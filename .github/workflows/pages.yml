@@ -23,8 +23,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Preserve student core
-        run: cp student.html student-core.html
+      - name: Preserve core pages
+        run: |
+          cp student.html student-core.html
+          cp reviews-admin.html reviews-admin-core.html
       - name: Add question images to student page
         run: |
           python - <<'PY'
@@ -48,6 +50,43 @@ jobs:
           old="<div class=\"question\">'+esc(q.stem)+'</div>';const a=answers[q.id]||{};"
           new="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
           if old not in s: raise SystemExit('student render target missing')
+          s=s.replace(old,new,1)
+          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div><div class=\"small\">"
+          new="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          if old not in s: raise SystemExit('student result stem target missing')
+          s=s.replace(old,new,1)
+          old="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+'</div>'"
+          new="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+assetHtml(q,'explanation_image')+'</div>'"
+          if old not in s: raise SystemExit('student result explanation target missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Add question images to manual review
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('reviews-admin.html')
+          s=p.read_text(encoding='utf-8')
+          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
+          s=s.replace('</style>',css+'\n</style>',1)
+          a='<div id="stem" class="answer"></div>'
+          b='<div id="stem" class="answer"></div><div id="stemAssets"></div>'
+          if a not in s: raise SystemExit('review stem container target missing')
+          s=s.replace(a,b,1)
+          a='<div id="modelAnswer" class="model"></div>'
+          b='<div id="modelAnswer" class="model"></div><div id="explanationAssets"></div>'
+          if a not in s: raise SystemExit('review model container target missing')
+          s=s.replace(a,b,1)
+          marker='function rubricItems(r){'
+          helpers="""function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
+          function reviewAssetHtml(rows,type){return(rows||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
+          async function loadReviewAssets(qid){const{data,error}=await sb.from('question_assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
+          """
+          if marker not in s: raise SystemExit('review helper target missing')
+          s=s.replace(marker,helpers+marker,1)
+          old="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');$('attempt').innerHTML="
+          new="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');await loadReviewAssets(data.question_id);$('attempt').innerHTML="
+          if old not in s: raise SystemExit('review load target missing')
           s=s.replace(old,new,1)
           p.write_text(s,encoding='utf-8')
           PY
