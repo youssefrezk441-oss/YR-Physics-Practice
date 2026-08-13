@@ -1,0 +1,16 @@
+name: Run one-time question seed
+
+on:
+  push:
+    paths:
+      - '.github/workflows/run-seed.yml'
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Import approved question batch
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/seed-trigger | tee seed-result.json
+          grep -q '"ok":true' seed-result.json
