@@ -90,6 +90,18 @@ jobs:
           s=s.replace(old,new,1)
           p.write_text(s,encoding='utf-8')
           PY
+      - name: Add admin navigation links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          needle='<button class="btn tab" data-tab="structure">الدروس والمهارات</button>'
+          links='<a class="btn tab" style="text-decoration:none" href="./assets-admin.html">صور ورسومات الأسئلة</a><a class="btn tab" style="text-decoration:none" href="./reviews-admin.html">مراجعة المقالي</a>'
+          if needle not in s: raise SystemExit('admin nav target missing')
+          s=s.replace(needle,needle+links,1)
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
