@@ -9,9 +9,8 @@ jobs:
   seed:
     runs-on: ubuntu-latest
     steps:
-      - name: Import approved question batch
+      - name: Import final approved question batch
         run: |
           set -euo pipefail
-          curl --fail --show-error --silent https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/seed-trigger | tee seed-result.json
+          curl --fail --show-error --silent https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/seed-approved-final-seven-trigger | tee seed-result.json
           grep -q '"ok":true' seed-result.json
-# retry after trigger gateway fix
