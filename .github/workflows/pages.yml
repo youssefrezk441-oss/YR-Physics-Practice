@@ -25,6 +25,32 @@ jobs:
         uses: actions/checkout@v4
       - name: Preserve student core
         run: cp student.html student-core.html
+      - name: Add question images to student page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
+          s=s.replace('</style>',css+'\n</style>',1)
+          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
+          helpers="""
+          function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
+          function assetHtml(q,type){return(q.assets||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
+          async function loadQuestionAssets(){const ids=questions.map(q=>q.id);if(!ids.length)return;const{data,error}=await sb.from('question_assets').select('question_id,asset_type,storage_path,caption,alt_text,sort_order').in('question_id',ids).order('sort_order');if(error){console.warn('question assets',error);return}const m=new Map();for(const a of data||[]){if(!m.has(a.question_id))m.set(a.question_id,[]);m.get(a.question_id).push(a)}questions=questions.map(q=>({...q,assets:m.get(q.id)||[]}))}
+          """
+          if state not in s: raise SystemExit('student state target missing')
+          s=s.replace(state,state+helpers,1)
+          old="questions=d.questions||[];answers={};qIndex=0;$('practiceTitle').textContent=currentSet.title;"
+          new="questions=d.questions||[];answers={};qIndex=0;await loadQuestionAssets();$('practiceTitle').textContent=currentSet.title;"
+          if old not in s: raise SystemExit('student start target missing')
+          s=s.replace(old,new,1)
+          old="<div class=\"question\">'+esc(q.stem)+'</div>';const a=answers[q.id]||{};"
+          new="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          if old not in s: raise SystemExit('student render target missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
