@@ -1,137 +1,48 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>YR Physics Practice — Student</title>
-  <style>
-    :root{font-family:Arial,"Noto Sans Arabic",sans-serif;background:#f5f7fb;color:#172033}
-    *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef4ff 0,#f8fafc 280px,#f5f7fb 100%);min-height:100vh;color:#172033}button,input{font:inherit}
-    .wrap{max-width:820px;margin:auto;padding:22px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.brand h1{font-size:22px;margin:0}.brand p{margin:5px 0 0;color:#667085;font-size:13px}.link{color:#1d4ed8;text-decoration:none;font-weight:700;font-size:13px}
-    .hero{background:#172033;color:#fff;border-radius:22px;padding:24px;margin-bottom:16px;box-shadow:0 16px 35px rgba(15,23,42,.12)}.hero .eyebrow{font-size:12px;opacity:.72;margin-bottom:8px}.hero h2{font-size:25px;margin:0 0 8px}.hero p{margin:0;opacity:.82;line-height:1.7}
-    .card{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:20px;margin-bottom:14px;box-shadow:0 5px 18px rgba(15,23,42,.04)}.hidden{display:none!important}.muted{color:#667085}.small{font-size:12px}.btn{border:0;border-radius:12px;padding:12px 18px;cursor:pointer;font-weight:800}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:#1d4ed8;color:#fff}.secondary{background:#eef2ff;color:#1d4ed8}.full{width:100%}
-    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.pill{font-size:12px;background:#f2f4f7;border-radius:999px;padding:5px 9px;color:#475467}.question{font-size:21px;line-height:1.7;font-weight:800;margin:8px 0 18px}.choice{display:flex;align-items:center;gap:12px;border:1.5px solid #e4e7ec;border-radius:14px;padding:14px 15px;margin:10px 0;cursor:pointer;transition:.18s;background:#fff}.choice:hover{border-color:#98a2b3}.choice input{width:19px;height:19px}.choice.selected{border-color:#2563eb;background:#eff6ff}.choice.correct{border-color:#16a34a;background:#f0fdf4}.choice.wrong{border-color:#e11d48;background:#fff1f2}.label{width:30px;height:30px;border-radius:50%;background:#f2f4f7;display:grid;place-items:center;font-weight:800;flex:0 0 auto}.choice.correct .label{background:#dcfce7;color:#166534}.choice.wrong .label{background:#ffe4e6;color:#9f1239}
-    .progress{height:8px;background:#eaecf0;border-radius:999px;overflow:hidden;margin-top:12px}.progress span{display:block;height:100%;width:100%;background:#2563eb}.result-score{text-align:center;padding:8px}.result-score .num{font-size:48px;font-weight:900;line-height:1}.result-score .caption{margin-top:8px;color:#667085}.feedback{border-radius:14px;padding:14px 15px;line-height:1.7;margin-top:14px}.feedback.ok{background:#ecfdf3;color:#166534}.feedback.bad{background:#fff1f2;color:#9f1239}.explain{background:#f8fafc;border-radius:14px;padding:15px;margin-top:12px;line-height:1.8}.msg{padding:12px 14px;border-radius:12px;margin-bottom:12px}.err{background:#fff1f3;color:#be123c}.okmsg{background:#ecfdf3;color:#027a48}
-    @media(max-width:620px){.top{align-items:flex-start;flex-direction:column}.hero{padding:20px}.hero h2{font-size:22px}.question{font-size:19px}.card{padding:16px}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YR Physics Practice — الطالب</title>
+<style>
+:root{font-family:Arial,"Noto Sans Arabic",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef4ff 0,#f7f9fc 280px,#f5f7fb 100%);min-height:100vh}button,input,textarea{font:inherit}.wrap{max-width:940px;margin:auto;padding:20px 14px 50px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.brand h1{font-size:22px;margin:0}.brand p{margin:5px 0 0;color:#667085;font-size:13px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 5px 18px rgba(15,23,42,.04)}.hero{background:#172033;color:#fff;border:0;padding:24px}.hero h2{margin:0 0 8px;font-size:26px}.hero p{margin:0;opacity:.8;line-height:1.7}.hidden{display:none!important}.btn{border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:800}.btn:disabled{opacity:.5;cursor:not-allowed}.primary{background:#1d4ed8;color:white}.secondary{background:#eef2ff;color:#1d4ed8}.danger{background:#fff1f2;color:#be123c}.full{width:100%}.muted{color:#667085}.small{font-size:12px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}input,textarea{width:100%;border:1px solid #d0d5dd;border-radius:11px;padding:11px;background:#fff;color:#172033}textarea{min-height:100px;resize:vertical}.msg{padding:12px 14px;border-radius:12px;margin-bottom:12px}.err{background:#fff1f3;color:#be123c}.ok{background:#ecfdf3;color:#027a48}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.set{padding:15px;border:1px solid #e4e7ec;border-radius:15px;margin:10px 0}.set h3{margin:0 0 6px;font-size:18px}.meta{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.pill{background:#f2f4f7;border-radius:999px;padding:5px 9px;font-size:12px;color:#475467}.stat{background:#f8fafc;border:1px solid #e4e7ec;border-radius:13px;padding:12px}.stat b{display:block;font-size:22px}.question{font-size:21px;line-height:1.75;font-weight:800;margin:15px 0}.choice{display:flex;gap:12px;align-items:center;border:1.5px solid #e4e7ec;border-radius:14px;padding:13px 14px;margin:9px 0;cursor:pointer}.choice:hover{border-color:#98a2b3}.choice.selected{border-color:#2563eb;background:#eff6ff}.choice input{width:19px;height:19px}.circle{width:30px;height:30px;border-radius:50%;background:#f2f4f7;display:grid;place-items:center;font-weight:800;flex:0 0 auto}.progress{height:8px;border-radius:99px;background:#eaecf0;overflow:hidden}.progress span{height:100%;display:block;background:#2563eb}.resultNum{font-size:52px;font-weight:900;text-align:center}.resultCaption{text-align:center;color:#667085;margin-top:5px}.answerCard{border:1px solid #e4e7ec;border-radius:14px;padding:14px;margin:10px 0}.answerCard.good{border-color:#86efac;background:#f0fdf4}.answerCard.bad{border-color:#fecdd3;background:#fff1f2}.answerCard.review{border-color:#fde68a;background:#fffbeb}.historyRow{display:grid;grid-template-columns:1fr 110px 120px;gap:10px;padding:11px 0;border-bottom:1px solid #eaecf0;align-items:center}.historyRow:last-child{border:0}.timer{font-weight:900;color:#b42318}.login{max-width:520px;margin:50px auto}.empty{text-align:center;padding:28px;color:#667085}.navBtns{display:flex;justify-content:space-between;gap:8px;margin-top:15px}.navBtns .btn{min-width:110px}@media(max-width:700px){.top{align-items:flex-start;flex-direction:column}.c8,.c6,.c4,.c3{grid-column:span 12}.historyRow{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:22px}.question{font-size:19px}}
+</style>
 </head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand"><h1>YR Physics Practice</h1><p>تجربة الطالب — النسخة التجريبية الأولى</p></div>
-    <a class="link" href="./">لوحة الإدارة ←</a>
-  </div>
-
-  <section class="hero">
-    <div class="eyebrow">اختبار الرحلة الكاملة</div>
-    <h2>تدريب تجريبي — الكتابة العلمية</h2>
-    <p>حل السؤال، سلّم إجابتك، وشاهد التصحيح والدرجة وشرح الحل فورًا.</p>
-  </section>
-
-  <div id="msg"></div>
-
-  <section id="loginRequired" class="card hidden">
-    <h3>يلزم تسجيل الدخول أولًا</h3>
-    <p class="muted">في الاختبار الحالي نستخدم حساب الإدارة نفسه كطالب تجريبي. افتح لوحة الإدارة وسجّل الدخول، ثم ارجع لهذه الصفحة.</p>
-    <a href="./"><button class="btn primary">الذهاب للوحة الإدارة</button></a>
-  </section>
-
-  <section id="startView" class="card hidden">
-    <div class="meta"><span class="pill">سؤال واحد</span><span class="pill">تصحيح تلقائي</span><span class="pill">النتيجة فورية</span></div>
-    <h3 style="margin:0 0 7px">جاهز تبدأ؟</h3>
-    <p class="muted" style="margin:0 0 16px">المحاولة دي مخصصة لاختبار المنظومة من أول عرض السؤال حتى تسجيل الدرجة في Supabase.</p>
-    <button id="startBtn" class="btn primary full">ابدأ التدريب</button>
-  </section>
-
-  <section id="practiceView" class="hidden">
-    <div class="card">
-      <div class="meta"><span id="qCode" class="pill"></span><span id="qDifficulty" class="pill"></span><span id="qPoints" class="pill"></span></div>
-      <div class="small muted">السؤال 1 من 1</div>
-      <div class="progress"><span></span></div>
-      <div id="qStem" class="question"></div>
-      <div id="choices"></div>
-      <button id="submitBtn" class="btn primary full" disabled>تسليم الإجابة</button>
-    </div>
-  </section>
-
-  <section id="resultView" class="hidden">
-    <div class="card">
-      <div class="result-score"><div id="scoreNum" class="num">0%</div><div id="scoreCaption" class="caption"></div></div>
-      <div id="answerFeedback" class="feedback"></div>
-      <div id="explanation" class="explain"></div>
-      <button id="againBtn" class="btn secondary full" style="margin-top:14px">محاولة جديدة</button>
-    </div>
-  </section>
+<body><div class="wrap">
+<div class="top"><div class="brand"><h1>YR Physics Practice</h1><p>تدريبات الفيزياء التفاعلية</p></div><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div>
+<div id="msg"></div>
+<section id="loginView" class="login card"><h2 style="margin-top:0">دخول الطالب</h2><p class="muted">اكتب كود الطالب وكلمة المرور.</p><div class="grid"><div class="c12"><label>كود الطالب</label><input id="studentCode" autocomplete="username" placeholder="مثال: N3-001"></div><div class="c12"><label>كلمة المرور</label><input id="studentPassword" type="password" autocomplete="current-password"></div><div class="c12"><button id="loginBtn" class="btn primary full">دخول</button></div></div></section>
+<section id="dashboardView" class="hidden">
+<div class="hero card"><h2 id="welcomeTitle">أهلاً بك</h2><p>اختر تدريبًا وابدأ الحل. نتائجك ومحاولاتك محفوظة تلقائيًا.</p></div>
+<div class="grid"><div class="c8 card"><h2 style="margin-top:0;font-size:19px">التدريبات المتاحة</h2><div id="setsList"></div></div><div class="c4"><div class="card"><h3 style="margin-top:0">ملخصك</h3><div class="grid"><div class="c6 stat"><b id="attemptsStat">0</b><span class="small muted">محاولة</span></div><div class="c6 stat"><b id="bestStat">—</b><span class="small muted">أفضل نتيجة</span></div></div></div></div></div>
+<div class="card"><h2 style="margin-top:0;font-size:19px">سجل المحاولات</h2><div id="historyList"></div></div>
+</section>
+<section id="practiceView" class="hidden">
+<div class="card"><div class="toolbar" style="justify-content:space-between"><div><b id="practiceTitle"></b><div id="qCounter" class="small muted"></div></div><div id="timer" class="timer"></div></div><div class="progress" style="margin:12px 0"><span id="progressBar" style="width:0"></span></div><div id="questionBox"></div><div class="navBtns"><button id="prevBtn" class="btn secondary">السابق</button><button id="nextBtn" class="btn secondary">التالي</button></div><button id="finishBtn" class="btn primary full" style="margin-top:12px">تسليم التدريب</button></div>
+</section>
+<section id="resultView" class="hidden"><div class="card"><div id="resultPercent" class="resultNum">0%</div><div id="resultCaption" class="resultCaption"></div><div id="resultDetails" style="margin-top:18px"></div><button id="backDashboardBtn" class="btn primary full" style="margin-top:14px">العودة للتدريبات</button></div></section>
 </div>
-
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
-
-const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co';
-const SUPABASE_KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
-const sb=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let attemptId=null,question=null,selectedChoiceId=null;
-
-function showMsg(text,type='err'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(text)+'</div>';}
-function clearMsg(){$('msg').innerHTML='';}
-function showOnly(id){['loginRequired','startView','practiceView','resultView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
-async function fn(body){const {data,error}=await sb.functions.invoke('student-practice',{body});if(error)throw new Error(error.message||'تعذر الاتصال بالخادم');if(data?.error)throw new Error(data.message||data.error);return data;}
-
-async function init(){
-  const {data:{session}}=await sb.auth.getSession();
-  if(!session){showOnly('loginRequired');return;}
-  try{await fn({action:'ping'});showOnly('startView');}
-  catch(e){showMsg(e.message);showOnly('loginRequired');}
-}
-
-$('startBtn').addEventListener('click',async()=>{
-  try{
-    clearMsg();$('startBtn').disabled=true;
-    const d=await fn({action:'start',slug:'scientific-notation-demo'});
-    if(!d.questions?.length)throw new Error('لا يوجد سؤال داخل التدريب.');
-    attemptId=d.attempt.id;question=d.questions[0];selectedChoiceId=null;
-    $('qCode').textContent=question.question_code;
-    $('qDifficulty').textContent=({easy:'سهل',medium:'متوسط',hard:'صعب',advanced:'أفكار عليا'})[question.difficulty]||question.difficulty;
-    $('qPoints').textContent=question.points+' درجة';
-    $('qStem').textContent=question.stem;
-    $('choices').innerHTML=(question.choices||[]).map(c=>'<label class="choice" data-id="'+esc(c.id)+'"><input type="radio" name="answer" value="'+esc(c.id)+'"><span class="label">'+esc(c.label)+'</span><span>'+esc(c.choice_text)+'</span></label>').join('');
-    document.querySelectorAll('.choice').forEach(el=>el.addEventListener('click',()=>{
-      selectedChoiceId=el.dataset.id;
-      document.querySelectorAll('.choice').forEach(x=>x.classList.toggle('selected',x===el));
-      $('submitBtn').disabled=false;
-    }));
-    $('submitBtn').disabled=true;showOnly('practiceView');
-  }catch(e){showMsg(e.message);}
-  finally{$('startBtn').disabled=false;}
-});
-
-$('submitBtn').addEventListener('click',async()=>{
-  if(!attemptId||!question||!selectedChoiceId)return;
-  try{
-    clearMsg();$('submitBtn').disabled=true;
-    const d=await fn({action:'submit_attempt',attempt_id:attemptId,answers:[{question_id:question.id,selected_choice_id:selectedChoiceId}]});
-    const r=d.results?.[0];if(!r)throw new Error('لم تصل نتيجة التصحيح.');
-    const pct=Number(d.attempt?.percentage??0);
-    $('scoreNum').textContent=pct+'%';
-    $('scoreCaption').textContent=(d.attempt?.score??0)+' من '+(d.attempt?.max_score??question.points)+' درجة';
-    const correct=r.grading_status==='correct';
-    $('answerFeedback').className='feedback '+(correct?'ok':'bad');
-    $('answerFeedback').textContent=correct?'✅ إجابة صحيحة — أحسنت.':'❌ إجابة غير صحيحة — راجع الفكرة ثم جرّب مرة أخرى.';
-    document.querySelectorAll('.choice').forEach(el=>{
-      el.classList.remove('selected');
-      if(el.dataset.id===String(r.correct_choice_id))el.classList.add('correct');
-      else if(el.dataset.id===selectedChoiceId&&!correct)el.classList.add('wrong');
-      const inp=el.querySelector('input');if(inp)inp.disabled=true;
-    });
-    $('explanation').innerHTML='<b>شرح الحل:</b><br>'+esc(r.explanation||'تم التصحيح بنجاح.');
-    showOnly('resultView');
-  }catch(e){showMsg(e.message);$('submitBtn').disabled=false;}
-});
-
-$('againBtn').addEventListener('click',()=>{attemptId=null;question=null;selectedChoiceId=null;clearMsg();showOnly('startView');});
-await init();
-</script>
-</body>
-</html>
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+const URL='https://ltjdhconuiqblxfjzpzj.supabase.co',KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
+const sb=createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;
+function emailForCode(c){return c.trim().toLowerCase().replace(/\s+/g,'')+'@students.yrphysicspractice.com'}function showMsg(t,type='err'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(t)+'</div>'}function clearMsg(){$('msg').innerHTML=''}function showOnly(id){['loginView','dashboardView','practiceView','resultView'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+async function fn(body){const{data,error}=await sb.functions.invoke('student-practice',{body});if(error)throw new Error(error.message||'تعذر الاتصال');if(data?.error)throw new Error(data.message||data.error);return data}
+$('loginBtn').onclick=async()=>{try{clearMsg();$('loginBtn').disabled=true;const code=$('studentCode').value.trim().toUpperCase().replace(/\s+/g,'');const pass=$('studentPassword').value;if(!code||!pass)throw new Error('اكتب الكود وكلمة المرور.');const{data,error}=await sb.auth.signInWithPassword({email:emailForCode(code),password:pass});if(error)throw new Error('الكود أو كلمة المرور غير صحيحة.');if(!data.user)throw new Error('تعذر تسجيل الدخول.');await initSession()}catch(e){showMsg(e.message)}finally{$('loginBtn').disabled=false}};
+$('logoutBtn').onclick=async()=>{stopTimer();await sb.auth.signOut();location.reload()};
+async function initSession(){const d=await fn({action:'ping'});profile=d.profile;$('studentName').textContent=(profile.full_name||'طالب')+' — '+(profile.student_code||'');$('welcomeTitle').textContent='أهلاً '+(profile.full_name||'');$('loginView').classList.add('hidden');$('userBar').classList.remove('hidden');await loadDashboard();showOnly('dashboardView')}
+async function loadDashboard(){const[a,b]=await Promise.all([fn({action:'list_sets'}),fn({action:'history'})]);sets=a.sets||[];history=b.attempts||[];renderSets();renderHistory();$('attemptsStat').textContent=history.length;const graded=history.filter(x=>x.percentage!=null);$('bestStat').textContent=graded.length?Math.max(...graded.map(x=>Number(x.percentage)))+'%':'—'}
+function renderSets(){if(!sets.length){$('setsList').innerHTML='<div class="empty">لا توجد تدريبات نشطة حاليًا.</div>';return}$('setsList').innerHTML=sets.map(s=>{const remain=s.remaining_attempts==null?'غير محدود':s.remaining_attempts;const disabled=s.remaining_attempts===0;return '<div class="set"><h3>'+esc(s.title)+'</h3><div class="muted small">'+esc(s.description||'')+'</div><div class="meta"><span class="pill">'+s.question_count+' سؤال</span><span class="pill">'+Number(s.max_score||0)+' درجة</span><span class="pill">المحاولات المتبقية: '+remain+'</span>'+(s.best_percentage!=null?'<span class="pill">أفضل نتيجة: '+Number(s.best_percentage)+'%</span>':'')+'</div><button class="btn primary startSet" data-slug="'+esc(s.slug)+'" '+(disabled?'disabled':'')+'>'+(disabled?'انتهت المحاولات':'ابدأ التدريب')+'</button></div>'}).join('');document.querySelectorAll('.startSet').forEach(b=>b.onclick=()=>startSet(b.dataset.slug))}
+function renderHistory(){if(!history.length){$('historyList').innerHTML='<div class="empty">لا توجد محاولات بعد.</div>';return}$('historyList').innerHTML=history.map(h=>'<div class="historyRow"><div><b>'+esc(h.title)+'</b><div class="small muted">'+new Date(h.started_at).toLocaleString('ar-EG')+'</div></div><div><span class="pill">'+esc(h.status)+'</span></div><div><b>'+(h.percentage==null?'—':Number(h.percentage)+'%')+'</b><div class="small muted">'+(h.score==null?'':Number(h.score)+' / '+Number(h.max_score))+'</div></div></div>').join('')}
+async function startSet(slug){try{clearMsg();const d=await fn({action:'start',slug});attemptId=d.attempt.id;currentSet=d.training_set;questions=d.questions||[];answers={};qIndex=0;$('practiceTitle').textContent=currentSet.title;startTimer(currentSet.time_limit_minutes);renderQuestion();showOnly('practiceView')}catch(e){showMsg(e.message)}}
+function startTimer(minutes){stopTimer();if(!minutes){$('timer').textContent='';return}deadline=Date.now()+Number(minutes)*60000;const tick=()=>{const ms=Math.max(0,deadline-Date.now()),m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);$('timer').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(ms<=0){stopTimer();submitAttempt(true)}};tick();timerId=setInterval(tick,1000)}function stopTimer(){if(timerId)clearInterval(timerId);timerId=null;deadline=null}
+function renderQuestion(){const q=questions[qIndex];$('qCounter').textContent='السؤال '+(qIndex+1)+' من '+questions.length;$('progressBar').style.width=((qIndex+1)/questions.length*100)+'%';let html='<div class="meta"><span class="pill">'+esc(q.question_code)+'</span><span class="pill">'+esc(({easy:'سهل',medium:'متوسط',hard:'صعب',advanced:'أفكار عليا'})[q.difficulty]||q.difficulty)+'</span><span class="pill">'+q.points+' درجة</span></div><div class="question">'+esc(q.stem)+'</div>';const a=answers[q.id]||{};
+if(q.type==='mcq')html+=(q.choices||[]).map(c=>'<label class="choice '+(a.selected_choice_id===c.id?'selected':'')+'" data-choice="'+esc(c.id)+'"><input type="radio" name="mcq" '+(a.selected_choice_id===c.id?'checked':'')+'><span class="circle">'+esc(c.label)+'</span><span>'+esc(c.choice_text)+'</span></label>').join('');
+else if(q.type==='numeric')html+='<div class="grid"><div class="c8"><label>الإجابة الرقمية</label><input id="numericValue" type="number" step="any" value="'+esc(a.numeric_value??'')+'"></div><div class="c4"><label>الوحدة</label><input id="unitText" value="'+esc(a.unit_text??'')+'" placeholder="إن وجدت"></div></div>';
+else html+='<label>إجابتك</label><textarea id="textAnswer" placeholder="اكتب إجابتك هنا">'+esc(a.text_answer??'')+'</textarea>';
+$('questionBox').innerHTML=html;document.querySelectorAll('[data-choice]').forEach(el=>el.onclick=()=>{answers[q.id]={question_id:q.id,selected_choice_id:el.dataset.choice};renderQuestion()});const nv=$('numericValue');if(nv)nv.oninput=()=>{answers[q.id]={question_id:q.id,numeric_value:nv.value===''?null:Number(nv.value),unit_text:$('unitText').value}};const ut=$('unitText');if(ut)ut.oninput=()=>{answers[q.id]={question_id:q.id,numeric_value:$('numericValue').value===''?null:Number($('numericValue').value),unit_text:ut.value}};const ta=$('textAnswer');if(ta)ta.oninput=()=>{answers[q.id]={question_id:q.id,text_answer:ta.value}};$('prevBtn').disabled=qIndex===0;$('nextBtn').disabled=qIndex===questions.length-1}
+$('prevBtn').onclick=()=>{if(qIndex>0){qIndex--;renderQuestion()}};$('nextBtn').onclick=()=>{if(qIndex<questions.length-1){qIndex++;renderQuestion()}};$('finishBtn').onclick=()=>submitAttempt(false);
+async function submitAttempt(auto=false){if(!attemptId)return;const unanswered=questions.filter(q=>!answers[q.id]||(q.type==='mcq'&&!answers[q.id].selected_choice_id)||(q.type==='numeric'&&answers[q.id].numeric_value==null)||(q.type==='short_text'&&!String(answers[q.id].text_answer||'').trim())).length;if(!auto&&unanswered>0&&!confirm('لديك '+unanswered+' سؤال بدون إجابة. هل تريد التسليم؟'))return;try{$('finishBtn').disabled=true;stopTimer();const d=await fn({action:'submit_attempt',attempt_id:attemptId,answers:Object.values(answers)});renderResult(d);showOnly('resultView')}catch(e){showMsg(e.message);$('finishBtn').disabled=false}}
+function renderResult(d){const pct=Number(d.attempt?.percentage??0);$('resultPercent').textContent=pct+'%';$('resultCaption').textContent=Number(d.attempt?.score??0)+' من '+Number(d.attempt?.max_score??0)+' درجة';const map=new Map((d.results||[]).map(r=>[String(r.question_id),r]));$('resultDetails').innerHTML=questions.map((q,i)=>{const r=map.get(String(q.id))||{};const cls=r.grading_status==='correct'?'good':r.grading_status==='review'?'review':'bad';const icon=r.grading_status==='correct'?'✅':r.grading_status==='review'?'🟡':'❌';let extra='';if(q.type==='mcq'&&r.correct_choice_id){const c=(q.choices||[]).find(x=>x.id===r.correct_choice_id);if(c)extra='<div class="small"><b>الإجابة الصحيحة:</b> '+esc(c.choice_text)+'</div>'}if(q.type==='numeric'&&r.correct_numeric_answer!=null)extra='<div class="small"><b>الإجابة الصحيحة:</b> '+esc(r.correct_numeric_answer)+' '+esc((r.accepted_units||[])[0]||'')+'</div>';return '<div class="answerCard '+cls+'"><b>'+icon+' السؤال '+(i+1)+'</b><div style="margin:7px 0">'+esc(q.stem)+'</div><div class="small">'+esc(r.feedback||'')+'</div>'+extra+(r.explanation?'<div class="small" style="margin-top:7px"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+'</div>'}).join('')}
+$('backDashboardBtn').onclick=async()=>{attemptId=null;currentSet=null;questions=[];answers={};$('finishBtn').disabled=false;await loadDashboard();showOnly('dashboardView')};
+const{data:{session}}=await sb.auth.getSession();if(session){try{await initSession()}catch{await sb.auth.signOut();showOnly('loginView')}}else showOnly('loginView');
+</script></body></html>
