@@ -61,6 +61,41 @@ jobs:
           s=s.replace(old,new,1)
           p.write_text(s,encoding='utf-8')
           PY
+      - name: Improve mobile equation layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          css='''.choiceText{min-width:0;flex:1}.formula-inline,.formula-long{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;vertical-align:baseline}.formula-inline{display:inline-block}.formula-long{display:inline-block;max-width:100%}@media(max-width:700px){.formula-inline{font-size:.96em}.formula-long{display:block;width:max-content;max-width:100%;overflow-x:auto;overflow-y:hidden;margin:8px auto;padding:3px 2px;text-align:center;line-height:1.35;-webkit-overflow-scrolling:touch}.question .formula-long{font-size:1em}.choiceText .formula-long{margin:3px 0}.formula-long::-webkit-scrollbar{height:4px}}'''
+          s=s.replace('</style>',css+'\n</style>',1)
+          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
+          helpers=r"""
+          function isLongFormula(expr){const clean=String(expr??'').replace(/\s+/g,' ').trim();const operators=(clean.match(/[=+\-×÷*/]/g)||[]).length;const parens=(clean.match(/[()]/g)||[]).length;return clean.length>=18||operators>=4||parens>=4}
+          function formatMixedText(text){const safe=esc(text);return safe.replace(/\u2066([\s\S]*?)\u2069/g,(_,expr)=>'<span class="'+(isLongFormula(expr)?'formula-long':'formula-inline')+'">'+expr+'</span>')}
+          """
+          if state not in s: raise SystemExit('equation state target missing')
+          s=s.replace(state,helpers+state,1)
+          old="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          new="<div class=\"question\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          if old not in s: raise SystemExit('equation question target missing')
+          s=s.replace(old,new,1)
+          old="<span>'+esc(c.choice_text)+'</span></label>"
+          new="<span class=\"choiceText\">'+formatMixedText(c.choice_text)+'</span></label>"
+          if old not in s: raise SystemExit('equation choice target missing')
+          s=s.replace(old,new,1)
+          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          new="<div class=\"resultStem\" style=\"margin:7px 0\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          if old not in s: raise SystemExit('equation result stem target missing')
+          s=s.replace(old,new,1)
+          old="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+esc(c.choice_text)+'</div>'"
+          new="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+formatMixedText(c.choice_text)+'</div>'"
+          if old not in s: raise SystemExit('equation correct choice target missing')
+          s=s.replace(old,new,1)
+          if "esc(r.explanation)" not in s: raise SystemExit('equation explanation target missing')
+          s=s.replace("esc(r.explanation)","formatMixedText(r.explanation)",1)
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Add question images to manual review
         run: |
           python - <<'PY'
