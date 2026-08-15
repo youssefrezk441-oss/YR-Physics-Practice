@@ -1,15 +1,13 @@
 from pathlib import Path
 
-p = Path('.github/workflows/pages.yml')
-s = p.read_text(encoding='utf-8')
+src = Path('.github/workflows/pages.yml').read_text(encoding='utf-8')
 marker = '      - name: Configure Pages\n'
 
-if 'Build hierarchical admin dashboard' in s:
-    raise SystemExit(0)
-if marker not in s:
+if marker not in src:
     raise SystemExit('Configure Pages marker not found')
 
-block = """      - name: Build hierarchical admin dashboard
+if 'Build hierarchical admin dashboard' not in src:
+    block = """      - name: Build hierarchical admin dashboard
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -38,6 +36,6 @@ block = """      - name: Build hierarchical admin dashboard
           Path('index.html').write_text(Path('admin-home.html').read_text(encoding='utf-8'),encoding='utf-8')
           PY
 """
+    src = src.replace(marker, block + marker, 1)
 
-s = s.replace(marker, block + marker, 1)
-p.write_text(s, encoding='utf-8')
+Path('pages-dashboard.generated.yml').write_text(src, encoding='utf-8')
