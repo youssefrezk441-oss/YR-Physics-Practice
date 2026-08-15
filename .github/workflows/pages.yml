@@ -159,7 +159,7 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           needle='<button class="btn tab" data-tab="structure">الدروس والمهارات</button>'
-          links='<a class="btn tab" style="text-decoration:none" href="./assets-admin.html">صور ورسومات الأسئلة</a><a class="btn tab" style="text-decoration:none" href="./reviews-admin.html">مراجعة المقالي</a>'
+          links='<a class="btn tab" style="text-decoration:none" href="./students-admin.html">إدارة الطلاب</a><a class="btn tab" style="text-decoration:none" href="./assets-admin.html">صور ورسومات الأسئلة</a><a class="btn tab" style="text-decoration:none" href="./reviews-admin.html">مراجعة المقالي</a>'
           if needle not in s: raise SystemExit('admin nav target missing')
           s=s.replace(needle,needle+links,1)
           p.write_text(s,encoding='utf-8')
