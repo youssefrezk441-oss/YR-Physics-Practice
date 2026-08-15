@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch Pages workflow
+      - name: Generate patched Pages workflow
         run: python scripts/patch_pages_dashboard.py
-      - name: Commit patch
+      - name: Commit generated workflow file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/workflows/pages.yml
+          git add pages-dashboard.generated.yml
           git diff --cached --quiet && exit 0
-          git commit -m "Build hierarchical admin dashboard"
+          git commit -m "Generate hierarchical dashboard Pages workflow"
           git push
