@@ -1,0 +1,205 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Preserve core pages
+        run: |
+          cp student.html student-core.html
+          cp reviews-admin.html reviews-admin-core.html
+      - name: Add question images to student page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
+          s=s.replace('</style>',css+'\n</style>',1)
+          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
+          helpers="""
+          function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
+          function assetHtml(q,type){return(q.assets||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
+          async function loadQuestionAssets(){const ids=questions.map(q=>q.id);if(!ids.length)return;const{data,error}=await sb.from('question_assets').select('question_id,asset_type,storage_path,caption,alt_text,sort_order').in('question_id',ids).order('sort_order');if(error){console.warn('question assets',error);return}const m=new Map();for(const a of data||[]){if(!m.has(a.question_id))m.set(a.question_id,[]);m.get(a.question_id).push(a)}questions=questions.map(q=>({...q,assets:m.get(q.id)||[]}))}
+          """
+          if state not in s: raise SystemExit('student state target missing')
+          s=s.replace(state,state+helpers,1)
+          old="questions=d.questions||[];answers={};qIndex=0;$('practiceTitle').textContent=currentSet.title;"
+          new="questions=d.questions||[];answers={};qIndex=0;await loadQuestionAssets();$('practiceTitle').textContent=currentSet.title;"
+          if old not in s: raise SystemExit('student start target missing')
+          s=s.replace(old,new,1)
+          old="<div class=\"question\">'+esc(q.stem)+'</div>';const a=answers[q.id]||{};"
+          new="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          if old not in s: raise SystemExit('student render target missing')
+          s=s.replace(old,new,1)
+          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div><div class=\"small\">"
+          new="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          if old not in s: raise SystemExit('student result stem target missing')
+          s=s.replace(old,new,1)
+          old="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+'</div>'"
+          new="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+assetHtml(q,'explanation_image')+'</div>'"
+          if old not in s: raise SystemExit('student result explanation target missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Improve mobile equation layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          css='''.choiceText{min-width:0;flex:1}.formula-inline,.formula-long{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;vertical-align:baseline}.formula-inline{display:inline-block}.formula-long{display:inline-block;max-width:100%}@media(max-width:700px){.formula-inline{font-size:.96em}.formula-long{display:block;width:max-content;max-width:100%;overflow-x:auto;overflow-y:hidden;margin:8px auto;padding:3px 2px;text-align:center;line-height:1.35;-webkit-overflow-scrolling:touch}.question .formula-long{font-size:1em}.choiceText .formula-long{margin:3px 0}.formula-long::-webkit-scrollbar{height:4px}}'''
+          s=s.replace('</style>',css+'\n</style>',1)
+          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
+          helpers=r"""
+          function isLongFormula(expr){const clean=String(expr??'').replace(/\s+/g,' ').trim();const operators=(clean.match(/[=+\-×÷*/]/g)||[]).length;const parens=(clean.match(/[()]/g)||[]).length;return clean.length>=18||operators>=4||parens>=4}
+          function formatMixedText(text){const safe=esc(text);return safe.replace(/\u2066([\s\S]*?)\u2069/g,(_,expr)=>'<span class="'+(isLongFormula(expr)?'formula-long':'formula-inline')+'">'+expr+'</span>')}
+          """
+          if state not in s: raise SystemExit('equation state target missing')
+          s=s.replace(state,helpers+state,1)
+          old="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          new="<div class=\"question\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
+          if old not in s: raise SystemExit('equation question target missing')
+          s=s.replace(old,new,1)
+          old="<span>'+esc(c.choice_text)+'</span></label>"
+          new="<span class=\"choiceText\">'+formatMixedText(c.choice_text)+'</span></label>"
+          if old not in s: raise SystemExit('equation choice target missing')
+          s=s.replace(old,new,1)
+          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          new="<div class=\"resultStem\" style=\"margin:7px 0\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
+          if old not in s: raise SystemExit('equation result stem target missing')
+          s=s.replace(old,new,1)
+          old="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+esc(c.choice_text)+'</div>'"
+          new="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+formatMixedText(c.choice_text)+'</div>'"
+          if old not in s: raise SystemExit('equation correct choice target missing')
+          s=s.replace(old,new,1)
+          if "esc(r.explanation)" not in s: raise SystemExit('equation explanation target missing')
+          s=s.replace("esc(r.explanation)","formatMixedText(r.explanation)",1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Add student dark mode
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          preload="""<script>(function(){try{var m=localStorage.getItem('yr-theme')||'system';var dark=m==='dark'||(m==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.dataset.themeMode=m}catch(e){}})();</script>"""
+          if '<head>' not in s: raise SystemExit('theme head target missing')
+          s=s.replace('<head>','<head>'+preload,1)
+          css='''html{color-scheme:light}html[data-theme="dark"]{color-scheme:dark;background:#0b1120;color:#e5e7eb}html[data-theme="dark"] body{background:linear-gradient(180deg,#0f172a 0,#0b1220 280px,#0b1120 100%);color:#e5e7eb}html[data-theme="dark"] .card{background:#111827;border-color:#293548;box-shadow:0 5px 18px rgba(0,0,0,.18)}html[data-theme="dark"] .hero{background:#172554;color:#f8fafc}html[data-theme="dark"] .muted,html[data-theme="dark"] .brand p,html[data-theme="dark"] .resultCaption,html[data-theme="dark"] .empty{color:#9ca3af}html[data-theme="dark"] input,html[data-theme="dark"] textarea{background:#0f172a;border-color:#374151;color:#f3f4f6}html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#6b7280}html[data-theme="dark"] .secondary{background:#1e293b;color:#bfdbfe}html[data-theme="dark"] .set{border-color:#334155;background:#111827}html[data-theme="dark"] .pill{background:#1f2937;color:#d1d5db}html[data-theme="dark"] .stat{background:#0f172a;border-color:#334155}html[data-theme="dark"] .choice{border-color:#374151;background:#111827}html[data-theme="dark"] .choice:hover{border-color:#64748b}html[data-theme="dark"] .choice.selected{border-color:#60a5fa;background:#172554}html[data-theme="dark"] .circle{background:#1f2937;color:#e5e7eb}html[data-theme="dark"] .progress{background:#273449}html[data-theme="dark"] .historyRow{border-bottom-color:#273449}html[data-theme="dark"] .answerCard{border-color:#374151;background:#111827}html[data-theme="dark"] .answerCard.good{border-color:#166534;background:#052e1b}html[data-theme="dark"] .answerCard.bad{border-color:#9f1239;background:#3f0d1d}html[data-theme="dark"] .answerCard.review{border-color:#a16207;background:#422006}html[data-theme="dark"] .err{background:#3f0d1d;color:#fda4af}html[data-theme="dark"] .ok{background:#052e1b;color:#86efac}html[data-theme="dark"] .qasset .cap{color:#9ca3af}.themeBtn{white-space:nowrap;min-width:116px}.topActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}@media(max-width:700px){.topActions{width:100%;justify-content:space-between}.themeBtn{min-width:0}}'''
+          s=s.replace('</style>',css+'\n</style>',1)
+          old='<div class="top"><div class="brand"><h1>منصة تدريبات الفيزياء</h1><p>مستر يوسف رزق</p></div><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div>'
+          new='<div class="top"><div class="brand"><h1>منصة تدريبات الفيزياء</h1><p>مستر يوسف رزق</p></div><div class="topActions"><button id="themeBtn" class="btn secondary themeBtn" type="button" title="تغيير المظهر">🌓 تلقائي</button><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div></div>'
+          if old not in s: raise SystemExit('theme topbar target missing')
+          s=s.replace(old,new,1)
+          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
+          helpers="""
+          const THEME_KEY='yr-theme';const themeMedia=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;let themeMode=localStorage.getItem(THEME_KEY)||'system';
+          function themeLabel(mode){return mode==='dark'?'🌙 داكن':mode==='light'?'☀️ فاتح':'🌓 تلقائي'}
+          function applyTheme(mode){themeMode=['system','light','dark'].includes(mode)?mode:'system';const dark=themeMode==='dark'||(themeMode==='system'&&themeMedia&&themeMedia.matches);document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.dataset.themeMode=themeMode;const b=$('themeBtn');if(b){b.textContent=themeLabel(themeMode);b.setAttribute('aria-label','المظهر: '+themeLabel(themeMode))}}
+          function cycleTheme(){const next=themeMode==='system'?'light':themeMode==='light'?'dark':'system';localStorage.setItem(THEME_KEY,next);applyTheme(next)}
+          applyTheme(themeMode);$('themeBtn').onclick=cycleTheme;if(themeMedia){const sync=()=>{if(themeMode==='system')applyTheme('system')};if(themeMedia.addEventListener)themeMedia.addEventListener('change',sync);else if(themeMedia.addListener)themeMedia.addListener(sync)}
+          """
+          if state not in s: raise SystemExit('theme state target missing')
+          s=s.replace(state,helpers+state,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Add question images to manual review
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('reviews-admin.html')
+          s=p.read_text(encoding='utf-8')
+          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
+          s=s.replace('</style>',css+'\n</style>',1)
+          a='<div id="stem" class="answer"></div>'
+          b='<div id="stem" class="answer"></div><div id="stemAssets"></div>'
+          if a not in s: raise SystemExit('review stem container target missing')
+          s=s.replace(a,b,1)
+          a='<div id="modelAnswer" class="model"></div>'
+          b='<div id="modelAnswer" class="model"></div><div id="explanationAssets"></div>'
+          if a not in s: raise SystemExit('review model container target missing')
+          s=s.replace(a,b,1)
+          marker='function rubricItems(r){'
+          helpers="""function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
+          function reviewAssetHtml(rows,type){return(rows||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
+          async function loadReviewAssets(qid){const{data,error}=await sb.from('question_assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
+          """
+          if marker not in s: raise SystemExit('review helper target missing')
+          s=s.replace(marker,helpers+marker,1)
+          old="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');$('attempt').innerHTML="
+          new="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');await loadReviewAssets(data.question_id);$('attempt').innerHTML="
+          if old not in s: raise SystemExit('review load target missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Add admin navigation links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          needle='<button class="btn tab" data-tab="structure">الدروس والمهارات</button>'
+          links='<a class="btn tab" style="text-decoration:none" href="./students-admin.html">إدارة الطلاب</a><a class="btn tab" style="text-decoration:none" href="./assets-admin.html">صور ورسومات الأسئلة</a><a class="btn tab" style="text-decoration:none" href="./reviews-admin.html">مراجعة المقالي</a>'
+          if needle not in s: raise SystemExit('admin nav target missing')
+          s=s.replace(needle,needle+links,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Build hierarchical admin dashboard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          src=Path('index.html').read_text(encoding='utf-8')
+          css='''#adminView>.tabs{display:none!important}.adminSectionBack{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:10px 13px}.adminSectionBack a{color:#000073;text-decoration:none;font-weight:800}@media(max-width:700px){.adminSectionBack{align-items:flex-start;flex-direction:column}}'''
+          src=src.replace('</style>',css+'\n</style>',1)
+          marker='<div id="mainMsg"></div>'
+          back='<div class="adminSectionBack"><div><b>المحتوى والتدريبات</b><div class="muted small">أنت داخل أداة تنفيذية من لوحة المحتوى.</div></div><a href="./admin-content-menu.html">← العودة لأدوات المحتوى</a></div>'
+          if marker not in src: raise SystemExit('content admin main marker missing')
+          src=src.replace(marker,back+marker,1)
+          old="async function openAdmin(user){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('userBar').classList.remove('hidden');$('userEmail').textContent=user.email||'';await loadStructure();await loadQuestions()}"
+          new="async function openAdmin(user){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('userBar').classList.remove('hidden');$('userEmail').textContent=user.email||'';await loadStructure();await loadQuestions();const requested=new URLSearchParams(location.search).get('view');if(['questions','newQuestion','trainings','structure'].includes(requested))setMainTab(requested)}"
+          if old not in src: raise SystemExit('content admin openAdmin marker missing')
+          src=src.replace(old,new,1)
+          Path('content-admin.html').write_text(src,encoding='utf-8')
+
+          sp=Path('sessions-admin.html')
+          ss=sp.read_text(encoding='utf-8')
+          old="await loadHistory()}catch(e){note(e.message,'err')}}"
+          new="await loadHistory();if(new URLSearchParams(location.search).get('view')==='history')switchView('history')}catch(e){note(e.message,'err')}}"
+          if old not in ss: raise SystemExit('sessions deep-link marker missing')
+          ss=ss.replace(old,new,1)
+          sp.write_text(ss,encoding='utf-8')
+
+          Path('index.html').write_text(Path('admin-home.html').read_text(encoding='utf-8'),encoding='utf-8')
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
