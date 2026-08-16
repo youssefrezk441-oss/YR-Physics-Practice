@@ -1,0 +1,34 @@
+name: Apply admin page permission guard
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-admin-page-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add guard to protected pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files=['index.html','students-admin.html','student-detail-admin.html','sessions-admin.html','assets-admin.html','reviews-admin.html']
+          guard='<script type="module" src="./admin-page-guard.js"></script>\n'
+          for name in files:
+              p=Path(name); s=p.read_text(encoding='utf-8')
+              if 'admin-page-guard.js' in s: continue
+              marker='<script type="module">'
+              if marker not in s: raise SystemExit(f'module marker missing in {name}')
+              s=s.replace(marker,guard+marker,1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit guard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html students-admin.html student-detail-admin.html sessions-admin.html assets-admin.html reviews-admin.html
+          git commit -m "Guard admin pages with section permissions"
+          git push
