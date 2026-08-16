@@ -1,0 +1,46 @@
+name: Fix student login CSS
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-student-login-css.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix CSS artifacts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          replacements={
+            '/*Student login redesign */':'/* Student login redesign */',
+            '100%(!important':'100%)!important',
+            '.loginStagy{':'.loginStage{',
+            'isolate:isolate':'isolation:isolate',
+            '.92)!mportant':'.92)!important',
+            'rgba(123,168,205,.50)aimportant':'rgba(123,168,205,.50)!important',
+            'rgba(255,255,255,.28)aimportant':'rgba(255,255,255,.28)!important',
+            'content:"م؆صة الفيزياء"':'content:"منصة الفيزياء"',
+            '.loginShell{grid-template-columns:1fr gap:18px;':'.loginShell{grid-template-columns:1fr;gap:18px;',
+            'flex-wrap:content':'flex-wrap:wrap'
+          }
+          for old,new in replacements.items():
+              if old not in s: raise SystemExit('missing expected artifact: '+old)
+              s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html
+          git commit -m "Fix integrated login CSS artifacts"
+          git push
