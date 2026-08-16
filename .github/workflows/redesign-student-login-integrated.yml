@@ -1,10 +1,10 @@
 name: Redesign student login integrated
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - '.github/workflows/redesign-student-login-integrated.yml'
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,89 +15,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Redesign login only
+        env:
+          LOGIN_CSS_B64: LypTdHVkZW50IGxvZ2luIHJlZGVzaWduICovCi8qIExvZ2luIGlzIGludGVudGlvbmFsbHkgZml4ZWQgZGFyayBhbmQgaW5kZXBlbmRlbnQgZnJvbSB0aGUgc3R1ZGVudCdzIHRoZW1lIHByZWZlcmVuY2UuICovCmJvZHk6aGFzKCNsb2dpblZpZXc6bm90KC5oaWRkZW4pKXtiYWNrZ3JvdW5kOgogcmFkaWFsLWdyYWRpZW50KGNpcmNsZSBhdCAxMiUgMTIlLHJnYmEoMCwyMDksMjU1LC4xMiksdHJhbnNwYXJlbnQgMjclKSwKIHJhZGlhbC1ncmFkaWVudChjaXJjbGUgYXQgODYlIDgwJSxyZ2JhKDAsMTczLDIyMCwuMTApLHRyYW5zcGFyZW50IDMwJSksCiBsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCMwMjBiMTkgMCUsIzA2MTMyNiA0OCUsIzAzMGIxOCAxMDAlKCFpbXBvcnRhbnQ7Y29sb3I6I2Y4ZmFmYztvdmVyZmxvdy14OmhpZGRlbn0KYm9keTpoYXMoI2xvZ2luVmlldzpub3QoLmhpZGRlbikpIC53cmFwe21heC13aWR0aDoxNTAwcHghaW1wb3J0YW50O3BhZGRpbmc6MzBweCAyOHB4IDI2cHghaW1wb3J0YW50O21pbi1oZWlnaHQ6MTAwdmg7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLnRvcHtkaXNwbGF5Om5vbmUhaW1wb3J0YW50fQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgI21zZ3t3aWR0aDptaW4oMTAwJSw2MjBweCk7bWFyZ2luOjAgMCAxNHB4IGF1dG87cG9zaXRpb246cmVsYXRpdmU7ei1pbmRleDo1fQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgI21zZyAuZXJye2JhY2tncm91bmQ6IzQwMTQyMSFpbXBvcnRhbnQ7Y29sb3I6I2ZlY2RkMyFpbXBvcnRhbnQ7Ym9yZGVyOjFweCBzb2xpZCAjN2YxZDNkfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgI21zZyAub2t7YmFja2dyb3VuZDojMDczNjI4IWltcG9ydGFudDtjb2xvcjojYTdmM2QwIWltcG9ydGFudDtib3JkZXI6MXB4IHNvbGlkICMwZjc2NmV9CgoubG9naW5TdGFneXt3aWR0aDoxMDAlO21heC13aWR0aDoxNDQwcHg7bWFyZ2luOmF1dG87cG9zaXRpb246cmVsYXRpdmV9Ci5sb2dpbkJyYW5kQmFye2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7anVzdGlmeS1jb250ZW50OmZsZXgtc3RhcnQ7Z2FwOjE4cHg7bWFyZ2luOjAgMCAyNHB4IGF1dG87d2lkdGg6NDIlO21pbi13aWR0aDo0ODBweDtjb2xvcjojZmZmO2ZvbnQtd2VpZ2h0Ojk1MDtmb250LXNpemU6MjhweDtsaW5lLWhlaWdodDoxLjI1O3BhZGRpbmctaW5saW5lOjEwcHh9Ci5sb2dpbkJyYW5kQmFyIC5wbGF0Zm9ybXtjb2xvcjojZmZmfS5sb2dpbkJyYW5kQmFyIC5wbGF0Zm9ybSBzdHJvbmd7Y29sb3I6IzIyZDNlZX0ubG9naW5CcmFuZEJhciAuZGl2aWRlcnt3aWR0aDoxcHg7aGVpZ2h0OjM2cHg7YmFja2dyb3VuZDpsaW5lYXItZ3JhZGllbnQoMTgwZGVnLHRyYW5zcGFyZW50LCMyMmQzZWUsdHJhbnNwYXJlbnQpO29wYWNpdHk6Ljl9LmxvZ2luQnJhbmRCYXIgLnRlYWNoZXJ7Zm9udC1zaXplOjI0cHg7Y29sb3I6I2Y4ZmFmY30KLmxvZ2luU2hlbGx7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczptaW5tYXgoMCwxLjM4ZnIpIG1pbm1heCg0MjBweCwuOTJmcik7Z2FwOjI4cHg7YWxpZ24taXRlbXM6c3RyZXRjaDtkaXJlY3Rpb246bHRyO21hcmdpbjowIWltcG9ydGFudDttYXgtd2lkdGg6bm9uZSFpbXBvcnRhbnR9Ci5sb2dpbkhlcm97Z3JpZC1jb2x1bW46MTtwb3NpdGlvbjpyZWxhdGl2ZTtvdmVyZmxvdzpoaWRkZW47Ym9yZGVyLXJhZGl1czoyOHB4O2JvcmRlcjoxcHggc29saWQgcmdiYSgzNCwyMTEsMjM4LC41OCk7YmFja2dyb3VuZDojMDQxMzI2O2JveC1zaGFkb3c6MCAyOHB4IDcwcHggcmdiYSgwLDAsMCwuMzUpLDAgMCAzNnB4IHJnYmEoMzQsMjExLDIzOCwuMDYpO21pbi1oZWlnaHQ6NzIwcHg7aXNvbGF0ZTppc29sYXRlfQoubG9naW5IZXJvOmJlZm9yZXtjb250ZW50OiIiO3Bvc2l0aW9uOmFic29sdXRlO2luc2V0Oi0xcHg7ei1pbmRleDoyO3BvaW50ZXItZXZlbnRzOm5vbmU7Ym9yZGVyLXJhZGl1czppbmhlcml0O2JhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDEzNWRlZyxyZ2JhKDM0LDIxMSwyMzgsLjE0KSx0cmFuc3BhcmVudCAyNiUsdHJhbnNwYXJlbnQgNzUlLHJnYmEoMzQsMjExLDIzOCwuMDgpKTttaXgtYmxlbmQtbW9kZTpzY3JlZW59Ci5sb2dpbkhlcm8gaW1ne3Bvc2l0aW9uOmFic29sdXRlO2luc2V0OjA7d2lkdGg6MTAwJTtoZWlnaHQ6MTAwJTtkaXNwbGF5OmJsb2NrO29iamVjdC1maXQ6Y292ZXI7b2JqZWN0LXBvc2l0aW9uOmNlbnRlcjtib3JkZXItcmFkaXVzOmluaGVyaXR9Ci5sb2dpblBhbmVse2dyaWQtY29sdW1uOjI7ZGlyZWN0aW9uOnJ0bDtwb3NpdGlvbjpyZWxhdGl2ZTtvdmVyZmxvdzpoaWRkZW47bWFyZ2luOjAhaW1wb3J0YW50O2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47anVzdGlmeS1jb250ZW50OmNlbnRlcjttaW4taGVpZ2h0OjcyMHB4O3BhZGRpbmc6NThweCA1NHB4IWltcG9ydGFudDtib3JkZXItcmFkaXVzOjI4cHghaW1wb3J0YW50O2JhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDE1NWRlZyxyZ2JhKDE0LDM0LDU4LC45NCkscmdiYSg1LDE5LDM2LC45NikpIWltcG9ydGFudDtib3JkZXI6MXB4IHNvbGlkIHJnYmEoMTExLDE3NywyMTUsLjQ4KSFpbXBvcnRhbnQ7Ym94LXNoYWRvdzowIDI4cHggNzBweCByZ2JhKDAsMCwwLC4zNCksaW5zZXQgMCAxcHggMCByZ2JhKDI1NSwyNTUsMjU1LC4wMzUpIWltcG9ydGFudDtjb2xvcjojZjhmYWZjIWltcG9ydGFudH0KLmxvZ2luUGFuZWw6YmVmb3Jle2NvbnRlbnQ6IiI7cG9zaXRpb246YWJzb2x1dGU7d2lkdGg6MzYwcHg7aGVpZ2h0OjM2MHB4O2JvcmRlci1yYWRpdXM6NTAlO3JpZ2h0Oi0xODBweDt0b3A6LTE5MHB4O2JhY2tncm91bmQ6cmdiYSgzNCwyMTEsMjM4LC4wNTUpO2ZpbHRlcjpibHVyKDNweCk7cG9pbnRlci1ldmVudHM6bm9uZX0KLmxvZ2luUGFuZWw6YWZ0ZXJ7Y29udGVudDoiIjtwb3NpdGlvbjphYnNvbHV0ZTt3aWR0aDoyODBweDtoZWlnaHQ6MjgwcHg7Ym9yZGVyLXJhZGl1czo1MCU7bGVmdDotMTcwcHg7Ym90dG9tOi0xNjBweDtiYWNrZ3JvdW5kOnJnYmEoMzcsOTksMjM1LC4wNik7cG9pbnRlci1ldmVudHM6bm9uZX0KLmxvZ2luUGFuZWw+Kntwb3NpdGlvbjpyZWxhdGl2ZTt6LWluZGV4OjF9Ci5sb2dpbklkZW50aXR5e2Rpc3BsYXk6bm9uZSFpbXBvcnRhbnR9Ci5sb2dpblBhbmVsIGgye2ZvbnQtc2l6ZTo0MnB4O2xpbmUtaGVpZ2h0OjEuMjU7bWFyZ2luOjAgMCAxMnB4IWltcG9ydGFudDt0ZXh0LWFsaWduOnJpZ2h0IWltcG9ydGFudDtjb2xvcjojZmZmIWltcG9ydGFudDtmb250LXdlaWdodDo5NTA7bGV0dGVyLXNwYWNpbmc6LS4wMmVtfQoubG9naW5QYW5lbCAubG9naW5IaW50e3RleHQtYWxpZ246cmlnaHQhaW1wb3J0YW50O2NvbG9yOiM4ZGE0YmYhaW1wb3J0YW50O21hcmdpbjowIDAgNDJweCFpbXBvcnRhbnQ7Zm9udC1zaXplOjE4cHg7bGluZS1oZWlnaHQ6MS43fQoubG9naW5QYW5lbCAuZ3JpZHtnYXA6MjJweCFpbXBvcnRhbnR9Ci5sb2dpbkZpZWxke3Bvc2l0aW9uOnJlbGF0aXZlfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgbGFiZWx7Zm9udC1zaXplOjE3cHghaW1wb3J0YW50O21hcmdpbi1ib3R0b206MTBweCFpbXBvcnRhbnQ7Y29sb3I6I2Y4ZmFmYyFpbXBvcnRhbnQ7Zm9udC13ZWlnaHQ6OTAwfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgaW5wdXR7aGVpZ2h0OjYycHghaW1wb3J0YW50O3BhZGRpbmc6MTVweCA1NHB4IDE1cHggMThweCFpbXBvcnRhbnQ7Ym9yZGVyLXJhZGl1czoxNHB4IWltcG9ydGFudDtmb250LXNpemU6MTdweCFpbXBvcnRhbnQ7YmFja2dyb3VuZDpyZ2JhKDE2LDM5LDY2LC45MikhbXBvcnRhbnQ7Ym9yZGVyOjFweCBzb2xpZCByZ2JhKDEyMywxNjgsMjA1LC41MClhaW1wb3J0YW50O2NvbG9yOiNmZmYhaW1wb3J0YW50O291dGxpbmU6bm9uZTt0cmFuc2l0aW9uOmJvcmRlci1jb2xvciAuMThzIGVhc2UsYm94LXNoYWRvdyAuMThzIGVhc2UsYmFja2dyb3VuZCAuMThzIGVhc2V9CmJvZHk6aGFzKCNsb2dpblZpZXc6bm90KC5oaWRkZW4pKSAubG9naW5QYW5lbCBpbnB1dDo6cGxhY2Vob2xkZXJ7Y29sb3I6Izc4OTBhYyFpbXBvcnRhbnQ7b3BhY2l0eToxfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgaW5wdXQ6Zm9jdXN7Ym9yZGVyLWNvbG9yOiMyMmQzZWUhaW1wb3J0YW50O2JveC1zaGFkb3c6MCAwIDAgM3B4IHJnYmEoMzQsMjExLDIzOCwuMTEpLDAgMCAyNXB4IHJnYmEoMzQsMjExLDIzOCwuMDcpIWltcG9ydGFudDtiYWNrZ3JvdW5kOnJnYmEoMTgsNDUsNzYsLjk4KSFpbXBvcnRhbnR9Ci5sb2dpbkZpZWxkSWNvbntwb3NpdGlvbjphYnNvbHV0ZTtyaWdodDoxOHB4O2JvdHRvbToxOHB4O3dpZHRoOjI2cHg7aGVpZ2h0OjI2cHg7ZGlzcGxheTpncmlkO3BsYWNlLWl0ZW1zOmNlbnRlcjtjb2xvcjojMjJkM2VlO2ZvbnQtc2l6ZToyMnB4O3BvaW50ZXItZXZlbnRzOm5vbmV9CmJvZHk6aGFzKCNsb2dpblZpZXc6bm90KC5oaWRkZW4pKSAubG9naW5QYW5lbCAucHJpbWFyeXtoZWlnaHQ6NjRweDttYXJnaW4tdG9wOjhweCFpbXBvcnRhbnQ7cGFkZGluZzoxNHB4IDIwcHghaW1wb3J0YW50O2JvcmRlci1yYWRpdXM6MTNweCFpbXBvcnRhbnQ7Zm9udC1zaXplOjI0cHghaW1wb3J0YW50O2ZvbnQtd2VpZ2h0Ojk1MCFpbXBvcnRhbnQ7Y29sb3I6I2ZmZiFpbXBvcnRhbnQ7YmFja2dyb3VuZDpsaW5lYXItZ3JhZGllbnQoOTBkZWcsIzA2YjZkNCwjMjJjN2RmKSFpbXBvcnRhbnQ7Ym9yZGVyOjFweCBzb2xpZCAjNjdlOGY5IWltcG9ydGFudDtib3gtc2hhZG93OjAgMTBweCAzMHB4IHJnYmEoNiwxODIsMjEyLC4xOCksaW5zZXQgMCAxcHggMCByZ2JhKDI1NSwyNTUsMjU1LC4yOClhaW1wb3J0YW50O3RyYW5zaXRpb246dHJhbnNmb3JtIC4xOHMgZWFzZSxmaWx0ZXIgLjE4cyBlYXNlLGJveC1zaGFkb3cgLjE4cyBlYXNlfQpib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgLnByaW1hcnk6aG92ZXJ7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoLTFweCk7ZmlsdGVyOmJyaWdodG5lc3MoMS4wNSk7Ym94LXNoYWRvdzowIDE0cHggMzZweCByZ2JhKDYsMTgyLDIxMiwuMjYpIWltcG9ydGFudH0KLmxvZ2luRm9vdGVye3RleHQtYWxpZ246Y2VudGVyIWltcG9ydGFudDtjb2xvcjojNjA3MzhiIWltcG9ydGFudDtmb250LXNpemU6MTNweCFpbXBvcnRhbnQ7bWFyZ2luLXRvcDozNHB4IWltcG9ydGFudH0ubG9naW5Gb290ZXIgYntjb2xvcjojOGRhNGJmIWltcG9ydGFudH0KLmxvZ2luUGxhdGZvcm1Ob3Rle2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7Z2FwOjlweDttYXJnaW4tdG9wOjI2cHg7Y29sb3I6IzZkODI5Yztmb250LXNpemU6MTNweDtsaW5lLWhlaWdodDoxLjd9LmxvZ2luUGxhdGZvcm1Ob3RlIHNwYW57d2lkdGg6N3B4O2hlaWdodDo3cHg7Ym9yZGVyLXJhZGl1czo1MCU7YmFja2dyb3VuZDojMjJkM2VlO2JveC1zaGFkb3c6MCAwIDEycHggcmdiYSgzNCwyMTEsMjM4LC44KTtmbGV4OjAgMCBhdXRvfQouYnJhbmQgaDF7Zm9udC1zaXplOjAhaW1wb3J0YW50fS5icmFuZCBoMTo6YWZ0ZXJ7Y29udGVudDoi2YXYhti12Kkg2KfZhNmB2YrYstmK2KfYoSI7Zm9udC1zaXplOjI0cHg7Zm9udC13ZWlnaHQ6OTAwfQoKQG1lZGlhKG1heC13aWR0aDoxMDUwcHgpewogYm9keTpoYXMoI2xvZ2luVmlldzpub3QoLmhpZGRlbikpIC53cmFwe3BhZGRpbmc6MjJweCAxOHB4IDI2cHghaW1wb3J0YW50O2p1c3RpZnktY29udGVudDpmbGV4LXN0YXJ0fQogLmxvZ2luQnJhbmRCYXJ7d2lkdGg6MTAwJTttaW4td2lkdGg6MDtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO21hcmdpbjowIGF1dG8gMjBweDtmb250LXNpemU6MjVweH0KIC5sb2dpbkJyYW5kQmFyIC50ZWFjaGVye2ZvbnQtc2l6ZToyMnB4fQogLmxvZ2luU2hlbGx7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciBnYXA6MThweDttYXgtd2lkdGg6NzYwcHghaW1wb3J0YW50O21hcmdpbjphdXRvIWltcG9ydGFudH0KIC5sb2dpbkhlcm97Z3JpZC1jb2x1bW46MTtncmlkLXJvdzoxO21pbi1oZWlnaHQ6MDthc3BlY3QtcmF0aW86MTYvMTB9CiAubG9naW5IZXJvIGltZ3twb3NpdGlvbjphYnNvbHV0ZTtvYmplY3QtZml0OmNvdmVyO29iamVjdC1wb3NpdGlvbjpjZW50ZXIgMjglfQogLmxvZ2luUGFuZWx7Z3JpZC1jb2x1bW46MTtncmlkLXJvdzoyO21pbi1oZWlnaHQ6MDtwYWRkaW5nOjM4cHggMzRweCFpbXBvcnRhbnR9CiAubG9naW5QYW5lbCBoMnt0ZXh0LWFsaWduOmNlbnRlciFpbXBvcnRhbnQ7Zm9udC1zaXplOjM0cHh9LmxvZ2luUGFuZWwgLmxvZ2luSGludHt0ZXh0LWFsaWduOmNlbnRlciFpbXBvcnRhbnQ7bWFyZ2luLWJvdHRvbTozMHB4IWltcG9ydGFudH0KfQpAbWVkaWEobWF4LXdpZHRoOjYyMHB4KXsKIGJvZHk6aGFzKCNsb2dpblZpZXc6bm90KC5oaWRkZW4pKSAud3JhcHtwYWRkaW5nOjE3cHggMTJweCAyMnB4IWltcG9ydGFudH0KIC5sb2dpbkJyYW5kQmFye2dhcDoxMHB4O2ZsZXgtd3JhcDpjb250ZW50O2ZvbnQtc2l6ZToyMnB4O21hcmdpbi1ib3R0b206MTVweH0ubG9naW5CcmFuZEJhciAudGVhY2hlcntmb250LXNpemU6MTlweH0ubG9naW5CcmFuZEJhciAuZGl2aWRlcntoZWlnaHQ6MjdweH0KIC5sb2dpblNoZWxse2dhcDoxM3B4fQogLmxvZ2luSGVyb3tib3JkZXItcmFkaXVzOjIxcHg7YXNwZWN0LXJhdGlvOjQvM30KIC5sb2dpbkhlcm8gaW1ne29iamVjdC1wb3NpdGlvbjpjZW50ZXIgMjIlfQogLmxvZ2luUGFuZWx7Ym9yZGVyLXJhZGl1czoyMXB4IWltcG9ydGFudDtwYWRkaW5nOjMwcHggMjBweCFpbXBvcnRhbnR9CiAubG9naW5QYW5lbCBoMntmb250LXNpemU6MjlweH0ubG9naW5QYW5lbCAubG9naW5IaW50e2ZvbnQtc2l6ZToxNXB4O21hcmdpbi1ib3R0b206MjZweCFpbXBvcnRhbnR9CiBib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgbGFiZWx7Zm9udC1zaXplOjE1cHghaW1wb3J0YW50fQogYm9keTpoYXMoI2xvZ2luVmlldzpub3QoLmhpZGRlbikpIC5sb2dpblBhbmVsIGlucHV0e2hlaWdodDo1N3B4IWltcG9ydGFudDtmb250LXNpemU6MTZweCFpbXBvcnRhbnR9CiBib2R5OmhhcygjbG9naW5WaWV3Om5vdCguaGlkZGVuKSkgLmxvZ2luUGFuZWwgLnByaW1hcnl7aGVpZ2h0OjU4cHg7Zm9udC1zaXplOjIwcHghaW1wb3J0YW50fQogLmxvZ2luRm9vdGVye21hcmdpbi10b3A6MjZweCFpbXBvcnRhbnQ7Zm9udC1zaXplOjEycHghaW1wb3J0YW50fS5sb2dpblBsYXRmb3JtTm90ZXtmb250LXNpemU6MTJweDttYXJnaW4tdG9wOjIwcHh9Cn0K
+          LOGIN_HTML_B64: PHNlY3Rpb24gaWQ9ImxvZ2luVmlldyIgY2xhc3M9ImxvZ2luU3RhZ2UiPgo8ZGl2IGNsYXNzPSJsb2dpbkJyYW5kQmFyIj48c3BhbiBjbGFzcz0icGxhdGZvcm0iPtmF2YbYtdipIDxzdHJvbmc+2KfZhNmB2YrYstmK2KfYoTwvc3Ryb25nPjwvc3Bhbj48c3BhbiBjbGFzcz0iZGl2aWRlciI+PC9zcGFuPjxzcGFuIGNsYXNzPSJ0ZWFjaGVyIj7Zhdiz2KrYsSDZitiv2LPZgSDYsdiy2YI8L3NwYW4+PC9kaXY+CjxkaXYgY2xhc3M9ImxvZ2luU2hlbGwiPgogIDxkaXYgY2xhc3M9ImxvZ2luSGVybyI+PGltZyBzcmM9Ii4vYXNzZXRzL3N0dWRlbnQtbG9naW4taGVyby53ZWJwIiBhbHQ9ItmF2YbYtdipINin2YTZgdmK2LLZitin2KEg4oCUINmF2LPYqtixINmK2YjYs9mBINix2LLZgiI+PC9kaXY+CiAgPGRpdiBjbGFzcz0ibG9naW5QYW5lbCBjYXJkIj4KICAgIDxoMj7Zhdix2K3YqNinINio2YMg2YXYrNiv2K/YpyE8L2gyPgogICAgPHAgY2xhc3M9ImxvZ2luSGludCI+2LPYrNmR2YQg2K/YrtmI2YTZgyDYpdmE2Ykg2K3Ys9in2KjZgTwvcD4KICAgIDxkaXYgY2xhc3M9ImdyaWQiPgogICAgICA8ZGl2IGNsYXNzPSJjMTIgbG9naW5GaWVsZCI+PGxhYmVsPtmD2YjYryDYp9mE2LfYp9mE2KjZhTwvbGFiZWw+PGlucHV0IGlkPSJzdHVkZW50Q29kZSIgYXV0b2NvbXBsZXRlPSJ1c2VybmFtZSIgcGxhY2Vob2xkZXI9Itij2K/YrtmEINmD2YjYryDYp9mE2LfYp9mE2KgiPjxzcGFuIGNsYXNzPSJsb2dpbkZpZWxkSWNvbiI+4pmZPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjMTIgbG9naW5GaWVsZCI+PGxhYmVsPtmD2YTZhdipINin2YTZhdix2YjYsjwvbGFiZWw+PGlucHV0IGlkPSJzdHVkZW50UGFzc3dvcmQiIHR5cGU9InBhc3N3b3JkIiBhdXRvY29tcGxldGU9ImN1cnJlbnQtcGFzc3dvcmQiIHBsYWNlaG9sZGVyPSLYo9iv2K7ZhCDZgdmE2YXZhyDYp9mE2YXYsdmI2LEiPjxzcGFuIGNsYXNzPSJsb2dpbkZpZWxkSWNvbiI+4pa7PC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjMTIiPjxidXR0b24gaWQ9ImxvZ2luQnRuIiBjbGFzcz0iYnRuIHByaW1hcnkgZnVsbCI+2K/YrtmI2YQ8L2J1dHRvbj48L2Rpdj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0ibG9naW5QbGF0Zm9ybU5vdGUiPjxzcGFuPjwvc3Bhbj7Yp9mE2KrYrNix2YrYqNin2Kog4oCiINin2YTZhdiq2KfYqNi52Kkg4oCiINin2YTZhdik2LTYsdin2Kog4oCiINmE2YjYrdipINin2YTYtNix2YE8L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImxvZ2luRm9vdGVyIj7YrNmF2YrYuSDYp9mE2K3ZgtmI2YIg2YXYrdmB2YjYuNipIOKAlCDxiPtiz2KrYsSDZitiv2LPZgSDYsdiy2YI8L2I+PC9kaXY+CiAgPC9kaXY+CjwvZGl2Pgo8L3NlY3Rpb24+
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
+          import os,re,base64
           p=Path('student.html')
           s=p.read_text(encoding='utf-8')
-
           marker='/* Student login redesign */'
-          if marker not in s:
-              raise SystemExit('login CSS marker missing')
-          a=s.index(marker)
-          b=s.index('</style>',a)
-          css=r'''/* Student login redesign */
-/* Login is intentionally fixed dark and independent from the student's theme preference. */
-body:has(#loginView:not(.hidden)){background:
- radial-gradient(circle at 12% 12%,rgba(0,209,255,.12),transparent 27%),
- radial-gradient(circle at 86% 80%,rgba(0,173,220,.10),transparent 30%),
- linear-gradient(135deg,#020b19 0%,#061326 48%,#030b18 100%)!important;color:#f8fafc;overflow-x:hidden}
-body:has(#loginView:not(.hidden)) .wrap{max-width:1500px!important;padding:30px 28px 26px!important;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-body:has(#loginView:not(.hidden)) .top{display:none!important}
-body:has(#loginView:not(.hidden)) #msg{width:min(100%,620px);margin:0 0 14px auto;position:relative;z-index:5}
-body:has(#loginView:not(.hidden)) #msg .err{background:#401421!important;color:#fecdd3!important;border:1px solid #7f1d3d}
-body:has(#loginView:not(.hidden)) #msg .ok{background:#073628!important;color:#a7f3d0!important;border:1px solid #0f766e}
-
-.loginStage{width:100%;max-width:1440px;margin:auto;position:relative}
-.loginBrandBar{display:flex;align-items:center;justify-content:flex-start;gap:18px;margin:0 0 24px auto;width:42%;min-width:480px;color:#fff;font-weight:950;font-size:28px;line-height:1.25;padding-inline:10px}
-.loginBrandBar .platform{color:#fff}.loginBrandBar .platform strong{color:#22d3ee}.loginBrandBar .divider{width:1px;height:36px;background:linear-gradient(180deg,transparent,#22d3ee,transparent);opacity:.9}.loginBrandBar .teacher{font-size:24px;color:#f8fafc}
-.loginShell{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(420px,.92fr);gap:28px;align-items:stretch;direction:ltr;margin:0!important;max-width:none!important}
-.loginHero{grid-column:1;position:relative;overflow:hidden;border-radius:28px;border:1px solid rgba(34,211,238,.58);background:#041326;box-shadow:0 28px 70px rgba(0,0,0,.35),0 0 36px rgba(34,211,238,.06);min-height:720px;isolation:isolate}
-.loginHero:before{content:"";position:absolute;inset:-1px;z-index:2;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,rgba(34,211,238,.14),transparent 26%,transparent 75%,rgba(34,211,238,.08));mix-blend-mode:screen}
-.loginHero img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;border-radius:inherit}
-.loginPanel{grid-column:2;direction:rtl;position:relative;overflow:hidden;margin:0!important;display:flex;flex-direction:column;justify-content:center;min-height:720px;padding:58px 54px!important;border-radius:28px!important;background:linear-gradient(155deg,rgba(14,34,58,.94),rgba(5,19,36,.96))!important;border:1px solid rgba(111,177,215,.48)!important;box-shadow:0 28px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035)!important;color:#f8fafc!important}
-.loginPanel:before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-180px;top:-190px;background:rgba(34,211,238,.055);filter:blur(3px);pointer-events:none}
-.loginPanel:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;left:-170px;bottom:-160px;background:rgba(37,99,235,.06);pointer-events:none}
-.loginPanel>*{position:relative;z-index:1}
-.loginIdentity{display:none!important}
-.loginPanel h2{font-size:42px;line-height:1.25;margin:0 0 12px!important;text-align:right!important;color:#fff!important;font-weight:950;letter-spacing:-.02em}
-.loginPanel .loginHint{text-align:right!important;color:#8da4bf!important;margin:0 0 42px!important;font-size:18px;line-height:1.7}
-.loginPanel .grid{gap:22px!important}
-.loginField{position:relative}
-body:has(#loginView:not(.hidden)) .loginPanel label{font-size:17px!important;margin-bottom:10px!important;color:#f8fafc!important;font-weight:900}
-body:has(#loginView:not(.hidden)) .loginPanel input{height:62px!important;padding:15px 54px 15px 18px!important;border-radius:14px!important;font-size:17px!important;background:rgba(16,39,66,.92)!important;border:1px solid rgba(123,168,205,.50)!important;color:#fff!important;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
-body:has(#loginView:not(.hidden)) .loginPanel input::placeholder{color:#7890ac!important;opacity:1}
-body:has(#loginView:not(.hidden)) .loginPanel input:focus{border-color:#22d3ee!important;box-shadow:0 0 0 3px rgba(34,211,238,.11),0 0 25px rgba(34,211,238,.07)!important;background:rgba(18,45,76,.98)!important}
-.loginFieldIcon{position:absolute;right:18px;bottom:18px;width:26px;height:26px;display:grid;place-items:center;color:#22d3ee;font-size:22px;pointer-events:none}
-body:has(#loginView:not(.hidden)) .loginPanel .primary{height:64px;margin-top:8px!important;padding:14px 20px!important;border-radius:13px!important;font-size:24px!important;font-weight:950!important;color:#fff!important;background:linear-gradient(90deg,#06b6d4,#22c7df)!important;border:1px solid #67e8f9!important;box-shadow:0 10px 30px rgba(6,182,212,.18),inset 0 1px 0 rgba(255,255,255,.28)!important;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
-body:has(#loginView:not(.hidden)) .loginPanel .primary:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 14px 36px rgba(6,182,212,.26)!important}
-.loginFooter{text-align:center!important;color:#60738b!important;font-size:13px!important;margin-top:34px!important}.loginFooter b{color:#8da4bf!important}
-.loginPlatformNote{display:flex;align-items:center;gap:9px;margin-top:26px;color:#6d829c;font-size:13px;line-height:1.7}.loginPlatformNote span{width:7px;height:7px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px rgba(34,211,238,.8);flex:0 0 auto}
-.brand h1{font-size:0!important}.brand h1::after{content:"منصة الفيزياء";font-size:24px;font-weight:900}
-
-@media(max-width:1050px){
- body:has(#loginView:not(.hidden)) .wrap{padding:22px 18px 26px!important;justify-content:flex-start}
- .loginBrandBar{width:100%;min-width:0;justify-content:center;margin:0 auto 20px;font-size:25px}
- .loginBrandBar .teacher{font-size:22px}
- .loginShell{grid-template-columns:1fr;gap:18px;max-width:760px!important;margin:auto!important}
- .loginHero{grid-column:1;grid-row:1;min-height:0;aspect-ratio:16/10}
- .loginHero img{position:absolute;object-fit:cover;object-position:center 28%}
- .loginPanel{grid-column:1;grid-row:2;min-height:0;padding:38px 34px!important}
- .loginPanel h2{text-align:center!important;font-size:34px}.loginPanel .loginHint{text-align:center!important;margin-bottom:30px!important}
-}
-@media(max-width:620px){
- body:has(#loginView:not(.hidden)) .wrap{padding:17px 12px 22px!important}
- .loginBrandBar{gap:10px;flex-wrap:wrap;font-size:22px;margin-bottom:15px}.loginBrandBar .teacher{font-size:19px}.loginBrandBar .divider{height:27px}
- .loginShell{gap:13px}
- .loginHero{border-radius:21px;aspect-ratio:4/3}
- .loginHero img{object-position:center 22%}
- .loginPanel{border-radius:21px!important;padding:30px 20px!important}
- .loginPanel h2{font-size:29px}.loginPanel .loginHint{font-size:15px;margin-bottom:26px!important}
- body:has(#loginView:not(.hidden)) .loginPanel label{font-size:15px!important}
- body:has(#loginView:not(.hidden)) .loginPanel input{height:57px!important;font-size:16px!important}
- body:has(#loginView:not(.hidden)) .loginPanel .primary{height:58px;font-size:20px!important}
- .loginFooter{margin-top:26px!important;font-size:12px!important}.loginPlatformNote{font-size:12px;margin-top:20px}
-}
-'''
+          if marker not in s: raise SystemExit('login CSS marker missing')
+          a=s.index(marker); b=s.index('</style>',a)
+          css=base64.b64decode(os.environ['LOGIN_CSS_B64']).decode('utf-8')
           s=s[:a]+css+'\n'+s[b:]
-
-          new_login='''<section id="loginView" class="loginStage">\n<div class="loginBrandBar"><span class="platform">منصة <strong>الفيزياء</strong></span><span class="divider"></span><span class="teacher">مستر يوسف رزق</span></div>\n<div class="loginShell">\n  <div class="loginHero"><img src="./assets/student-login-hero.webp" alt="منصة الفيزياء — مستر يوسف رزق"></div>\n  <div class="loginPanel card">\n    <h2>مرحبًا بك مجددًا!</h2>\n    <p class="loginHint">سجّل دخولك إلى حسابك</p>\n    <div class="grid">\n      <div class="c12 loginField"><label>كود الطالب</label><input id="studentCode" autocomplete="username" placeholder="أدخل كود الطالب"><span class="loginFieldIcon">♙</span></div>\n      <div class="c12 loginField"><label>كلمة المرور</label><input id="studentPassword" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور"><span class="loginFieldIcon">▣</span></div>\n      <div class="c12"><button id="loginBtn" class="btn primary full">دخول</button></div>\n    </div>\n    <div class="loginPlatformNote"><span></span>التدريبات • المتابعة • المؤشرات • لوحة الشرف</div>\n    <div class="loginFooter">جميع الحقوق محفوظة — <b>مستر يوسف رزق</b></div>\n  </div>\n</div>\n</section>'''
+          html=base64.b64decode(os.environ['LOGIN_HTML_B64']).decode('utf-8')
           pat=r'<section id="loginView" class="loginShell">.*?</section>(?=\s*<section id="dashboardView")'
-          s2,n=re.subn(pat,new_login,s,count=1,flags=re.S)
-          if n!=1:
-              raise SystemExit(f'login HTML replacement count={n}')
-          s=s2
+          s,n=re.subn(pat,html,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'login HTML replacement count={n}')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit redesign
