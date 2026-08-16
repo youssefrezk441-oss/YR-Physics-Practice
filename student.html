@@ -10,23 +10,23 @@ html[data-theme="dark"] .studentNavIcon{background:#1e293b}html[data-theme="dark
 @media(max-width:760px){.studentHomeGrid,.studentSubGrid,.studentSubGrid.two{grid-template-columns:1fr}.studentNavCard{min-height:165px}.studentSubHead{align-items:flex-start;flex-direction:column}.metricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.metricGrid .stat:last-child{grid-column:span 2}}
 
 
-/*Student login redesign */
+/* Student login redesign */
 /* Login is intentionally fixed dark and independent from the student's theme preference. */
 body:has(#loginView:not(.hidden)){background:
  radial-gradient(circle at 12% 12%,rgba(0,209,255,.12),transparent 27%),
  radial-gradient(circle at 86% 80%,rgba(0,173,220,.10),transparent 30%),
- linear-gradient(135deg,#020b19 0%,#061326 48%,#030b18 100%(!important;color:#f8fafc;overflow-x:hidden}
+ linear-gradient(135deg,#020b19 0%,#061326 48%,#030b18 100%)!important;color:#f8fafc;overflow-x:hidden}
 body:has(#loginView:not(.hidden)) .wrap{max-width:1500px!important;padding:30px 28px 26px!important;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body:has(#loginView:not(.hidden)) .top{display:none!important}
 body:has(#loginView:not(.hidden)) #msg{width:min(100%,620px);margin:0 0 14px auto;position:relative;z-index:5}
 body:has(#loginView:not(.hidden)) #msg .err{background:#401421!important;color:#fecdd3!important;border:1px solid #7f1d3d}
 body:has(#loginView:not(.hidden)) #msg .ok{background:#073628!important;color:#a7f3d0!important;border:1px solid #0f766e}
 
-.loginStagy{width:100%;max-width:1440px;margin:auto;position:relative}
+.loginStage{width:100%;max-width:1440px;margin:auto;position:relative}
 .loginBrandBar{display:flex;align-items:center;justify-content:flex-start;gap:18px;margin:0 0 24px auto;width:42%;min-width:480px;color:#fff;font-weight:950;font-size:28px;line-height:1.25;padding-inline:10px}
 .loginBrandBar .platform{color:#fff}.loginBrandBar .platform strong{color:#22d3ee}.loginBrandBar .divider{width:1px;height:36px;background:linear-gradient(180deg,transparent,#22d3ee,transparent);opacity:.9}.loginBrandBar .teacher{font-size:24px;color:#f8fafc}
 .loginShell{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(420px,.92fr);gap:28px;align-items:stretch;direction:ltr;margin:0!important;max-width:none!important}
-.loginHero{grid-column:1;position:relative;overflow:hidden;border-radius:28px;border:1px solid rgba(34,211,238,.58);background:#041326;box-shadow:0 28px 70px rgba(0,0,0,.35),0 0 36px rgba(34,211,238,.06);min-height:720px;isolate:isolate}
+.loginHero{grid-column:1;position:relative;overflow:hidden;border-radius:28px;border:1px solid rgba(34,211,238,.58);background:#041326;box-shadow:0 28px 70px rgba(0,0,0,.35),0 0 36px rgba(34,211,238,.06);min-height:720px;isolation:isolate}
 .loginHero:before{content:"";position:absolute;inset:-1px;z-index:2;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,rgba(34,211,238,.14),transparent 26%,transparent 75%,rgba(34,211,238,.08));mix-blend-mode:screen}
 .loginHero img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;border-radius:inherit}
 .loginPanel{grid-column:2;direction:rtl;position:relative;overflow:hidden;margin:0!important;display:flex;flex-direction:column;justify-content:center;min-height:720px;padding:58px 54px!important;border-radius:28px!important;background:linear-gradient(155deg,rgba(14,34,58,.94),rgba(5,19,36,.96))!important;border:1px solid rgba(111,177,215,.48)!important;box-shadow:0 28px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035)!important;color:#f8fafc!important}
@@ -39,21 +39,21 @@ body:has(#loginView:not(.hidden)) #msg .ok{background:#073628!important;color:#a
 .loginPanel .grid{gap:22px!important}
 .loginField{position:relative}
 body:has(#loginView:not(.hidden)) .loginPanel label{font-size:17px!important;margin-bottom:10px!important;color:#f8fafc!important;font-weight:900}
-body:has(#loginView:not(.hidden)) .loginPanel input{height:62px!important;padding:15px 54px 15px 18px!important;border-radius:14px!important;font-size:17px!important;background:rgba(16,39,66,.92)!mportant;border:1px solid rgba(123,168,205,.50)aimportant;color:#fff!important;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+body:has(#loginView:not(.hidden)) .loginPanel input{height:62px!important;padding:15px 54px 15px 18px!important;border-radius:14px!important;font-size:17px!important;background:rgba(16,39,66,.92)!important;border:1px solid rgba(123,168,205,.50)!important;color:#fff!important;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
 body:has(#loginView:not(.hidden)) .loginPanel input::placeholder{color:#7890ac!important;opacity:1}
 body:has(#loginView:not(.hidden)) .loginPanel input:focus{border-color:#22d3ee!important;box-shadow:0 0 0 3px rgba(34,211,238,.11),0 0 25px rgba(34,211,238,.07)!important;background:rgba(18,45,76,.98)!important}
 .loginFieldIcon{position:absolute;right:18px;bottom:18px;width:26px;height:26px;display:grid;place-items:center;color:#22d3ee;font-size:22px;pointer-events:none}
-body:has(#loginView:not(.hidden)) .loginPanel .primary{height:64px;margin-top:8px!important;padding:14px 20px!important;border-radius:13px!important;font-size:24px!important;font-weight:950!important;color:#fff!important;background:linear-gradient(90deg,#06b6d4,#22c7df)!important;border:1px solid #67e8f9!important;box-shadow:0 10px 30px rgba(6,182,212,.18),inset 0 1px 0 rgba(255,255,255,.28)aimportant;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+body:has(#loginView:not(.hidden)) .loginPanel .primary{height:64px;margin-top:8px!important;padding:14px 20px!important;border-radius:13px!important;font-size:24px!important;font-weight:950!important;color:#fff!important;background:linear-gradient(90deg,#06b6d4,#22c7df)!important;border:1px solid #67e8f9!important;box-shadow:0 10px 30px rgba(6,182,212,.18),inset 0 1px 0 rgba(255,255,255,.28)!important;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
 body:has(#loginView:not(.hidden)) .loginPanel .primary:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 14px 36px rgba(6,182,212,.26)!important}
 .loginFooter{text-align:center!important;color:#60738b!important;font-size:13px!important;margin-top:34px!important}.loginFooter b{color:#8da4bf!important}
 .loginPlatformNote{display:flex;align-items:center;gap:9px;margin-top:26px;color:#6d829c;font-size:13px;line-height:1.7}.loginPlatformNote span{width:7px;height:7px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px rgba(34,211,238,.8);flex:0 0 auto}
-.brand h1{font-size:0!important}.brand h1::after{content:"م؆صة الفيزياء";font-size:24px;font-weight:900}
+.brand h1{font-size:0!important}.brand h1::after{content:"منصة الفيزياء";font-size:24px;font-weight:900}
 
 @media(max-width:1050px){
  body:has(#loginView:not(.hidden)) .wrap{padding:22px 18px 26px!important;justify-content:flex-start}
  .loginBrandBar{width:100%;min-width:0;justify-content:center;margin:0 auto 20px;font-size:25px}
  .loginBrandBar .teacher{font-size:22px}
- .loginShell{grid-template-columns:1fr gap:18px;max-width:760px!important;margin:auto!important}
+ .loginShell{grid-template-columns:1fr;gap:18px;max-width:760px!important;margin:auto!important}
  .loginHero{grid-column:1;grid-row:1;min-height:0;aspect-ratio:16/10}
  .loginHero img{position:absolute;object-fit:cover;object-position:center 28%}
  .loginPanel{grid-column:1;grid-row:2;min-height:0;padding:38px 34px!important}
@@ -61,7 +61,7 @@ body:has(#loginView:not(.hidden)) .loginPanel .primary:hover{transform:translate
 }
 @media(max-width:620px){
  body:has(#loginView:not(.hidden)) .wrap{padding:17px 12px 22px!important}
- .loginBrandBar{gap:10px;flex-wrap:content;font-size:22px;margin-bottom:15px}.loginBrandBar .teacher{font-size:19px}.loginBrandBar .divider{height:27px}
+ .loginBrandBar{gap:10px;flex-wrap:wrap;font-size:22px;margin-bottom:15px}.loginBrandBar .teacher{font-size:19px}.loginBrandBar .divider{height:27px}
  .loginShell{gap:13px}
  .loginHero{border-radius:21px;aspect-ratio:4/3}
  .loginHero img{object-position:center 22%}
