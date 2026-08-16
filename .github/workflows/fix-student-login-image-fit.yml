@@ -1,0 +1,52 @@
+name: Fix student login image fit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-student-login-image-fit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch login image fit and autofill
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          replacements={
+            '.loginStage{width:100%;max-width:1440px;margin:auto;position:relative}':'.loginStage{width:100%;max-width:1180px;margin:auto;position:relative}',
+            '.loginBrandBar{display:flex;align-items:center;justify-content:flex-start;gap:18px;margin:0 0 24px auto;width:42%;min-width:480px;color:#fff;font-weight:950;font-size:28px;line-height:1.25;padding-inline:10px}':'.loginBrandBar{display:flex;align-items:center;justify-content:flex-start;gap:18px;margin:0 0 22px auto;width:52%;min-width:500px;color:#fff;font-weight:950;font-size:28px;line-height:1.25;padding-inline:10px}',
+            '.loginShell{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(420px,.92fr);gap:28px;align-items:stretch;direction:ltr;margin:0!important;max-width:none!important}':'.loginShell{display:grid;grid-template-columns:minmax(390px,500px) minmax(430px,560px);gap:28px;align-items:stretch;justify-content:center;direction:ltr;margin:0!important;max-width:none!important}',
+            '.loginHero{grid-column:1;position:relative;overflow:hidden;border-radius:28px;border:1px solid rgba(34,211,238,.58);background:#041326;box-shadow:0 28px 70px rgba(0,0,0,.35),0 0 36px rgba(34,211,238,.06);min-height:720px;isolation:isolate}':'.loginHero{grid-column:1;position:relative;overflow:hidden;border-radius:28px;border:1px solid rgba(34,211,238,.58);background:#041326;box-shadow:0 28px 70px rgba(0,0,0,.35),0 0 36px rgba(34,211,238,.06);min-height:0;aspect-ratio:2/3;isolation:isolate}',
+            '.loginHero img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;border-radius:inherit}':'.loginHero img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;object-position:center;border-radius:inherit;background:#041326}',
+            '.loginPanel{grid-column:2;direction:rtl;position:relative;overflow:hidden;margin:0!important;display:flex;flex-direction:column;justify-content:center;min-height:720px;padding:58px 54px!important;':'.loginPanel{grid-column:2;direction:rtl;position:relative;overflow:hidden;margin:0!important;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:52px 48px!important;'
+          }
+          for old,new in replacements.items():
+              if old not in s:
+                  raise SystemExit('missing expected CSS segment: '+old[:80])
+              s=s.replace(old,new,1)
+          anchor='body:has(#loginView:not(.hidden)) .loginPanel input:focus{border-color:#22d3ee!important;box-shadow:0 0 0 3px rgba(34,211,238,.11),0 0 25px rgba(34,211,238,.07)!important;background:rgba(18,45,76,.98)!important}'
+          autofill='''\nbody:has(#loginView:not(.hidden)) .loginPanel input:-webkit-autofill,\nbody:has(#loginView:not(.hidden)) .loginPanel input:-webkit-autofill:hover,\nbody:has(#loginView:not(.hidden)) .loginPanel input:-webkit-autofill:focus{\n -webkit-text-fill-color:#fff!important;\n caret-color:#fff!important;\n -webkit-box-shadow:0 0 0 1000px #102742 inset!important;\n box-shadow:0 0 0 1000px #102742 inset!important;\n border:1px solid rgba(123,168,205,.50)!important;\n transition:background-color 9999s ease-out 0s!important;\n}\n'''
+          if autofill.strip() not in s:
+              if anchor not in s: raise SystemExit('focus anchor missing')
+              s=s.replace(anchor,anchor+autofill,1)
+          s=s.replace('.loginHero{grid-column:1;grid-row:1;min-height:0;aspect-ratio:16/10}', '.loginHero{grid-column:1;grid-row:1;min-height:0;aspect-ratio:2/3;max-width:500px;width:100%;justify-self:center}',1)
+          s=s.replace('.loginHero img{position:absolute;object-fit:cover;object-position:center 28%}', '.loginHero img{position:absolute;object-fit:contain;object-position:center}',1)
+          s=s.replace('.loginHero{border-radius:21px;aspect-ratio:4/3}', '.loginHero{border-radius:21px;aspect-ratio:2/3;max-width:430px}',1)
+          s=s.replace('.loginHero img{object-position:center 22%}', '.loginHero img{object-position:center}',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html
+          git commit -m "Fix student login hero fit and autofill styling"
+          git push
