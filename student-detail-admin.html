@@ -13,6 +13,7 @@
 <section id="authView" class="card" style="max-width:520px;margin:50px auto"><h2 style="margin-top:0">تسجيل دخول المدير</h2><div style="display:grid;gap:10px"><input id="email" type="email" placeholder="البريد الإلكتروني" style="padding:11px;border:1px solid #d0d5dd;border-radius:10px;font:inherit"><input id="password" type="password" placeholder="كلمة المرور" style="padding:11px;border:1px solid #d0d5dd;border-radius:10px;font:inherit"><button id="loginBtn" class="btn primary">دخول</button></div></section>
 <section id="mainView" class="hidden"><div id="studentHeader"></div><div id="attemptsCard" class="card"><h2 style="margin-top:0;font-size:19px">سجل المحاولات بالتفصيل</h2><div id="attempts"></div></div></section>
 </div>
+<script type="module" src="./admin-page-guard.js"></script>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
 const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co',KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';

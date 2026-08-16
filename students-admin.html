@@ -12,6 +12,7 @@ K2-001 | محمد علي | 2 ثانوي | المستقبل | K2-A | YR123456</di
 <div class="grid" id="stats" style="margin-bottom:14px"></div>
 <div class="card"><div class="toolbar" style="justify-content:space-between"><div><h2 style="margin:0;font-size:19px">الطلاب</h2><div class="small muted" style="margin-top:4px">اضغط «ملف الطالب» لعرض جميع المحاولات وفتح تفاصيل كل محاولة سؤالًا بسؤال.</div></div><div class="toolbar"><input id="search" class="searchBox" placeholder="بحث بالاسم أو الكود أو السنتر أو المجموعة"><button id="refreshBtn" class="btn secondary">تحديث</button></div></div><div id="rows" style="margin-top:12px"></div></div>
 </section></div>
+<script type="module" src="./admin-page-guard.js"></script>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
 const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co',KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';const sb=createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));let students=[],lastBulk={created:[],failed:[]};

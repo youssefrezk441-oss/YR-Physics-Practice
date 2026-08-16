@@ -18,6 +18,7 @@
 <div class="card"><h2 class="section-title">رفع صورة جديدة</h2><div class="grid"><div class="c6"><label>مكان الصورة</label><select id="assetType"><option value="stem_image">مع السؤال</option><option value="explanation_image">مع شرح الحل</option></select></div><div class="c6"><label>ترتيب الصورة</label><input id="sortOrder" type="number" min="0" step="1" value="0"></div><div class="c12"><label>اختر الصورة</label><input id="file" type="file" accept="image/png,image/jpeg,image/webp"></div><div class="c6"><label>وصف مختصر للصورة — اختياري</label><input id="caption" placeholder="مثال: الرسم البياني للعلاقة بين السرعة والزمن"></div><div class="c6"><label>نص بديل لذوي الاحتياجات — اختياري</label><input id="altText" placeholder="وصف ما يظهر في الرسم"></div></div><div id="preview" class="preview hidden" style="margin-top:12px"></div><div class="toolbar" style="margin-top:12px"><button id="upload" class="btn primary">ضغط ورفع الصورة</button><span class="muted small">يتم تحويل الصورة إلى WebP بعرض أقصى 1600px قبل الرفع.</span></div></div>
 <div class="card"><h2 class="section-title">الصور المرتبطة بالسؤال</h2><div id="assets"></div></div>
 </div></div></div></section></div>
+<script type="module" src="./admin-page-guard.js"></script>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
 const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co',KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
