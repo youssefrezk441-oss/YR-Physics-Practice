@@ -1,0 +1,93 @@
+name: Build student commitment indicator
+on:
+  push:
+    paths:
+      - '.github/workflows/build-student-commitment.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build commitment indicator UI
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+
+          css='''
+/* Student commitment indicator */
+.commitmentHero{display:grid;grid-template-columns:250px 1fr;gap:28px;align-items:center;padding:26px;background:linear-gradient(135deg,#0f2747,#172033);color:#fff;border:0}.commitmentRing{--score:0;--ring-color:#16a34a;width:190px;height:190px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--ring-color) calc(var(--score)*1%),rgba(255,255,255,.15) 0);position:relative;margin:auto;box-shadow:0 14px 36px rgba(15,23,42,.18)}.commitmentRing:after{content:"";position:absolute;width:148px;height:148px;border-radius:50%;background:#10233d}.commitmentRingInner{position:relative;z-index:2;text-align:center}.commitmentRingValue{font-size:44px;font-weight:950;line-height:1}.commitmentRingLabel{font-size:13px;opacity:.75;margin-top:7px}.commitmentCopy h2{font-size:28px;margin:0 0 8px}.commitmentCopy p{margin:0;color:#cbd5e1;line-height:1.8}.commitmentLevel{display:inline-block;margin-top:14px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:900;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.13)}.commitmentFormula{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.commitmentFormula span{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.09);font-size:12px}.commitmentMetricGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:14px}.commitmentMetric{background:#fff;border:1px solid #e4e7ec;border-radius:15px;padding:15px;box-shadow:0 4px 14px rgba(15,23,42,.035)}.commitmentMetric .icon{font-size:24px}.commitmentMetric b{font-size:28px;display:block;margin:7px 0 4px}.commitmentMetric .detail{font-size:12px;color:#667085;line-height:1.65}.diagnosisCard{display:flex;gap:14px;align-items:flex-start}.diagnosisIcon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:#eef2ff;font-size:25px;flex:0 0 auto}.diagnosisCard h3{margin:0 0 5px;font-size:18px}.diagnosisCard p{margin:0;line-height:1.8;color:#667085}.commitmentLegend{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.commitmentLegend span{font-size:11px;padding:5px 8px;border-radius:999px;background:#f2f4f7}.trendGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:12px}.trendItem{border:1px solid #e4e7ec;border-radius:13px;padding:11px;background:#f8fafc;min-height:128px}.trendItem .n{font-weight:900}.trendItem .d{font-size:11px;color:#667085;margin:4px 0 9px}.trendPill{display:block;width:max-content;max-width:100%;font-size:11px;padding:4px 7px;border-radius:999px;margin-top:5px}.trendPresent{background:#ecfdf3;color:#027a48}.trendAbsent{background:#fff1f3;color:#be123c}.trendDone{background:#eff6ff;color:#1d4ed8}.trendPartial{background:#fffaeb;color:#b54708}.trendMissing{background:#fff1f3;color:#be123c}.trendUnknown{background:#f2f4f7;color:#667085}.commitmentTable{overflow-x:auto}.commitmentHead,.commitmentRow{display:grid;grid-template-columns:90px 120px minmax(180px,1fr) 110px 120px;gap:9px;align-items:center;min-width:720px}.commitmentHead{font-size:12px;font-weight:900;color:#667085;padding:9px;background:#f8fafc;border-radius:10px}.commitmentRow{padding:11px 9px;border-bottom:1px solid #eaecf0}.commitmentRow:last-child{border-bottom:0}.commitmentNote{font-size:12px;color:#667085;line-height:1.8;margin-top:12px}.commitmentEmpty{text-align:center;padding:40px 18px}.commitmentEmpty .big{font-size:48px;margin-bottom:8px}
+html[data-theme="dark"] .commitmentMetric,html[data-theme="dark"] .trendItem{background:#111827;border-color:#334155}html[data-theme="dark"] .commitmentMetric .detail,html[data-theme="dark"] .diagnosisCard p,html[data-theme="dark"] .trendItem .d,html[data-theme="dark"] .commitmentNote{color:#9ca3af}html[data-theme="dark"] .diagnosisIcon{background:#1e293b}html[data-theme="dark"] .commitmentLegend span,html[data-theme="dark"] .commitmentHead{background:#1e293b;color:#cbd5e1}html[data-theme="dark"] .commitmentRow{border-color:#334155}
+@media(max-width:800px){.commitmentHero{grid-template-columns:1fr;text-align:center}.commitmentFormula{justify-content:center}.commitmentMetricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.trendGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.trendItem:last-child:nth-child(odd){grid-column:span 2}}@media(max-width:480px){.commitmentRing{width:166px;height:166px}.commitmentRing:after{width:128px;height:128px}.commitmentRingValue{font-size:38px}.commitmentMetricGrid{grid-template-columns:1fr 1fr}.commitmentMetric b{font-size:24px}}
+
+'''
+          anchor='/* Student login redesign */'
+          if anchor not in s: raise SystemExit('commitment css anchor missing')
+          s=s.replace(anchor,css+anchor,1)
+
+          old_card='<button id="openCommitment" class="card studentNavCard" type="button"><div class="studentNavIcon">🎯</div><h3>مؤشر الالتزام</h3><p>الحضور والواجب والالتزام بالحصة.</p><span class="soonBadge">قريبًا</span></button>'
+          new_card='<button id="openCommitment" class="card studentNavCard" type="button"><div class="studentNavIcon">🎯</div><h3>مؤشر الالتزام</h3><p>الحضور والواجب واتجاه التزامك من بيانات حصصك الفعلية.</p></button>'
+          if old_card not in s: raise SystemExit('commitment card anchor missing')
+          s=s.replace(old_card,new_card,1)
+
+          view='''<section id="commitmentView" class="hidden">
+<div class="studentSubHead"><div><h2>🎯 مؤشر الالتزام</h2><p class="sectionIntro">يقيس انتظامك في الحضور وتسليم الواجبات من الحصص المسجلة فعليًا.</p></div><button id="backCommitmentMenu" class="btn secondary studentBack">العودة لمؤشراتي</button></div>
+<div id="commitmentLoading" class="card"><div class="empty">جاري حساب مؤشر الالتزام...</div></div>
+<div id="commitmentContent" class="hidden">
+<div class="commitmentHero card"><div><div id="commitmentRing" class="commitmentRing"><div class="commitmentRingInner"><div id="commitmentOverall" class="commitmentRingValue">—</div><div class="commitmentRingLabel">مؤشر الالتزام</div></div></div></div><div class="commitmentCopy"><h2 id="commitmentLevelTitle">مؤشر الالتزام</h2><p id="commitmentLevelText">يتم الحساب من بيانات حصصك المسجلة.</p><span id="commitmentLevelBadge" class="commitmentLevel">—</span><div id="commitmentFormula" class="commitmentFormula"></div><div class="commitmentLegend"><span>95–100 ممتاز</span><span>85–أقل من 95 جيد جدًا</span><span>70–أقل من 85 مقبول</span><span>أقل من 70 يحتاج تحسين</span></div></div></div>
+<div class="commitmentMetricGrid"><div class="commitmentMetric"><span class="icon">🏫</span><b id="commitmentAttendance">—</b><div id="commitmentAttendanceDetail" class="detail"></div></div><div class="commitmentMetric"><span class="icon">📚</span><b id="commitmentHomework">—</b><div id="commitmentHomeworkDetail" class="detail"></div></div><div class="commitmentMetric"><span class="icon">📅</span><b id="commitmentSessions">0</b><div class="detail">إجمالي الحصص المسجلة لك</div></div><div class="commitmentMetric"><span class="icon">⚡</span><b id="commitmentLast5">—</b><div id="commitmentLast5Detail" class="detail">آخر الحصص المسجلة</div></div></div>
+<div class="card diagnosisCard"><div id="commitmentDiagnosisIcon" class="diagnosisIcon">💡</div><div><h3 id="commitmentDiagnosisTitle">تحليل الالتزام</h3><p id="commitmentDiagnosisText"></p></div></div>
+<div class="card"><h3 style="margin:0">اتجاه الالتزام — آخر 5 حصص</h3><p class="sectionIntro">شاهد الحضور وحالة الواجب حصة بحصة.</p><div id="commitmentTrend" class="trendGrid"></div></div>
+<div class="card"><h3 style="margin:0 0 12px">تفاصيل الحصص</h3><div id="commitmentDetails" class="commitmentTable"></div><div id="commitmentFootnote" class="commitmentNote"></div></div>
+</div>
+</section>
+'''
+          before='<section id="comingSoonView" class="hidden">'
+          if before not in s: raise SystemExit('commitment view insertion anchor missing')
+          s=s.replace(before,view+before,1)
+
+          old_views="['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','comingSoonView','practiceView','resultView','reviewView']"
+          new_views="['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','comingSoonView','practiceView','resultView','reviewView']"
+          if old_views not in s: raise SystemExit('student views anchor missing')
+          s=s.replace(old_views,new_views,1)
+
+          fn_anchor="async function fn(body){const{data,error}=await sb.functions.invoke('student-practice',{body});if(error)throw new Error(error.message||'تعذر الاتصال');if(data?.error)throw new Error(data.message||data.error);return data}"
+          extra=r'''async function commitmentFn(){const{data,error}=await sb.functions.invoke('student-commitment',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل مؤشر الالتزام');if(data?.error)throw new Error(data.message||data.error);return data}
+function pctText(v){return v==null?'—':Number(v).toFixed(Number(v)%1?1:0)+'%'}
+function commitmentMeta(v){const n=Number(v);if(!Number.isFinite(n))return{label:'لا توجد بيانات',title:'ابدأ تسجيل الحصص أولًا',text:'سيظهر المؤشر تلقائيًا عندما تتوفر بيانات حضور أو واجب.',color:'#64748b'};if(n>=95)return{label:'ممتاز',title:'التزام ممتاز',text:'أنت في أعلى مستوى من الالتزام. حافظ على انتظامك في الحضور والواجب.',color:'#16a34a'};if(n>=85)return{label:'جيد جدًا',title:'التزام قوي',text:'أداؤك جيد جدًا، وأنت قريب من مستوى الالتزام الممتاز.',color:'#22c55e'};if(n>=70)return{label:'مقبول',title:'يمكنك رفع المؤشر بسهولة',text:'المؤشر مقبول، لكن تحسين الحضور أو الواجب سيصنع فرقًا واضحًا.',color:'#f59e0b'};return{label:'يحتاج تحسين',title:'الالتزام يحتاج تدخلًا',text:'راجع سبب الانخفاض بالأسفل وابدأ بأقرب نقطة قابلة للتحسين.',color:'#ef4444'}}
+function homeworkAr(v,has){if(!has)return{t:'لا يوجد واجب',c:'trendUnknown'};if(v==='done')return{t:'تم الواجب',c:'trendDone'};if(v==='partial')return{t:'واجب ناقص',c:'trendPartial'};if(v==='not_submitted')return{t:'لم يسلم',c:'trendMissing'};return{t:'غير مسجل',c:'trendUnknown'}}
+function diagnosisIcon(k){return k==='excellent'?'🌟':k==='homework'?'📚':k==='attendance'?'🏫':'💡'}
+function dateShort(v){if(!v)return'—';return new Date(v+'T12:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'})}
+function renderCommitment(d){const s=d.summary||{},m=commitmentMeta(s.overall);$('commitmentOverall').textContent=pctText(s.overall);$('commitmentRing').style.setProperty('--score',Math.max(0,Math.min(100,Number(s.overall||0))));$('commitmentRing').style.setProperty('--ring-color',m.color);$('commitmentLevelTitle').textContent=m.title;$('commitmentLevelText').textContent=m.text;$('commitmentLevelBadge').textContent=m.label;$('commitmentLevelBadge').style.borderColor=m.color;$('commitmentLevelBadge').style.color='#fff';$('commitmentAttendance').textContent=pctText(s.attendance_rate);$('commitmentAttendanceDetail').textContent=`حضر ${s.present||0} من ${s.total_sessions||0} حصة · غياب ${s.absent||0}`;$('commitmentHomework').textContent=pctText(s.homework_rate);$('commitmentHomeworkDetail').textContent=s.homework_rate==null?'لا توجد واجبات بحالة قابلة للحساب':`تم ${s.homework_done||0} · ناقص ${s.homework_partial||0} · لم يسلم ${s.homework_not_submitted||0}`;$('commitmentSessions').textContent=s.total_sessions||0;$('commitmentLast5').textContent=pctText(s.last5_score);$('commitmentLast5Detail').textContent=`آخر ${s.last5_count||0} حصة`;$('commitmentFormula').innerHTML=d.formula?.homework_weight?'<span>الحضور 60%</span><span>الواجب 40%</span>':'<span>الحضور 100% مؤقتًا</span><span>الواجب غير متاح للحساب</span>';$('commitmentDiagnosisIcon').textContent=diagnosisIcon(d.diagnosis?.kind);$('commitmentDiagnosisTitle').textContent=d.diagnosis?.title||'تحليل الالتزام';$('commitmentDiagnosisText').textContent=d.diagnosis?.message||'';
+const last=d.last5||[];$('commitmentTrend').innerHTML=last.length?last.map(x=>{const hw=homeworkAr(x.homework_status,x.has_homework),att=x.attendance==='absent'?['غائب','trendAbsent']:['حاضر','trendPresent'];return `<div class="trendItem"><div class="n">حصة ${Number(x.session_number)}</div><div class="d">${dateShort(x.session_date)}</div><span class="trendPill ${att[1]}">${att[0]}</span><span class="trendPill ${hw.c}">${hw.t}</span></div>`}).join(''):'<div class="empty" style="grid-column:1/-1">لا توجد حصص مسجلة حتى الآن.</div>';
+const rows=d.sessions||[];$('commitmentDetails').innerHTML=rows.length?'<div class="commitmentHead"><div>الحصة</div><div>التاريخ</div><div>العنوان</div><div>الحضور</div><div>الواجب</div></div>'+rows.map(x=>{const hw=homeworkAr(x.homework_status,x.has_homework),att=x.attendance==='absent'?['غائب','trendAbsent']:['حاضر','trendPresent'];return `<div class="commitmentRow"><div><b>${Number(x.session_number)}</b></div><div>${dateShort(x.session_date)}</div><div>${esc(x.title||'بدون عنوان')}</div><div><span class="trendPill ${att[1]}">${att[0]}</span></div><div><span class="trendPill ${hw.c}">${hw.t}</span></div></div>`}).join(''):'<div class="commitmentEmpty"><div class="big">📭</div><b>لا توجد حصص مسجلة لك حتى الآن</b><div class="muted small" style="margin-top:7px">سيظهر المؤشر تلقائيًا بعد تسجيل بيانات الحصص.</div></div>';
+const unknown=Number(s.homework_unknown||0);$('commitmentFootnote').textContent='مؤشر الالتزام يقيس الانضباط والمتابعة وليس المستوى العلمي مباشرة.'+(unknown?` يوجد ${unknown} واجب قديم حالته غير مسجلة وتم استبعاده من حساب الواجب حتى لا يؤثر عليك.`:'')}
+async function openCommitmentView(){clearMsg();showOnly('commitmentView');$('commitmentLoading').classList.remove('hidden');$('commitmentContent').classList.add('hidden');try{const d=await commitmentFn();renderCommitment(d);$('commitmentLoading').classList.add('hidden');$('commitmentContent').classList.remove('hidden')}catch(e){$('commitmentLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل المؤشر')+'</div>'}}
+'''
+          if fn_anchor not in s: raise SystemExit('student fn anchor missing')
+          s=s.replace(fn_anchor,fn_anchor+'\n'+extra,1)
+
+          old="$('openCommitment').onclick=()=>openSoon('🎯 مؤشر الالتزام','قريبًا — سيتم تفعيل المؤشر بعد ربط بيانات الحضور والواجب المسجلة في الحصص بصفحة الطالب.','indicatorsMenuView');"
+          new="$('openCommitment').onclick=()=>openCommitmentView();$('backCommitmentMenu').onclick=()=>showOnly('indicatorsMenuView');"
+          if old not in s: raise SystemExit('commitment click anchor missing')
+          s=s.replace(old,new,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate commitment UI
+        run: |
+          grep -q 'id="commitmentView"' student.html
+          grep -q "student-commitment" student.html
+          grep -q "openCommitmentView" student.html
+          ! grep -q 'مؤشر الالتزام</h3><p>الحضور والواجب والالتزام بالحصة.</p><span class="soonBadge"' student.html
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html
+          git commit -m "Activate student commitment indicator"
+          git push
