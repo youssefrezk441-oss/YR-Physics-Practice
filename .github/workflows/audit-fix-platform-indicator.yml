@@ -1,0 +1,41 @@
+name: Audit fix platform indicator
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-fix-platform-indicator.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Align platform indicator with honor board
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          new_fn="""function renderPlatformIndicators(){const activeSlugs=new Set(sets.map(x=>String(x.slug||''))),activeHistory=history.filter(x=>activeSlugs.has(String(x.slug||''))),completed=activeHistory.filter(x=>x.status!=='in_progress'),graded=activeHistory.filter(x=>x.status==='graded'&&x.percentage!=null),completedSets=new Set(completed.map(x=>String(x.slug||x.title||x.id)));$('attemptsStat').textContent=completed.length;$('completedStat').textContent=completedSets.size;const ratio=sets.length?Math.min(100,Math.round(((completedSets.size/sets.length*100)+1e-9)*10)/10):0;$('completionStat').textContent=(Number.isInteger(ratio)?String(ratio):ratio.toFixed(1))+'%';const bestBySet=new Map;graded.forEach(x=>{const k=String(x.slug||x.title||x.id),v=Number(x.percentage);if(Number.isFinite(v)&&(!bestBySet.has(k)||v>bestBySet.get(k)))bestBySet.set(k,v)});const bestValues=[...bestBySet.values()],avg=bestValues.length?bestValues.reduce((a,v)=>a+v,0)/bestValues.length:null,best=bestValues.length?Math.max(...bestValues):null;$('averageStat').textContent=avg==null?'—':(Math.round((avg+1e-9)*10)/10).toFixed(1)+'%';$('bestStat').textContent=best==null?'—':(Math.round((best+1e-9)*10)/10).toFixed(1)+'%'}
+          function renderSets()"""
+          pattern=r"function renderPlatformIndicators\(\)\{.*?\}\nfunction renderSets\(\)"
+          ns,n=re.subn(pattern,new_fn,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'platform function replacement count={n}')
+          ns=ns.replace('<b id="averageStat">—</b><span class="small muted">متوسط الدرجات</span>','<b id="averageStat">—</b><span class="small muted">متوسط أفضل نتيجة</span>',1)
+          ns=ns.replace('المؤشرات محسوبة من تدريباتك ومحاولاتك الحالية على المنصة.','الإكمال محسوب من التدريبات النشطة، ومتوسط الأداء من أفضل نتيجة معتمدة لكل تدريب.',1)
+          p.write_text(ns,encoding='utf-8')
+          PY
+      - name: Validate platform indicator
+        run: |
+          grep -q 'const activeSlugs=new Set' student.html
+          grep -q 'متوسط أفضل نتيجة' student.html
+          grep -q 'الإكمال محسوب من التدريبات النشطة' student.html
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add student.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Align platform indicator with audited data rules'
+          git push
