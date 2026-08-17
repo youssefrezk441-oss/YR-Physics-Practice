@@ -1,0 +1,106 @@
+name: Build student class tests indicator
+on:
+  push:
+    paths:
+      - '.github/workflows/build-student-class-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build class tests indicator UI
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+
+          if '/* Student class tests indicator */' not in s:
+              css='''
+/* Student class tests indicator */
+.testsHero{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:center;padding:26px;background:linear-gradient(135deg,#111d3d,#172033);color:#fff;border:0}.testsScoreCircle{--score:0;--ring:#2563eb;width:178px;height:178px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--ring) calc(var(--score)*1%),rgba(255,255,255,.15) 0);position:relative;margin:auto}.testsScoreCircle:after{content:"";position:absolute;width:137px;height:137px;border-radius:50%;background:#121f38}.testsScoreInner{position:relative;z-index:2;text-align:center}.testsScoreValue{font-size:42px;font-weight:950;line-height:1}.testsScoreLabel{font-size:12px;opacity:.76;margin-top:7px}.testsHero h2{margin:0 0 8px;font-size:27px}.testsHero p{margin:0;color:#cbd5e1;line-height:1.8}.testsBadge{display:inline-block;margin-top:13px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:900}.testsMetricGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:14px}.testsMetric{background:#fff;border:1px solid #e4e7ec;border-radius:15px;padding:15px}.testsMetric .icon{font-size:24px}.testsMetric b{font-size:27px;display:block;margin:7px 0 4px}.testsMetric .detail{font-size:12px;color:#667085;line-height:1.65}.testsAnalysis{display:flex;gap:14px;align-items:flex-start}.testsAnalysisIcon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#eef2ff;font-size:24px;flex:0 0 auto}.testsAnalysis h3{margin:0 0 5px}.testsAnalysis p{margin:0;color:#667085;line-height:1.8}.testsTypes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.testsTypeCard{border:1px solid #e4e7ec;border-radius:13px;padding:13px;background:#f8fafc}.testsTypeCard b{display:block;font-size:18px;margin:5px 0}.testsTimeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:12px}.testsTimelineItem{border:1px solid #e4e7ec;border-radius:13px;padding:11px;background:#f8fafc;min-height:130px}.testsTimelineItem .name{font-weight:900;line-height:1.5}.testsTimelineItem .date{font-size:11px;color:#667085;margin:5px 0 8px}.testsPill{display:inline-block;font-size:11px;padding:4px 8px;border-radius:999px}.testsPill.good{background:#ecfdf3;color:#027a48}.testsPill.mid{background:#eff6ff;color:#1d4ed8}.testsPill.warn{background:#fffaeb;color:#b54708}.testsPill.bad{background:#fff1f3;color:#be123c}.testsPill.mutedPill{background:#f2f4f7;color:#667085}.testsTable{overflow-x:auto}.testsHead,.testsRow{display:grid;grid-template-columns:100px minmax(230px,1fr) 110px 100px 100px 110px;gap:9px;align-items:center;min-width:820px}.testsHead{font-size:12px;font-weight:900;color:#667085;padding:9px;background:#f8fafc;border-radius:10px}.testsRow{padding:11px 9px;border-bottom:1px solid #eaecf0}.testsRow:last-child{border-bottom:0}.testsNote{font-size:12px;color:#667085;line-height:1.8;margin-top:12px}
+html[data-theme="dark"] .testsMetric,html[data-theme="dark"] .testsTypeCard,html[data-theme="dark"] .testsTimelineItem{background:#111827;border-color:#334155}html[data-theme="dark"] .testsMetric .detail,html[data-theme="dark"] .testsAnalysis p,html[data-theme="dark"] .testsTimelineItem .date,html[data-theme="dark"] .testsNote{color:#9ca3af}html[data-theme="dark"] .testsAnalysisIcon,html[data-theme="dark"] .testsHead{background:#1e293b;color:#cbd5e1}html[data-theme="dark"] .testsRow{border-color:#334155}
+@media(max-width:800px){.testsHero{grid-template-columns:1fr;text-align:center}.testsMetricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.testsTypes{grid-template-columns:1fr}.testsTimeline{grid-template-columns:repeat(2,minmax(0,1fr))}.testsTimelineItem:last-child:nth-child(odd){grid-column:span 2}}@media(max-width:480px){.testsScoreCircle{width:160px;height:160px}.testsScoreCircle:after{width:123px;height:123px}.testsScoreValue{font-size:37px}.testsMetricGrid{grid-template-columns:1fr 1fr}.testsMetric b{font-size:23px}}
+
+'''
+              anchor='/* Student login redesign */'
+              if anchor not in s: raise SystemExit('tests css anchor missing')
+              s=s.replace(anchor,css+anchor,1)
+
+          old_card='<button id="openClassTests" class="card studentNavCard" type="button"><div class="studentNavIcon">🧪</div><h3>اختبارات الحصص</h3><p>متوسط ونتائج الكويزات والاختبارات الشاملة.</p><span class="soonBadge">قريبًا</span></button>'
+          new_card='<button id="openClassTests" class="card studentNavCard" type="button"><div class="studentNavIcon">🧪</div><h3>اختبارات الحصص</h3><p>متوسط الدرجات، أفضل نتيجة، اتجاه الأداء وتفاصيل كل اختبار.</p></button>'
+          if old_card in s:
+              s=s.replace(old_card,new_card,1)
+          elif new_card not in s:
+              raise SystemExit('class tests card anchor missing')
+
+          if '<section id="classTestsView" class="hidden">' not in s:
+              view='''<section id="classTestsView" class="hidden">
+<div class="studentSubHead"><div><h2>🧪 اختبارات الحصص</h2><p class="sectionIntro">نتائج الكويزات والاختبارات المسجلة لك داخل الحصص.</p></div><button id="backClassTestsMenu" class="btn secondary studentBack">العودة لمؤشراتي</button></div>
+<div id="classTestsLoading" class="card"><div class="empty">جاري تحميل نتائج الاختبارات...</div></div>
+<div id="classTestsContent" class="hidden">
+<div class="testsHero card"><div><div id="testsScoreCircle" class="testsScoreCircle"><div class="testsScoreInner"><div id="testsAverage" class="testsScoreValue">—</div><div class="testsScoreLabel">متوسط الدرجات</div></div></div></div><div><h2 id="testsPerformanceTitle">اختبارات الحصص</h2><p id="testsPerformanceText">يتم الحساب من درجات اختباراتك المسجلة فعليًا.</p><span id="testsPerformanceBadge" class="testsBadge">—</span></div></div>
+<div class="testsMetricGrid"><div class="testsMetric"><span class="icon">✅</span><b id="testsScored">0</b><div id="testsScoredDetail" class="detail">اختبارات لها درجة</div></div><div class="testsMetric"><span class="icon">🏅</span><b id="testsBest">—</b><div class="detail">أفضل نتيجة</div></div><div class="testsMetric"><span class="icon">⚡</span><b id="testsLatest">—</b><div id="testsLatestDetail" class="detail">آخر نتيجة مسجلة</div></div><div class="testsMetric"><span class="icon">🚫</span><b id="testsAbsent">0</b><div class="detail">اختبارات غياب</div></div></div>
+<div class="card testsAnalysis"><div id="testsAnalysisIcon" class="testsAnalysisIcon">📊</div><div><h3 id="testsAnalysisTitle">تحليل الأداء</h3><p id="testsAnalysisText"></p><p id="testsTrendText" style="margin-top:5px"></p></div></div>
+<div class="card"><h3 style="margin:0">حسب نوع الاختبار</h3><p class="sectionIntro">يظهر كل نوع موجود في بياناتك فقط.</p><div id="testsTypes" class="testsTypes"></div></div>
+<div class="card"><h3 style="margin:0">آخر الاختبارات</h3><p class="sectionIntro">آخر 5 اختبارات مرتبطة بحصصك.</p><div id="testsTimeline" class="testsTimeline"></div></div>
+<div class="card"><h3 style="margin:0 0 12px">تفاصيل الاختبارات</h3><div id="testsDetails" class="testsTable"></div><div id="testsFootnote" class="testsNote"></div></div>
+</div>
+</section>
+'''
+              anchor='<section id="commitmentView" class="hidden">'
+              if anchor not in s: raise SystemExit('tests view insertion anchor missing')
+              s=s.replace(anchor,view+anchor,1)
+
+          old_views="['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','comingSoonView','practiceView','resultView','reviewView']"
+          new_views="['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','comingSoonView','practiceView','resultView','reviewView']"
+          if old_views in s:
+              s=s.replace(old_views,new_views,1)
+          elif new_views not in s:
+              raise SystemExit('student views class tests anchor missing')
+
+          if 'async function classTestsFn()' not in s:
+              js=r'''async function classTestsFn(){const{data,error}=await sb.functions.invoke('student-class-tests',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل اختبارات الحصص');if(data?.error)throw new Error(data.message||data.error);return data}
+function testPctMeta(v){if(v==null)return{label:'غير مسجل',cls:'mutedPill',color:'#64748b'};const n=Number(v);if(n>=85)return{label:'ممتاز',cls:'good',color:'#16a34a'};if(n>=70)return{label:'جيد',cls:'mid',color:'#2563eb'};if(n>=50)return{label:'يحتاج تحسين',cls:'warn',color:'#f59e0b'};return{label:'يحتاج مراجعة',cls:'bad',color:'#ef4444'}}
+function testStatusMeta(r){if(r.status==='absent')return{label:'غائب',cls:'bad'};if(r.status==='scored'){const m=testPctMeta(r.percentage);return{label:m.label,cls:m.cls}}return{label:'غير مسجل',cls:'mutedPill'}}
+function testAnalysisIcon(k){return k==='excellent'?'🌟':k==='good'?'✅':k==='improve'?'📘':k==='alert'?'⚠️':'📊'}
+function testTypeLabel(v){return v||'اختبار'}
+function renderClassTests(d){const s=d.summary||{},perf=d.performance||{},avg=s.average_percentage,m=testPctMeta(avg);$('testsAverage').textContent=pctText(avg);$('testsScoreCircle').style.setProperty('--score',Math.max(0,Math.min(100,Number(avg||0))));$('testsScoreCircle').style.setProperty('--ring',m.color);$('testsPerformanceTitle').textContent=perf.title||'اختبارات الحصص';$('testsPerformanceText').textContent=perf.message||'يتم الحساب من الدرجات المسجلة.';$('testsPerformanceBadge').textContent=avg==null?'لا توجد درجات':m.label;$('testsPerformanceBadge').style.borderColor=m.color;$('testsScored').textContent=s.scored_tests||0;$('testsScoredDetail').textContent=`من ${s.total_tests||0} اختبار مرتبط بحصصك`;$('testsBest').textContent=pctText(s.best_percentage);$('testsLatest').textContent=pctText(s.latest_percentage);$('testsLatestDetail').textContent=s.latest_percentage==null?'لا توجد نتيجة مسجلة':`${s.latest_score??'—'} / ${s.latest_max_score??'—'}`;$('testsAbsent').textContent=s.absent_tests||0;$('testsAnalysisIcon').textContent=testAnalysisIcon(perf.kind);$('testsAnalysisTitle').textContent=perf.title||'تحليل الأداء';$('testsAnalysisText').textContent=perf.message||'';$('testsTrendText').textContent=d.trend?.message||'';
+const types=d.by_type||[];$('testsTypes').innerHTML=types.length?types.map(x=>`<div class="testsTypeCard"><span class="small muted">${esc(testTypeLabel(x.label))}</span><b>${pctText(x.avg_percentage)}</b><div class="small muted">${Number(x.scored||0)} بدرجة · ${Number(x.absent||0)} غياب · ${Number(x.total||0)} إجمالي</div></div>`).join(''):'<div class="empty" style="grid-column:1/-1">لا توجد أنواع اختبارات مسجلة حتى الآن.</div>';
+const last=d.last5||[];$('testsTimeline').innerHTML=last.length?last.map(r=>{const sm=testStatusMeta(r);const score=r.status==='scored'?`${Number(r.score)} / ${Number(r.max_score)} · ${pctText(r.percentage)}`:r.status==='absent'?'غائب عن الاختبار':'الدرجة غير مسجلة';return `<div class="testsTimelineItem"><div class="name">${esc(r.test_name||r.test_type_label||'اختبار')}</div><div class="date">${dateShort(r.session_date)} · حصة ${Number(r.session_number)}</div><span class="testsPill ${sm.cls}">${esc(sm.label)}</span><div class="small" style="margin-top:8px">${esc(score)}</div></div>`}).join(''):'<div class="empty" style="grid-column:1/-1">لا توجد اختبارات مرتبطة بحصصك حتى الآن.</div>';
+const rows=d.tests||[];$('testsDetails').innerHTML=rows.length?'<div class="testsHead"><div>التاريخ</div><div>الاختبار</div><div>النوع</div><div>الدرجة</div><div>النسبة</div><div>الحالة</div></div>'+rows.map(r=>{const sm=testStatusMeta(r);return `<div class="testsRow"><div>${dateShort(r.session_date)}</div><div><b>${esc(r.test_name||'اختبار')}</b><div class="small muted">الحصة ${Number(r.session_number)}${r.session_title?' · '+esc(r.session_title):''}</div></div><div>${esc(r.test_type_label||r.test_type||'اختبار')}</div><div>${r.status==='scored'?esc(Number(r.score)+' / '+Number(r.max_score)):'—'}</div><div>${r.status==='scored'?pctText(r.percentage):'—'}</div><div><span class="testsPill ${sm.cls}">${esc(sm.label)}</span></div></div>`}).join(''):'<div class="empty">لا توجد اختبارات مسجلة لك حتى الآن.</div>';$('testsFootnote').textContent='متوسط الدرجات يُحسب من الاختبارات التي لها درجة مسجلة فقط. الغياب يظهر منفصلًا ولا يُحوّل تلقائيًا إلى درجة صفر داخل المتوسط.'}
+async function openClassTestsView(){clearMsg();showOnly('classTestsView');$('classTestsLoading').innerHTML='<div class="empty">جاري تحميل نتائج الاختبارات...</div>';$('classTestsLoading').classList.remove('hidden');$('classTestsContent').classList.add('hidden');try{const d=await classTestsFn();renderClassTests(d);$('classTestsLoading').classList.add('hidden');$('classTestsContent').classList.remove('hidden')}catch(e){$('classTestsLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل اختبارات الحصص')+'</div>'}}
+'''
+              anchor='function pctText(v)'
+              if anchor not in s: raise SystemExit('class tests js insertion anchor missing')
+              s=s.replace(anchor,js+anchor,1)
+
+          old_event="$('" + "openClassTests').onclick=()=>openSoon('🧪 اختبارات الحصص','قريبًا — سيتم عرض نتائج الكويزات والاختبارات الشاملة بعد ربط بيانات الحصص بصفحة الطالب.','indicatorsMenuView');"
+          new_event="$('" + "openClassTests').onclick=()=>openClassTestsView();$('backClassTestsMenu').onclick=()=>showOnly('indicatorsMenuView');"
+          if old_event in s:
+              s=s.replace(old_event,new_event,1)
+          elif new_event not in s:
+              raise SystemExit('class tests event anchor missing')
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate class tests UI markers
+        run: |
+          grep -q 'student-class-tests' student.html
+          grep -q 'id="classTestsView"' student.html
+          grep -q "openClassTestsView" student.html
+          grep -q 'backClassTestsMenu' student.html
+      - name: Commit patched student page
+        run: |
+          if git diff --quiet -- student.html; then
+            echo 'No changes needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add student.html
+          git commit -m 'Activate student class tests indicator'
+          git push
