@@ -102,6 +102,33 @@ body:has(#loginView:not(.hidden)) .loginPanel .primary:hover{transform:translate
  .loginFooter{margin-top:26px!important;font-size:12px!important}.loginPlatformNote{font-size:12px;margin-top:20px}
 }
 
+
+/* Honor podium visual refinement */
+.honorPodium{gap:16px;padding:12px 6px 6px}
+.podiumCard{padding:17px 14px 14px;min-height:0!important;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.podiumCard.rank1{padding-top:20px;background:radial-gradient(circle at 50% 15%,rgba(246,196,83,.22),transparent 36%),linear-gradient(180deg,#fffaf0,#fff 68%);box-shadow:0 22px 48px rgba(217,155,40,.18)}
+.podiumMedal{font-size:27px;line-height:1;margin-bottom:7px}
+.podiumAvatar{width:70px;height:70px;margin:6px auto 12px;border-width:3px;background:linear-gradient(145deg,#f8fbff,#e4edff)}
+.rank1 .podiumAvatar{width:82px;height:82px;margin-top:7px}
+.podiumSymbol{font-size:31px;line-height:1;color:#183b73;font-family:Arial,sans-serif}
+.rank1 .podiumSymbol{font-size:37px}
+.rank2 .podiumSymbol{color:#667085}.rank3 .podiumSymbol{color:#a65f25}
+.podiumName{min-height:0;font-size:16px;line-height:1.55;margin:0 0 3px}
+.rank1 .podiumName{font-size:18px}
+.podiumGroup{margin:3px 0 9px;font-size:11px}
+.podiumScore{margin:0 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1}
+.podiumScore strong{font-size:30px;font-weight:950;letter-spacing:-.5px}
+.rank1 .podiumScore strong{font-size:36px}
+.podiumScore span{display:block;font-size:10px;color:#667085;font-weight:850;margin-top:4px}
+.podiumBadges{margin-top:auto;gap:5px}
+.podiumBadges .honorBadge{font-size:9.5px;padding:4px 7px;background:#fffaf0;border-color:#efd37d}
+.podiumBadges .honorBadge:first-child{background:#f8df91;color:#5f4100;border-color:#e5b83d;font-weight:950}
+.rank1:after{content:'المتصدر';position:absolute;top:12px;right:12px;padding:4px 8px;border-radius:999px;background:#f5c84c;color:#4b3300;font-size:9px;font-weight:950;box-shadow:0 5px 14px rgba(217,155,40,.18)}
+html[data-theme="dark"] .podiumCard.rank1{background:radial-gradient(circle at 50% 15%,rgba(246,196,83,.13),transparent 38%),linear-gradient(180deg,#2a2412,#111827 68%)}
+html[data-theme="dark"] .podiumAvatar{background:linear-gradient(145deg,#172554,#111827)}
+html[data-theme="dark"] .podiumScore span{color:#9ca3af}
+@media(max-width:820px){.honorPodium{gap:10px}.podiumCard{padding:15px 12px}.podiumCard.rank1{order:1}.podiumCard.rank2{order:2}.podiumCard.rank3{order:3}}
+
 </style>
 </head>
 <body><div class="wrap">
@@ -228,9 +255,9 @@ async function openClassTestsView(){clearMsg();showOnly('classTestsView');$('cla
 let honorData=null,honorGrade=null;
 async function honorFn(){const{data,error}=await sb.functions.invoke('student-honor-board',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل لوحة الشرف');if(data?.error)throw new Error(data.message||data.error);return data}
 function honorPct(v){return v==null?'—':Number(v).toFixed(Number(v)%1?1:0)+'%'}
-function honorInitials(name){const p=String(name||'طالب').trim().split(/\s+/).filter(Boolean);return ((p[0]?.[0]||'ط')+(p[1]?.[0]||'')).toUpperCase()}
+function honorPodiumSymbol(rank){return rank===1?'👑':rank===2?'★':'◆'}
 function honorBadges(list){return (list||[]).map(x=>`<span class="honorBadge">${esc(x)}</span>`).join('')}
-function honorPodiumCard(s,rank){if(!s)return '<div></div>';const medal=rank===1?'🥇':rank===2?'🥈':'🥉';return `<div class="podiumCard rank${rank}"><div class="podiumMedal">${medal}</div><div class="podiumAvatar">${esc(honorInitials(s.full_name))}</div><div class="podiumName">${esc(s.full_name)}</div><div class="podiumGroup">${esc(s.group_code||'')}</div><div class="podiumScore">${honorPct(s.overall)} <small>مؤشر التميز</small></div><div class="podiumBadges">${honorBadges(s.badges)}</div></div>`}
+function honorPodiumCard(s,rank){if(!s)return '<div></div>';const medal=rank===1?'🥇':rank===2?'🥈':'🥉';return `<div class="podiumCard rank${rank}"><div class="podiumMedal">${medal}</div><div class="podiumAvatar podiumSymbol" aria-hidden="true">${honorPodiumSymbol(rank)}</div><div class="podiumName">${esc(s.full_name)}</div><div class="podiumGroup">${esc(s.group_code||'')}</div><div class="podiumScore"><strong>${honorPct(s.overall)}</strong><span>مؤشر التميز</span></div><div class="podiumBadges">${honorBadges(s.badges)}</div></div>`}
 function honorMetricCell(label,value){return `<div class="honorCellMetric"><b>${honorPct(value)}</b><span>${label}</span></div>`}
 function honorTopRows(rows){if(!(rows||[]).length)return '<div class="honorEmpty">لا توجد بيانات كافية للترتيب حتى الآن.</div>';return `<div class="honorTopRow honorTopHead"><div>المركز</div><div>الطالب</div><div>التميز</div><div>اختبارات</div><div>التزام</div><div>واجب</div><div>منصة</div></div>`+rows.map(s=>`<div class="honorTopRow"><div><div class="honorRankNum">${s.rank}</div></div><div><div class="honorStudentName">${esc(s.full_name)}</div><div class="honorStudentMeta">${esc(s.group_code||'')} · ${honorBadges(s.badges)}</div></div><div class="honorOverallCell"><b>${honorPct(s.overall)}</b><div class="honorOverallBar"><i style="width:${Math.max(0,Math.min(100,Number(s.overall||0)))}%"></i></div></div>${honorMetricCell('اختبار',s.test_score)}${honorMetricCell('التزام',s.commitment_score)}${honorMetricCell('واجب',s.homework_score)}${honorMetricCell('منصة',s.platform_score)}</div>`).join('')}
 function honorRiserCards(rows){if(!(rows||[]).length)return '<div class="honorEmpty" style="grid-column:1/-1">نحتاج نتيجتين على الأقل لكل طالب حتى يظهر نجوم الصعود.</div>';return rows.map(s=>`<div class="honorRiser"><div class="arrow">↗️</div><div class="rise">+${Number(s.improvement).toFixed(Number(s.improvement)%1?1:0)}</div><div class="nm">${esc(s.full_name)}</div><span class="meta">${esc(s.group_code||'')} · ${honorPct(s.previous_test)} ← ${honorPct(s.latest_test)}</span></div>`).join('')}
