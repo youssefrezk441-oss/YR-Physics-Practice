@@ -1,22 +1,72 @@
-name: Inspect session delete anchors
+name: Patch session delete action
 on:
   push:
     paths:
       - '.github/workflows/inspect-sessions-delete-patch.yml'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
-  inspect:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Show relevant session code
+      - name: Add safe delete session control
         run: |
           python - <<'PY'
           from pathlib import Path
-          s=Path('sessions-admin.html').read_text(encoding='utf-8')
-          for i,line in enumerate(s.splitlines(),1):
-              if any(k in line for k in ['sessionId','loadHistory','openSession','newSessionBtn','saveBtn','historyRows']):
-                  print(f'{i}: {line}')
+          p=Path('sessions-admin.html')
+          s=p.read_text(encoding='utf-8')
+
+          old='.dark{background:#172033;color:#fff}'
+          new=old+'.danger{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}'
+          if '.danger{background:#fff1f2;color:#be123c' not in s:
+              if old not in s: raise SystemExit('danger css anchor missing')
+              s=s.replace(old,new,1)
+
+          old_btn='<div><button class="btn secondary editSession" data-id="${esc(s.id)}">فتح / تعديل</button></div>'
+          new_btn='<div><div class="toolbar"><button class="btn secondary editSession" data-id="${esc(s.id)}">فتح / تعديل</button><button class="btn danger permissionEditOnly deleteSession" data-id="${esc(s.id)}">حذف الحصة</button></div></div>'
+          if old_btn not in s and 'class="btn danger permissionEditOnly deleteSession"' not in s:
+              raise SystemExit('history action anchor missing')
+          s=s.replace(old_btn,new_btn,1)
+
+          old_bind="document.querySelectorAll('.editSession').forEach(b=>b.addEventListener('click',()=>openSession(b.dataset.id,true)))}"
+          new_bind="document.querySelectorAll('.editSession').forEach(b=>b.addEventListener('click',()=>openSession(b.dataset.id,true)));document.querySelectorAll('.deleteSession').forEach(b=>b.addEventListener('click',()=>deleteSession(b.dataset.id)))}"
+          if old_bind not in s and "querySelectorAll('.deleteSession')" not in s:
+              raise SystemExit('history binding anchor missing')
+          s=s.replace(old_bind,new_bind,1)
+
+          marker='async function openSession(id,switchToEntry=true)'
+          helper="""async function deleteSession(id){
+            if(!id)return;
+            if(!confirm('سيتم حذف هذه الحصة نهائيًا مع الحضور والواجب والاختبار والدرجات المرتبطة بها. هل تريد المتابعة؟'))return;
+            if(!confirm('تأكيد نهائي: حذف الحصة لا يمكن التراجع عنه. هل أنت متأكد؟'))return;
+            try{
+              const{data,error}=await sb.functions.invoke('admin-delete-session',{body:{session_id:id}});
+              if(error)throw new Error(error.message||'تعذر الاتصال بالخادم.');
+              if(data?.error)throw new Error(data.message||data.error);
+              const x=data?.session||{};
+              note(`تم حذف المحاضرة ${Number(x.session_number||0)} — ${x.group_code||''} نهائيًا.`);
+              await loadHistory();
+            }catch(e){note(e.message||'تعذر حذف الحصة.','err')}
+          }
+
+          """
+          if 'async function deleteSession(id)' not in s:
+              if marker not in s: raise SystemExit('openSession anchor missing')
+              s=s.replace(marker,helper+marker,1)
+
+          p.write_text(s,encoding='utf-8')
           PY
+      - name: Validate delete controls
+        run: |
+          grep -q "admin-delete-session" sessions-admin.html
+          grep -q "deleteSession" sessions-admin.html
+          grep -q "permissionEditOnly deleteSession" sessions-admin.html
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sessions-admin.html
+          git commit -m "Add safe delete action for class sessions"
+          git push
