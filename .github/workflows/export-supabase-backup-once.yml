@@ -1,0 +1,29 @@
+name: Export Supabase backup once
+on:
+  push:
+    paths:
+      - '.github/workflows/export-supabase-backup-once.yml'
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download protected backup
+        run: |
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/yr-backup-export-once?key=uivGjFkwAWvWRLHuUCCxwHyS8d5QWnGhdpt480hCBPQ' \
+            -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0amRoY29udWlxYmx4Zmp6cHpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2MDg5MjUsImV4cCI6MjEwMjE4NDkyNX0.KXImtheb-2xtEMddWA2n2M4O4LgcMI9FBc0RO3GXLrc' \
+            -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0amRoY29udWlxYmx4Zmp6cHpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2MDg5MjUsImV4cCI6MjEwMjE4NDkyNX0.KXImtheb-2xtEMddWA2n2M4O4LgcMI9FBc0RO3GXLrc' \
+            -o YR_Physics_Supabase_Backup_2026-08-18.zip
+      - name: Verify ZIP
+        run: |
+          unzip -t YR_Physics_Supabase_Backup_2026-08-18.zip
+          unzip -p YR_Physics_Supabase_Backup_2026-08-18.zip backup_manifest.json | head -80
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YR_Physics_Supabase_Backup_2026-08-18
+          path: YR_Physics_Supabase_Backup_2026-08-18.zip
+          if-no-files-found: error
+          retention-days: 1
