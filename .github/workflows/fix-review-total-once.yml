@@ -1,0 +1,53 @@
+name: Fix review total counter once
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-review-total-once.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch reviews admin counter
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('reviews-admin.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = "const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));let all=[],view=[],current=null,timer;"
+          new = "const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));let all=[],view=[],current=null,timer,reviewedTotal=0;"
+          if old not in s:
+              raise SystemExit('global state marker not found')
+          s = s.replace(old, new, 1)
+
+          old = "async function load(){const [pendingRes,reviewedRes]=await Promise.all([sb.from('admin_short_text_reviews').select('*').eq('grading_status','review').order('submitted_at',{ascending:true,nullsFirst:false}).limit(1000),sb.from('admin_short_text_reviews').select('*').in('grading_status',['correct','incorrect','partial']).order('submitted_at',{ascending:false,nullsFirst:false}).limit(500)]);if(pendingRes.error)throw pendingRes.error;if(reviewedRes.error)throw reviewedRes.error;all=[...(pendingRes.data||[]),...(reviewedRes.data||[])];renderStats();renderRows()}"
+          new = "async function load(){const [pendingRes,reviewedRes,reviewedCountRes]=await Promise.all([sb.from('admin_short_text_reviews').select('*').eq('grading_status','review').order('submitted_at',{ascending:true,nullsFirst:false}).limit(1000),sb.from('admin_short_text_reviews').select('*').in('grading_status',['correct','incorrect','partial']).order('submitted_at',{ascending:false,nullsFirst:false}).limit(500),sb.from('admin_short_text_reviews').select('response_id',{count:'exact',head:true}).in('grading_status',['correct','incorrect','partial'])]);if(pendingRes.error)throw pendingRes.error;if(reviewedRes.error)throw reviewedRes.error;if(reviewedCountRes.error)throw reviewedCountRes.error;reviewedTotal=reviewedCountRes.count??(reviewedRes.data||[]).length;all=[...(pendingRes.data||[]),...(reviewedRes.data||[])];renderStats();renderRows()}"
+          if old not in s:
+              raise SystemExit('load function marker not found')
+          s = s.replace(old, new, 1)
+
+          old = "<div class=\"c3 stat\"><b>'+r.length+'</b><span class=\"muted small\">إجابة تمت مراجعتها</span></div>"
+          new = "<div class=\"c3 stat\"><b>'+reviewedTotal+'</b><span class=\"muted small\">إجابة تمت مراجعتها — الإجمالي</span></div>"
+          if old not in s:
+              raise SystemExit('reviewed stat marker not found')
+          s = s.replace(old, new, 1)
+
+          old = "المقارنة تتم بين اقتراح AI والدرجة النهائية التي تعتمدها أنت."
+          new = "المقارنة تتم بين اقتراح AI والدرجة النهائية التي تعتمدها أنت. إحصاءات الدقة مبنية على أحدث '+r.length+' مراجعة محمّلة من إجمالي '+reviewedTotal+'."
+          if old not in s:
+              raise SystemExit('AI stats note marker not found')
+          s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reviews-admin.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix reviewed answers total counter"
+          git push
