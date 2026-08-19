@@ -1,0 +1,27 @@
+name: Patch unified metrics and honor UI
+on:
+  push:
+    paths:
+      - '.github/triggers/unified-metrics-honor.txt'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python .github/scripts/patch_unified_metrics_honor.py
+      - name: Validate
+        run: |
+          grep -q "جودة أفضل النتائج" student.html
+          grep -q "غياب أي كويز أو امتحان" student.html
+          grep -q "honorPhaseMeta" student.html
+          grep -q "r.readiness_score" assessment-admin.html
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html assessment-admin.html
+          git diff --cached --quiet || git commit -m "Unify student metrics and honor board UI"
+          git push
