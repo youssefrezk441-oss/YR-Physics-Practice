@@ -1,0 +1,41 @@
+name: Finalize honor board once
+on:
+  push:
+    paths:
+      - '.github/triggers/finalize-honor-board.txt'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python .github/scripts/finalize_honor_board.py
+      - name: Validate JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          for fn in ['student.html','admin-honor.html']:
+              t=Path(fn).read_text(encoding='utf-8')
+              scripts=re.findall(r'<script(?:\s+type="module")?>(.*?)</script>',t,re.S)
+              if not scripts: raise SystemExit(f'no scripts in {fn}')
+              for i,code in enumerate(scripts):
+                  code=re.sub(r'^\s*import[^;]+;','',code,flags=re.M)
+                  code=re.sub(r'^\s*export\s+','',code,flags=re.M)
+                  p=Path(tempfile.gettempdir())/f'check_{fn}_{i}.mjs'
+                  p.write_text(code,encoding='utf-8')
+                  subprocess.run(['node','--check',str(p)],check=True)
+          print('syntax ok')
+          PY
+      - name: Commit final honor board
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add student.html admin-honor.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Finalize honor board experience"
+          git push
