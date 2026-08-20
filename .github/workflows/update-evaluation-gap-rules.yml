@@ -1,7 +1,8 @@
-# trigger-via-merged-pr
+# manual-run-ready
 name: Update evaluation gap rules
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
