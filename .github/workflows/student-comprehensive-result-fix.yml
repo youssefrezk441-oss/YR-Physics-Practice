@@ -1,0 +1,85 @@
+name: Student comprehensive result fix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/student-comprehensive-result-fix.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch student comprehensive result UI
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+
+          def one(old,new,label):
+              global s
+              if old not in s:
+                  raise SystemExit(f'missing pattern: {label}')
+              s=s.replace(old,new,1)
+
+          # Add a dedicated comprehensive result card in Indicators.
+          marker='<button id="openPlatformIndicators" class="card studentNavCard" type="button">'
+          card='''<button id="openComprehensiveResult" class="card studentNavCard" type="button"><div class="studentNavIcon">🏆</div><h3>نتيجة الشامل</h3><p>درجتك في الامتحان الشامل ونسبتك ومقارنتها بمؤشر الاستعداد.</p></button>'''
+          one(marker,card+marker,'indicator card')
+
+          # Add dedicated result view before assessment view.
+          marker='<section id="assessmentCycleView" class="hidden">'
+          view='''<section id="comprehensiveResultView" class="hidden"><div class="studentSubHead"><div><h2>🏆 نتيجة الامتحان الشامل</h2><p class="sectionIntro">نتيجتك الرسمية بعد اعتماد الامتحان، مع مقارنة بمؤشر الاستعداد قبل الشامل.</p></div><button id="backComprehensiveResult" class="btn secondary studentBack">العودة لمؤشراتي</button></div><div id="comprehensiveResultLoading" class="card"><div class="empty">جاري تحميل نتيجة الشامل...</div></div><div id="comprehensiveResultBody" class="hidden"></div></section>\n'''
+          one(marker,view+marker,'result view')
+
+          # Register view in navigation.
+          one("'assessmentCycleView','honorView'","'assessmentCycleView','comprehensiveResultView','honorView'",'view registry')
+
+          # Dedicated rendering logic using the same central assessment API.
+          marker='async function openAssessmentCycleView()'
+          logic=r'''function comprehensiveCompareMeta(diff){if(diff==null)return{label:'المقارنة غير متاحة',icon:'➖',color:'#64748b',text:'مؤشر الاستعداد غير مكتمل، لذلك لا يمكن إجراء مقارنة عادلة.'};const d=Number(diff);if(Math.abs(d)<=5)return{label:'متوافق مع الاستعداد',icon:'✅',color:'#16a34a',text:'نتيجة الشامل قريبة من مؤشر الاستعداد قبل الامتحان.'};if(d>5)return{label:'أعلى من الاستعداد',icon:'📈',color:'#2563eb',text:'أداء الشامل جاء أعلى من مؤشرات ما قبل الامتحان.'};return{label:'أقل من الاستعداد',icon:'📉',color:'#dc2626',text:'نتيجة الشامل جاءت أقل من مؤشر الاستعداد قبل الامتحان.'}}
+function renderComprehensiveResult(d){const c=d.cycle||{},p=d.pre_comprehensive||{},comp=(d.comprehensive||[])[0]||{},status=comp.status||'not_entered';if(!c.id){$('comprehensiveResultBody').innerHTML='<div class="card empty">لا توجد دورة تقييم مرتبطة بحسابك.</div>';return}if(status!=='scored'&&status!=='absent'){$('comprehensiveResultBody').innerHTML='<div class="card empty"><div style="font-size:42px;margin-bottom:8px">⏳</div><b>لم تُعلن نتيجة الشامل بعد</b><div class="small muted" style="margin-top:8px">ستظهر هنا تلقائيًا بعد اعتماد النتيجة.</div></div>';return}const score=status==='absent'?0:Number(comp.score||0),max=Number(comp.max_score||0),pct=status==='absent'?0:Number(comp.percentage||0),ready=p.readiness_score==null?null:Number(p.readiness_score),diff=ready==null?null:Math.round((pct-ready)*10)/10,m=comprehensiveCompareMeta(diff),scoreText=status==='absent'?'0 / '+max+' — غياب':score+' / '+max;const diffText=diff==null?'—':(diff>0?'+':'')+diff.toFixed(1)+' نقطة';$('comprehensiveResultBody').innerHTML=`<div class="card" style="padding:0;overflow:hidden;border:0;background:linear-gradient(135deg,#081b3a,#000073);color:#fff"><div style="padding:28px;text-align:center"><div style="font-size:13px;opacity:.75;margin-bottom:7px">${esc(comp.test_name||'الامتحان الشامل')}</div><div style="font-size:48px;font-weight:950;line-height:1.05">${esc(scoreText)}</div><div style="font-size:29px;font-weight:900;color:#f4c84e;margin-top:9px">${pctText(pct)}</div><div style="font-size:12px;opacity:.75;margin-top:8px">${esc(c.grade_level||'')} · نتيجة معتمدة</div></div></div><div class="card"><div class="metricGrid" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="stat"><b>${pctText(pct)}</b><span class="small muted">نسبة الشامل</span></div><div class="stat"><b>${ready==null?'—':pctText(ready)}</b><span class="small muted">مؤشر الاستعداد</span></div><div class="stat"><b>${esc(diffText)}</b><span class="small muted">الفرق</span></div></div></div><div class="card" style="border-right:5px solid ${m.color}"><div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:30px">${m.icon}</div><div><h3 style="margin:0 0 6px">${esc(m.label)}</h3><p class="muted" style="margin:0;line-height:1.8">${esc(m.text)}</p></div></div></div>`}
+async function openComprehensiveResultView(){clearMsg();showOnly('comprehensiveResultView');$('comprehensiveResultLoading').innerHTML='<div class="empty">جاري تحميل نتيجة الشامل...</div>';$('comprehensiveResultLoading').classList.remove('hidden');$('comprehensiveResultBody').classList.add('hidden');try{const d=await assessmentCycleFn();renderComprehensiveResult(d);$('comprehensiveResultLoading').classList.add('hidden');$('comprehensiveResultBody').classList.remove('hidden')}catch(e){$('comprehensiveResultLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل نتيجة الشامل')+'</div>'}}
+'''
+          one(marker,logic+marker,'result logic')
+
+          # Wire buttons.
+          marker="$('openAssessmentCycle').onclick=()=>openAssessmentCycleView();"
+          wiring=marker+"$('openComprehensiveResult').onclick=()=>openComprehensiveResultView();$('backComprehensiveResult').onclick=()=>showOnly('indicatorsMenuView');"
+          one(marker,wiring,'result button wiring')
+
+          # Rename the general test indicator because it now includes approved comprehensive exams.
+          s=s.replace('اختبارات الحصص','الاختبارات')
+
+          # Do not show a fake session number for standalone comprehensive exams.
+          old='<div class="date">${dateShort(r.session_date)} · حصة ${Number(r.session_number)}</div>'
+          new='<div class="date">${dateShort(r.session_date)}${r.session_number==null?\' · شامل\':\' · حصة \'+Number(r.session_number)}</div>'
+          if old in s:s=s.replace(old,new,1)
+          old2='<div class="small muted">الحصة ${Number(r.session_number)}${r.session_title?\' · \'+esc(r.session_title):\'\'}</div>'
+          new2='<div class="small muted">${r.session_number==null?\'امتحان شامل\':\'الحصة \'+Number(r.session_number)}${r.session_title?\' · \'+esc(r.session_title):\'\'}</div>'
+          if old2 in s:s=s.replace(old2,new2,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate inline module syntax
+        run: |
+          python - <<'PY'
+          import re
+          s=open('student.html',encoding='utf-8').read()
+          blocks=re.findall(r'<script type="module">(.*?)</script>',s,re.S)
+          if not blocks: raise SystemExit('no module scripts')
+          open('/tmp/student-inline.mjs','w',encoding='utf-8').write('\n'.join(blocks))
+          PY
+          node --check /tmp/student-inline.mjs
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Show comprehensive result to students"
+          git push
