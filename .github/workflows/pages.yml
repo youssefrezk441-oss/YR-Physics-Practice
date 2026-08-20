@@ -22,283 +22,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Preserve core pages
-        run: |
-          cp student.html student-core.html
-          cp reviews-admin.html reviews-admin-core.html
-      - name: Add question images to student page
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('student.html')
-          s=p.read_text(encoding='utf-8')
-          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
-          s=s.replace('</style>',css+'\n</style>',1)
-          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
-          helpers="""
-          function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
-          function assetHtml(q,type){return(q.assets||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
-          async function loadQuestionAssets(){const ids=questions.map(q=>q.id);if(!ids.length)return;const{data,error}=await sb.from('question_assets').select('question_id,asset_type,storage_path,caption,alt_text,sort_order').in('question_id',ids).order('sort_order');if(error){console.warn('question assets',error);return}const m=new Map();for(const a of data||[]){if(!m.has(a.question_id))m.set(a.question_id,[]);m.get(a.question_id).push(a)}questions=questions.map(q=>({...q,assets:m.get(q.id)||[]}))}
-          """
-          if state not in s: raise SystemExit('student state target missing')
-          s=s.replace(state,state+helpers,1)
-          old="questions=d.questions||[];answers={};qIndex=0;$('practiceTitle').textContent=currentSet.title;"
-          new="questions=d.questions||[];answers={};qIndex=0;await loadQuestionAssets();$('practiceTitle').textContent=currentSet.title;"
-          if old not in s: raise SystemExit('student start target missing')
-          s=s.replace(old,new,1)
-          old="<div class=\"question\">'+esc(q.stem)+'</div>';const a=answers[q.id]||{};"
-          new="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
-          if old not in s: raise SystemExit('student render target missing')
-          s=s.replace(old,new,1)
-          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div><div class=\"small\">"
-          new="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
-          if old not in s: raise SystemExit('student result stem target missing')
-          s=s.replace(old,new,1)
-          old="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+'</div>'"
-          new="+(r.explanation?'<div class=\"small\" style=\"margin-top:7px\"><b>الشرح:</b> '+esc(r.explanation)+'</div>':'')+assetHtml(q,'explanation_image')+'</div>'"
-          if old not in s: raise SystemExit('student result explanation target missing')
-          s=s.replace(old,new,1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Improve mobile equation layout
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('student.html')
-          s=p.read_text(encoding='utf-8')
-          css='''.choiceText{min-width:0;flex:1}.formula-inline,.formula-long{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;vertical-align:baseline}.formula-inline{display:inline-block}.formula-long{display:inline-block;max-width:100%}@media(max-width:700px){.formula-inline{font-size:.96em}.formula-long{display:block;width:max-content;max-width:100%;overflow-x:auto;overflow-y:hidden;margin:8px auto;padding:3px 2px;text-align:center;line-height:1.35;-webkit-overflow-scrolling:touch}.question .formula-long{font-size:1em}.choiceText .formula-long{margin:3px 0}.formula-long::-webkit-scrollbar{height:4px}}'''
-          s=s.replace('</style>',css+'\n</style>',1)
-          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
-          helpers=r"""
-          function isLongFormula(expr){const clean=String(expr??'').replace(/\s+/g,' ').trim();const operators=(clean.match(/[=+\-×÷*/]/g)||[]).length;const parens=(clean.match(/[()]/g)||[]).length;return clean.length>=18||operators>=4||parens>=4}
-          function formatMixedText(text){const safe=esc(text);return safe.replace(/\u2066([\s\S]*?)\u2069/g,(_,expr)=>'<span class="'+(isLongFormula(expr)?'formula-long':'formula-inline')+'">'+expr+'</span>')}
-          """
-          if state not in s: raise SystemExit('equation state target missing')
-          s=s.replace(state,helpers+state,1)
-          old="<div class=\"question\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
-          new="<div class=\"question\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image');const a=answers[q.id]||{};"
-          if old not in s: raise SystemExit('equation question target missing')
-          s=s.replace(old,new,1)
-          old="<span>'+esc(c.choice_text)+'</span></label>"
-          new="<span class=\"choiceText\">'+formatMixedText(c.choice_text)+'</span></label>"
-          if old not in s: raise SystemExit('equation choice target missing')
-          s=s.replace(old,new,1)
-          old="<div style=\"margin:7px 0\">'+esc(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
-          new="<div class=\"resultStem\" style=\"margin:7px 0\">'+formatMixedText(q.stem)+'</div>'+assetHtml(q,'stem_image')+'<div class=\"small\">"
-          if old not in s: raise SystemExit('equation result stem target missing')
-          s=s.replace(old,new,1)
-          old="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+esc(c.choice_text)+'</div>'"
-          new="'<div class=\"small\"><b>الإجابة الصحيحة:</b> '+formatMixedText(c.choice_text)+'</div>'"
-          if old not in s: raise SystemExit('equation correct choice target missing')
-          s=s.replace(old,new,1)
-          if "esc(r.explanation)" not in s: raise SystemExit('equation explanation target missing')
-          s=s.replace("esc(r.explanation)","formatMixedText(r.explanation)",1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Add student dark mode
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('student.html')
-          s=p.read_text(encoding='utf-8')
-          preload="""<script>(function(){try{var m=localStorage.getItem('yr-theme')||'system';var dark=m==='dark'||(m==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.dataset.themeMode=m}catch(e){}})();</script>"""
-          if '<head>' not in s: raise SystemExit('theme head target missing')
-          s=s.replace('<head>','<head>'+preload,1)
-          css='''html{color-scheme:light}html[data-theme="dark"]{color-scheme:dark;background:#0b1120;color:#e5e7eb}html[data-theme="dark"] body{background:linear-gradient(180deg,#0f172a 0,#0b1220 280px,#0b1120 100%);color:#e5e7eb}html[data-theme="dark"] .card{background:#111827;border-color:#293548;box-shadow:0 5px 18px rgba(0,0,0,.18)}html[data-theme="dark"] .hero{background:#172554;color:#f8fafc}html[data-theme="dark"] .muted,html[data-theme="dark"] .brand p,html[data-theme="dark"] .resultCaption,html[data-theme="dark"] .empty{color:#9ca3af}html[data-theme="dark"] input,html[data-theme="dark"] textarea{background:#0f172a;border-color:#374151;color:#f3f4f6}html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#6b7280}html[data-theme="dark"] .secondary{background:#1e293b;color:#bfdbfe}html[data-theme="dark"] .set{border-color:#334155;background:#111827}html[data-theme="dark"] .pill{background:#1f2937;color:#d1d5db}html[data-theme="dark"] .stat{background:#0f172a;border-color:#334155}html[data-theme="dark"] .choice{border-color:#374151;background:#111827}html[data-theme="dark"] .choice:hover{border-color:#64748b}html[data-theme="dark"] .choice.selected{border-color:#60a5fa;background:#172554}html[data-theme="dark"] .circle{background:#1f2937;color:#e5e7eb}html[data-theme="dark"] .progress{background:#273449}html[data-theme="dark"] .historyRow{border-bottom-color:#273449}html[data-theme="dark"] .answerCard{border-color:#374151;background:#111827}html[data-theme="dark"] .answerCard.good{border-color:#166534;background:#052e1b}html[data-theme="dark"] .answerCard.bad{border-color:#9f1239;background:#3f0d1d}html[data-theme="dark"] .answerCard.review{border-color:#a16207;background:#422006}html[data-theme="dark"] .err{background:#3f0d1d;color:#fda4af}html[data-theme="dark"] .ok{background:#052e1b;color:#86efac}html[data-theme="dark"] .qasset .cap{color:#9ca3af}.themeBtn{white-space:nowrap;min-width:116px}.topActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}@media(max-width:700px){.topActions{width:100%;justify-content:space-between}.themeBtn{min-width:0}}'''
-          s=s.replace('</style>',css+'\n</style>',1)
-          old='<div class="top"><div class="brand"><h1>منصة تدريبات الفيزياء</h1><p>مستر يوسف رزق</p></div><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div>'
-          new='<div class="top"><div class="brand"><h1>منصة تدريبات الفيزياء</h1><p>مستر يوسف رزق</p></div><div class="topActions"><button id="themeBtn" class="btn secondary themeBtn" type="button" title="تغيير المظهر">🌓 تلقائي</button><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div></div>'
-          if old not in s: raise SystemExit('theme topbar target missing')
-          s=s.replace(old,new,1)
-          state="let profile=null,sets=[],history=[],attemptId=null,currentSet=null,questions=[],answers={},qIndex=0,timerId=null,deadline=null;"
-          helpers="""
-          const THEME_KEY='yr-theme';const themeMedia=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;let themeMode=localStorage.getItem(THEME_KEY)||'system';
-          function themeLabel(mode){return mode==='dark'?'🌙 داكن':mode==='light'?'☀️ فاتح':'🌓 تلقائي'}
-          function applyTheme(mode){themeMode=['system','light','dark'].includes(mode)?mode:'system';const dark=themeMode==='dark'||(themeMode==='system'&&themeMedia&&themeMedia.matches);document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.dataset.themeMode=themeMode;const b=$('themeBtn');if(b){b.textContent=themeLabel(themeMode);b.setAttribute('aria-label','المظهر: '+themeLabel(themeMode))}}
-          function cycleTheme(){const next=themeMode==='system'?'light':themeMode==='light'?'dark':'system';localStorage.setItem(THEME_KEY,next);applyTheme(next)}
-          applyTheme(themeMode);$('themeBtn').onclick=cycleTheme;if(themeMedia){const sync=()=>{if(themeMode==='system')applyTheme('system')};if(themeMedia.addEventListener)themeMedia.addEventListener('change',sync);else if(themeMedia.addListener)themeMedia.addListener(sync)}
-          """
-          if state not in s: raise SystemExit('theme state target missing')
-          s=s.replace(state,helpers+state,1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Add question images to manual review
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('reviews-admin.html')
-          s=p.read_text(encoding='utf-8')
-          css='.qasset{margin:12px 0;text-align:center}.qasset img{display:block;max-width:100%;max-height:520px;margin:8px auto;border:1px solid #e4e7ec;border-radius:12px;background:#fff}.qasset .cap{font-size:12px;color:#667085;margin-top:5px}'
-          s=s.replace('</style>',css+'\n</style>',1)
-          a='<div id="stem" class="answer"></div>'
-          b='<div id="stem" class="answer"></div><div id="stemAssets"></div>'
-          if a not in s: raise SystemExit('review stem container target missing')
-          s=s.replace(a,b,1)
-          a='<div id="modelAnswer" class="model"></div>'
-          b='<div id="modelAnswer" class="model"></div><div id="explanationAssets"></div>'
-          if a not in s: raise SystemExit('review model container target missing')
-          s=s.replace(a,b,1)
-          marker='function rubricItems(r){'
-          helpers="""function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
-          function reviewAssetHtml(rows,type){return(rows||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
-          async function loadReviewAssets(qid){const{data,error}=await sb.from('question_assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
-          """
-          if marker not in s: raise SystemExit('review helper target missing')
-          s=s.replace(marker,helpers+marker,1)
-          old="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');$('attempt').innerHTML="
-          new="$('feedback').value=data.grading_status==='review'?'':(data.feedback||'');await loadReviewAssets(data.question_id);$('attempt').innerHTML="
-          if old not in s: raise SystemExit('review load target missing')
-          s=s.replace(old,new,1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Add admin navigation links
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          needle='<button class="btn tab" data-tab="structure">الدروس والمهارات</button>'
-          links='<a class="btn tab" style="text-decoration:none" href="./students-admin.html">إدارة الطلاب</a><a class="btn tab" style="text-decoration:none" href="./assets-admin.html">صور ورسومات الأسئلة</a><a class="btn tab" style="text-decoration:none" href="./reviews-admin.html">مراجعة المقالي</a>'
-          if needle not in s: raise SystemExit('admin nav target missing')
-          s=s.replace(needle,needle+links,1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Build hierarchical admin dashboard
-        run: |
-          python - <<'PY'
-          from pathlib import Path
+        uses: actions/checkout@v5
 
-          src=Path('index.html').read_text(encoding='utf-8')
-          css='''#adminView>.tabs{display:none!important}.adminSectionBack{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:10px 13px}.adminSectionBack a{color:#000073;text-decoration:none;font-weight:800}@media(max-width:700px){.adminSectionBack{align-items:flex-start;flex-direction:column}}'''
-          src=src.replace('</style>',css+'\n</style>',1)
-          marker='<div id="mainMsg"></div>'
-          back='<div class="adminSectionBack"><div><b>المحتوى والتدريبات</b><div class="muted small">أنت داخل أداة تنفيذية من لوحة المحتوى.</div></div><a href="./admin-content-menu.html">← العودة لأدوات المحتوى</a></div>'
-          if marker not in src: raise SystemExit('content admin main marker missing')
-          src=src.replace(marker,back+marker,1)
-          old="async function openAdmin(user){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('userBar').classList.remove('hidden');$('userEmail').textContent=user.email||'';await loadStructure();await loadQuestions()}"
-          new="async function openAdmin(user){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('userBar').classList.remove('hidden');$('userEmail').textContent=user.email||'';await loadStructure();await loadQuestions();const requested=new URLSearchParams(location.search).get('view');if(['questions','newQuestion','trainings','structure'].includes(requested))setMainTab(requested)}"
-          if old not in src: raise SystemExit('content admin openAdmin marker missing')
-          src=src.replace(old,new,1)
-          Path('content-admin.html').write_text(src,encoding='utf-8')
-
-          sp=Path('sessions-admin.html')
-          ss=sp.read_text(encoding='utf-8')
-          old="await loadHistory()}catch(e){note(e.message,'err')}}"
-          new="await loadHistory();if(new URLSearchParams(location.search).get('view')==='history')switchView('history')}catch(e){note(e.message,'err')}}"
-          if old not in ss: raise SystemExit('sessions deep-link marker missing')
-          ss=ss.replace(old,new,1)
-          sp.write_text(ss,encoding='utf-8')
-
-          Path('index.html').write_text(Path('admin-home.html').read_text(encoding='utf-8'),encoding='utf-8')
-          PY
-      - name: Align student platform indicator with unified score
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('student.html')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('الإكمال محسوب من التدريبات النشطة، وجودة الأداء = مجموع أفضل الدرجات الفعلية ÷ مجموع نهاياتها.','المؤشر الأساسي = مجموع أفضل درجاتك في التدريبات المكتملة ÷ مجموع درجات كل التدريبات النشطة. التدريب غير المكتمل تأثيره صفر.')
-          s=s.replace('<span class="small muted">جودة أفضل النتائج</span>','<span class="small muted">مؤشر المنصة</span>',1)
-          s=s.replace('<span class="small muted">أفضل نتيجة</span>','<span class="small muted">جودة التدريبات المكتملة</span>',1)
-          start=s.index('function renderPlatformIndicators(){')
-          end=s.index('function renderSets(){',start)
-          newfn="""function renderPlatformIndicators(){const activeSlugs=new Set(sets.map(x=>String(x.slug||''))),activeHistory=history.filter(x=>activeSlugs.has(String(x.slug||''))),completed=activeHistory.filter(x=>x.status!=='in_progress'),graded=activeHistory.filter(x=>x.status==='graded'&&x.percentage!=null),completedSets=new Set(completed.map(x=>String(x.slug||x.title||x.id)));$('attemptsStat').textContent=completed.length;$('completedStat').textContent=completedSets.size;const ratio=sets.length?Math.min(100,Math.round(((completedSets.size/sets.length*100)+1e-9)*10)/10):0;$('completionStat').textContent=(Number.isInteger(ratio)?String(ratio):ratio.toFixed(1))+'%';const bestBySet=new Map;graded.forEach(x=>{const k=String(x.slug||x.title||x.id),v=Number(x.percentage),score=Number(x.score),max=Number(x.max_score);if(!Number.isFinite(v)||!Number.isFinite(score)||!Number.isFinite(max)||max<=0)return;const old=bestBySet.get(k);if(!old||score>old.score||(score===old.score&&v>old.percentage))bestBySet.set(k,{percentage:v,score,max})});const bestValues=[...bestBySet.values()],sumScore=bestValues.reduce((a,x)=>a+x.score,0),sumCompletedMax=bestValues.reduce((a,x)=>a+x.max,0),quality=sumCompletedMax?sumScore/sumCompletedMax*100:null,totalPossible=sets.reduce((a,x)=>{const m=Number(x.max_score);return a+(Number.isFinite(m)&&m>0?m:0)},0),platformScore=totalPossible?sumScore/totalPossible*100:null;$('averageStat').textContent=platformScore==null?'—':(Math.round((platformScore+1e-9)*10)/10).toFixed(1)+'%';$('bestStat').textContent=quality==null?'—':(Math.round((quality+1e-9)*10)/10).toFixed(1)+'%'}
-"""
-          s=s[:start]+newfn+s[end:]
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Redesign foundation course evaluation for students
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          p=Path('student.html')
-          s=p.read_text(encoding='utf-8')
-
-          s=s.replace('<h3>تقييمي قبل الشامل</h3>','<h3>تقييمي في الكورس التأسيسي</h3>')
-          s=s.replace('رحلة أدائك قبل الشامل منفصلة عن أي نشاط تم بعده.','نتيجة الشامل ومؤشر الاستعداد وأهم مؤشرات أدائك في الكورس.')
-          s=s.replace('<h2>🎓 تقييمي قبل الشامل</h2>','<h2>🎓 تقييمي في الكورس التأسيسي</h2>')
-          s=s.replace('صورة أدائك وقت دخول الشامل؛ نشاطك اللاحق لا يغير الماضي.','نتيجة الشامل أولًا، ثم مؤشر الاستعداد وأهم مكونات أدائك في الكورس.')
-          s=s.replace('جاري تحميل دورة التقييم...','جاري تحميل تقييم الكورس...')
-          s=s.replace('تعذر تحميل تقييم ما قبل الشامل','تعذر تحميل تقييم الكورس التأسيسي')
-
-          css=r'''
-          /* Foundation course evaluation v3 */
-          .courseEval{display:grid;gap:14px}.courseResultHero{position:relative;overflow:hidden;text-align:center;padding:30px 20px;border:0;background:radial-gradient(circle at 18% 8%,rgba(255,211,90,.16),transparent 32%),linear-gradient(135deg,#06162f,#000073);color:#fff}.courseResultHero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(255,255,255,.08);border-radius:50%;left:-80px;bottom:-110px}.courseResultLabel{font-size:13px;color:#dbe7ff;font-weight:800}.courseResultScore{font-size:58px;font-weight:950;line-height:1;margin:10px 0 7px;letter-spacing:-1px}.courseResultPct{font-size:30px;font-weight:950;color:#f6c453}.courseResultName{font-size:12px;color:#aebfe8;margin-top:8px}.courseReadinessCard{padding:21px;border:1px solid #c7d2fe;background:linear-gradient(135deg,#f8faff,#eef2ff)}.courseReadinessTop{display:flex;align-items:center;justify-content:space-between;gap:16px}.courseReadinessTitle{font-weight:950;color:#000073}.courseReadinessValue{font-size:43px;font-weight:950;color:#000073;line-height:1}.courseQuizStrip{margin-top:15px;padding-top:13px;border-top:1px solid #dbe4ff;display:flex;align-items:center;justify-content:space-between;gap:12px}.courseQuizStrip b{font-size:18px}.courseQuizStrip span{font-size:12px;color:#667085}.courseMetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.courseMetricCard{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:16px}.courseMetricCard .courseMetricIcon{font-size:23px}.courseMetricCard .courseMetricTitle{font-size:12px;color:#667085;margin-top:6px}.courseMetricCard .courseMetricValue{font-size:29px;font-weight:950;margin:6px 0}.courseMetricCard .courseMetricDetail{font-size:12px;line-height:1.7;color:#667085}.courseCompare{padding:20px;border-radius:18px;border:1px solid var(--cmp-border,#bfdbfe);background:var(--cmp-bg,#eff6ff)}.courseCompareTop{display:flex;align-items:center;gap:13px}.courseCompareIcon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:27px;background:#fff;border:1px solid rgba(0,0,0,.06);flex:0 0 auto}.courseCompare h3{margin:0 0 4px;font-size:20px}.courseCompareDiff{font-size:12px;color:#667085}.courseReasons{margin-top:14px;padding-top:13px;border-top:1px solid rgba(100,116,139,.18)}.courseReasons b{display:block;margin-bottom:6px}.courseReasons ul{margin:0;padding-right:20px;line-height:1.8;color:#475467}.courseTeacherNote{margin-top:12px;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid rgba(0,0,0,.07);font-weight:850}.coursePending{padding:28px;text-align:center}.coursePending .big{font-size:48px;margin-bottom:8px}
-          html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#111c3b,#101827);border-color:#314a7d}html[data-theme="dark"] .courseReadinessTitle,html[data-theme="dark"] .courseReadinessValue{color:#c7d2fe}html[data-theme="dark"] .courseQuizStrip{border-color:#334155}html[data-theme="dark"] .courseQuizStrip span,html[data-theme="dark"] .courseMetricCard .courseMetricTitle,html[data-theme="dark"] .courseMetricCard .courseMetricDetail,html[data-theme="dark"] .courseCompareDiff{color:#9ca3af}html[data-theme="dark"] .courseMetricCard{background:#111827;border-color:#334155}html[data-theme="dark"] .courseCompare{background:#111827!important;border-color:#334155!important}html[data-theme="dark"] .courseCompareIcon,html[data-theme="dark"] .courseTeacherNote{background:#0f172a;border-color:#334155}html[data-theme="dark"] .courseReasons ul{color:#cbd5e1}
-          @media(max-width:700px){.courseResultScore{font-size:49px}.courseResultPct{font-size:26px}.courseReadinessTop{align-items:flex-start;flex-direction:column}.courseQuizStrip{align-items:flex-start;flex-direction:column}.courseMetricGrid{grid-template-columns:1fr}.courseMetricCard .courseMetricValue{font-size:27px}}
-          '''
-          s=s.replace('</style>',css+'\n</style>',1)
-
-          block=r'''function courseNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
-          function coursePct(v){const n=courseNum(v);if(n==null)return'—';const x=Math.round((n+1e-9)*10)/10;return x.toFixed(x%1?1:0)+'%'}
-          function courseScoreText(score,max,status){if(status==='absent')return '0 / '+Number(max||0)+' — غياب';if(status!=='scored')return 'لم تُعلن بعد';return Number(score||0)+' / '+Number(max||0)}
-          function courseCompPct(comp){if(comp?.status==='absent')return 0;const s=courseNum(comp?.score),m=courseNum(comp?.max_score);return comp?.status==='scored'&&m>0?Math.round((s/m*100+1e-9)*10)/10:null}
-          function courseCompare(compPct,readiness,p){
-            if(compPct==null||readiness==null)return{kind:'neutral',icon:'➖',title:'المقارنة غير متاحة بعد',diff:null,reasons:['سيظهر الفرق بين الشامل والاستعداد بمجرد اكتمال البيانات.'],consult:false};
-            const diff=Math.round((compPct-readiness+1e-9)*10)/10,ad=Math.abs(diff),q=courseNum(p.quizzes?.score_ratio),pq=courseNum(p.platform?.quality_ratio),att=courseNum(p.attendance?.rate),hw=courseNum(p.homework?.rate),reasons=[];
-            if(ad<=5)return{kind:'match',icon:'✅',title:'نتيجة الشامل متوافقة مع درجة الاستعداد',diff,reasons:['الفرق بسيط، ونتيجة الامتحان قريبة من المستوى الذي كانت تشير إليه بيانات الكورس.'],consult:false};
-            if(diff>5){
-              if(q!=null&&compPct-q>=8)reasons.push('نتيجة الشامل أعلى بوضوح من مستوى الكويزات؛ قد يكون حصل تحسن قوي مع المراجعة النهائية أو أداء أفضل يوم الامتحان.');
-              if(pq!=null&&compPct-pq>=8)reasons.push('نتيجة الشامل أعلى من جودة تدريبات المنصة؛ قد يكون تركيزك وتنفيذك في الامتحان كانا أفضل من التدريبات السابقة.');
-              if(!reasons.length)reasons.push('بيانات المنصة لا تُظهر سببًا مباشرًا للتفوق غير المتوقع؛ قد تكون المراجعة النهائية أو أداء يوم الامتحان أحدثا الفرق.');
-              return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد',diff,reasons:reasons.slice(0,2),consult:true};
-            }
-            if(q!=null&&q-compPct>=8)reasons.push('مستوى الكويزات كان أعلى من نتيجة الشامل؛ الانخفاض ظهر بشكل أساسي في الامتحان الشامل نفسه.');
-            if(pq!=null&&pq-compPct>=8)reasons.push('جودة تدريبات المنصة كانت أعلى من نتيجة الشامل؛ قد يكون هناك فرق بين الأداء أثناء التدريب والتنفيذ داخل الامتحان.');
-            const academic=[q,pq].filter(x=>x!=null),acad=academic.length?academic.reduce((a,b)=>a+b,0)/academic.length:null;
-            if(att!=null&&hw!=null&&att>=90&&hw>=90&&acad!=null&&Math.abs(acad-compPct)+3<Math.abs(readiness-compPct))reasons.push('الحضور والواجب المرتفعان ساهما في رفع درجة الاستعداد، بينما مؤشرات الأداء الأكاديمي أقرب لنتيجة الشامل.');
-            if(!reasons.length)reasons.push('مؤشرات ما قبل الشامل كانت أعلى، لكن البيانات لا تسجل سبب الانخفاض مباشرة؛ قد يرتبط بإدارة الوقت أو التركيز أو أخطاء في التنفيذ داخل الامتحان.');
-            return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد',diff,reasons:reasons.slice(0,2),consult:true};
-          }
-          function courseCompareStyle(kind){if(kind==='up')return'--cmp-bg:#eff6ff;--cmp-border:#93c5fd';if(kind==='down')return'--cmp-bg:#fff1f2;--cmp-border:#fecdd3';if(kind==='match')return'--cmp-bg:#ecfdf3;--cmp-border:#a7f3d0';return'--cmp-bg:#f8fafc;--cmp-border:#e4e7ec'}
-          function renderAssessmentCycle(d){
-            const box=$('assessmentBody');if(!box)return;if(!d.cycle){box.innerHTML='<div class="card coursePending"><div class="big">📭</div><b>لا يوجد تقييم متاح للكورس حاليًا.</b></div>';return}
-            const p=d.pre_comprehensive||{},a=p.attendance||{},h=p.homework||{},q=p.quizzes||{},pl=p.platform||{},comp=(d.comprehensive||[])[0]||{},status=comp.status||'not_entered';
-            const compPct=courseCompPct(comp),readiness=courseNum(p.readiness_score),cmp=courseCompare(compPct,readiness,p),diffText=cmp.diff==null?'—':(cmp.diff>0?'+':'')+cmp.diff+' نقطة',result=status==='scored'||status==='absent';
-            const examName=comp.test_name||comp.title||'الامتحان الشامل على الكورس التأسيسي';
-            const attendanceTotal=Number(a.present||0)+Number(a.absent||0),attendanceDetail=Number(a.present||0)+' حضور من '+attendanceTotal+' حصة';
-            const homeworkDetail=Number(h.done||0)+' كامل · '+Number(h.partial||0)+' ناقص · '+Number(h.not_submitted||0)+' لم يسلم';
-            const quizScore=q.possible_score?Number(q.earned_score||0)+' / '+Number(q.possible_score):'لا توجد درجات كافية';
-            const platformDetail=Number(pl.completed_trainings||0)+' من '+Number(pl.available_trainings||0)+' تدريب مكتمل',platformQuality=pl.quality_ratio==null?'—':coursePct(pl.quality_ratio);
-            box.innerHTML=`<div class="courseEval">
-              <div class="card courseResultHero"><div class="courseResultLabel">🏆 نتيجة الامتحان الشامل</div><div class="courseResultScore">${esc(courseScoreText(comp.score,comp.max_score,status))}</div><div class="courseResultPct">${result?coursePct(compPct):'بانتظار الإعلان'}</div><div class="courseResultName">${esc(examName)}</div></div>
-              <div class="card courseReadinessCard"><div class="courseReadinessTop"><div><div class="courseReadinessTitle">🎯 درجة الاستعداد قبل الشامل</div><div class="courseReadinessValue">${coursePct(readiness)}</div></div></div><div class="courseQuizStrip"><div><b>🧪 الكويزات ${coursePct(q.score_ratio)}</b></div><span>${esc(quizScore)} درجة</span></div></div>
-              <div class="courseMetricGrid">
-                <div class="courseMetricCard"><div class="courseMetricIcon">📅</div><div class="courseMetricTitle">الحضور</div><div class="courseMetricValue">${coursePct(a.rate)}</div><div class="courseMetricDetail">${esc(attendanceDetail)}</div></div>
-                <div class="courseMetricCard"><div class="courseMetricIcon">📚</div><div class="courseMetricTitle">الواجب</div><div class="courseMetricValue">${coursePct(h.rate)}</div><div class="courseMetricDetail">${esc(homeworkDetail)}</div></div>
-                <div class="courseMetricCard"><div class="courseMetricIcon">🚀</div><div class="courseMetricTitle">تدريبات المنصة</div><div class="courseMetricValue">${coursePct(pl.score)}</div><div class="courseMetricDetail">${esc(platformDetail)}<br>جودة الأداء ${platformQuality}</div></div>
-              </div>
-              <div class="courseCompare" style="${courseCompareStyle(cmp.kind)}"><div class="courseCompareTop"><div class="courseCompareIcon">${cmp.icon}</div><div><h3>${esc(cmp.title)}</h3><div class="courseCompareDiff">الفرق بين نسبة الشامل والاستعداد: ${esc(diffText)}</div></div></div><div class="courseReasons"><b>قراءة محتملة للنتيجة</b><ul>${cmp.reasons.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>${cmp.consult?'<div class="courseTeacherNote">💬 لمعرفة سبب الفرق بدقة، اتكلم مع مستر يوسف؛ بيانات المنصة تساعد في تحديد مكان الخلل أو سبب التفوق، لكنها لا تسجل كل ظروف يوم الامتحان.</div>':''}</div></div>
-            </div>`;
-          }
-          async function openAssessmentCycleView(){clearMsg();showOnly('assessmentCycleView');$('assessmentLoading').innerHTML='<div class="empty">جاري تحميل تقييم الكورس...</div>';$('assessmentLoading').classList.remove('hidden');$('assessmentBody').classList.add('hidden');try{const d=await assessmentCycleFn();renderAssessmentCycle(d);$('assessmentLoading').classList.add('hidden');$('assessmentBody').classList.remove('hidden')}catch(e){$('assessmentLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل تقييم الكورس التأسيسي')+'</div>'}}
-          '''
-          pattern=re.compile(r"function renderAssessmentCycle\(d\)\{.*?(?=function renderClassTests\(d\)\{)",re.S)
-          if not pattern.search(s): raise SystemExit('assessment function block not found')
-          s=pattern.sub(block+'\n',s,count=1)
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Validate student module syntax
+      - name: Validate source pages
         run: |
           python - <<'PY'
           import re
-          s=open('student.html',encoding='utf-8').read()
-          blocks=re.findall(r'<script type="module">(.*?)</script>',s,re.S)
-          if not blocks: raise SystemExit('no student module script found')
-          open('/tmp/student-module.mjs','w',encoding='utf-8').write('\n'.join(blocks))
+          from pathlib import Path
+
+          files = [
+              'student.html',
+              'reviews-admin.html',
+              'sessions-admin.html',
+              'content-admin.html',
+              'index.html',
+          ]
+          found = []
+          for filename in files:
+              path = Path(filename)
+              if not path.exists():
+                  raise SystemExit(f'missing required page: {filename}')
+              text = path.read_text(encoding='utf-8')
+              blocks = re.findall(r'<script type="module">(.*?)</script>', text, re.S)
+              for i, block in enumerate(blocks):
+                  out = Path('/tmp') / f'{path.stem}-{i}.mjs'
+                  out.write_text(block, encoding='utf-8')
+                  found.append(str(out))
+          print('\n'.join(found))
           PY
-          node --check /tmp/student-module.mjs
+          for f in /tmp/student-*.mjs /tmp/reviews-admin-*.mjs /tmp/sessions-admin-*.mjs /tmp/content-admin-*.mjs /tmp/index-*.mjs; do
+            [ -e "$f" ] || continue
+            node --check "$f"
+          done
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
