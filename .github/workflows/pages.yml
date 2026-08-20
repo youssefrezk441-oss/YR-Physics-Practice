@@ -192,6 +192,22 @@ jobs:
 
           Path('index.html').write_text(Path('admin-home.html').read_text(encoding='utf-8'),encoding='utf-8')
           PY
+      - name: Align student platform indicator with unified score
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('الإكمال محسوب من التدريبات النشطة، وجودة الأداء = مجموع أفضل الدرجات الفعلية ÷ مجموع نهاياتها.','المؤشر الأساسي = مجموع أفضل درجاتك في التدريبات المكتملة ÷ مجموع درجات كل التدريبات النشطة. التدريب غير المكتمل تأثيره صفر.')
+          s=s.replace('<span class="small muted">جودة أفضل النتائج</span>','<span class="small muted">مؤشر المنصة</span>',1)
+          s=s.replace('<span class="small muted">أفضل نتيجة</span>','<span class="small muted">جودة التدريبات المكتملة</span>',1)
+          start=s.index('function renderPlatformIndicators(){')
+          end=s.index('function renderSets(){',start)
+          newfn="""function renderPlatformIndicators(){const activeSlugs=new Set(sets.map(x=>String(x.slug||''))),activeHistory=history.filter(x=>activeSlugs.has(String(x.slug||''))),completed=activeHistory.filter(x=>x.status!=='in_progress'),graded=activeHistory.filter(x=>x.status==='graded'&&x.percentage!=null),completedSets=new Set(completed.map(x=>String(x.slug||x.title||x.id)));$('attemptsStat').textContent=completed.length;$('completedStat').textContent=completedSets.size;const ratio=sets.length?Math.min(100,Math.round(((completedSets.size/sets.length*100)+1e-9)*10)/10):0;$('completionStat').textContent=(Number.isInteger(ratio)?String(ratio):ratio.toFixed(1))+'%';const bestBySet=new Map;graded.forEach(x=>{const k=String(x.slug||x.title||x.id),v=Number(x.percentage),score=Number(x.score),max=Number(x.max_score);if(!Number.isFinite(v)||!Number.isFinite(score)||!Number.isFinite(max)||max<=0)return;const old=bestBySet.get(k);if(!old||score>old.score||(score===old.score&&v>old.percentage))bestBySet.set(k,{percentage:v,score,max})});const bestValues=[...bestBySet.values()],sumScore=bestValues.reduce((a,x)=>a+x.score,0),sumCompletedMax=bestValues.reduce((a,x)=>a+x.max,0),quality=sumCompletedMax?sumScore/sumCompletedMax*100:null,totalPossible=sets.reduce((a,x)=>{const m=Number(x.max_score);return a+(Number.isFinite(m)&&m>0?m:0)},0),platformScore=totalPossible?sumScore/totalPossible*100:null;$('averageStat').textContent=platformScore==null?'—':(Math.round((platformScore+1e-9)*10)/10).toFixed(1)+'%';$('bestStat').textContent=quality==null?'—':(Math.round((quality+1e-9)*10)/10).toFixed(1)+'%'}
+"""
+          s=s[:start]+newfn+s[end:]
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Redesign foundation course evaluation for students
         run: |
           python - <<'PY'
