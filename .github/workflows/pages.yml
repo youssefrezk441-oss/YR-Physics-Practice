@@ -142,7 +142,7 @@ jobs:
           marker='function rubricItems(r){'
           helpers="""function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
           function reviewAssetHtml(rows,type){return(rows||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
-          async function loadReviewAssets(qid){const{data,error}=await sb.from('question-assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
+          async function loadReviewAssets(qid){const{data,error}=await sb.from('question_assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
           """
           if marker not in s: raise SystemExit('review helper target missing')
           s=s.replace(marker,helpers+marker,1)
