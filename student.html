@@ -290,7 +290,7 @@ function courseCompare(compPct,readiness,p){
       return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد بوضوح',diff,reasons,consult:false,prompt:''};
     }
     reasons.push('الفرق كبير، لكن مؤشر تدريبات المنصة لا يفسّره بشكل كافٍ من البيانات المسجلة.');
-    return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'💬 تواصل مع مستر يوسف وقوله: أنا شايف إن نتيجتي في الشامل أعلى من المتوقع بكتير، إيه أفضل حاجة شايف إنها أدت للنتيجة غير المتوقعة دي؟'};
+    return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'🌟 النتيجة أعلى من المتوقع بوضوح. تواصل مع مستر يوسف وشاركه إيه اللي شايف إنك عملته بشكل مختلف أو إيه اللي ساعدك تحقق النتيجة دي، حتى لو كان سبب المنصة مش قادرة تعرفه، عشان نحدد معًا إيه اللي نجح ونحافظ عليه ونكرره.'};
   }
   const platformEffect=platform==null?null:(platform-compPct)*platformWeight;
   const platformLikely=platformEffect!=null&&platformEffect>=Math.max(4,ad*.40);
@@ -299,7 +299,7 @@ function courseCompare(compPct,readiness,p){
     return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد بوضوح',diff,reasons,consult:false,prompt:''};
   }
   reasons.push('الفرق كبير، لكن مؤشر تدريبات المنصة لا يفسّره بشكل كافٍ من البيانات المسجلة.');
-  return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'⚠️ تواصل مع مستر يوسف ضروري وقوله: أنا شايف إن نتيجتي في الشامل أقل من المتوقع بكتير، إيه أكتر مشكلة ممكن تكون قابلتني وأدت للنتيجة غير المتوقعة دي؟'};
+  return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'⚠️ النتيجة أقل من المتوقع بوضوح. تواصل مع مستر يوسف وشاركه أنت شايف إيه اللي حصل معاك في الامتحان، حتى لو كان سبب المنصة مش قادرة تعرفه، وبعدها نحدد معًا إيه اللي محتاج يتغير.'};
 }
 function courseCompareStyle(kind){if(kind==='up')return'--cmp-bg:#eff6ff;--cmp-border:#93c5fd';if(kind==='down')return'--cmp-bg:#fff1f2;--cmp-border:#fecdd3';if(kind==='match')return'--cmp-bg:#ecfdf3;--cmp-border:#a7f3d0';return'--cmp-bg:#f8fafc;--cmp-border:#e4e7ec'}
 function renderAssessmentCycle(d){
