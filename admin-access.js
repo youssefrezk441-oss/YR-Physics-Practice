@@ -11,3 +11,4 @@ export function canView(ctx,section){const x=accessLevel(ctx,section);return x==
 export function canEdit(ctx,section){return accessLevel(ctx,section)==='edit'}
 export function levelArabic(level){return level==='edit'?'تعديل':level==='view'?'مشاهدة فقط':'بدون صلاحية'}
 export function denyMessage(){return 'ليس لديك صلاحية لفتح هذا القسم.'}
+if(location.pathname.endsWith('student-ledger-admin.html'))import('./student-ledger-export.js').catch(e=>console.warn('ledger export',e));
