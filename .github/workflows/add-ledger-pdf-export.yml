@@ -3,8 +3,6 @@ name: Add ledger PDF export
 on:
   pull_request:
     branches: [main]
-    paths:
-      - '.ledger-pdf-export-trigger'
 
 permissions:
   contents: write
