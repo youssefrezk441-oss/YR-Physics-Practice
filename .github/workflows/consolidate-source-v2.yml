@@ -1,0 +1,134 @@
+name: Consolidate source v2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.source-consolidation-v2-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Reproduce current Pages output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, tempfile
+
+          lines=Path('.github/workflows/pages.yml').read_text(encoding='utf-8').splitlines()
+          runs=[]
+          i=0
+          while i < len(lines):
+              if not lines[i].startswith('      - name: '):
+                  i+=1
+                  continue
+              name=lines[i][14:].strip()
+              j=i+1
+              script=None
+              while j < len(lines) and not lines[j].startswith('      - name: '):
+                  if lines[j].startswith('        run: |'):
+                      k=j+1
+                      buf=[]
+                      while k < len(lines) and not lines[k].startswith('      - name: '):
+                          line=lines[k]
+                          if line.startswith('          '):
+                              buf.append(line[10:])
+                          elif line.strip()=='':
+                              buf.append('')
+                          elif line.strip() in ('"""', "'''"):
+                              # Legacy pages.yml contains one de-indented triple-quote closer.
+                              buf.append(line.strip())
+                          k+=1
+                      script='\n'.join(buf).rstrip()+'\n'
+                      j=k
+                      break
+                  j+=1
+              if script is not None:
+                  runs.append((name,script))
+              i=max(j,i+1)
+
+          for name,script in runs:
+              print(f'--- build step: {name}')
+              with tempfile.NamedTemporaryFile('w',encoding='utf-8',suffix='.sh',delete=False) as f:
+                  f.write('set -euo pipefail\n'+script)
+                  path=f.name
+              subprocess.run(['bash',path],check=True)
+          PY
+
+      - name: Apply final comparison rule
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('function courseCompare(compPct,readiness,p){')
+          end=s.index('function courseCompareStyle(kind){',start)
+          new='\n'.join([
+            "function courseCompare(compPct,readiness,p){",
+            "  if(compPct==null||readiness==null)return{kind:'neutral',icon:'➖',title:'المقارنة غير متاحة بعد',diff:null,reasons:['سيظهر الفرق بين الشامل والاستعداد بمجرد اكتمال البيانات.'],consult:false,prompt:''};",
+            "  const diff=Math.round((compPct-readiness+1e-9)*10)/10,ad=Math.abs(diff),platform=courseNum(p.platform?.score),platformWeight=.30,reasons=[];",
+            "  if(ad<=10)return{kind:'match',icon:'✅',title:'الفرق طبيعي ومتوافق مع درجة الاستعداد',diff,reasons:['فرق يصل إلى 10 نقاط مئوية أعلى أو أقل يُعتبر طبيعيًا بين مؤشر الاستعداد ونتيجة امتحان واحد.'],consult:false,prompt:''};",
+            "  if(diff>10){",
+            "    const platformEffect=platform==null?null:(compPct-platform)*platformWeight;",
+            "    const platformLikely=platformEffect!=null&&platformEffect>=Math.max(4,ad*.40);",
+            "    if(platformLikely){",
+            "      reasons.push('مؤشر تدريبات المنصة كان '+coursePct(platform)+' مقابل '+coursePct(compPct)+' في الشامل، وده غالبًا خفّض درجة الاستعداد عن المستوى اللي ظهر في الامتحان.');",
+            "      return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد بوضوح',diff,reasons,consult:false,prompt:''};",
+            "    }",
+            "    reasons.push('الفرق كبير، لكن مؤشر تدريبات المنصة لا يفسّره بشكل كافٍ من البيانات المسجلة.');",
+            "    return{kind:'up',icon:'📈',title:'نتيجة الشامل أعلى من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'💬 تواصل مع مستر يوسف وقوله: أنا شايف إن نتيجتي في الشامل أعلى من المتوقع بكتير، إيه أفضل حاجة شايف إنها أدت للنتيجة غير المتوقعة دي؟'};",
+            "  }",
+            "  const platformEffect=platform==null?null:(platform-compPct)*platformWeight;",
+            "  const platformLikely=platformEffect!=null&&platformEffect>=Math.max(4,ad*.40);",
+            "  if(platformLikely){",
+            "    reasons.push('مؤشر تدريبات المنصة كان '+coursePct(platform)+' مقابل '+coursePct(compPct)+' في الشامل، وده غالبًا رفع درجة الاستعداد عن المستوى اللي ظهر في الامتحان.');",
+            "    return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد بوضوح',diff,reasons,consult:false,prompt:''};",
+            "  }",
+            "  reasons.push('الفرق كبير، لكن مؤشر تدريبات المنصة لا يفسّره بشكل كافٍ من البيانات المسجلة.');",
+            "  return{kind:'down',icon:'📉',title:'نتيجة الشامل أقل من درجة الاستعداد بوضوح',diff,reasons,consult:true,prompt:'⚠️ تواصل مع مستر يوسف ضروري وقوله: أنا شايف إن نتيجتي في الشامل أقل من المتوقع بكتير، إيه أكتر مشكلة ممكن تكون قابلتني وأدت للنتيجة غير المتوقعة دي؟'};",
+            "}",
+            ""
+          ])
+          s=s[:start]+new+s[end:]
+          old="${cmp.consult?'<div class=\"courseTeacherNote\">💬 لمعرفة سبب الفرق بدقة، اتكلم مع مستر يوسف؛ بيانات المنصة تساعد في تحديد مكان الخلل أو سبب التفوق، لكنها لا تسجل كل ظروف يوم الامتحان.</div>':''}"
+          replacement="${cmp.consult?'<div class=\"courseTeacherNote\">'+esc(cmp.prompt||'')+'</div>':''}"
+          if old not in s:
+              raise SystemExit('teacher note target missing')
+          s=s.replace(old,replacement,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Validate final student JavaScript
+        run: |
+          python - <<'PY'
+          import re
+          s=open('student.html',encoding='utf-8').read()
+          blocks=re.findall(r'<script type="module">(.*?)</script>',s,re.S)
+          if not blocks:
+              raise SystemExit('no student module script found')
+          open('/tmp/student-final.mjs','w',encoding='utf-8').write('\n'.join(blocks))
+          PY
+          node --check /tmp/student-final.mjs
+
+      - name: Stage consolidated source on isolated branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C consolidated-source-output-v2
+          git add student.html reviews-admin.html index.html content-admin.html sessions-admin.html
+          git status --short
+          if git diff --cached --quiet; then
+            echo 'No generated source changes.'
+            exit 1
+          fi
+          git commit -m "Consolidate Pages-generated output into source"
+          git push --force origin consolidated-source-output-v2
