@@ -142,7 +142,7 @@ jobs:
           marker='function rubricItems(r){'
           helpers="""function publicAssetUrl(path){return sb.storage.from('question-assets').getPublicUrl(path).data.publicUrl}
           function reviewAssetHtml(rows,type){return(rows||[]).filter(a=>a.asset_type===type).map(a=>'<div class="qasset"><a href="'+esc(publicAssetUrl(a.storage_path))+'" target="_blank" rel="noopener"><img src="'+esc(publicAssetUrl(a.storage_path))+'" alt="'+esc(a.alt_text||a.caption||'رسم مرتبط بالسؤال')+'" loading="lazy"></a>'+(a.caption?'<div class="cap">'+esc(a.caption)+'</div>':'')+'</div>').join('')}
-          async function loadReviewAssets(qid){const{data,error}=await sb.from('question_assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
+          async function loadReviewAssets(qid){const{data,error}=await sb.from('question-assets').select('asset_type,storage_path,caption,alt_text,sort_order').eq('question_id',qid).order('sort_order');if(error){console.warn('review assets',error);return}$('stemAssets').innerHTML=reviewAssetHtml(data,'stem_image');$('explanationAssets').innerHTML=reviewAssetHtml(data,'explanation_image')}
           """
           if marker not in s: raise SystemExit('review helper target missing')
           s=s.replace(marker,helpers+marker,1)
@@ -192,6 +192,53 @@ jobs:
 
           Path('index.html').write_text(Path('admin-home.html').read_text(encoding='utf-8'),encoding='utf-8')
           PY
+      - name: Unify foundation course evaluation for students
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+
+          replacements=[
+            ('<h3>تقييمي قبل الشامل</h3><p>رحلة أدائك قبل الشامل منفصلة عن أي نشاط تم بعده.</p>',
+             '<h3>تقييمي في الكورس التأسيسي</h3><p>تقييم شامل لأدائك في الكورس: مؤشر الاستعداد، الحضور، الواجب، الكويزات، المنصة ودرجة الشامل.</p>'),
+            ('<h2>🎓 تقييمي قبل الشامل</h2><p class="sectionIntro">صورة أدائك وقت دخول الشامل؛ نشاطك اللاحق لا يغير الماضي.</p>',
+             '<h2>🎓 تقييمي في الكورس التأسيسي</h2><p class="sectionIntro">كل بيانات الكورس في مكان واحد: رحلتك قبل الشامل، مؤشر الاستعداد، ودرجة الشامل بعد اعتمادها.</p>'),
+            ("if(error)throw new Error(error.message||'تعذر تحميل تقييم ما قبل الشامل');",
+             "if(error)throw new Error(error.message||'تعذر تحميل تقييم الكورس التأسيسي');"),
+            ("outcome=comp.status==='scored'?Number(comp.score)+' / '+Number(comp.max_score):comp.status==='absent'?'0 / '+Number(comp.max_score)+' (غياب)':'لم تُدخل درجة الشامل بعد'",
+             "outcome=comp.status==='scored'?Number(comp.score)+' / '+Number(comp.max_score)+' · '+assessmentPct(comp.percentage):comp.status==='absent'?'0 / '+Number(comp.max_score)+' · 0% (غياب)':'لم تُدخل درجة الشامل بعد'"),
+            ('<p>هذه البيانات متوقفة عند لحظة الإغلاق؛ أي تدريب بعد الشامل يظهر منفصلًا ولا يغيّر تقييمك السابق.</p><span class="assessmentCutoff">إغلاق التقييم: ',
+             '<p>ملخص كامل لأدائك في الكورس. مؤشر الاستعداد يعتمد على بيانات ما قبل الشامل، ونتيجة الشامل تظهر مستقلة بعد اعتمادها.</p><span class="assessmentCutoff">إغلاق بيانات الاستعداد: '),
+            ('<span class="small muted">النتيجة النهائية للدورة</span><b>\'+esc(outcome)+\'</b><span class="small muted">سنقارنها بمؤشرات الرحلة بعد إدخال الدرجة.</span>',
+             '<span class="small muted">درجة الامتحان الشامل المعتمدة</span><b>\'+esc(outcome)+\'</b><span class="small muted">\'+(comp.percentage==null?\'تظهر الدرجة هنا فور اعتمادها.\':\'نسبة الشامل: \'+assessmentPct(comp.percentage)+(p.readiness_score==null?\'\':\' · مؤشر الاستعداد: \'+assessmentPct(p.readiness_score)))+\'</span>'),
+            ('<h3 style="margin-top:0">كيف يتم الحساب؟</h3>',
+             '<h3 style="margin-top:0">كيف تُحسب مؤشرات الكورس؟</h3>'),
+            ("$('assessmentLoading').innerHTML='<div class=\"msg err\">'+esc(e.message||'تعذر تحميل التقييم')+'</div>'",
+             "$('assessmentLoading').innerHTML='<div class=\"msg err\">'+esc(e.message||'تعذر تحميل تقييم الكورس التأسيسي')+'</div>'")
+          ]
+          for old,new in replacements:
+              if old not in s:
+                  raise SystemExit('foundation evaluation target missing: '+old[:80])
+              s=s.replace(old,new,1)
+
+          old='  box.prepend(el);'
+          new="  const hero=box.querySelector('.assessmentHero');if(hero)hero.insertAdjacentElement('afterend',el);else box.prepend(el);"
+          if old not in s: raise SystemExit('readiness placement target missing')
+          s=s.replace(old,new,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate student module syntax
+        run: |
+          python - <<'PY'
+          import re
+          s=open('student.html',encoding='utf-8').read()
+          blocks=re.findall(r'<script type="module">(.*?)</script>',s,re.S)
+          if not blocks: raise SystemExit('no student module script found')
+          open('/tmp/student-module.mjs','w',encoding='utf-8').write('\n'.join(blocks))
+          PY
+          node --check /tmp/student-module.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
