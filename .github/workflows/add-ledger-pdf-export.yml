@@ -1,6 +1,8 @@
 name: Add ledger PDF export
 
 on:
+  push:
+    branches: [trigger-ledger-pdf-export]
   pull_request:
     branches: [main]
     paths:
