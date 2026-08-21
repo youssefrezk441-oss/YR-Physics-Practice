@@ -10,18 +10,18 @@
 <div id="boot" class="boot">جاري فتح المنصة...</div>
 <script>
 (async()=>{
-  let html=await (await fetch('./student-base.html?v=20260822-1',{cache:'no-store'})).text();
+  let html=await (await fetch('./student-base.html?v=20260822-2',{cache:'no-store'})).text();
   const replaceOnce=(oldText,newText,label)=>{if(!html.includes(oldText))throw new Error('تعذر تجهيز '+label);html=html.replace(oldText,newText)};
 
   replaceOnce(
 `<section id="trainingMenuView" class="hidden"><div class="studentSubHead"><div><h2>📝 التدريبات</h2><p class="sectionIntro">اختر الكورس الذي تريد التدريب عليه.</p></div><button class="btn secondary studentBack" data-go-home>العودة للرئيسية</button></div><div class="studentSubGrid"><button id="openChapterTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">⚡</div><h3>تدريبات الفصل الأول</h3><p>تدريبات كهربية الفصل الأول للصف الثالث الثانوي.</p></button><button id="openFoundationTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">🧰</div><h3>تدريبات الكورس التأسيسي</h3><p>كل تدريبات الكورس التأسيسي في مكان واحد.</p></button><button id="openCompleted" class="card studentNavCard" type="button"><div class="studentNavIcon">✅</div><h3>التدريبات المكتملة</h3><p>راجع محاولاتك السابقة ونتائجك وتصحيحها.</p></button></div></section>`,
-`<section id="trainingMenuView" class="hidden"><div class="studentSubHead"><div><h2>📝 التدريبات</h2><p class="sectionIntro">اختر ما تريد عرضه.</p></div><button class="btn secondary studentBack" data-go-home>العودة للرئيسية</button></div><div class="studentSubGrid two"><button id="openAvailable" class="card studentNavCard" type="button"><div class="studentNavIcon">🚀</div><h3>التدريبات المتاحة</h3><p>ابدأ تدريبًا جديدًا من التدريبات المتاحة لك.</p></button><button id="openCompleted" class="card studentNavCard" type="button"><div class="studentNavIcon">✅</div><h3>التدريبات المكتملة</h3><p>راجع محاولاتك السابقة ونتائجك وتصحيحها.</p></button></div></section>
+`<section id="trainingMenuView" class="hidden"><div class="studentSubHead"><div><h2>📝 التدريبات</h2><p class="sectionIntro">اختر ما تريد عرضه.</p></div><button class="btn secondary studentBack" data-go-home>العودة للرئيسية</button></div><div class="studentSubGrid two"><button id="openAvailable" class="card studentNavCard" type="button"><div class="studentNavIcon">🚀</div><h3>التدريبات المتاحة</h3><p>ابدأ تدريبًا جديدًا من التدريبات المتاحة لك.</p></button><button id="openCompleted" class="card studentNavCard" type="button"><div class="studentNavIcon">✅</div><h3>التدريبات المكتملة</h3><p>راجع محاولاتك السابقة ونتائجها وتصحيحها.</p></button></div></section>
 <section id="trainingCoursesView" class="hidden"><div class="studentSubHead"><div><h2>🚀 التدريبات المتاحة</h2><p class="sectionIntro">اختر الكورس الذي تريد التدريب عليه.</p></div><button id="backTrainingCourses" class="btn secondary studentBack">العودة للتدريبات</button></div><div class="studentSubGrid two"><button id="openFoundationTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">🧰</div><h3>تدريبات الكورس التأسيسي</h3><p>كل تدريبات الكورس التأسيسي في مكان واحد.</p></button><button id="openChapterTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">⚡</div><h3>تدريبات الفصل الأول</h3><p>تدريبات كهربية الفصل الأول للصف الثالث الثانوي.</p></button></div></section>`,
 'قائمة التدريبات');
 
   replaceOnce(
 "const STUDENT_VIEWS=['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','assessmentCycleView','honorView','comingSoonView','practiceView','resultView','reviewView'];",
-"const STUDENT_VIEWS=['loginView','dashboardView','trainingMenuView','trainingCoursesView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','assessmentCycleView','honorView','comingSoonView','practiceView','resultView','reviewView'];",
+"const STUDENT_VIEWS=['loginView','dashboardView','trainingMenuView','trainingCoursesView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','assessmentCycleView','chapterJourneyView','honorView','comingSoonView','practiceView','resultView','reviewView'];",
 'الشاشات');
 
   replaceOnce(
@@ -38,6 +38,90 @@
 "$('openCompleted').onclick=()=>showOnly('completedTrainingsView');$('backTrainingMenu1').onclick=()=>{selectedTrainingCourse=null;showOnly('trainingMenuView')};$('backTrainingMenu2').onclick=()=>showOnly('trainingMenuView');",
 "$('openCompleted').onclick=()=>showOnly('completedTrainingsView');$('backTrainingCourses').onclick=()=>{selectedTrainingCourse=null;showOnly('trainingMenuView')};$('backTrainingMenu1').onclick=()=>{selectedTrainingCourse=null;updateTrainingCourseButtons();showOnly('trainingCoursesView')};$('backTrainingMenu2').onclick=()=>showOnly('trainingMenuView');",
 'أزرار الرجوع');
+
+  replaceOnce(
+"</button><button id=\"openPlatformIndicators\"",
+"</button><button id=\"openChapterJourney\" class=\"card studentNavCard\" type=\"button\"><div class=\"studentNavIcon\">⚡</div><h3>رحلتي مع الفصل الأول</h3><p>جاهزيتك، التزامك، نتائجك وتطورك حتى الشامل.</p></button><button id=\"openPlatformIndicators\"",
+'أيقونة رحلة الفصل الأول');
+
+  replaceOnce(
+"<section id=\"assessmentCycleView\"",
+`<section id="chapterJourneyView" class="hidden">
+<div class="studentSubHead"><div><h2>⚡ رحلتي مع الفصل الأول</h2><p class="sectionIntro">جاهزيتك الحالية مبنية على الحضور والواجب والكويزات وتدريبات الفصل.</p></div><button id="backChapterJourneyMenu" class="btn secondary studentBack">العودة لمؤشراتي</button></div>
+<div id="chapterJourneyLoading" class="card"><div class="empty">جاري بناء صورة أدائك في الفصل الأول...</div></div>
+<div id="chapterJourneyContent" class="hidden">
+  <div class="journeyHero card"><div><div id="journeyRing" class="journeyRing"><div class="journeyRingInner"><div id="journeyReadiness" class="journeyReadiness">—</div><div class="journeyReadinessLabel">جاهزيتي للشامل</div></div></div></div><div class="journeyHeroCopy"><div id="journeyStatus" class="journeyStatus">الدورة جارية</div><h2 id="journeyHeroTitle">رحلتك بدأت</h2><p id="journeyHeroText"></p><div id="journeyReason" class="journeyReason"></div></div></div>
+  <div class="journeyMetricGrid">
+    <div class="journeyMetric"><span class="journeyMetricIcon">📅</span><b id="journeyAttendance">—</b><strong>الحضور</strong><div id="journeyAttendanceDetail" class="detail"></div></div>
+    <div class="journeyMetric"><span class="journeyMetricIcon">📚</span><b id="journeyHomework">—</b><strong>الواجب</strong><div id="journeyHomeworkDetail" class="detail"></div></div>
+    <div class="journeyMetric"><span class="journeyMetricIcon">🧪</span><b id="journeyQuizzes">—</b><strong>الكويزات</strong><div id="journeyQuizzesDetail" class="detail"></div></div>
+    <div class="journeyMetric"><span class="journeyMetricIcon">💻</span><b id="journeyPlatform">—</b><strong>تدريبات المنصة</strong><div id="journeyPlatformDetail" class="detail"></div></div>
+  </div>
+  <div class="card journeyPriority"><div class="journeyPriorityIcon">🎯</div><div><h3>أهم شيء تحتاجه الآن</h3><p id="journeyPriorityText"></p><div id="journeyWeakest" class="journeyWeakest"></div></div></div>
+  <div class="journeyTwoCol">
+    <div class="card"><h3 style="margin:0">📈 اتجاه الكويزات</h3><p class="sectionIntro">الاتجاه يظهر فقط عندما تتوفر نتائج كافية.</p><div id="journeyQuizTrend" class="journeyTrend"></div><div id="journeyQuizHistory" class="journeyMiniList"></div></div>
+    <div class="card"><h3 style="margin:0">🗓️ آخر الحصص</h3><p class="sectionIntro">الحضور والواجب في آخر حصص الفصل المسجلة.</p><div id="journeySessions" class="journeyMiniList"></div></div>
+  </div>
+  <div class="card"><h3 style="margin:0">🛤️ رحلة تدريبات الفصل</h3><p class="sectionIntro">كل تدريب جديد في الفصل يدخل الرحلة تلقائيًا.</p><div id="journeyTrainings" class="journeyTrainingList"></div></div>
+  <div id="journeyWeights" class="journeyFoot"></div>
+</div>
+</section>
+<section id="assessmentCycleView"`,
+'صفحة رحلة الفصل الأول');
+
+  replaceOnce(
+"async function assessmentCycleFn(){",
+"async function chapterJourneyFn(){const{data,error}=await sb.functions.invoke('student-chapter-journey',{body:{action:'summary'}});if(error){let message=error.message||'تعذر تحميل رحلة الفصل الأول';try{if(error.context&&typeof error.context.json==='function'){const payload=await error.context.json();message=payload?.message||payload?.error||message}}catch{}throw new Error(message)}if(data?.error)throw new Error(data.message||data.error);return data}\nasync function assessmentCycleFn(){",
+'محرك رحلة الفصل الأول');
+
+  replaceOnce(
+"renderProfileMeta();$('loginView').classList.add('hidden');",
+"renderProfileMeta();const chapterJourneyButton=$('openChapterJourney');if(chapterJourneyButton)chapterJourneyButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');$('loginView').classList.add('hidden');",
+'صلاحية رحلة الفصل الأول');
+
+  const journeyJs=`
+function journeyPct(v){if(v===null||v===undefined||!Number.isFinite(Number(v)))return '—';const n=Math.round((Number(v)+1e-9)*10)/10;return (Number.isInteger(n)?String(n):n.toFixed(1))+'%'}
+function journeyDate(v){if(!v)return '—';try{return new Date(String(v).slice(0,10)+'T00:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'})}catch{return String(v)}}
+function journeyHomeworkText(v,has){if(!has)return 'لا يوجد واجب';if(v==='done')return 'واجب كامل';if(v==='partial')return 'واجب ناقص';if(v==='not_submitted')return 'لم يسلّم';return 'غير مسجل'}
+function journeyQuizStatus(q){if(q.status==='absent')return 'غائب — 0%';if(q.status==='scored')return Number(q.score)+' / '+Number(q.max_score)+' — '+journeyPct(q.percentage);return 'لم تُسجل النتيجة'}
+function renderChapterJourney(d){
+  if(!d.cycle){$('chapterJourneyContent').innerHTML='<div class="card"><div class="empty">لم تبدأ دورة تقييم الفصل الأول بعد.</div></div>';return}
+  const s=d.summary||{},a=d.attendance||{},h=d.homework||{},q=d.quiz_summary||{},p=d.platform||{},an=d.analysis||{},score=s.readiness_score==null?null:Number(s.readiness_score);
+  $('journeyRing').style.setProperty('--score',score==null?0:Math.max(0,Math.min(100,score)));
+  $('journeyReadiness').textContent=score==null?'—':journeyPct(score);
+  $('journeyStatus').textContent=d.cycle.is_open?'الدورة جارية · موعد الشامل يُحدد لاحقًا':'جاهزيتك قبل الشامل';
+  $('journeyHeroTitle').textContent=an.title||'رحلتي مع الفصل الأول';
+  $('journeyHeroText').textContent=an.message||'';
+  $('journeyReason').textContent=s.readiness_reason||'';
+  $('journeyAttendance').textContent=journeyPct(a.rate);
+  $('journeyAttendanceDetail').textContent=Number(a.present||0)+' حضور · '+Number(a.absent||0)+' غياب من '+Number(a.total||0)+' حصة';
+  $('journeyHomework').textContent=journeyPct(h.rate);
+  $('journeyHomeworkDetail').textContent=Number(h.done||0)+' كامل · '+Number(h.partial||0)+' ناقص · '+Number(h.not_submitted||0)+' لم يسلّم';
+  $('journeyQuizzes').textContent=journeyPct(q.ratio);
+  $('journeyQuizzesDetail').textContent=Number(q.scored||0)+' مصحح · '+Number(q.absent||0)+' غياب'+(Number(q.pending||0)?' · '+Number(q.pending)+' منتظر':'');
+  $('journeyPlatform').textContent=journeyPct(p.score);
+  $('journeyPlatformDetail').textContent=Number(p.completed||0)+' من '+Number(p.available||0)+' تدريب مكتمل · الإكمال '+journeyPct(p.completion_rate);
+  $('journeyPriorityText').textContent=an.priority||'استمر في تنفيذ المطلوب أولًا بأول.';
+  $('journeyWeakest').textContent=an.weakest?'أضعف عنصر حاليًا: '+an.weakest.label+' ('+journeyPct(an.weakest.value)+')':'سيظهر العنصر الأكثر تأثيرًا بعد اكتمال بيانات كافية.';
+  const tr=an.quiz_trend||{};let trIcon=tr.kind==='up'?'↗️':tr.kind==='down'?'↘️':tr.kind==='stable'?'➡️':'⏳';$('journeyQuizTrend').innerHTML='<div class="journeyTrendMain"><span>'+trIcon+'</span><b>'+esc(tr.label||'لا توجد نتائج كافية')+'</b></div>'+(tr.delta==null?'':'<div class="small muted">التغير عن الكويز السابق: '+(Number(tr.delta)>0?'+':'')+Number(tr.delta)+' نقطة مئوية</div>');
+  const qh=d.quiz_history||[];$('journeyQuizHistory').innerHTML=qh.length?qh.slice(0,4).map(x=>'<div class="journeyMiniRow"><div><b>'+esc(x.test_name||'كويز')+'</b><span>'+journeyDate(x.session_date)+'</span></div><strong>'+esc(journeyQuizStatus(x))+'</strong></div>').join(''):'<div class="empty">لسه مفيش نتائج كويزات في الفصل الأول.</div>';
+  const ss=d.sessions||[];$('journeySessions').innerHTML=ss.length?ss.map(x=>'<div class="journeyMiniRow"><div><b>'+(x.title?esc(x.title):'الحصة '+Number(x.session_number||0))+'</b><span>'+journeyDate(x.session_date)+'</span></div><div class="journeySessionTags"><span class="journeyTag '+(x.attendance==='absent'?'bad':'good')+'">'+(x.attendance==='absent'?'غائب':'حاضر')+'</span><span class="journeyTag">'+esc(journeyHomeworkText(x.homework_status,x.has_homework))+'</span></div></div>').join(''):'<div class="empty">لم تُسجل حصص الفصل الأول بعد. سيظهر هذا الجزء تلقائيًا مع أول حصة.</div>';
+  const ts=d.trainings||[];$('journeyTrainings').innerHTML=ts.length?ts.map((x,i)=>{const state=x.pending?'قيد مراجعة المقالي':x.completed?'مكتمل':'لم يبدأ',cls=x.completed?'done':x.pending?'pending':'todo',best=x.best_percentage==null?'':('<span>أفضل نتيجة: '+journeyPct(x.best_percentage)+'</span>');return '<div class="journeyTraining '+cls+'"><div class="journeyStep">'+(i+1)+'</div><div class="journeyTrainingText"><b>'+esc(x.title)+'</b><div>'+state+'</div></div>'+best+'</div>'}).join(''):'<div class="empty">لا توجد تدريبات مرتبطة بالدورة.</div>';
+  const w=d.cycle.weights||{};$('journeyWeights').innerHTML='<b>حساب الجاهزية:</b> الكويزات '+Number(w.quizzes||40)+'% · تدريبات المنصة '+Number(w.platform||30)+'% · الواجب '+Number(w.homework||20)+'% · الحضور '+Number(w.attendance||10)+'%. التدريب غير المكتمل تأثيره صفر، وغياب الكويز يُحسب صفرًا.';
+}
+async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView');$('chapterJourneyLoading').innerHTML='<div class="empty">جاري تحليل رحلتك مع الفصل الأول...</div>';$('chapterJourneyLoading').classList.remove('hidden');$('chapterJourneyContent').classList.add('hidden');try{const d=await chapterJourneyFn();renderChapterJourney(d);$('chapterJourneyLoading').classList.add('hidden');$('chapterJourneyContent').classList.remove('hidden')}catch(e){$('chapterJourneyLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل رحلة الفصل الأول')+'</div>'}}
+`;
+  replaceOnce("let soonReturnView='dashboardView';",journeyJs+"\nlet soonReturnView='dashboardView';",'عرض رحلة الفصل الأول');
+
+  replaceOnce(
+"$('openAssessmentCycle').onclick=()=>openAssessmentCycleView();$('backAssessmentMenu').onclick=()=>showOnly('indicatorsMenuView');",
+"$('openAssessmentCycle').onclick=()=>openAssessmentCycleView();$('backAssessmentMenu').onclick=()=>showOnly('indicatorsMenuView');$('openChapterJourney').onclick=()=>openChapterJourneyView();$('backChapterJourneyMenu').onclick=()=>showOnly('indicatorsMenuView');",
+'أزرار رحلة الفصل الأول');
+
+  const journeyCss=`
+.journeyHero{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:center;background:linear-gradient(135deg,#0d2444,#172033);color:#fff;border:0;padding:26px}.journeyRing{--score:0;width:178px;height:178px;border-radius:50%;display:grid;place-items:center;margin:auto;position:relative;background:conic-gradient(#60a5fa calc(var(--score)*1%),rgba(255,255,255,.14) 0);box-shadow:0 16px 38px rgba(15,23,42,.22)}.journeyRing:after{content:"";position:absolute;width:138px;height:138px;border-radius:50%;background:#11243e}.journeyRingInner{position:relative;z-index:2;text-align:center}.journeyReadiness{font-size:40px;font-weight:950;line-height:1}.journeyReadinessLabel{font-size:12px;opacity:.72;margin-top:8px}.journeyStatus{display:inline-block;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}.journeyHeroCopy h2{font-size:28px;margin:12px 0 7px}.journeyHeroCopy p{margin:0;color:#dbeafe;line-height:1.85}.journeyReason{margin-top:13px;font-size:12px;color:#bfdbfe}.journeyMetricGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:14px}.journeyMetric{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:16px;box-shadow:0 5px 16px rgba(15,23,42,.035)}.journeyMetricIcon{font-size:24px}.journeyMetric b{display:block;font-size:28px;margin:8px 0 2px}.journeyMetric strong{font-size:13px}.journeyMetric .detail{font-size:11px;color:#667085;line-height:1.7;margin-top:7px}.journeyPriority{display:flex;gap:14px;align-items:flex-start;border-color:#bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff)}.journeyPriorityIcon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#dbeafe;font-size:26px;flex:0 0 auto}.journeyPriority h3{margin:0 0 6px}.journeyPriority p{margin:0;line-height:1.8;font-weight:800}.journeyWeakest{margin-top:8px;font-size:12px;color:#475467}.journeyTwoCol{display:grid;grid-template-columns:1fr 1fr;gap:14px}.journeyTrend{padding:15px;border-radius:14px;background:#f8fafc;border:1px solid #e4e7ec;margin-top:12px}.journeyTrendMain{display:flex;gap:9px;align-items:center;font-size:15px}.journeyTrendMain span{font-size:24px}.journeyMiniList{margin-top:10px}.journeyMiniRow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 2px;border-bottom:1px solid #eaecf0}.journeyMiniRow:last-child{border-bottom:0}.journeyMiniRow b{display:block;font-size:13px}.journeyMiniRow span{display:block;color:#667085;font-size:11px;margin-top:3px}.journeyMiniRow strong{font-size:12px;text-align:left}.journeySessionTags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.journeyTag{background:#f2f4f7;color:#475467;border-radius:999px;padding:5px 8px;font-size:11px!important;margin:0!important}.journeyTag.good{background:#ecfdf3;color:#027a48}.journeyTag.bad{background:#fff1f3;color:#be123c}.journeyTrainingList{margin-top:12px}.journeyTraining{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;padding:12px;border:1px solid #e4e7ec;border-radius:13px;margin:8px 0}.journeyStep{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#eef2ff;color:#1d4ed8;font-weight:900}.journeyTraining.done{border-color:#a7f3d0;background:#f0fdf4}.journeyTraining.pending{border-color:#fde68a;background:#fffbeb}.journeyTrainingText b{font-size:13px}.journeyTrainingText div,.journeyTraining>span{font-size:11px;color:#667085;margin-top:4px}.journeyFoot{font-size:11px;color:#667085;line-height:1.8;padding:5px 3px 15px}.journeyFoot b{color:#344054}html[data-theme="dark"] .journeyMetric{background:#111827;border-color:#334155}html[data-theme="dark"] .journeyMetric .detail,html[data-theme="dark"] .journeyWeakest,html[data-theme="dark"] .journeyMiniRow span,html[data-theme="dark"] .journeyTrainingText div,html[data-theme="dark"] .journeyTraining>span,html[data-theme="dark"] .journeyFoot{color:#9ca3af}html[data-theme="dark"] .journeyPriority{background:#111827;border-color:#1d4ed8}html[data-theme="dark"] .journeyPriorityIcon{background:#172554}html[data-theme="dark"] .journeyTrend{background:#111827;border-color:#334155}html[data-theme="dark"] .journeyMiniRow{border-color:#334155}html[data-theme="dark"] .journeyTag{background:#1e293b;color:#cbd5e1}html[data-theme="dark"] .journeyTraining{border-color:#334155;background:#111827}html[data-theme="dark"] .journeyTraining.done{background:#052e16;border-color:#166534}html[data-theme="dark"] .journeyTraining.pending{background:#422006;border-color:#92400e}@media(max-width:800px){.journeyHero{grid-template-columns:1fr;text-align:center}.journeyHeroCopy{display:flex;flex-direction:column;align-items:center}.journeyMetricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.journeyTwoCol{grid-template-columns:1fr}}@media(max-width:480px){.journeyRing{width:160px;height:160px}.journeyRing:after{width:124px;height:124px}.journeyReadiness{font-size:36px}.journeyMetric b{font-size:24px}.journeyTraining{grid-template-columns:34px 1fr}.journeyTraining>span{grid-column:2}}
+`;
+  replaceOnce('</style>',journeyCss+'</style>','تنسيق رحلة الفصل الأول');
 
   document.open();
   document.write(html);
