@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YR Physics — WhatsApp Group Sync</title>
+  <style>
+    :root{--navy:#16324F;--blue:#3166A8;--bg:#f5f7fb;--card:#fff;--line:#dce3ec;--ok:#087f5b;--warn:#b26a00;--bad:#b42318}
+    *{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:#17212b}.wrap{max-width:1120px;margin:auto;padding:24px}.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:22px;border-radius:18px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:26px}.hero p{margin:0;opacity:.9}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(22,50,79,.06)}.full{grid-column:1/-1}h2{margin:0 0 14px;font-size:18px;color:var(--navy)}label{display:block;font-weight:700;margin:10px 0 6px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px;background:#fff}textarea{min-height:170px;resize:vertical;direction:rtl}button{border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}button.secondary{background:#e8eef7;color:var(--navy)}button.danger{background:var(--bad)}button.ok{background:var(--ok)}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.status{padding:10px 12px;border-radius:10px;background:#eef2f7;margin-top:10px}.status.ok{background:#e8f7f1;color:#05603f}.status.warn{background:#fff5df;color:#7c4a00}.status.bad{background:#ffeded;color:#8f1b13}.qr{text-align:center}.qr img{max-width:320px;width:100%;border:12px solid #fff;border-radius:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.stat{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}.stat b{display:block;font-size:24px;color:var(--navy)}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:right}th{background:#f2f6fb;color:var(--navy)}.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}.pill.ok{background:#e8f7f1;color:#05603f}.pill.add{background:#e8f0ff;color:#194a9a}.pill.remove{background:#ffeded;color:#8f1b13}.pill.warn{background:#fff5df;color:#7c4a00}.note{font-size:13px;color:#5b6673;line-height:1.7}.hidden{display:none}@media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.stats{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>مزامنة جروب واتساب — YR Physics</h1>
+    <p>Preview أولًا، ثم تنفيذ الإضافة أو الحذف. الـAdmins ورقم الواتساب المتصل محميان تلقائيًا.</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1) اتصال واتساب</h2>
+      <div id="waStatus" class="status warn">جاري فحص الاتصال…</div>
+      <div id="qrBox" class="qr hidden"><p class="note">امسح الـQR من: واتساب ← الأجهزة المرتبطة ← ربط جهاز</p><img id="qrImage" alt="WhatsApp QR" /></div>
+      <div class="row" style="margin-top:12px"><button class="secondary" onclick="refreshStatus()">تحديث الحالة</button><button onclick="loadGroups()">تحميل الجروبات</button></div>
+      <label>الجروب</label>
+      <select id="groupSelect"><option value="">— حمّل الجروبات أولًا —</option></select>
+    </section>
+
+    <section class="card">
+      <h2>2) ربط المنصة</h2>
+      <p class="note">تسجيل الدخول يتم محليًا من جهازك ولا يُحفظ في ملفات الـBridge. نستخدمه فقط لجلب أسماء وأرقام الطلاب من المنصة.</p>
+      <label>إيميل الإدارة</label><input id="adminEmail" type="email" autocomplete="username" />
+      <label>كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" />
+      <div class="row" style="margin-top:12px"><button onclick="platformLogin()">تسجيل الدخول</button><input id="groupCode" value="N3-A" aria-label="كود المجموعة" /></div>
+      <div class="row" style="margin-top:10px"><button class="secondary" onclick="loadPlatformStudents()">تحميل طلاب المجموعة</button></div>
+      <div id="platformStatus" class="status">لم يتم تحميل طلاب المنصة بعد.</div>
+    </section>
+
+    <section class="card">
+      <h2>3) الحضور المعتمد</h2>
+      <p class="note">الصق القائمة كما هي: اسم فقط، رقم فقط، أو اسم + رقم. الأسماء بدون أرقام سيتم مطابقتها مع المنصة.</p>
+      <textarea id="attendanceText" placeholder="مثال:
+نعمة شريف حسن 01131028511
+حبيبه سامي القصاص
+نورهان علي عاشور"></textarea>
+    </section>
+
+    <section class="card">
+      <h2>4) أرقام إضافية محمية</h2>
+      <p class="note">ضع هنا أرقام الأشخاص الذين يجب أن يظلوا في الجروب حتى لو لم يكونوا في قائمة الحضور، مثل رقمك وجنى الزمر وخلود خالد وشهد الرفاعي. كل رقم في سطر.</p>
+      <textarea id="protectedText" placeholder="01xxxxxxxxx"></textarea>
+      <p class="note">ملحوظة: رقم الواتساب المتصل وكل Admin بالجروب محميان تلقائيًا حتى لو لم تكتبهم هنا.</p>
+    </section>
+
+    <section class="card full">
+      <div class="row"><h2 style="flex:3">5) المعاينة قبل التنفيذ</h2><button onclick="previewSync()">اعمل Preview</button></div>
+      <div id="previewEmpty" class="status">لم يتم عمل معاينة بعد.</div>
+      <div id="previewBox" class="hidden">
+        <div class="stats">
+          <div class="stat"><span>المطلوب بالجروب</span><b id="desiredCount">0</b></div>
+          <div class="stat"><span>سيظلوا</span><b id="keepCount">0</b></div>
+          <div class="stat"><span>إضافة</span><b id="addCount">0</b></div>
+          <div class="stat"><span>حذف</span><b id="removeCount">0</b></div>
+        </div>
+        <div id="issues"></div>
+        <div id="tables"></div>
+        <div class="row" style="margin-top:16px">
+          <button class="ok" id="addBtn" onclick="applySync('add')">تنفيذ الإضافات فقط</button>
+          <button class="danger" id="removeBtn" onclick="applySync('remove')">تنفيذ الحذف فقط</button>
+          <button id="bothBtn" onclick="applySync('both')">تنفيذ الكل</button>
+        </div>
+        <div id="applyStatus" class="status hidden"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let lastPreview = null;
+
+async function api(url, options={}){
+  const res = await fetch(url,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok) throw Object.assign(new Error(data.message||data.error||'حدث خطأ'),{data,status:res.status});
+  return data;
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function payload(){return {groupId:$('groupSelect').value,attendanceText:$('attendanceText').value,protectedText:$('protectedText').value}}
+
+async function refreshStatus(){
+  try{
+    const s=await api('/api/status');
+    const box=$('waStatus'); box.className='status '+(s.status==='ready'?'ok':s.status==='qr'?'warn':'bad');
+    box.textContent=s.status==='ready'?`متصل بواتساب${s.connectedNumber?' — '+s.connectedNumber:''}`:s.status==='qr'?'مطلوب مسح QR لربط واتساب':`الحالة: ${s.status}${s.error?' — '+s.error:''}`;
+    if(s.qr){$('qrBox').classList.remove('hidden');$('qrImage').src=s.qr}else{$('qrBox').classList.add('hidden')}
+    if(s.platformLoggedIn)$('platformStatus').textContent=`تم تسجيل الدخول — الطلاب المحملون: ${s.platformStudents}`;
+  }catch(e){$('waStatus').className='status bad';$('waStatus').textContent=e.message}
+}
+async function loadGroups(){
+  try{
+    const d=await api('/api/groups');
+    $('groupSelect').innerHTML='<option value="">— اختر الجروب —</option>'+d.groups.map(g=>`<option value="${esc(g.id)}">${esc(g.name)} (${g.participants})</option>`).join('');
+    const first=[...$('groupSelect').options].find(o=>/3|ثانوي|فرست|first/i.test(o.textContent)); if(first) first.selected=true;
+  }catch(e){alert(e.message)}
+}
+async function platformLogin(){
+  try{
+    $('platformStatus').className='status warn';$('platformStatus').textContent='جاري تسجيل الدخول…';
+    await api('/api/platform/login',{method:'POST',body:JSON.stringify({email:$('adminEmail').value,password:$('adminPassword').value})});
+    $('adminPassword').value='';
+    $('platformStatus').className='status ok';$('platformStatus').textContent='تم تسجيل الدخول بنجاح.';
+    await loadPlatformStudents();
+  }catch(e){$('platformStatus').className='status bad';$('platformStatus').textContent=e.message}
+}
+async function loadPlatformStudents(){
+  try{
+    const d=await api('/api/platform/students',{method:'POST',body:JSON.stringify({groupCode:$('groupCode').value.trim()||'N3-A'})});
+    $('platformStatus').className='status ok';$('platformStatus').textContent=`تم تحميل ${d.count} طالب — النشطين: ${d.activeCount} — ${d.groupCode}`;
+  }catch(e){$('platformStatus').className='status bad';$('platformStatus').textContent=e.message}
+}
+function table(title,kind,rows){
+  if(!rows?.length)return `<h3>${esc(title)} <span class="pill ${kind}">0</span></h3><p class="note">لا يوجد.</p>`;
+  return `<h3>${esc(title)} <span class="pill ${kind}">${rows.length}</span></h3><table><thead><tr><th>الاسم</th><th>الرقم</th><th>ملاحظة</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.name||r.desiredName||'—')}</td><td>${esc(r.displayPhone||r.phone||'—')}</td><td>${esc(r.protectedReason||r.code||'')}</td></tr>`).join('')}</tbody></table>`;
+}
+function renderPreview(p){
+  lastPreview=p;$('previewEmpty').classList.add('hidden');$('previewBox').classList.remove('hidden');
+  $('desiredCount').textContent=p.desiredCount;$('keepCount').textContent=p.keep.length;$('addCount').textContent=p.toAdd.length;$('removeCount').textContent=p.toRemove.length;
+  const bad=p.unresolved.length+p.ambiguous.length;
+  let issues='';
+  if(bad){
+    issues+=`<div class="status bad"><b>التنفيذ متوقف:</b> عندك ${bad} اسم/سطر محتاج مراجعة قبل أي إضافة أو حذف.</div>`;
+    if(p.unresolved.length)issues+=`<table><thead><tr><th>غير محسوم</th><th>السبب</th></tr></thead><tbody>${p.unresolved.map(x=>`<tr><td>${esc(x.input)}</td><td>${esc(x.reason)}</td></tr>`).join('')}</tbody></table>`;
+    if(p.ambiguous.length)issues+=`<table><thead><tr><th>اسم ملتبس</th><th>الاحتمالات</th></tr></thead><tbody>${p.ambiguous.map(x=>`<tr><td>${esc(x.input)}</td><td>${x.candidates.map(c=>esc(c.name+' '+c.code)).join(' — ')}</td></tr>`).join('')}</tbody></table>`;
+  }else issues='<div class="status ok">المطابقة محسومة. راجع قائمتي الإضافة والحذف ثم نفّذ.</div>';
+  $('issues').innerHTML=issues;
+  $('tables').innerHTML=table('سيتم إضافتهم','add',p.toAdd)+table('سيتم حذفهم','remove',p.toRemove)+table('سيظلوا في الجروب','ok',p.keep);
+  $('addBtn').disabled=bad>0;$('removeBtn').disabled=bad>0;$('bothBtn').disabled=bad>0;
+}
+async function previewSync(){
+  if(!$('groupSelect').value)return alert('اختر الجروب أولًا.');
+  try{const d=await api('/api/preview',{method:'POST',body:JSON.stringify(payload())});renderPreview(d.preview)}catch(e){alert(e.message)}
+}
+async function applySync(mode){
+  if(!lastPreview)return;
+  const msg=mode==='add'?'تنفيذ الإضافات الآن؟':mode==='remove'?'تنفيذ الحذف الآن؟':'تنفيذ الإضافات والحذف الآن؟';
+  if(!confirm(msg+'\n\nراجع الـPreview قبل الموافقة.'))return;
+  const box=$('applyStatus');box.className='status warn';box.classList.remove('hidden');box.textContent='جاري التنفيذ… لا تغلق الصفحة.';
+  try{
+    const d=await api('/api/apply',{method:'POST',body:JSON.stringify({...payload(),mode,confirm:'EXECUTE'})});
+    const addOk=(d.added||[]).filter(x=>x.ok).length, remOk=(d.removed||[]).filter(x=>x.ok).length;
+    box.className='status ok';box.textContent=`تم التنفيذ. إضافات ناجحة: ${addOk} — حذف ناجح: ${remOk}`;renderPreview(d.after);
+  }catch(e){box.className='status bad';box.textContent=e.message;if(e.data?.preview)renderPreview(e.data.preview)}
+}
+refreshStatus();setInterval(refreshStatus,5000);
+</script>
+</body>
+</html>
