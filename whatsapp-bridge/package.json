@@ -1,0 +1,17 @@
+{
+  "name": "yr-physics-whatsapp-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local WhatsApp Web bridge for previewing and syncing YR Physics class groups.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "qrcode": "1.5.4",
+    "whatsapp-web.js": "1.34.7"
+  }
+}
