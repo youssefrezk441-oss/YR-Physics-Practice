@@ -1,3 +1,4 @@
+import './honor-cycle-selector.js';
 export async function loadAdminAccess(sb){
   const{data:{session}}=await sb.auth.getSession();
   if(!session?.user||session.user.app_metadata?.role!=='admin')throw new Error('admin_required');
