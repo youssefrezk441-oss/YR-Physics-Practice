@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>التصحيح السريع — منصة تدريبات الفيزياء</title>
+<style>
+:root{font-family:Arial,"Noto Sans Arabic",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0;background:#f5f7fb}button,input,textarea{font:inherit}.wrap{max-width:1280px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.brand h1{font-size:22px;margin:0}.brand p{margin:4px 0 0;color:#667085;font-size:13px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:16px}.hidden{display:none!important}.muted{color:#667085}.small{font-size:12px}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:#f2f4f7;font-size:12px;font-weight:700}.pending{background:#fffaeb;color:#b54708}.ok{background:#ecfdf3;color:#027a48}.err{background:#fff1f3;color:#c01048}.msg{padding:10px 12px;border-radius:10px;margin-bottom:12px}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,.65fr);gap:14px}.stack{display:grid;gap:12px}.section{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:14px}.section h3{margin:0 0 9px;font-size:15px}.text{white-space:pre-wrap;line-height:1.85}.model{background:#eff6ff;border-color:#bfdbfe}.rubric{background:#f8fafc}.images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.imgbox{background:#fff;border:1px solid #e4e7ec;border-radius:12px;overflow:hidden}.imgbox img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;background:white;cursor:zoom-in}.imgmeta{padding:7px 9px;color:#667085;font-size:11px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:11px 15px;cursor:pointer;font-weight:800}.btn:disabled{opacity:.5;cursor:not-allowed}.primary{background:#1d4ed8;color:#fff}.dark{background:#172033;color:#fff}.secondary{background:#eef2ff;color:#1d4ed8}.gradeBtns{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.gradeBtn{border:2px solid #d0d5dd;background:#fff;border-radius:12px;padding:14px 8px;font-weight:900;font-size:17px;cursor:pointer}.gradeBtn.active{border-color:#1d4ed8;background:#eef2ff;color:#1d4ed8}.scoreLine{font-size:14px;line-height:1.8}.progress{height:9px;border-radius:99px;background:#eaecf0;overflow:hidden}.progress>div{height:100%;background:#1d4ed8}.sticky{position:sticky;top:12px}.feedback{width:100%;min-height:78px;border:1px solid #d0d5dd;border-radius:11px;padding:10px;resize:vertical}.counter{font-size:22px;font-weight:900}.gate{max-width:620px;margin:80px auto}.kbd{font-family:monospace;border:1px solid #d0d5dd;border-bottom-width:2px;border-radius:6px;padding:1px 5px;background:#fff;font-size:11px}.done{text-align:center;padding:50px 20px}.done b{display:block;font-size:28px;margin-bottom:8px}@media(max-width:900px){.layout{grid-template-columns:1fr}.sticky{position:static}.images{grid-template-columns:1fr}}@media(max-width:560px){.wrap{padding:10px}.top{align-items:flex-start;flex-direction:column}.gradeBtns{grid-template-columns:repeat(5,1fr)}.gradeBtn{padding:12px 4px;font-size:15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div class="brand"><h1>التصحيح السريع للمقالي</h1><p>مراجعة يدوية فقط — بدون AI أو API</p></div><div class="toolbar"><a href="./reviews-admin.html" style="color:#1d4ed8;font-weight:700;text-decoration:none">المراجعة الكاملة</a><a href="./" style="color:#1d4ed8;font-weight:700;text-decoration:none">لوحة الإدارة</a></div></div>
+<div id="gate" class="card gate"><h2>التحقق من حساب الإدارة</h2><p class="muted">سجّل الدخول من لوحة الإدارة أولًا ثم افتح الصفحة مرة أخرى.</p></div>
+<section id="app" class="hidden">
+<div id="msg"></div>
+<div id="main" class="layout">
+<div class="stack">
+<div class="card">
+<div class="toolbar" style="justify-content:space-between"><div><span id="student" style="font-weight:900;font-size:19px"></span> <span id="studentCode" class="pill"></span></div><span id="pendingCount" class="pill pending"></span></div>
+<div id="training" class="muted small" style="margin-top:7px"></div>
+<div style="margin-top:10px" class="toolbar"><span id="qcode" class="pill"></span><span id="points" class="pill"></span></div>
+</div>
+<div class="section"><h3>السؤال</h3><div id="stem" class="text"></div></div>
+<div class="section"><h3>صور إجابة الطالب</h3><div id="images" class="images"><span class="muted">جارٍ تحميل الصور…</span></div></div>
+</div>
+<div class="stack sticky">
+<div class="section model"><h3>نموذج الإجابة</h3><div id="model" class="text"></div></div>
+<div class="section rubric"><h3>نقاط التصحيح</h3><div id="rubric" class="text"></div></div>
+<div class="card">
+<div class="toolbar" style="justify-content:space-between;margin-bottom:10px"><div><span class="muted small">التقدم</span><div><span id="doneCount" class="counter">0</span> / <span id="totalCount">0</span></div></div><div id="attemptNow" class="scoreLine"></div></div>
+<div class="progress"><div id="bar" style="width:0%"></div></div>
+<h3 style="margin:16px 0 8px">اختر الدرجة</h3>
+<div id="gradeBtns" class="gradeBtns"></div>
+<div class="muted small" style="margin-top:8px">اختصارات: <span class="kbd">0</span> <span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span> <span class="kbd">4</span> للاختيار، و <span class="kbd">Enter</span> للاعتماد والانتقال.</div>
+<label style="display:block;font-weight:700;font-size:13px;margin:14px 0 6px">ملاحظة للطالب — اختيارية</label>
+<textarea id="feedback" class="feedback" placeholder="يمكن تركها فارغة"></textarea>
+<div class="toolbar" style="margin-top:12px"><button id="saveNext" class="btn primary">اعتماد والانتقال للتالي</button><button id="skip" class="btn secondary">تخطي مؤقتًا</button></div>
+</div>
+</div>
+</div>
+<div id="done" class="card done hidden"><b>تم إنهاء كل المعلّق ✓</b><span class="muted">تمت إعادة حساب النتائج تلقائيًا مع كل درجة تم اعتمادها.</span></div>
+</section>
+</div>
+<script type="module" src="./admin-page-guard.js"></script>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let items=[],current=null,selected=null,total=0,done=0,busy=false;
+function note(t,type='ok'){$('msg').innerHTML=`<div class="msg ${type}">${esc(t)}</div>`;setTimeout(()=>$('msg').innerHTML='',3500)}
+function rubricItems(r){if(!r)return[];if(typeof r==='string'){try{r=JSON.parse(r)}catch{return[r]}}if(Array.isArray(r))return r.map(String);if(Array.isArray(r.criteria))return r.criteria.map(p=>(p?.criterion||p?.text||p?.point||JSON.stringify(p))+(p?.points!=null?` — ${p.points} درجة`:''));if(Array.isArray(r.points))return r.points.map(p=>typeof p==='string'?p:(p?.text||p?.point||JSON.stringify(p)));return typeof r==='object'?Object.values(r).map(v=>typeof v==='string'?v:JSON.stringify(v)):[String(r)]}
+async function load(){const{data,error}=await sb.from('admin_short_text_reviews').select('*').eq('grading_status','review').order('submitted_at',{ascending:true,nullsFirst:false}).limit(1000);if(error)throw error;items=data||[];total=items.length;done=0;$('totalCount').textContent=total;if(!items.length)return finish();await openItem(0)}
+function buttons(max){const vals=[0,.25,.5,.75,1].map(x=>Math.round(max*x*100)/100);$('gradeBtns').innerHTML=vals.map((v,i)=>`<button class="gradeBtn" type="button" data-v="${v}" data-k="${i}">${v}</button>`).join('');document.querySelectorAll('.gradeBtn').forEach(b=>b.onclick=()=>choose(Number(b.dataset.v)))}
+function choose(v){selected=v;document.querySelectorAll('.gradeBtn').forEach(b=>b.classList.toggle('active',Number(b.dataset.v)===v))}
+async function loadImages(id){$('images').innerHTML='<span class="muted">جارٍ تحميل الصور…</span>';const{data,error}=await sb.from('response_answer_images').select('object_path,image_order,size_bytes,clarity_status').eq('response_id',id).is('deleted_at',null).order('image_order');if(error){$('images').innerHTML='<span class="err">تعذر تحميل الصور.</span>';return}const rows=data||[];if(!rows.length){$('images').innerHTML='<span class="muted">لا توجد صورة مرفوعة لهذه الإجابة.</span>';return}const out=[];for(const r of rows){const x=await sb.storage.from('answer-images').createSignedUrl(r.object_path,900);const u=x.data?.signedUrl||'';out.push(`<div class="imgbox">${u?`<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="صورة إجابة الطالب"></a>`:'<div class="imgmeta">تعذر إنشاء رابط الصورة</div>'}<div class="imgmeta">الصورة ${Number(r.image_order||1)} · ${esc(r.clarity_status||'pending')}</div></div>`)}$('images').innerHTML=out.join('')}
+async function openItem(index){if(!items.length)return finish();current=items[index]||items[0];selected=null;$('student').textContent=current.student_name||'';$('studentCode').textContent=current.student_code||'';$('training').textContent=current.training_title||'';$('qcode').textContent=current.question_code||'';$('points').textContent=`${Number(current.points)} درجة`;$('stem').textContent=current.stem||'';$('model').textContent=current.model_answer||'لا يوجد نموذج إجابة.';const r=rubricItems(current.rubric);$('rubric').innerHTML=r.length?`<ul>${r.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<span class="muted">لا توجد نقاط تصحيح مسجلة.</span>';$('feedback').value='';$('pendingCount').textContent=`${items.length} معلّق`;$('doneCount').textContent=done;$('bar').style.width=(total?Math.round(done/total*100):0)+'%';$('attemptNow').innerHTML=`<b>${Number(current.attempt_score??0)}</b> / ${Number(current.attempt_max_score??0)}<br><span class="muted small">${Number(current.attempt_percentage??0)}%</span>`;buttons(Number(current.points));await loadImages(current.response_id)}
+async function saveNext(){if(busy||!current)return;if(selected==null){note('اختر الدرجة أولًا.','err');return}busy=true;$('saveNext').disabled=true;try{const id=current.response_id;const{data,error}=await sb.rpc('review_short_text_response',{p_response_id:id,p_awarded_points:selected,p_feedback:$('feedback').value.trim()||null});if(error)throw error;items=items.filter(x=>x.response_id!==id);done++;note(`تم اعتماد ${Number(data.awarded_points)} / ${Number(current.points)} وإعادة حساب نتيجة المحاولة.`);if(items.length)await openItem(0);else finish()}catch(e){note(e.message||'تعذر حفظ التصحيح.','err')}finally{busy=false;$('saveNext').disabled=false}}
+function finish(){$('main').classList.add('hidden');$('done').classList.remove('hidden');$('doneCount').textContent=done;$('bar').style.width='100%'}
+$('saveNext').onclick=saveNext;$('skip').onclick=()=>{if(items.length<2)return;items.push(items.shift());openItem(0)};
+document.addEventListener('keydown',e=>{if(e.target&&['TEXTAREA','INPUT'].includes(e.target.tagName))return;if(['0','1','2','3','4'].includes(e.key)){const b=document.querySelector(`.gradeBtn[data-k="${e.key}"]`);if(b)b.click()}else if(e.key==='Enter'){e.preventDefault();saveNext()}});
+const{data:{session}}=await sb.auth.getSession();if(session?.user?.app_metadata?.role==='admin'){$('gate').classList.add('hidden');$('app').classList.remove('hidden');load().catch(e=>note(e.message,'err'))}
+</script>
+</body></html>
