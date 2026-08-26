@@ -14,4 +14,7 @@ if(meta.section==='essay_reviews'){css+=' .adminViewOnly #save,.adminViewOnly #u
 injectStyle(css)}
 async function apply(session){const meta=info();if(!meta||!session?.user||session.user.app_metadata?.role!=='admin')return;if(lastUser===session.user.id&&document.documentElement.dataset.adminGuardDone==='1')return;lastUser=session.user.id;let ctx;try{ctx=await loadAdminAccess(sb)}catch{location.replace('./');return}if(!canView(ctx,meta.section)){location.replace('./');return}if(meta.needsEdit&&!canEdit(ctx,meta.section)){location.replace('content-admin.html?view=questions');return}if(meta.section==='class_sessions'&&meta.view==='entry'&&!canEdit(ctx,'class_sessions')){location.replace('sessions-admin.html?view=history');return}document.documentElement.dataset.adminAccess=accessLevel(ctx,meta.section);document.documentElement.dataset.adminGuardDone='1';if(!canEdit(ctx,meta.section))applyReadOnly(meta)}
 const{data:{session}}=await sb.auth.getSession();await apply(session);sb.auth.onAuthStateChange((_e,s)=>{setTimeout(()=>apply(s),0)});
-if((location.pathname.split('/').pop()||'').toLowerCase()==='reviews-admin.html')import('./reviews-admin-history-fix.js').catch(e=>console.warn('reviews history fix',e));
+if((location.pathname.split('/').pop()||'').toLowerCase()==='reviews-admin.html'){
+  import('./reviews-admin-history-fix.js').catch(e=>console.warn('reviews history fix',e));
+  import('./reviews-answer-images.js').catch(e=>console.warn('reviews answer images',e));
+}
