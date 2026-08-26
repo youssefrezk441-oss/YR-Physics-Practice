@@ -62,4 +62,4 @@ function renderQuestion'''
           git commit -m 'Enable direct camera capture for handwritten answers'
           git push
 
-# retrigger 2
+# publish after generated student-base commit
