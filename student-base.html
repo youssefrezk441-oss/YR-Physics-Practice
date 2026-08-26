@@ -383,7 +383,8 @@ let answerImages={};
 function answerImageRows(qid){return (answerImages[String(qid)]||[]).filter(x=>!x.deleted)}
 function answerImageSize(n){const k=Math.max(0,Number(n||0))/1024;return k>=1024?(k/1024).toFixed(1)+' MB':Math.round(k)+' KB'}
 function answerImageHtml(qid){const rows=answerImageRows(qid);if(!rows.length)return '';return '<div class="answerImageList">'+rows.map(x=>'<div class="answerImageItem"><button type="button" class="answerImageRemove" data-remove-answer-image="'+esc(x.id)+'" title="حذف الصورة">×</button><img src="'+esc(x.preview_url)+'" alt="صورة إجابة الطالب"><div class="answerImageMeta">✅ تم الحفظ · '+answerImageSize(x.size_bytes)+'</div></div>').join('')+'</div>'}
-async function answerImageLoad(file){return await new Promise((resolve,reject)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(u);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(u);reject(new Error('تعذر قراءة الصورة.'))};img.src=u})}
+function answerImageDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(new Error('تعذر قراءة الصورة.'));r.readAsDataURL(file)})}
+async function answerImageLoad(file){const src=await answerImageDataUrl(file);return await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('تعذر قراءة الصورة.'));img.src=src})}
 function answerImageCanvasBlob(canvas,type,quality){return new Promise(resolve=>canvas.toBlob(resolve,type,quality))}
 async function compressAnswerImage(file){
  if(!file||!String(file.type||'').startsWith('image/'))throw new Error('اختر صورة فقط.');
@@ -403,7 +404,7 @@ async function uploadAnswerImage(qid,file){
  const up=await sb.storage.from('answer-images').upload(path,blob,{contentType:blob.type,upsert:false,cacheControl:'3600'});if(up.error)throw new Error('تعذر حفظ الصورة في التخزين: '+(up.error.message||'خطأ غير معروف'));
  const reg=await sb.rpc('register_answer_image',{p_attempt_id:attemptId,p_question_id:key,p_object_path:path});if(reg.error){await sb.storage.from('answer-images').remove([path]);throw new Error('تم رفع الصورة لكن تعذر ربطها بالإجابة: '+(reg.error.message||'خطأ غير معروف'));}
  const row=Array.isArray(reg.data)?reg.data[0]:(reg.data||{});if(!row?.id){await sb.storage.from('answer-images').remove([path]);throw new Error('تعذر تأكيد حفظ الصورة. حاول مرة أخرى.');}
- let previewUrl='';const signed=await sb.storage.from('answer-images').createSignedUrl(path,3600);if(!signed.error&&signed.data?.signedUrl)previewUrl=signed.data.signedUrl;if(!previewUrl)previewUrl=URL.createObjectURL(blob);
+ let previewUrl='';const signed=await sb.storage.from('answer-images').createSignedUrl(path,3600);if(!signed.error&&signed.data?.signedUrl)previewUrl=signed.data.signedUrl;if(!previewUrl)previewUrl=await answerImageDataUrl(blob);
  const rec={...row,id:row.id,object_path:path,size_bytes:Number(row.size_bytes||blob.size),preview_url:previewUrl,deleted:false};answerImages[key]=[...(answerImages[key]||[]),rec];
  const old=answers[key]||{};answers[key]={...old,question_id:key,has_image:true,text_answer:String(old.text_answer||'').trim()?old.text_answer:'إجابة مصورة مرفوعة'};
 }
@@ -411,7 +412,7 @@ async function removeAnswerImage(qid,id){
  const key=String(qid),row=(answerImages[key]||[]).find(x=>String(x.id)===String(id)&&!x.deleted);if(!row)return;
  const mark=await sb.rpc('mark_answer_image_deleted',{p_image_id:row.id});if(mark.error)throw new Error(mark.error.message||'تعذر حذف الصورة.');
  const rm=await sb.storage.from('answer-images').remove([row.object_path]);if(rm.error)console.warn('answer image storage remove',rm.error);
- row.deleted=true;if(row.preview_url)URL.revokeObjectURL(row.preview_url);
+ row.deleted=true;
  const left=answerImageRows(key),old=answers[key]||{};if(!left.length&&String(old.text_answer||'')==='إجابة مصورة مرفوعة')answers[key]={question_id:key,text_answer:''};else answers[key]={...old,has_image:left.length>0};
 }
 async function bindAnswerImageControls(q){
