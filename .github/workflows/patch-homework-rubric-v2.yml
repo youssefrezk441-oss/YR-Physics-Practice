@@ -1,0 +1,39 @@
+name: Apply homework rubric v2
+
+on:
+  push:
+    paths:
+      - '.github/scripts/patch_homework_rubric_v2.py'
+      - '.github/workflows/patch-homework-rubric-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch homework flow
+        run: python .github/scripts/patch_homework_rubric_v2.py
+      - name: Verify homework rubric
+        run: |
+          grep -q 'value="mastered"' sessions-admin.html
+          grep -q 'مكتمل بإتقان' sessions-admin.html
+          grep -q 'homework_mastered' student-base.html
+          grep -q 'legacy_done' student-base.html
+          grep -q 'legacy_done' student.html
+          grep -q 'مكتمل بإتقان' student-ledger-admin.html
+          grep -q 'وسام إتقان الواجب' admin-honor.html
+      - name: Commit platform patch
+        run: |
+          if git diff --quiet; then
+            echo 'No changes needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sessions-admin.html student-base.html student.html student-ledger-admin.html admin-honor.html
+          git commit -m 'Apply homework rubric v2 across platform'
+          git push
