@@ -1,0 +1,63 @@
+name: Patch direct camera upload
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-camera-upload.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch student handwritten image controls
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('student-base.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_picker = '''<label class="btn secondary answerImagePicker">اختيار / تصوير<input id="answerImageInput" type="file" accept="image/*" multiple></label>'''
+          new_picker = '''<div class="toolbar" style="margin-top:10px"><label class="btn primary answerImagePicker">📷 صوّر الحل الآن<input id="answerCameraInput" type="file" accept="image/*" capture="environment"></label><label class="btn secondary answerImagePicker">🖼️ اختر صورة من الجهاز<input id="answerGalleryInput" type="file" accept="image/*" multiple></label></div>'''
+          if old_picker not in s:
+              raise SystemExit('picker marker not found')
+          s = s.replace(old_picker, new_picker, 1)
+
+          pattern = r'''async function bindAnswerImageControls\(q\)\{.*?\n\}\n\nfunction renderQuestion'''
+          replacement = '''async function bindAnswerImageControls(q){
+ const bindInput=input=>{if(!input)return;input.onchange=async()=>{const files=[...(input.files||[])];if(!files.length)return;const err=$('answerImageError'),busy=$('answerImageBusy');if(err){err.textContent='';err.classList.add('hidden')}if(busy)busy.classList.remove('hidden');input.disabled=true;try{for(const f of files){if(answerImageRows(q.id).length>=3)break;await uploadAnswerImage(q.id,f)}renderQuestion()}catch(e){if(err){err.textContent=e.message;err.classList.remove('hidden')}else showMsg(e.message)}finally{input.disabled=false;if(busy)busy.classList.add('hidden')}}};
+ bindInput($('answerCameraInput'));
+ bindInput($('answerGalleryInput'));
+ document.querySelectorAll('[data-remove-answer-image]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await removeAnswerImage(q.id,b.dataset.removeAnswerImage);renderQuestion()}catch(e){showMsg(e.message);b.disabled=false}})
+}
+
+function renderQuestion'''
+          s2, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit(f'bind function marker not found or duplicated: {n}')
+
+          p.write_text(s2, encoding='utf-8')
+          PY
+      - name: Verify patch
+        run: |
+          grep -q 'answerCameraInput' student-base.html
+          grep -q 'capture="environment"' student-base.html
+          grep -q 'answerGalleryInput' student-base.html
+          ! grep -q 'id="answerImageInput"' student-base.html
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo 'No changes needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add student-base.html
+          git commit -m 'Enable direct camera capture for handwritten answers'
+          git push
