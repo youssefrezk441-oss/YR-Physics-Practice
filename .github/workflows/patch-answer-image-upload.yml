@@ -1,0 +1,33 @@
+name: Patch student answer image upload
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-answer-image-upload.yml'
+      - 'tools/patch_answer_image_upload.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Patch student base
+        run: python tools/patch_answer_image_upload.py
+      - name: Commit patched student UI
+        run: |
+          if git diff --quiet -- student-base.html; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student-base.html
+          git commit -m "Enable handwritten answer image upload"
+          git push origin main
