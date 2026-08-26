@@ -20,3 +20,6 @@ if(currentFile==='reviews-admin.html'){
   import('./reviews-answer-images.js').catch(e=>console.warn('reviews answer images',e));
   import('./reviews-mode-nav.js').catch(e=>console.warn('reviews mode nav',e));
 }
+if(currentFile==='reviews-quick.html'){
+  import('./reviews-quick-feedback.js').catch(e=>console.warn('quick review feedback',e));
+}
