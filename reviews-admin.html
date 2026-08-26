@@ -45,4 +45,5 @@ $('save').onclick=async()=>{if(!current)return;const grade=Number($('grade').val
 $('next').onclick=()=>{if(!view.length)return;const i=view.findIndex(x=>x.response_id===current?.response_id),n=view[i+1]||view[0];if(n)openReview(n.response_id)};$('refresh').onclick=()=>load().catch(e=>note(e.message,'err'));$('mode').onchange=renderRows;$('search').oninput=()=>{clearTimeout(timer);timer=setTimeout(renderRows,250)};
 const {data:{session}}=await sb.auth.getSession();if(session?.user?.app_metadata?.role==='admin'){$('gate').classList.add('hidden');$('app').classList.remove('hidden');$('userEmail').textContent=session.user.email||'';if(new URLSearchParams(location.search).get('mode')==='precutoff')$('mode').value='precutoff';load().catch(e=>note(e.message,'err'))}
 </script>
+<script type="module" src="./reviews-answer-images.js"></script>
 </body></html>
