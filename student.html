@@ -82,7 +82,7 @@
   const journeyJs=`
 function journeyPct(v){if(v===null||v===undefined||!Number.isFinite(Number(v)))return '—';const n=Math.round((Number(v)+1e-9)*10)/10;return (Number.isInteger(n)?String(n):n.toFixed(1))+'%'}
 function journeyDate(v){if(!v)return '—';try{return new Date(String(v).slice(0,10)+'T00:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'})}catch{return String(v)}}
-function journeyHomeworkText(v,has){if(!has)return 'لا يوجد واجب';if(v==='done')return 'واجب كامل';if(v==='partial')return 'واجب ناقص';if(v==='not_submitted')return 'لم يسلّم';return 'غير مسجل'}
+function journeyHomeworkText(v,has){if(!has)return 'لا يوجد واجب';if(v==='mastered')return 'مكتمل بإتقان';if(v==='done')return 'مكتمل';if(v==='partial')return 'ناقص';if(v==='not_submitted')return 'لم يسلّم';if(v==='legacy_done')return 'تم — سجل سابق';return 'غير مسجل'}
 function journeyQuizStatus(q){if(q.status==='absent')return 'غائب — 0%';if(q.status==='scored')return Number(q.score)+' / '+Number(q.max_score)+' — '+journeyPct(q.percentage);return 'لم تُسجل النتيجة'}
 function renderChapterJourney(d){
   if(!d.cycle){$('chapterJourneyContent').innerHTML='<div class="card"><div class="empty">لم تبدأ دورة تقييم الفصل الأول بعد.</div></div>';return}
@@ -96,7 +96,7 @@ function renderChapterJourney(d){
   $('journeyAttendance').textContent=journeyPct(a.rate);
   $('journeyAttendanceDetail').textContent=Number(a.present||0)+' حضور · '+Number(a.absent||0)+' غياب من '+Number(a.total||0)+' حصة';
   $('journeyHomework').textContent=journeyPct(h.rate);
-  $('journeyHomeworkDetail').textContent=Number(h.done||0)+' كامل · '+Number(h.partial||0)+' ناقص · '+Number(h.not_submitted||0)+' لم يسلّم';
+  $('journeyHomeworkDetail').textContent=Number(h.mastered||0)+' بإتقان · '+Number(h.done||0)+' مكتمل · '+Number(h.partial||0)+' ناقص · '+Number(h.not_submitted||0)+' لم يسلّم'+(Number(h.legacy_done||0)?' · '+Number(h.legacy_done)+' سجل سابق':'');
   $('journeyQuizzes').textContent=journeyPct(q.ratio);
   $('journeyQuizzesDetail').textContent=Number(q.scored||0)+' مصحح · '+Number(q.absent||0)+' غياب'+(Number(q.pending||0)?' · '+Number(q.pending)+' منتظر':'');
   $('journeyPlatform').textContent=journeyPct(p.score);
