@@ -1,0 +1,2 @@
+Homework rubric v2 deployed across class entry, student indicators, assessment views, ledger, and honor labels.
+Values: mastered=100, done=80, partial=50, not_submitted=0. Historical legacy_done remains 100.
