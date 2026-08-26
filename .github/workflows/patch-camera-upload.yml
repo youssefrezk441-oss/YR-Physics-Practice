@@ -18,12 +18,18 @@ jobs:
         run: python .github/scripts/fix_mobile_answer_images.py
       - name: Verify patch
         run: |
-          grep -q 'answerCameraBtn' student-base.html
-          grep -q 'answerGalleryBtn' student-base.html
-          grep -q 'answerImageNativeInput' student-base.html
-          grep -q '✅ تم الحفظ' student-base.html
-          grep -q 'createSignedUrl(path,3600)' student-base.html
-          grep -q 'input.click()' student-base.html
+          for f in student-base.html student.html; do
+            grep -q 'answerCameraBtn' "$f"
+            grep -q 'answerGalleryBtn' "$f"
+            grep -q 'answerImageNativeInput' "$f"
+            grep -q '✅ تم الحفظ' "$f"
+            grep -q 'createSignedUrl(path,3600)' "$f"
+            grep -q 'input.click()' "$f"
+            grep -q 'function answerImageDataUrl(file)' "$f"
+            grep -q 'readAsDataURL' "$f"
+            ! grep -q 'URL.createObjectURL' "$f"
+            ! grep -q 'URL.revokeObjectURL' "$f"
+          done
       - name: Commit patch
         run: |
           if git diff --quiet; then
@@ -32,6 +38,6 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add student-base.html
-          git commit -m 'Fix handwritten image saving on mobile'
+          git add student-base.html student.html
+          git commit -m 'Fix mobile image loading with FileReader'
           git push
