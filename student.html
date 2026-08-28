@@ -118,6 +118,52 @@ async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView'
 "$('openAssessmentCycle').onclick=()=>openAssessmentCycleView();$('backAssessmentMenu').onclick=()=>showOnly('indicatorsMenuView');$('openChapterJourney').onclick=()=>openChapterJourneyView();$('backChapterJourneyMenu').onclick=()=>showOnly('indicatorsMenuView');",
 'أزرار رحلة الفصل الأول');
 
+
+  /* شرح الحصص patch v1 */
+  if(!html.includes('id="openReferences"')){
+    html=html.replace(
+      '<div class="studentHomeGrid">',
+      '<div class="studentHomeGrid"><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
+    );
+  }
+
+  if(!html.includes('id="referencesView"')){
+    html=html.replace(
+      '<section id="trainingMenuView"',
+      `<section id="referencesView" class="hidden">
+<div class="studentSubHead"><div><h2>📖 مرجع الشرح</h2><p class="sectionIntro">ارجع لطريقة التفكير والقوانين والأفكار الأساسية لكل حصة بعد انتهاء الشرح.</p></div><button id="backReferences" class="btn secondary studentBack">العودة للرئيسية</button></div>
+<div class="studentSubGrid two">
+  <a id="refB2Lesson1" class="card studentNavCard referenceLessonCard" href="./references/second-secondary/lesson-1-relative-velocity.html" target="_blank" rel="noopener"><div class="studentNavIcon">🧭</div><h3>الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — الصف الثاني الثانوي.</p><span class="referenceBadge">متاح الآن</span></a>
+</div>
+<div id="referencesEmpty" class="card hidden"><div class="empty">لا يوجد مرجع شرح منشور لصفك حاليًا.</div></div>
+</section>
+<section id="trainingMenuView"`
+    );
+  }
+
+  html=html.replace("'dashboardView','trainingMenuView'","'dashboardView','referencesView','trainingMenuView'");
+
+  if(html.includes("$('openTrainings').onclick=()=>showOnly('trainingMenuView');")){
+    html=html.replace(
+      "$('openTrainings').onclick=()=>showOnly('trainingMenuView');",
+      "$('openReferences').onclick=()=>{const isSecond=gradeLabel(profile?.grade_level)==='الصف الثاني الثانوي';$('refB2Lesson1').classList.toggle('hidden',!isSecond);$('referencesEmpty').classList.toggle('hidden',isSecond);showOnly('referencesView')};$('backReferences').onclick=()=>showOnly('dashboardView');$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+    );
+  }else{
+    throw new Error('تعذر ربط زر مرجع الشرح');
+  }
+
+  const referencesCss=`
+@media(min-width:761px){.studentHomeGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.referenceHomeCard{border-color:#bfdbfe;background:linear-gradient(180deg,#f8fbff,#fff)}
+.referenceHomeCard .studentNavIcon{background:#dbeafe}
+.referenceLessonCard{border-color:#c7d2fe;background:linear-gradient(180deg,#fbfdff,#fff)}
+.referenceBadge{position:absolute;top:14px;left:14px;background:#ecfdf3;color:#027a48;border:1px solid #a7f3d0;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
+html[data-theme="dark"] .referenceHomeCard,html[data-theme="dark"] .referenceLessonCard{background:#111827;border-color:#334155}
+html[data-theme="dark"] .referenceHomeCard .studentNavIcon{background:#1e3a5f}
+html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-color:#166534}
+`;
+  html=html.replace('</style>',referencesCss+'</style>');
+
   const journeyCss=`
 .journeyHero{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:center;background:linear-gradient(135deg,#0d2444,#172033);color:#fff;border:0;padding:26px}.journeyRing{--score:0;width:178px;height:178px;border-radius:50%;display:grid;place-items:center;margin:auto;position:relative;background:conic-gradient(#60a5fa calc(var(--score)*1%),rgba(255,255,255,.14) 0);box-shadow:0 16px 38px rgba(15,23,42,.22)}.journeyRing:after{content:"";position:absolute;width:138px;height:138px;border-radius:50%;background:#11243e}.journeyRingInner{position:relative;z-index:2;text-align:center}.journeyReadiness{font-size:40px;font-weight:950;line-height:1}.journeyReadinessLabel{font-size:12px;opacity:.72;margin-top:8px}.journeyStatus{display:inline-block;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}.journeyHeroCopy h2{font-size:28px;margin:12px 0 7px}.journeyHeroCopy p{margin:0;color:#dbeafe;line-height:1.85}.journeyReason{margin-top:13px;font-size:12px;color:#bfdbfe}.journeyMetricGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:14px}.journeyMetric{background:#fff;border:1px solid #e4e7ec;border-radius:16px;padding:16px;box-shadow:0 5px 16px rgba(15,23,42,.035)}.journeyMetricIcon{font-size:24px}.journeyMetric b{display:block;font-size:28px;margin:8px 0 2px}.journeyMetric strong{font-size:13px}.journeyMetric .detail{font-size:11px;color:#667085;line-height:1.7;margin-top:7px}.journeyPriority{display:flex;gap:14px;align-items:flex-start;border-color:#bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff)}.journeyPriorityIcon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#dbeafe;font-size:26px;flex:0 0 auto}.journeyPriority h3{margin:0 0 6px}.journeyPriority p{margin:0;line-height:1.8;font-weight:800}.journeyWeakest{margin-top:8px;font-size:12px;color:#475467}.journeyTwoCol{display:grid;grid-template-columns:1fr 1fr;gap:14px}.journeyTrend{padding:15px;border-radius:14px;background:#f8fafc;border:1px solid #e4e7ec;margin-top:12px}.journeyTrendMain{display:flex;gap:9px;align-items:center;font-size:15px}.journeyTrendMain span{font-size:24px}.journeyMiniList{margin-top:10px}.journeyMiniRow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 2px;border-bottom:1px solid #eaecf0}.journeyMiniRow:last-child{border-bottom:0}.journeyMiniRow b{display:block;font-size:13px}.journeyMiniRow span{display:block;color:#667085;font-size:11px;margin-top:3px}.journeyMiniRow strong{font-size:12px;text-align:left}.journeySessionTags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.journeyTag{background:#f2f4f7;color:#475467;border-radius:999px;padding:5px 8px;font-size:11px!important;margin:0!important}.journeyTag.good{background:#ecfdf3;color:#027a48}.journeyTag.bad{background:#fff1f3;color:#be123c}.journeyTrainingList{margin-top:12px}.journeyTraining{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;padding:12px;border:1px solid #e4e7ec;border-radius:13px;margin:8px 0}.journeyStep{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#eef2ff;color:#1d4ed8;font-weight:900}.journeyTraining.done{border-color:#a7f3d0;background:#f0fdf4}.journeyTraining.pending{border-color:#fde68a;background:#fffbeb}.journeyTrainingText b{font-size:13px}.journeyTrainingText div,.journeyTraining>span{font-size:11px;color:#667085;margin-top:4px}.journeyFoot{font-size:11px;color:#667085;line-height:1.8;padding:5px 3px 15px}.journeyFoot b{color:#344054}html[data-theme="dark"] .journeyMetric{background:#111827;border-color:#334155}html[data-theme="dark"] .journeyMetric .detail,html[data-theme="dark"] .journeyWeakest,html[data-theme="dark"] .journeyMiniRow span,html[data-theme="dark"] .journeyTrainingText div,html[data-theme="dark"] .journeyTraining>span,html[data-theme="dark"] .journeyFoot{color:#9ca3af}html[data-theme="dark"] .journeyPriority{background:#111827;border-color:#1d4ed8}html[data-theme="dark"] .journeyPriorityIcon{background:#172554}html[data-theme="dark"] .journeyTrend{background:#111827;border-color:#334155}html[data-theme="dark"] .journeyMiniRow{border-color:#334155}html[data-theme="dark"] .journeyTag{background:#1e293b;color:#cbd5e1}html[data-theme="dark"] .journeyTraining{border-color:#334155;background:#111827}html[data-theme="dark"] .journeyTraining.done{background:#052e16;border-color:#166534}html[data-theme="dark"] .journeyTraining.pending{background:#422006;border-color:#92400e}@media(max-width:800px){.journeyHero{grid-template-columns:1fr;text-align:center}.journeyHeroCopy{display:flex;flex-direction:column;align-items:center}.journeyMetricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.journeyTwoCol{grid-template-columns:1fr}}@media(max-width:480px){.journeyRing{width:160px;height:160px}.journeyRing:after{width:124px;height:124px}.journeyReadiness{font-size:36px}.journeyMetric b{font-size:24px}.journeyTraining{grid-template-columns:34px 1fr}.journeyTraining>span{grid-column:2}}
 `;

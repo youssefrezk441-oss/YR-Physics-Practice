@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مرجع الحصة — متجهات السرعة والسرعة النسبية</title>
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#111b2e;
+  --panel2:#16243b;
+  --ink:#f5f7fb;
+  --muted:#aeb9cb;
+  --blue:#5aa7ff;
+  --cyan:#55d6d2;
+  --gold:#ffd166;
+  --red:#ff7b7b;
+  --green:#79e2a7;
+  --line:#2a3a55;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Tahoma,Arial,"Segoe UI",sans-serif;
+  line-height:1.8;
+}
+button{font:inherit}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 18px;
+  border-bottom:1px solid var(--line);
+  background:#0d1627;
+}
+.title-wrap{min-width:0}
+.lesson-title{
+  font-size:20px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.sub{font-size:12px;color:var(--muted);margin-top:2px}
+.progress-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:250px;
+}
+.progress{
+  height:8px;
+  background:#1d2a40;
+  border-radius:999px;
+  overflow:hidden;
+  flex:1;
+}
+.progress > div{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--blue));
+}
+.counter{font-size:13px;color:var(--muted);min-width:54px;text-align:left}
+
+.main{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:0;
+}
+.sidebar{
+  position:sticky;
+  top:61px;
+  align-self:start;
+  max-height:calc(100vh - 61px);
+  overflow:auto;
+  border-left:1px solid var(--line);
+  background:#0d1627;
+  padding:10px;
+}
+.nav-item{
+  display:block;
+  width:100%;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--muted);
+  text-align:right;
+  border-radius:10px;
+  padding:9px 10px;
+  margin:4px 0;
+  cursor:pointer;
+  font-size:13px;
+}
+.nav-item:hover{background:#132039;color:#fff}
+.nav-item.active{
+  background:#152846;
+  color:#fff;
+  border-color:#2f5f91;
+}
+
+.stage{
+  padding:18px;
+  min-width:0;
+}
+.hero{
+  border:1px solid #294464;
+  background:linear-gradient(180deg,#14233a,#101b2d);
+  border-radius:18px;
+  padding:22px 24px;
+  margin-bottom:18px;
+}
+.hero h1{
+  margin:0 0 8px;
+  font-size:30px;
+  line-height:1.4;
+}
+.hero p{margin:0;color:var(--muted)}
+.master{
+  margin-top:16px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+}
+
+.card{
+  display:none;
+  gap:14px;
+}
+.card.active{display:grid}
+.phase-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+}
+.phase-title{
+  font-size:29px;
+  font-weight:900;
+  line-height:1.35;
+}
+.phase-kicker{
+  color:var(--cyan);
+  font-weight:800;
+  font-size:15px;
+  margin-top:4px;
+}
+.bigidea{
+  background:linear-gradient(180deg,#14233a,#101b2d);
+  border:1px solid #294464;
+  border-radius:16px;
+  padding:16px 18px;
+  font-size:22px;
+  font-weight:800;
+  line-height:1.6;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.box{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:15px 16px;
+  background:var(--panel);
+  min-width:0;
+}
+.box h3{
+  margin:0 0 8px;
+  font-size:15px;
+  color:var(--muted);
+}
+.idea{border-color:#315b7a}.idea h3{color:var(--blue)}
+.why{border-color:#3f665f}.why h3{color:var(--green)}
+.warn{border-color:#6e4a4a}.warn h3{color:var(--red)}
+.test{border-color:#6e633f}.test h3{color:var(--gold)}
+.example{border-color:#4f4b73}.example h3{color:#c4b5fd}
+.visual{border-color:#3a6571}.visual h3{color:#67e8f9}
+.content{
+  font-size:17px;
+  line-height:1.8;
+}
+.eq{
+  direction:ltr;
+  text-align:center;
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-size:22px;
+  font-weight:700;
+  color:#fff;
+  background:#0c1525;
+  border:1px solid #263a56;
+  border-radius:10px;
+  padding:8px 10px;
+  margin:8px 0;
+}
+
+.vec{
+  position:relative;
+  display:inline-block;
+  padding-top:.08em;
+  margin-inline:.03em;
+  font-family:"Cambria Math","Times New Roman",serif;
+}
+.vec::before{
+  content:"→";
+  position:absolute;
+  left:50%;
+  top:-0.55em;
+  transform:translateX(-50%);
+  font-size:.72em;
+  line-height:1;
+  font-weight:700;
+}
+
+.mini{
+  color:var(--muted);
+  font-size:14px;
+}
+.answer{
+  display:none;
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid #355a49;
+  background:#10271e;
+  border-radius:10px;
+  color:#d9ffe7;
+}
+.answer.show{display:block}
+.answer-btn{
+  margin-top:8px;
+  border:1px solid #4d5f7a;
+  background:#18263e;
+  color:#fff;
+  border-radius:9px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+.answer-btn:hover{background:#203553}
+.controls{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.btn{
+  border:1px solid #2d4262;
+  background:#15233a;
+  color:#fff;
+  border-radius:10px;
+  padding:9px 16px;
+  cursor:pointer;
+}
+.btn:hover{background:#1b3152}
+.footer-note{
+  margin-top:20px;
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+}
+ul{margin:6px 0;padding-right:22px}
+li{margin:5px 0}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .grid{grid-template-columns:1fr}
+  .progress-wrap{min-width:150px}
+  .hero h1{font-size:25px}
+  .phase-title{font-size:25px}
+  .bigidea{font-size:19px}
+  .stage{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="title-wrap">
+    <div class="lesson-title">مرجع الحصة — متجهات السرعة والسرعة النسبية</div>
+    <div class="sub">لو نسيت الفكرة… ارجع لطريقة التفكير، مش للقانون فقط.</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress"><div id="bar"></div></div>
+    <div class="counter" id="counter">1 / 12</div>
+  </div>
+</header>
+
+<div class="main">
+  <aside class="sidebar" id="nav"></aside>
+
+  <main class="stage">
+    <section class="hero">
+      <h1>مرجع الحصة — الدرس الأول</h1>
+      <p>هذا الملف ليس بديلًا عن الشرح، بل مرجع سريع يعيد لك منطق الحصة بعد انتهاء الدرس.</p>
+      <div class="master">قبل أي مسألة: الجسم؟ المرجع؟ الاتجاهات؟</div>
+    </section>
+
+    <section class="card active" data-title="1 — المرجع">
+      <div class="phase-head"><div>
+        <div class="phase-title">1 — الحركة بالنسبة إلى مَن؟</div>
+        <div class="phase-kicker">الفكرة الأولى التي يبنى عليها الدرس كله</div>
+      </div></div>
+      <div class="bigidea">الجسم قد يكون ساكنًا بالنسبة لمرجع، ومتحركًا بالنسبة لمرجع آخر في نفس اللحظة.</div>
+      <div class="grid">
+        <div class="box visual"><h3>الصورة في دماغك</h3><div class="content">
+          شخص واقف على ممر متحرك:<br>
+          بالنسبة للممر → ساكن.<br>
+          بالنسبة للأرض → متحرك.
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن وصف الحركة لا يكتمل إلا إذا عرفت بالنسبة إلى أي جسم أو إطار تقيس الحركة.
+        </div></div>
+        <div class="box idea"><h3>الخلاصة</h3><div class="content">
+          لا تقل «ساكن» أو «متحرك» دون أن تحدد المرجع.
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          سيارتان تتحركان جنبًا إلى جنب بنفس السرعة وفي نفس الاتجاه. ماذا يرى راكب كل سيارة بالنسبة للسيارة الأخرى؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">يراها ساكنة بالنسبة إليه، رغم أن السيارتين تتحركان بالنسبة للطريق.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="2 — السرعة متجه">
+      <div class="phase-head"><div>
+        <div class="phase-title">2 — السرعة ليست رقمًا فقط</div>
+        <div class="phase-kicker">المقدار وحده لا يكفي</div>
+      </div></div>
+      <div class="bigidea">السرعة المتجهة تحتاج مقدارًا واتجاهًا معًا.</div>
+      <div class="grid">
+        <div class="box visual"><h3>الصورة في دماغك</h3><div class="content">
+          5 m/s شرقًا ≠ 5 m/s غربًا، رغم أن المقدار واحد.
+        </div></div>
+        <div class="box idea"><h3>الخلاصة</h3><div class="content">
+          <div class="eq">Velocity = Magnitude + Direction</div>
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن تغيير الاتجاه يغير المتجه حتى لو لم يتغير مقدار السرعة.
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          جسم سرعته 10 m/s. هل هذه المعلومة وحدها تكفي لتحديد سرعة الجسم المتجهة؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">لا، يجب معرفة الاتجاه أيضًا.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="3 — تركيب السرعات">
+      <div class="phase-head"><div>
+        <div class="phase-title">3 — عندما يتحرك الجسم بحركتين معًا</div>
+        <div class="phase-kicker">نبحث عن المحصلة كمتجه</div>
+      </div></div>
+      <div class="bigidea">لا تجمع مقادير السرعات قبل أن تعرف اتجاهاتها.</div>
+      <div class="grid">
+        <div class="box idea"><h3>القانون العام</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>R</sub> = <span class="vec">v</span><sub>1</sub> + <span class="vec">v</span><sub>2</sub></div>
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن المحصلة تعتمد على مقدار كل متجه وعلى الزاوية بينهما.
+        </div></div>
+        <div class="box example"><h3>مثال سريع</h3><div class="content">
+          سرعتان مقدارهما 3 و4 m/s:<br>
+          نفس الاتجاه → 7 m/s<br>
+          عكس الاتجاه → 1 m/s<br>
+          متعامدتان → 5 m/s
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          «3 + 4 = 7» ليست قاعدة في المتجهات؛ هي حالة خاصة فقط عندما يكون الاتجاه واحدًا.
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="4 — المركبات">
+      <div class="phase-head"><div>
+        <div class="phase-title">4 — تحليل متجه السرعة</div>
+        <div class="phase-kicker">متجه واحد… نصفه في اتجاهين</div>
+      </div></div>
+      <div class="bigidea">المركبات ليست سرعتين منفصلتين؛ هي طريقة لوصف نفس المتجه بالنسبة لمحورين.</div>
+      <div class="grid">
+        <div class="box idea"><h3>إذا كانت θ من المحور الأفقي</h3><div class="content">
+          <div class="eq">vx = v cos θ</div>
+          <div class="eq">vy = v sin θ</div>
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن vx هو الضلع المجاور للزاوية، وvy هو الضلع المقابل.
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          لا تحفظ: «الأفقي Cos والرأسي Sin».<br>
+          اسأل أولًا: الزاوية مقاسة من أي محور؟ وما الضلع المقابل والمجاور؟
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          سرعة 10 m/s وتميل بزاوية 30° عن الرأسي. ما المركبة الأفقية؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer"><div class="eq">vx = 10 sin 30° = 5 m/s</div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="5 — المعدية">
+      <div class="phase-head"><div>
+        <div class="phase-title">5 — المعدية: كل مركبة تؤدي وظيفة</div>
+        <div class="phase-kicker">افهم تأثير كل اتجاه قبل أن تحسب</div>
+      </div></div>
+      <div class="bigidea">المركبة عبر النهر تحدد العبور، والمركبة مع التيار تحدد الانحراف.</div>
+      <div class="grid">
+        <div class="box idea"><h3>العلاقات الأساسية</h3><div class="content">
+          <div class="eq">vy → عبور النهر</div>
+          <div class="eq">vx → الانحراف مع التيار</div>
+          <div class="eq">t = h / vy</div>
+          <div class="eq">dx = vx t</div>
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن الحركتين تحدثان في الوقت نفسه، وكل مركبة تؤثر في اتجاه مختلف.
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          لا تستخدم السرعة المحصلة لحساب زمن عبور عرض النهر إذا كان المطلوب قطع البعد العمودي على الضفة.
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          إذا اختفى تيار النهر تمامًا، أي جزء من حركة القارب يبقى؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">حركة القارب عبر النهر فقط.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="6 — زمن العبور">
+      <div class="phase-head"><div>
+        <div class="phase-title">6 — لماذا قد يزيد المسار ولا يزيد الزمن؟</div>
+        <div class="phase-kicker">سؤال يكشف فهمك الحقيقي للمركبات</div>
+      </div></div>
+      <div class="bigidea">إذا زادت سرعة التيار فقط بينما ظلت المركبة عبر النهر ثابتة، فإن زمن العبور لا يتغير.</div>
+      <div class="grid">
+        <div class="box idea"><h3>ما الذي يحدث؟</h3><div class="content">
+          السرعة المحصلة ↑<br>
+          الانحراف ↑<br>
+          طول المسار ↑<br>
+          <strong>زمن العبور ثابت</strong>
+        </div></div>
+        <div class="box why"><h3>ليه؟</h3><div class="content">
+          لأن:
+          <div class="eq">t = h / vy</div>
+          وطالما vy لم تتغير، فإن t لا تتغير.
+        </div></div>
+        <div class="box warn"><h3>خطأ شائع</h3><div class="content">
+          «المسار أطول إذن الزمن أكبر».<br>
+          هذا يتجاهل أن السرعة المحصلة زادت أيضًا، وأن زمن قطع العرض تحكمه vy.
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          ما الكمية التي يجب أن تتغير فعلًا حتى يتغير زمن عبور عرض النهر؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">المركبة التي تقطع عرض النهر vy، أو عرض النهر h.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="7 — هدف القارب">
+      <div class="phase-head"><div>
+        <div class="phase-title">7 — أقصر زمن ليس هو الوصول للنقطة المقابلة</div>
+        <div class="phase-kicker">الهدف يحدد أفضل توجيه</div>
+      </div></div>
+      <div class="bigidea">قبل أن تبحث عن «أفضل اتجاه»، حدد: أفضل لتحقيق ماذا؟</div>
+      <div class="grid">
+        <div class="box visual"><h3>الصورة الذهنية</h3><div class="content">
+          أقصر زمن للوصول لأي نقطة على الضفة المقابلة → وجّه القارب عموديًا على الضفة.<br><br>
+          الوصول للنقطة المقابلة بالضبط → وجّه القارب عكس التيار بحيث تلغى المركبة الجانبية.
+        </div></div>
+        <div class="box idea"><h3>شرط الوصول للمقابل</h3><div class="content">
+          <div class="eq">vboat,x + vriver = 0</div>
+        </div></div>
+        <div class="box example"><h3>مثال سريع</h3><div class="content">
+          إذا كانت سرعة القارب 6 m/s وسرعة التيار 3 m/s:
+          <div class="eq">6 cos θ = 3</div>
+          <div class="eq">θ = 60°</div>
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          لماذا لا يكون توجيه القارب عموديًا على الضفة مناسبًا إذا كان المطلوب الوصول للنقطة المقابلة بالضبط؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">لأن التيار سيضيف مركبة جانبية فينحرف القارب مع اتجاه التيار.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="8 — السرعة النسبية">
+      <div class="phase-head"><div>
+        <div class="phase-title">8 — السرعة النسبية</div>
+        <div class="phase-kicker">نغيّر الراصد لا حركة الجسم فقط</div>
+      </div></div>
+      <div class="bigidea">سرعة B بالنسبة إلى A هي ما يراه الراصد المتحرك مع A لحركة B.</div>
+      <div class="grid">
+        <div class="box idea"><h3>القانون</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>B/A</sub> = <span class="vec">v</span><sub>B</sub> − <span class="vec">v</span><sub>A</sub></div>
+        </div></div>
+        <div class="box why"><h3>ليه الطرح؟</h3><div class="content">
+          إذا تحرك A وB بنفس السرعة وفي نفس الاتجاه، فيجب أن يرى كل منهما الآخر ساكنًا:
+          <div class="eq">vB/A = 0</div>
+        </div></div>
+        <div class="box example"><h3>مثال سريع</h3><div class="content">
+          A = 20 m/s شرقًا<br>
+          B = 25 m/s شرقًا
+          <div class="eq">vB/A = 25 − 20 = 5 m/s</div>
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          «السرعة النسبية صفر» لا تعني أن الجسم ساكن بالنسبة للأرض؛ تعني أنه ساكن بالنسبة للراصد المحدد فقط.
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="9 — الإشارة والاتجاه">
+      <div class="phase-head"><div>
+        <div class="phase-title">9 — نفس الاتجاه والعكس: لا تحفظ قاعدتين</div>
+        <div class="phase-kicker">استخدم الإشارات والقانون العام</div>
+      </div></div>
+      <div class="bigidea">اختر اتجاهًا موجبًا، ثم مثّل كل سرعة بإشارتها، وبعدها استخدم نفس القانون دائمًا.</div>
+      <div class="grid">
+        <div class="box example"><h3>مثال</h3><div class="content">
+          الشرق موجب.<br>
+          إذا كانت A تتحرك غربًا بسرعة 20:
+          <div class="eq">vA = −20</div>
+          وإذا كانت B شرقًا 25:
+          <div class="eq">vB/A = 25 − (−20) = 45</div>
+        </div></div>
+        <div class="box why"><h3>ليه ظهر الجمع؟</h3><div class="content">
+          لأننا طرحنا كمية سالبة، وليس لأن هناك «قانونًا آخر» للاتجاه المعاكس.
+        </div></div>
+        <div class="box idea"><h3>علاقة مهمة</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>B/A</sub> = −<span class="vec">v</span><sub>A/B</sub></div>
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          إذا كانت vB/A = +5 m/s واخترنا الشرق موجبًا، ماذا تعني الإشارة الموجبة؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">تعني أن B تتحرك بالنسبة إلى A في الاتجاه الموجب الذي اخترناه، أي شرقًا.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="10 — المطر">
+      <div class="phase-head"><div>
+        <div class="phase-title">10 — لماذا يبدو المطر مائلًا من سيارة متحركة؟</div>
+        <div class="phase-kicker">نفس القطرة… لكن المرجع تغير</div>
+      </div></div>
+      <div class="bigidea">الراكب لا يرى سرعة المطر بالنسبة للأرض؛ بل سرعة المطر بالنسبة للسيارة.</div>
+      <div class="grid">
+        <div class="box idea"><h3>القانون</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>rain/car</sub> = <span class="vec">v</span><sub>rain/ground</sub> − <span class="vec">v</span><sub>car/ground</sub></div>
+        </div></div>
+        <div class="box why"><h3>ليه يظهر الميل؟</h3><div class="content">
+          لأن طرح سرعة السيارة يضيف للمطر بالنسبة للراكب مركبة أفقية عكس حركة السيارة.
+        </div></div>
+        <div class="box example"><h3>مثال سريع</h3><div class="content">
+          إذا كانت السيارة 5 m/s، والمطر يبدو بزاوية 30° عن الرأسي:
+          <div class="eq">tan 30° = 5 / vrain</div>
+          <div class="eq">vrain ≈ 8.66 m/s</div>
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          متجه حركة القطرة بالنسبة للسيارة يميل إلى الخلف أثناء هبوطها، لذلك لا تخلط بين اتجاه حركة القطرة واتجاه المكان الذي تبدو قادمة منه.
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="11 — النموذج الموحد">
+      <div class="phase-head"><div>
+        <div class="phase-title">11 — القارب والمطر والطائرة: نفس الفكرة</div>
+        <div class="phase-kicker">لا تحفظ «نوع المسألة»… افهم الأطر المرجعية</div>
+      </div></div>
+      <div class="bigidea">في كل مرة نحاول تحويل سرعة جسم من مرجع إلى مرجع آخر.</div>
+      <div class="grid">
+        <div class="box idea"><h3>العلاقة الموحدة</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>A/C</sub> = <span class="vec">v</span><sub>A/B</sub> + <span class="vec">v</span><sub>B/C</sub></div>
+          <div class="mini">استخدمها كأداة فهم، وليس كقانون تحفظه بلا معنى.</div>
+        </div></div>
+        <div class="box visual"><h3>شوف التشابه</h3><div class="content">
+          قارب بالنسبة للماء → ماء بالنسبة للأرض → قارب بالنسبة للأرض.<br><br>
+          مطر بالنسبة للأرض → أرض بالنسبة للسيارة → مطر بالنسبة للسيارة.<br><br>
+          طائرة بالنسبة للهواء → هواء بالنسبة للأرض → طائرة بالنسبة للأرض.
+        </div></div>
+        <div class="box why"><h3>الفكرة الأعمق</h3><div class="content">
+          الجمع أو الطرح الظاهر في المسألة ليس هو الفكرة الأساسية؛ الفكرة الأساسية هي الانتقال بين الأطر المرجعية.
+        </div></div>
+        <div class="box test"><h3>اختبر نفسك</h3><div class="content">
+          لماذا يمكن لمسألة المطر ومسألة القارب أن تبدوا مختلفتين رغم أن بنيتهما واحدة؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">لأن المراجع والاتجاهات مختلفة، لكننا في الحالتين نركّب سرعات بين أكثر من إطار مرجعي.</div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" data-title="12 — الطائرة والإغلاق">
+      <div class="phase-head"><div>
+        <div class="phase-title">12 — الطائرة ثم الخلاصة الكبرى</div>
+        <div class="phase-kicker">تطبيق نهائي يثبت أن اتجاه المقدمة ليس دائمًا اتجاه المسار</div>
+      </div></div>
+      <div class="bigidea">قد يوجّه الطيار مقدمة الطائرة عكس الرياح حتى تكون السرعة المحصلة على امتداد المدرج.</div>
+      <div class="grid">
+        <div class="box idea"><h3>القانون</h3><div class="content">
+          <div class="eq"><span class="vec">v</span><sub>plane/ground</sub> = <span class="vec">v</span><sub>plane/air</sub> + <span class="vec">v</span><sub>air/ground</sub></div>
+        </div></div>
+        <div class="box example"><h3>مثال سريع</h3><div class="content">
+          سرعة الطائرة بالنسبة للهواء = 220 km/h<br>
+          سرعة الرياح = 40 km/h
+          <div class="eq">220 sin θ = 40</div>
+          <div class="eq">θ ≈ 10.5°</div>
+          <div class="eq">vground ≈ 216 km/h</div>
+        </div></div>
+        <div class="box warn"><h3>خلي بالك</h3><div class="content">
+          اتجاه مقدمة الطائرة ليس بالضرورة اتجاه مسارها بالنسبة للأرض.
+        </div></div>
+        <div class="box test"><h3>اختبار الخروج</h3><div class="content">
+          لو قابلتك مسألة جديدة تمامًا، ما أول أربع خطوات؟
+          <button class="answer-btn">إظهار الإجابة</button>
+          <div class="answer">حدد الجسم → حدد المرجع → حدد الاتجاهات → ارسم المتجهات، ثم ابدأ الحساب.</div>
+        </div></div>
+      </div>
+
+      <div class="box why" style="margin-top:14px">
+        <h3>الخلاصة الكبرى للدرس</h3>
+        <div class="content">
+          <div class="eq">مرجع → مقدار + اتجاه → متجه → تركيب/تحليل → تغيير المرجع → سرعة نسبية</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="controls">
+      <button class="btn" id="prev">السابق ←</button>
+      <button class="btn" id="next">→ التالي</button>
+    </div>
+
+    <div class="footer-note">
+      مرجع الحصة — مستر يوسف رزق
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+const cards=[...document.querySelectorAll('.card')];
+const nav=document.getElementById('nav');
+const bar=document.getElementById('bar');
+const counter=document.getElementById('counter');
+let current=0;
+
+cards.forEach((c,i)=>{
+  const b=document.createElement('button');
+  b.className='nav-item'+(i===0?' active':'');
+  b.textContent=c.dataset.title;
+  b.addEventListener('click',()=>show(i));
+  nav.appendChild(b);
+});
+
+document.querySelectorAll('.answer-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const ans=btn.nextElementSibling;
+    const open=ans.classList.toggle('show');
+    btn.textContent=open?'إخفاء الإجابة':'إظهار الإجابة';
+  });
+});
+
+function show(i){
+  current=Math.max(0,Math.min(cards.length-1,i));
+  cards.forEach((c,idx)=>c.classList.toggle('active',idx===current));
+  [...nav.children].forEach((n,idx)=>n.classList.toggle('active',idx===current));
+  bar.style.width=(((current+1)/cards.length)*100)+'%';
+  counter.textContent=(current+1)+' / '+cards.length;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('next').addEventListener('click',()=>show(current+1));
+document.getElementById('prev').addEventListener('click',()=>show(current-1));
+
+document.addEventListener('keydown',e=>{
+  const tag=(e.target.tagName||'').toLowerCase();
+  if(['input','textarea','button','select'].includes(tag)) return;
+  if(e.key==='ArrowLeft' || e.key==='PageDown'){e.preventDefault();show(current+1);}
+  if(e.key==='ArrowRight' || e.key==='PageUp'){e.preventDefault();show(current-1);}
+  if(e.key==='Home'){e.preventDefault();show(0);}
+  if(e.key==='End'){e.preventDefault();show(cards.length-1);}
+});
+
+show(0);
+</script>
+</body>
+</html>
