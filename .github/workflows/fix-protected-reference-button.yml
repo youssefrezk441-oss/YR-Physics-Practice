@@ -1,0 +1,33 @@
+name: Fix protected reference button
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-protected-reference-button.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch protected reference button
+        run: python3 scripts/fix_protected_reference_button.py
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add student.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Fix protected student reference button"
+            git push
+          fi
