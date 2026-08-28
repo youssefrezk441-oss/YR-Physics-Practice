@@ -10,15 +10,15 @@
 <body>
 <div id="gate" class="gate"><div class="gateCard"><b>جاري التحقق من صلاحية الإدارة...</b></div></div>
 <main id="app" class="wrap hidden">
-<div class="top"><div class="brand"><h1>مرجع شرح الحصص</h1><p>تحضير المدرس العملي الذي تفتحه أثناء الشرح أو تراجعه قبل الحصة.</p></div><a class="back" href="admin-home.html">← لوحة الإدارة</a></div>
+<div class="top"><div class="brand"><h1>مرجع شرح الحصص</h1><p>لوحة قيادة سريعة تفتحها على اللاب أثناء الشرح: فكرة، سؤال، سبورة، فخ، وانتقال.</p></div><a class="back" href="index.html">← لوحة الإدارة</a></div>
 <section class="hero"><h2>مرجع المدرس</h2><p>كل حصة لها صفحة مستقلة: تسلسل الشرح، أسئلة الإلقاء، ما يُكتب على السبورة، الأخطاء المتوقعة، والعلاقات الرياضية مضبوطة بصريًا.</p></section>
 <div class="grid">
-<a class="item" href="teacher-reference-lesson1.html"><div class="icon">🧭</div><div><h3>الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — الصف الثاني الثانوي. دليل قيادة الحصة كاملًا.</p></div><span class="badge">متاح الآن</span></a>
+<a class="item" href="teacher-reference-lesson1.html"><div class="icon">🧭</div><div><h3>الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — لوحة قيادة مباشرة للحصة، شاشة وراء شاشة.</p></div><span class="badge">متاح الآن</span></a>
 </div>
 </main>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';import{loadAdminAccess}from'./admin-access.js';
 const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-try{await loadAdminAccess(sb);document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحسابات الإدارة فقط.</p><a href="admin-home.html">العودة إلى لوحة الإدارة</a></div>'}
+try{await loadAdminAccess(sb);document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحسابات الإدارة فقط.</p><a href="index.html">العودة إلى لوحة الإدارة</a></div>'}
 </script>
 </body></html>
