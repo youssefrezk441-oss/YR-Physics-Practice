@@ -29,3 +29,4 @@ jobs:
             git commit -m "Add teacher lesson references"
             git push
           fi
+# retry with chunked source
