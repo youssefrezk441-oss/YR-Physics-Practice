@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مرجع شرح الحصص — الإدارة</title>
+<style>
+:root{font-family:Arial,"Noto Sans Arabic",Tahoma,sans-serif;color:#172033;background:#f5f7fb;color-scheme:light}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top right,#eef4fb 0,#f8fafc 38%,#f5f7fb 78%);color:#172033}.wrap{max-width:1100px;margin:auto;padding:26px 18px 54px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:24px}.brand h1{margin:0;font-size:27px;color:#16324F}.brand p{margin:6px 0 0;color:#667085}.back{color:#16324F;text-decoration:none;font-weight:900;background:#fff;border:1px solid #d0d5dd;border-radius:11px;padding:10px 14px}.hero{background:linear-gradient(135deg,#fafdff,#edf4fb);border:1px solid #cfe0f3;border-radius:22px;padding:24px;margin-bottom:20px}.hero h2{margin:0 0 7px;color:#16324F;font-size:22px}.hero p{margin:0;color:#526071;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.item{position:relative;display:flex;align-items:center;gap:18px;min-height:175px;padding:24px;background:#fff;border:1px solid #e4e7ec;border-radius:20px;text-decoration:none;color:#172033;box-shadow:0 7px 22px rgba(16,24,40,.05);transition:.18s ease}.item:hover{transform:translateY(-3px);border-color:#b8c4e8;box-shadow:0 13px 28px rgba(16,24,40,.09)}.icon{width:76px;height:76px;min-width:76px;border-radius:21px;background:#eef4fb;color:#3166A8;display:grid;place-items:center;font-size:37px}.item h3{margin:0 0 7px;color:#16324F;font-size:20px}.item p{margin:0;color:#667085;line-height:1.7;font-size:13px}.badge{position:absolute;top:14px;left:14px;background:#ecfdf3;color:#027a48;border:1px solid #a7f3d0;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}.gate{min-height:100vh;display:grid;place-items:center;padding:20px}.gateCard{max-width:480px;background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(15,23,42,.08);text-align:center}.gateCard a{display:inline-block;margin-top:8px;color:#16324F;text-decoration:none;font-weight:900}.hidden{display:none!important}@media(max-width:720px){.wrap{padding:18px 12px 40px}.top{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.item{min-height:150px;padding:20px}.icon{width:66px;height:66px;min-width:66px;font-size:32px}.brand h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div id="gate" class="gate"><div class="gateCard"><b>جاري التحقق من صلاحية الإدارة...</b></div></div>
+<main id="app" class="wrap hidden">
+<div class="top"><div class="brand"><h1>مرجع شرح الحصص</h1><p>تحضير المدرس العملي الذي تفتحه أثناء الشرح أو تراجعه قبل الحصة.</p></div><a class="back" href="admin-home.html">← لوحة الإدارة</a></div>
+<section class="hero"><h2>مرجع المدرس</h2><p>كل حصة لها صفحة مستقلة: تسلسل الشرح، أسئلة الإلقاء، ما يُكتب على السبورة، الأخطاء المتوقعة، والعلاقات الرياضية مضبوطة بصريًا.</p></section>
+<div class="grid">
+<a class="item" href="teacher-reference-lesson1.html"><div class="icon">🧭</div><div><h3>الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — الصف الثاني الثانوي. دليل قيادة الحصة كاملًا.</p></div><span class="badge">متاح الآن</span></a>
+</div>
+</main>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';import{loadAdminAccess}from'./admin-access.js';
+const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+try{const ctx=await loadAdminAccess(sb);if(!ctx.isOwner)throw new Error('owner only');document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحساب المالك فقط.</p><a href="admin-home.html">العودة إلى لوحة الإدارة</a></div>'}
+</script>
+</body></html>

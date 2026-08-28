@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إعداد مستر يوسف — الدرس الأول: متجهات السرعة والسرعة النسبية</title>
+<style>
+  :root{
+    --ink:#111827;
+    --muted:#5b6472;
+    --navy:#16324F;
+    --blue:#3166A8;
+    --pale:#eef4fb;
+    --soft:#f7f9fc;
+    --line:#d8e0ea;
+    --warn:#fff6df;
+    --ok:#edf8f1;
+    --danger:#fff0f0;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:#edf1f5;
+    color:var(--ink);
+    font-family:Tahoma,Arial,"Segoe UI",sans-serif;
+    line-height:1.9;
+    font-size:16px;
+  }
+  .page{
+    width:min(100%, 980px);
+    margin:26px auto;
+    background:#fff;
+    padding:42px 48px;
+    box-shadow:0 8px 28px rgba(0,0,0,.08);
+    border-radius:18px;
+  }
+  h1,h2,h3{color:var(--navy);line-height:1.5;margin-top:0}
+  h1{font-size:30px;text-align:center;margin-bottom:8px}
+  .subtitle{text-align:center;color:var(--muted);margin-bottom:26px}
+  h2{
+    font-size:23px;
+    border-right:5px solid var(--blue);
+    padding-right:12px;
+    margin-top:34px;
+    margin-bottom:16px;
+  }
+  h3{font-size:19px;margin-top:22px;margin-bottom:8px}
+  p{margin:8px 0 14px}
+  .hero{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#fafdff,#f4f8fc);
+    border-radius:16px;
+    padding:24px;
+    margin-bottom:24px;
+  }
+  .core{
+    background:var(--pale);
+    border:1px solid #cfe0f3;
+    border-radius:14px;
+    padding:18px 20px;
+    margin:16px 0;
+  }
+  .quote{
+    font-size:20px;
+    font-weight:700;
+    text-align:center;
+    color:var(--navy);
+    background:#fff;
+    border:1px dashed var(--blue);
+    border-radius:14px;
+    padding:15px;
+    margin:14px 0;
+  }
+  .formula{
+    direction:ltr;
+    unicode-bidi:isolate;
+    text-align:center;
+    font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+    font-size:22px;
+    background:#fbfcfe;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:11px 14px;
+    margin:12px 0;
+    line-height:1.55;
+    overflow-x:auto;
+  }
+  .formula.arabic{direction:rtl;font-family:Tahoma,Arial,"Segoe UI",sans-serif;font-size:19px}.formula.mixed{direction:ltr;display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap}.formula.mixed [dir="rtl"]{font-family:Tahoma,Arial,"Segoe UI",sans-serif;font-size:.88em}
+  .formula sub,.inlineMath sub{font-size:.68em;vertical-align:-.28em}
+  .formula sup,.inlineMath sup{font-size:.68em}
+  .inlineMath{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;white-space:nowrap}
+  .vec{position:relative;display:inline-block;font-style:italic;padding-top:.12em;margin:0 .04em}
+  .vec::before{content:"→";position:absolute;left:50%;top:-.62em;transform:translateX(-50%) scaleX(.82);font-size:.78em;font-style:normal;font-weight:400;line-height:1}
+  .frac{display:inline-grid;grid-template-rows:auto auto;vertical-align:middle;line-height:1.05;margin:0 .15em;min-width:1.35em}
+  .frac .num{border-bottom:1.5px solid currentColor;padding:0 .22em .08em;text-align:center}
+  .frac .den{padding:.08em .22em 0;text-align:center}
+  .unit{font-style:normal;white-space:nowrap}
+  .teacherTop{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #d8e0ea;padding:11px max(18px,calc((100vw - 980px)/2));box-shadow:0 4px 14px rgba(15,23,42,.06)}
+  .teacherTop>div:first-child{display:flex;flex-direction:column;gap:2px}.teacherTop strong{color:#16324F;font-size:16px}.teacherTop span{color:#667085;font-size:12px}.teacherActions{display:flex;gap:8px;flex-wrap:wrap}.teacherActions a,.gateCard a{color:#16324F;text-decoration:none;font-weight:800;background:#f8fafc;border:1px solid #d0d5dd;border-radius:10px;padding:8px 11px;font-size:12px}
+  .quickNav{position:sticky;top:62px;z-index:25;display:flex;gap:7px;overflow-x:auto;padding:8px max(18px,calc((100vw - 980px)/2));background:#f8fafc;border-bottom:1px solid #e4e7ec;scrollbar-width:thin}
+  .quickNav a{white-space:nowrap;text-decoration:none;color:#344054;background:#fff;border:1px solid #d0d5dd;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+  .accessGate{min-height:100vh;display:grid;place-items:center;background:#f5f7fb}.gateCard{max-width:480px;margin:20px;background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(15,23,42,.08);text-align:center}.hidden{display:none!important}
+  html{color-scheme:light;background:#edf1f5} body{color-scheme:light}
+  .tip,.warning,.success{
+    border-radius:13px;
+    padding:15px 18px;
+    margin:14px 0;
+  }
+  .tip{background:var(--soft);border:1px solid var(--line)}
+  .warning{background:var(--warn);border:1px solid #ead598}
+  .success{background:var(--ok);border:1px solid #bddfc9}
+  .danger{background:var(--danger);border:1px solid #efc8c8;border-radius:13px;padding:15px 18px;margin:14px 0}
+  strong{color:#0f2943}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0 24px;
+    font-size:14px;
+  }
+  th,td{
+    border:1px solid var(--line);
+    padding:11px 10px;
+    vertical-align:top;
+  }
+  th{
+    background:var(--navy);
+    color:#fff;
+    font-weight:700;
+  }
+  tr:nth-child(even) td{background:#fafbfd}
+  ul{margin:8px 0 16px;padding-right:22px}
+  li{margin:6px 0}
+  .board{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:16px 0;
+  }
+  .board > div{
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+    min-height:120px;
+    background:#fbfcfe;
+  }
+  .board h4{margin:0 0 8px;color:var(--navy)}
+  .checklist{
+    list-style:none;
+    padding:0;
+  }
+  .checklist li{
+    padding:8px 36px 8px 8px;
+    position:relative;
+    border-bottom:1px dashed #e2e8f0;
+  }
+  .checklist li::before{
+    content:"☐";
+    position:absolute;
+    right:6px;
+    top:6px;
+    font-size:20px;
+    color:var(--blue);
+  }
+  .mini{
+    color:var(--muted);
+    font-size:14px;
+  }
+  .footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    margin-top:34px;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+  .section-break{page-break-before:always}
+  @media (max-width:700px){
+    .teacherTop{position:static;padding:10px 14px;align-items:flex-start;flex-direction:column}.quickNav{top:0;padding:8px 12px}.teacherActions{width:100%}
+    body{background:#fff}
+    .page{margin:0;padding:24px 18px;border-radius:0;box-shadow:none}
+    h1{font-size:25px}
+    h2{font-size:21px}
+    .board{grid-template-columns:1fr}
+    table{font-size:13px}
+  }
+  @media print{
+    .teacherTop,.quickNav,.accessGate{display:none!important}
+    @page{size:A4 portrait;margin:12mm}
+    body{background:#fff;font-size:12.5pt}
+    .page{width:auto;margin:0;padding:0;box-shadow:none;border-radius:0}
+    h1{font-size:22pt}
+    h2{font-size:17pt;break-after:avoid}
+    h3{font-size:14pt;break-after:avoid}
+    table{font-size:9.5pt}
+    tr,td,th{break-inside:avoid}
+    .hero,.core,.tip,.warning,.success,.danger,.formula,.quote{break-inside:avoid}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+
+<body>
+<div id="gate" class="accessGate"><div class="gateCard"><b>جاري التحقق من صلاحية الإدارة...</b></div></div>
+<div id="app" class="hidden">
+<header class="teacherTop"><div><strong>مرجع شرح الحصص</strong><span>الدرس الأول — متجهات السرعة والسرعة النسبية</span></div><div class="teacherActions"><a href="teacher-references.html">← كل المراجع</a><a href="admin-home.html">لوحة الإدارة</a></div></header>
+<nav class="quickNav"><a href="#opening">الافتتاح</a><a href="#river">المعدية</a><a href="#relative">السرعة النسبية</a><a href="#rain">المطر</a><a href="#plane">الطائرة</a><a href="#board">السبورة</a><a href="#mistakes">الأخطاء</a></nav>
+<main class="page">
+
+<section class="hero">
+  <h1>إعداد مستر يوسف للدرس الأول</h1>
+  <div class="subtitle">متجهات السرعة والسرعة النسبية — دليل قيادة الحصة</div>
+  <div class="core">
+    <strong>الفكرة الحاكمة للحصة:</strong>
+    الإطار المرجعي ← المتجه ← تركيب السرعات ← المركبات ← المعدية ← السرعة النسبية ← المطر ← النموذج الموحد ← الطائرة.
+  </div>
+  <div class="quote">الجسم؟ بالنسبة إلى مَن؟ وفي أي اتجاه؟</div>
+</section>
+
+<h2>أولًا: ما الذي أريد أن يحدث في عقل الطالب؟</h2>
+<p>
+ليس المطلوب أن يخرج الطالب حافظًا علاقات الجيب وجيب التمام أو قاعدة «نفس الاتجاه اطرح».
+المطلوب أن يتعلم قبل أي حساب أن يسأل:
+</p>
+<div class="quote">أنا أدرس حركة مَن؟ بالنسبة إلى مَن؟ وما اتجاهات السرعات الموجودة؟</div>
+<p>
+إذا ثبتت هذه الأسئلة، تتحول معظم مسائل الدرس إلى تمثيل صحيح ثم رياضيات بسيطة.
+</p>
+
+<h2 id="opening">1. افتتاح الحصة — لا تبدأ بالقانون</h2>
+<p>
+ارسم ممرًا متحركًا، وشخصًا واقفًا عليه، وشخصًا آخر واقفًا على أرض المطار.
+ثم اسأل:
+</p>
+<div class="quote">«الشخص ده ساكن ولا متحرك؟»</div>
+<p>
+اسمح بالإجابتين. ثم قل: <strong>«الاتنين صح»</strong>. وبعدها:
+</p>
+<div class="quote">«إزاي إجابتين عكس بعض يكونوا صح؟»</div>
+
+<div class="success">
+<strong>النتيجة التي تريد الوصول إليها:</strong><br>
+بالنسبة إلى الممر: ساكن.<br>
+بالنسبة إلى الأرض: متحرك.
+</div>
+
+<p>اكتب أعلى السبورة ولا تمسحها طوال الحصة:</p>
+<div class="formula arabic">بالنسبة إلى ماذا؟</div>
+
+<p>
+بعد ذلك استخدم موقف سيارتين متجاورتين تسيران بالسرعة نفسها، واسأل لماذا تبدو إحداهما ساكنة للأخرى.
+<strong>لا تدخل قانون السرعة النسبية الآن.</strong> المطلوب فقط زرع فكرة المرجع.
+</p>
+
+<h2>2. السيناريو الكامل للحصة</h2>
+<table>
+  <thead>
+    <tr>
+      <th>المرحلة</th>
+      <th>ماذا تفعل أنت؟</th>
+      <th>السؤال الذي ترميه للطلاب</th>
+      <th>ما الذي يجب أن يصلوا إليه؟</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>المرجع</td><td>الممر المتحرك + السيارتان</td><td>ساكن ولا متحرك؟</td><td>لا توجد سرعة مكتملة بلا مرجع</td></tr>
+    <tr><td>السرعة متجه</td><td>اكتب <span class="inlineMath">5 <span class="unit">m/s</span></span> فقط</td><td>هل عرفت حركة الجسم؟</td><td>نحتاج مقدارًا واتجاهًا</td></tr>
+    <tr><td>متجه السرعة</td><td>3 أسهم متساوية شرق/غرب/شمال</td><td>إيه ثابت وإيه اتغير؟</td><td>المقدار ثابت والمتجه تغير</td></tr>
+    <tr><td>جسم وحركتان</td><td>روبوت شمالًا فوق منصة شرقًا</td><td>كاميرا السقف هتشوفه رايح فين؟</td><td>الحركتان المتزامنتان تنتجان محصلة</td></tr>
+    <tr><td>الجمع المتجهي</td><td>أعطِ 3 و4 دون اتجاه</td><td>المحصلة كام؟</td><td>لا يمكن قبل معرفة الاتجاه</td></tr>
+    <tr><td>الحالات الثلاث</td><td>نفس الاتجاه/العكس/التعامد</td><td>ليه مرة جمع ومرة طرح ومرة فيثاغورس؟</td><td>كلها حالات هندسية لجمع المتجهات</td></tr>
+    <tr><td>مقدار واتجاه المحصلة</td><td>مثلث 3-4-5</td><td>قبل الحساب هتميل ناحية مين؟</td><td>نحو المركبة الأكبر</td></tr>
+    <tr><td>المركبات</td><td>سهم مائل ومحوران</td><td>الجسم عنده سرعتين فعلًا؟</td><td>لا؛ متجه واحد نصفه بمركبتين</td></tr>
+    <tr><td>تدوير المحاور</td><td>ثبّت السهم وغيّر المحاور</td><td>إيه اللي اتغير؟</td><td>المركبات تتغير والمتجه الحقيقي لا</td></tr>
+    <tr><td>Sin / Cos</td><td>اشتق من المثلث</td><td>ليه Cos هنا؟</td><td>لأنها المجاور للزاوية</td></tr>
+    <tr><td>فخ الزاوية</td><td><span class="inlineMath">10 <span class="unit">m/s</span> ، 30°</span> من الرأسي</td><td>الأفقي Sin ولا Cos؟</td><td><span class="inlineMath">v<sub>x</sub> = 10 sin 30°</span></td></tr>
+    <tr><td>المعدية</td><td>محور عبر النهر ومحور مع التيار</td><td>مين مسؤول عن العبور ومين عن الانحراف؟</td><td>كل مركبة تتحكم في أثر مختلف</td></tr>
+    <tr><td>زمن العبور</td><td>t = <span class="frac"><span class="num">h</span><span class="den">v<sub>y</sub></span></span></td><td>زودت التيار فقط؛ الزمن؟</td><td>ثابت إذا ظلت vy ثابتة</td></tr>
+    <tr><td>التناقض</td><td>المحصلة↑ والمسار↑ والانحراف↑</td><td>إزاي الزمن ثابت؟</td><td>المسار الأطول لا يعني وحده زمنًا أطول</td></tr>
+    <tr><td>هدف القارب</td><td>أقصر زمن مقابل النقطة المقابلة</td><td>هل هما نفس المهمة؟</td><td>أفضل توجيه يعتمد على الهدف</td></tr>
+    <tr><td>السرعة النسبية</td><td>سيارتان شرقًا 20 و25</td><td>B بتبعد عن A بسرعة كام؟</td><td><span class="inlineMath">v<sub>B/A</sub> = 5</span></td></tr>
+    <tr><td>لماذا نطرح؟</td><td>اجعلهما متساويين</td><td>المفروض A تشوف B بكام؟</td><td>صفر؛ لذلك يظهر الفرق طبيعيًا</td></tr>
+    <tr><td>الاتجاه والإشارة</td><td>شرق موجب</td><td>ماذا لو B غربًا؟</td><td>المجموع نتيجة للإشارات لا قاعدة جديدة</td></tr>
+    <tr><td>المطر</td><td>مطر رأسي + سيارة أفقية</td><td>ليه الراكب يشوفه مائل؟</td><td>تغير المرجع يخلق مركبة أفقية نسبية</td></tr>
+    <tr><td>النموذج الموحد</td><td>قارب/ماء/أرض + مطر/أرض/سيارة</td><td>إيه المشترك؟</td><td>انتقال السرعة بين أطر مرجعية</td></tr>
+    <tr><td>الطائرة</td><td>رياح جانبية ومدرج</td><td>هل مقدمة الطائرة لازم تكون مع مسارها؟</td><td>لا؛ يجب إلغاء أثر الرياح الجانبي</td></tr>
+    <tr><td>جاليليو</td><td>سفينة منتظمة الحركة</td><td>مين فيهم ساكن حقيقةً؟</td><td>وصف الحركة متعلق بالمرجع</td></tr>
+    <tr><td>الإغلاق</td><td>ارجع لأول سؤال</td><td>قبل أي مسألة أسأل إيه؟</td><td>الجسم؟ المرجع؟ الاتجاهات؟</td></tr>
+  </tbody>
+</table>
+
+<h2>3. أهم خمس لحظات في الحصة</h2>
+
+<h3>اللحظة الأولى: المحصلة ليست جمع أرقام</h3>
+<div class="formula">3 m/s &nbsp;&nbsp;&nbsp;&nbsp; 4 m/s</div>
+<p>
+اسأل: «المحصلة؟». إذا قال طالب 7، لا تقل له «غلط». اسأله:
+«طب لو واحدة شرق وواحدة غرب؟ طب لو متعامدين؟»
+</p>
+<div class="formula"><span class="vec">v</span><sub>R</sub> = <span class="vec">v</span><sub>1</sub> + <span class="vec">v</span><sub>2</sub></div>
+<div class="tip">
+الجمع والطرح وفيثاغورس ليست ثلاث قواعد منفصلة؛ هي صور مختلفة للجمع المتجهي بحسب الزاوية بين المتجهات.
+</div>
+
+<h3>اللحظة الثانية: اكسر قاعدة «الأفقي Cos»</h3>
+<p>
+ارسم متجهًا مائلًا والزاوية مع الأفقي، ثم استنتج:
+</p>
+<div class="formula">v<sub>x</sub> = v cos θ</div>
+<p>
+بعدها امسح موضع الزاوية فقط واجعلها مع الرأسي. اسأل:
+«المتجه اتغير؟ لا. طيب الأفقي لسه Cos؟»
+</p>
+<div class="formula">v<sub>x</sub> = v sin θ</div>
+<div class="quote">«أنا مش باختار Sin أو Cos على أساس أفقي ورأسي. أنا ببص للزاوية: المطلوب مقابل ولا مجاور؟»</div>
+
+<h2 id="river">4. المعدية — هنا الدرس يتحول من رياضيات إلى فيزياء</h2>
+<p>
+ارسم النهر من أعلى. اجعل y عبر النهر وx مع اتجاه التيار.
+لا تبدأ بقانون. اسأل:
+</p>
+<ul>
+  <li>لو التيار اختفى تمامًا، أنهي حركة هتفضل موجودة؟ → العبور.</li>
+  <li>لو المحرك وقف وظل التيار؟ → الانجراف.</li>
+</ul>
+
+<div class="formula mixed"><span class="inlineMath">v<sub>y</sub></span><span>→</span><span dir="rtl">قطع عرض النهر</span></div>
+<div class="formula mixed"><span class="inlineMath">v<sub>x</sub></span><span>→</span><span dir="rtl">الانحراف مع التيار</span></div>
+
+<p>بعد ذلك فقط:</p>
+<div class="formula">t = <span class="frac"><span class="num">h</span><span class="den">v<sub>y</sub></span></span></div>
+<div class="formula">d<sub>x</sub> = v<sub>x</sub> × t</div>
+
+<div class="warning">
+<strong>أقوى سؤال في هذا الجزء:</strong><br>
+زودنا سرعة التيار فقط. ماذا يحدث للسرعة المحصلة، والانحراف، وطول المسار، وزمن العبور؟
+</div>
+
+<ul>
+  <li>السرعة المحصلة ↑</li>
+  <li>الانحراف ↑</li>
+  <li>طول المسار ↑</li>
+  <li><strong>زمن العبور ثابت</strong> طالما <span class="inlineMath">v<sub>y</sub></span> لم تتغير.</li>
+</ul>
+
+<div class="quote">«الحركتان تحدثان في الوقت نفسه؛ زمن قطع عرض النهر تحدده المركبة التي تقطع العرض.»</div>
+
+<h2>5. أقصر زمن ≠ الوصول أمام نقطة البداية</h2>
+<p>
+ارسم موقفين:
+الأول القارب عمودي على الضفة، والثاني مائل عكس التيار.
+</p>
+<p>
+اسأل:
+</p>
+<ul>
+  <li>مين أسرع في الوصول إلى أي نقطة على الضفة؟ → العمودي.</li>
+  <li>مين يمكنه الوصول للنقطة المقابلة بالضبط؟ → المائل عكس التيار بشرط إلغاء مركبة التيار.</li>
+</ul>
+
+<div class="formula">v<sub>boat,x</sub> + v<sub>river</sub> = 0</div>
+<div class="quote">«قبل ما تقول أفضل اتجاه، قولي أفضل لتحقيق إيه؟»</div>
+
+<h3>مثال نموذجي</h3>
+<div class="formula">v<sub>boat/water</sub> = 6 <span class="unit">m/s</span> &nbsp; , &nbsp; v<sub>river</sub> = 3 <span class="unit">m/s</span></div>
+<div class="formula">6 cos θ = 3 &nbsp; ⇒ &nbsp; θ = 60°</div>
+<div class="formula">v<sub>y</sub> ≈ 5.20 <span class="unit">m/s</span></div>
+<div class="formula">t = <span class="frac"><span class="num">60</span><span class="den">5.20</span></span> ≈ 11.5 <span class="unit">s</span></div>
+
+<h2 id="relative" class="section-break">6. الانتقال إلى السرعة النسبية</h2>
+<div class="quote">«لحد دلوقتي كنا بنغير حركة الجسم. دلوقتي مش هنغير الجسم… هنغير اللي بيبص عليه.»</div>
+
+<p>استخدم سيارتين:</p>
+<div class="formula">v<sub>A</sub> = 20 <span class="unit">m/s</span> &nbsp; , &nbsp; v<sub>B</sub> = 25 <span class="unit">m/s</span></div>
+<p>
+بالنسبة للطريق: B سرعتها 25 m/s. بالنسبة لراكب A: B تبتعد عنه بسرعة 5 m/s.
+</p>
+<div class="formula"><span class="vec">v</span><sub>B/A</sub> = <span class="vec">v</span><sub>B</sub> − <span class="vec">v</span><sub>A</sub></div>
+
+<p>
+لا تقل «لأن القانون طرح». اجعلهما متساويين ثم اسأل:
+«لو الاتنين ماشيين جنب بعض بنفس السرعة، واحد يشوف التاني بيتحرك؟»
+</p>
+<div class="formula">v<sub>B</sub> = v<sub>A</sub> &nbsp; ⇒ &nbsp; v<sub>B/A</sub> = 0</div>
+
+<h2>7. لا تجعل «نفس الاتجاه اطرح والعكس اجمع» القاعدة الأصلية</h2>
+<p>اختر الشرق موجبًا.</p>
+<div class="formula">v<sub>B/A</sub> = 25 − 20 = 5</div>
+<p>ولو A في الاتجاه المعاكس:</p>
+<div class="formula">v<sub>A</sub> = −20</div>
+<div class="formula">v<sub>B/A</sub> = 25 − (−20) = 45</div>
+
+<div class="quote">«إحنا ما جمعناش لأنهم عكس بعض؛ إحنا طرحنا متجهين، فظهر الجمع بسبب الإشارات.»</div>
+
+<div class="warning">
+إذا كانت <span class="inlineMath">v<sub>B/A</sub> = 0</span> فهذا لا يعني أن B ساكن بالنسبة للأرض، بل يعني أنه ساكن بالنسبة إلى A فقط.
+</div>
+
+<h2 id="rain">8. المطر — أغلق مشكلة المرجع</h2>
+<p>
+ارسم السيارة تتحرك إلى اليمين، والمطر رأسيًا إلى أسفل بالنسبة إلى الأرض.
+</p>
+<div class="formula"><span class="vec">v</span><sub>rain/car</sub> = <span class="vec">v</span><sub>rain/ground</sub> − <span class="vec">v</span><sub>car/ground</sub></div>
+
+<p>
+طرح سرعة السيارة يضيف إلى سرعة المطر بالنسبة للراكب مركبة أفقية عكس حركة السيارة.
+</p>
+
+<div class="danger">
+<strong>دقة لغوية مهمة:</strong><br>
+متجه حركة القطرة بالنسبة للسيارة يميل إلى الخلف أثناء هبوطها، ولذلك إذا تتبع الراكب الخط إلى حيث جاءت القطرة تبدو له قادمة من الأمام.
+</div>
+
+<h3>مثال</h3>
+<div class="formula">v<sub>car</sub> = 5 <span class="unit">m/s</span> &nbsp; , &nbsp; θ = 30° عن الرأسي</div>
+<div class="formula">tan 30° = <span class="frac"><span class="num">5</span><span class="den">v<sub>rain</sub></span></span></div>
+<div class="formula">v<sub>rain</sub> ≈ 8.66 <span class="unit">m/s</span></div>
+
+<h2>9. القارب والمطر — فكرة واحدة</h2>
+<div class="formula"><span class="vec">v</span><sub>boat/ground</sub> = <span class="vec">v</span><sub>boat/water</sub> + <span class="vec">v</span><sub>water/ground</sub></div>
+<div class="formula"><span class="vec">v</span><sub>rain/car</sub> = <span class="vec">v</span><sub>rain/ground</sub> + <span class="vec">v</span><sub>ground/car</sub></div>
+<div class="formula"><span class="vec">v</span><sub>ground/car</sub> = −<span class="vec">v</span><sub>car/ground</sub></div>
+
+<div class="quote">«يعني القارب كان جمع والمطر طرح؟ ولا إحنا من الأول بنتعامل مع نفس الفكرة؟»</div>
+
+<p>أظهر كأداة فهم فقط:</p>
+<div class="formula"><span class="vec">v</span><sub>A/C</sub> = <span class="vec">v</span><sub>A/B</sub> + <span class="vec">v</span><sub>B/C</sub></div>
+<p class="mini">لا تطلب حفظ العلاقة كصيغة منفصلة؛ استخدمها لكشف الوحدة بين المواقف.</p>
+
+<h2 id="plane">10. الطائرة — تطبيق نقل حقيقي</h2>
+<p>
+ارسم مدرجًا ورياحًا جانبية. اسأل:
+«لو الطيار وجّه مقدمة الطائرة مع المدرج بالضبط، هل ستتحرك الطائرة مع المدرج؟»
+</p>
+<p>
+لا، لأن الرياح ستسبب انحرافًا جانبيًا. لذلك يجب أن يوجّه مقدمة الطائرة عكس الرياح حتى تلغي مركبة من سرعة الطائرة أثر الرياح الجانبي.
+</p>
+
+<div class="formula"><span class="vec">v</span><sub>plane/ground</sub> = <span class="vec">v</span><sub>plane/air</sub> + <span class="vec">v</span><sub>air/ground</sub></div>
+
+<h3>القيم المعتمدة في المثال</h3>
+<div class="formula">v<sub>plane/air</sub> = 220 <span class="unit">km/h</span> &nbsp; , &nbsp; v<sub>wind</sub> = 40 <span class="unit">km/h</span></div>
+<div class="formula">220 sin θ = 40</div>
+<div class="formula">θ ≈ 10.5°</div>
+<div class="formula">v<sub>ground</sub> = √(220<sup>2</sup> − 40<sup>2</sup>) ≈ 216 <span class="unit">km/h</span></div>
+
+<h2>11. جاليليو — دقيقة أو دقيقتان فقط</h2>
+<p>
+قل:
+«تخيل نفسك داخل سفينة مغلقة تتحرك بسرعة ثابتة في خط مستقيم. هل من سقوط الماء أو حركة الأشياء داخلها وحدها تستطيع أن تعرف هل السفينة واقفة أم تتحرك بالنسبة للشاطئ؟»
+</p>
+<div class="quote">«السرعة لا تكتسب معناها إلا بالنسبة إلى مرجع.»</div>
+
+<p>
+ثم اربط بالمطر: مراقبان قد يعطيان سرعتين مختلفتين لنفس القطرة، ولا يكون أحدهما مخطئًا؛ كل منهما يصف السرعة بالنسبة إلى مرجع مختلف.
+</p>
+
+<h2 id="board">12. خطة السبورة</h2>
+<div class="board">
+  <div>
+    <h4>يمين السبورة</h4>
+    <p>الموقف الفيزيائي والرسم.</p>
+    <p>ممر — مركبة — نهر — سيارة — مطر — طائرة.</p>
+  </div>
+  <div>
+    <h4>منتصف السبورة</h4>
+    <p>المتجهات، المثلثات، التحليل إلى مركبات.</p>
+  </div>
+  <div>
+    <h4>يسار السبورة</h4>
+    <p>العلاقة النهائية والاستنتاج المختصر.</p>
+  </div>
+</div>
+
+<div class="core">
+<strong>اترك طوال الحصة أعلى السبورة:</strong>
+<div class="formula arabic">الجسم؟ بالنسبة إلى مَن؟ وفي أي اتجاه؟</div>
+</div>
+
+<p>وفي جزء المعدية اترك:</p>
+<div class="formula">t = <span class="frac"><span class="num">h</span><span class="den">v<sub>y</sub></span></span></div>
+
+<p>وفي جزء السرعة النسبية اترك:</p>
+<div class="formula"><span class="vec">v</span><sub>B/A</sub> = <span class="vec">v</span><sub>B</sub> − <span class="vec">v</span><sub>A</sub></div>
+
+<h2 id="mistakes">13. الأخطاء المتوقعة وطريقة علاجها</h2>
+<table>
+  <thead>
+    <tr>
+      <th>الخطأ</th>
+      <th>العلاج السريع داخل الحصة</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>«الأفقي Cos»</td><td>غيّر موضع الزاوية دون تغيير المتجه.</td></tr>
+    <tr><td>3 و4 يبقوا 7 دائمًا</td><td>اسأله عن الاتجاه قبل الحساب.</td></tr>
+    <tr><td>المحصلة زادت إذن الزمن يقل</td><td>اسأله: أي مركبة تقطع عرض النهر؟</td></tr>
+    <tr><td>أقصر زمن = الوصول للنقطة المقابلة</td><td>ارسم الهدفين منفصلين.</td></tr>
+    <tr><td>نفس الاتجاه طرح والعكس جمع</td><td>اتجاه موجب + إشارات + القانون العام.</td></tr>
+    <tr><td>السرعة النسبية صفر يعني الجسمين واقفين</td><td>استخدم سيارتين جنبًا إلى جنب.</td></tr>
+    <tr><td>مقدمة الجسم = اتجاه مساره</td><td>استخدم المعدية ثم الطائرة.</td></tr>
+    <tr><td>المركبات سرعتان حقيقيتان مستقلتان</td><td>دوّر المحاور والمتجه الحقيقي ثابت.</td></tr>
+  </tbody>
+</table>
+
+<h2>14. أسئلة شفوية أثناء الحصة</h2>
+<ul>
+  <li>متجه سرعته ثابتة ودوّرت المحاور. إيه اتغير؟</li>
+  <li>سرعتان 5 و8. تقدر تجيب المحصلة؟</li>
+  <li>زودت التيار فقط. الزمن؟ ولماذا؟</li>
+  <li>زادت المحصلة. هل بالضرورة زمن العبور قل؟</li>
+  <li>20 m/s و30° مع الرأسي. أنهي مركبة تستخدم Sin؟</li>
+  <li>سيارتان شرقًا بنفس السرعة. هل هما ساكنتان؟</li>
+  <li><span class="inlineMath">v<sub>B/A</sub> = +5</span>. ما معنى الإشارة وليس الرقم فقط؟</li>
+  <li>هل <span class="inlineMath">v<sub>B/A</sub> = −v<sub>A/B</sub></span>؟ وما معنى ذلك فيزيائيًا؟</li>
+  <li>لماذا مقدمة الطائرة ليست في اتجاه مسارها الأرضي؟</li>
+  <li>ما المشترك بين المطر والقارب؟</li>
+</ul>
+
+<div class="tip">
+إذا قال الطالب إن المشترك بين المطر والقارب أنهما «سرعة نسبية» فقط، اطلب إجابة أعمق:
+<strong>نحن نصف حركة جسم بالنسبة إلى إطار، وقد نحتاج إلى تركيب سرعات بين أكثر من إطار.</strong>
+</div>
+
+<h2>15. آخر خمس دقائق — لا تلخص القوانين</h2>
+<p>امسح التفاصيل واترك التسلسل التالي:</p>
+<div class="formula arabic">مرجع &nbsp; ↓ &nbsp; مقدار + اتجاه &nbsp; ↓ &nbsp; متجه &nbsp; ↓ &nbsp; تركيب ↔ تحليل &nbsp; ↓ &nbsp; تغيير المرجع &nbsp; ↓ &nbsp; سرعة نسبية</div>
+
+<p>ثم اسأل:</p>
+<div class="quote">«لو بكرة جبتلك موقف عمرك ما شفته، أول حاجة تعملها إيه؟»</div>
+
+<div class="success">
+<strong>الإجابة التي تريد إنهاء الحصة بها:</strong><br>
+«أحدد الجسم، والمرجع، والاتجاهات… وبعدها القانون غالبًا هيظهر لوحده.»
+</div>
+
+<h2>16. Checklist قبل أن تعتبر الدرس اتشرح</h2>
+<ul class="checklist">
+  <li>يفرق الطالب بين مقدار السرعة ومتجه السرعة.</li>
+  <li>يحدد المرجع قبل وصف الحركة.</li>
+  <li>يرسم محصلة السرعات بصورة صحيحة.</li>
+  <li>يحلل متجهًا دون قاعدة «الأفقي Cos».</li>
+  <li>يفسر لماذا زيادة سرعة التيار لا تغير زمن العبور في الحالة المحددة.</li>
+  <li>يفرق بين أقصر زمن والوصول للنقطة المقابلة.</li>
+  <li>يستخدم vB/A مع مراعاة الاتجاه والإشارة.</li>
+  <li>يفهم أن السرعة النسبية صفر لا تعني السكون المطلق.</li>
+  <li>يفسر رؤية المطر المائل من سيارة متحركة.</li>
+  <li>يربط بين القارب والمطر والطائرة كنماذج لتركيب السرعات بين الأطر المرجعية.</li>
+  <li>يتعامل مع موقف جديد من خلال: الجسم → المرجع → الاتجاهات → التمثيل المتجهي.</li>
+</ul>
+
+<div class="footer">
+  إعداد خاص للشرح — مستر يوسف رزق<br>
+  الدرس الأول: متجهات السرعة والسرعة النسبية
+</div>
+
+</main>
+</div>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+import{loadAdminAccess}from'./admin-access.js';
+const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+try{const ctx=await loadAdminAccess(sb);if(!ctx.isOwner)throw new Error('owner only');document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحساب المالك فقط.</p><a href="admin-home.html">العودة إلى لوحة الإدارة</a></div>'}
+</script>
+</body>
+</html>
