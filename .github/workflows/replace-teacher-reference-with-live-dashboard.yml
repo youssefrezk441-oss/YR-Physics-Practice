@@ -1,0 +1,44 @@
+name: Replace teacher reference with live dashboard
+
+on:
+  push:
+    paths:
+      - '.github/workflows/replace-teacher-reference-with-live-dashboard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build live dashboard
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,gzip
+          src=Path('reference-assets/teacher-live-dashboard-light.html.gz.b64')
+          out=Path('teacher-reference-lesson1.html')
+          out.write_bytes(gzip.decompress(base64.b64decode(src.read_text(encoding='utf-8').strip())))
+          menu=Path('teacher-references.html')
+          t=menu.read_text(encoding='utf-8')
+          t=t.replace('تحضير المدرس العملي الذي تفتحه أثناء الشرح أو تراجعه قبل الحصة.','لوحة قيادة سريعة تفتحها على اللاب أثناء الشرح: فكرة، سؤال، سبورة، فخ، وانتقال.')
+          t=t.replace('متجهات السرعة والسرعة النسبية — الصف الثاني الثانوي. دليل قيادة الحصة كاملًا.','متجهات السرعة والسرعة النسبية — لوحة قيادة مباشرة للحصة، شاشة وراء شاشة.')
+          t=t.replace('href="admin-home.html"','href="index.html"')
+          menu.write_text(t,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add teacher-reference-lesson1.html teacher-references.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Use live teaching dashboard for lesson one"
+            git push
+          fi
