@@ -1,12 +1,13 @@
 from pathlib import Path
 import base64,gzip
 ROOT=Path(__file__).resolve().parents[1]
-for src_name,target_name in [
- ('teacher-references.html.gz.b64','teacher-references.html'),
- ('teacher-reference-lesson1.html.gz.b64','teacher-reference-lesson1.html')
-]:
-    src=ROOT/'reference-assets'/src_name
-    (ROOT/target_name).write_bytes(gzip.decompress(base64.b64decode(src.read_text(encoding='utf-8').strip())))
+assets=ROOT/'reference-assets'
+
+menu_b64=(assets/'teacher-references.html.gz.b64').read_text(encoding='utf-8').strip()
+(ROOT/'teacher-references.html').write_bytes(gzip.decompress(base64.b64decode(menu_b64)))
+
+lesson_b64=''.join((assets/f'teacher-reference-lesson1.part{i}').read_text(encoding='utf-8').strip() for i in range(1,7))
+(ROOT/'teacher-reference-lesson1.html').write_bytes(gzip.decompress(base64.b64decode(lesson_b64)))
 
 p=ROOT/'admin-home.html'
 text=p.read_text(encoding='utf-8')
