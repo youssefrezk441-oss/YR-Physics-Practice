@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/add-student-reference.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,27 +13,29 @@ jobs:
   patch-platform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Add reference page and student home entry
+      - name: Add reference and patch student home
         shell: bash
         run: |
-          python - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
-          import base64, gzip
+          import base64
+          import gzip
 
-          ref_b64 = '''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'''
+          source = Path('reference-assets/lesson1-relative-velocity.html.gz.b64')
+          target = Path('references/second-secondary/lesson-1-relative-velocity.html')
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_bytes(gzip.decompress(base64.b64decode(source.read_text(encoding='utf-8').strip())))
 
-          ref_path = Path('references/second-secondary/lesson-1-relative-velocity.html')
-          ref_path.parent.mkdir(parents=True, exist_ok=True)
-          ref_path.write_bytes(gzip.decompress(base64.b64decode(ref_b64)))
+          student = Path('student.html')
+          text = student.read_text(encoding='utf-8')
+          marker = '/* شرح الحصص patch v1 */'
 
-          student_path = Path('student.html')
-          text = student_path.read_text(encoding='utf-8')
-          patch_marker = '/* شرح الحصص patch v1 */'
-          if patch_marker not in text:
+          if marker not in text:
               patch = r'''
   /* شرح الحصص patch v1 */
   if(!html.includes('id="openReferences"')){
@@ -56,15 +59,15 @@ jobs:
     );
   }
 
-  if(html.includes("'dashboardView','trainingMenuView'")){
-    html=html.replace("'dashboardView','trainingMenuView'","'dashboardView','referencesView','trainingMenuView'");
-  }
+  html=html.replace("'dashboardView','trainingMenuView'","'dashboardView','referencesView','trainingMenuView'");
 
   if(html.includes("$('openTrainings').onclick=()=>showOnly('trainingMenuView');")){
     html=html.replace(
       "$('openTrainings').onclick=()=>showOnly('trainingMenuView');",
       "$('openReferences').onclick=()=>{const isSecond=gradeLabel(profile?.grade_level)==='الصف الثاني الثانوي';$('refB2Lesson1').classList.toggle('hidden',!isSecond);$('referencesEmpty').classList.toggle('hidden',isSecond);showOnly('referencesView')};$('backReferences').onclick=()=>showOnly('dashboardView');$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
     );
+  }else{
+    throw new Error('تعذر ربط زر مرجع الشرح');
   }
 
   const referencesCss=`
@@ -74,18 +77,19 @@ jobs:
 .referenceLessonCard{border-color:#c7d2fe;background:linear-gradient(180deg,#fbfdff,#fff)}
 .referenceBadge{position:absolute;top:14px;left:14px;background:#ecfdf3;color:#027a48;border:1px solid #a7f3d0;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
 html[data-theme="dark"] .referenceHomeCard,html[data-theme="dark"] .referenceLessonCard{background:#111827;border-color:#334155}
+html[data-theme="dark"] .referenceHomeCard .studentNavIcon{background:#1e3a5f}
 html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-color:#166534}
 `;
   html=html.replace('</style>',referencesCss+'</style>');
 '''
               anchor = '  const journeyCss=`'
               if anchor not in text:
-                  raise SystemExit('Could not find student.html insertion anchor')
+                  raise RuntimeError('تعذر العثور على موضع إضافة مرجع الشرح في student.html')
               text = text.replace(anchor, patch + '\n' + anchor, 1)
-              student_path.write_text(text, encoding='utf-8')
+              student.write_text(text, encoding='utf-8')
           PY
 
-      - name: Commit platform changes
+      - name: Commit changes
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
