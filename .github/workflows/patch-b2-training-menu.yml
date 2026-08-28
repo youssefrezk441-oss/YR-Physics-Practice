@@ -1,0 +1,51 @@
+name: Patch B2 training menu
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-b2-training-menu.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch student menu
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('student.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_menu = '''<div class="studentSubGrid two"><button id="openFoundationTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">🧰</div><h3>تدريبات الكورس التأسيسي</h3><p>كل تدريبات الكورس التأسيسي في مكان واحد.</p></button><button id="openChapterTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">⚡</div><h3>تدريبات الفصل الأول</h3><p>تدريبات كهربية الفصل الأول للصف الثالث الثانوي.</p></button></div></section>'''
+          new_menu = '''<div class="studentSubGrid two"><button id="openFoundationTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">🧰</div><h3>تدريبات الكورس التأسيسي</h3><p>كل تدريبات الكورس التأسيسي في مكان واحد.</p></button><button id="openB2Lesson1Trainings" class="card studentNavCard" type="button"><div class="studentNavIcon">🧭</div><h3>تدريبات الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — الصف الثاني الثانوي.</p></button><button id="openChapterTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">⚡</div><h3>تدريبات الفصل الأول</h3><p>تدريبات كهربية الفصل الأول للصف الثالث الثانوي.</p></button></div></section>'''
+          if old_menu not in s:
+              raise SystemExit('training courses menu target not found')
+          s = s.replace(old_menu, new_menu, 1)
+
+          old_visibility = '''function updateTrainingCourseButtons(){const foundation=$('openFoundationTrainings'),chapter=$('openChapterTrainings');if(foundation)foundation.classList.toggle('hidden',!sets.some(s=>String(s.course_slug||'')==='foundation-physics'));if(chapter)chapter.classList.toggle('hidden',!sets.some(s=>String(s.course_slug||'')==='third-secondary-electricity-chapter-1'))}'''
+          new_visibility = '''function updateTrainingCourseButtons(){const foundation=$('openFoundationTrainings'),b2Lesson1=$('openB2Lesson1Trainings'),chapter=$('openChapterTrainings');if(foundation)foundation.classList.toggle('hidden',!sets.some(s=>String(s.course_slug||'')==='foundation-physics'));if(b2Lesson1)b2Lesson1.classList.toggle('hidden',!sets.some(s=>String(s.course_slug||'')==='second-secondary-baccalaureate-physics'));if(chapter)chapter.classList.toggle('hidden',!sets.some(s=>String(s.course_slug||'')==='third-secondary-electricity-chapter-1'))}'''
+          if old_visibility not in s:
+              raise SystemExit('course button visibility target not found')
+          s = s.replace(old_visibility, new_visibility, 1)
+
+          old_click = '''$('openAvailable').onclick=()=>{selectedTrainingCourse=null;updateTrainingCourseButtons();showOnly('trainingCoursesView')};$('openChapterTrainings').onclick=()=>openCourseTrainings('third-secondary-electricity-chapter-1','تدريبات الفصل الأول','⚡');'''
+          new_click = '''$('openAvailable').onclick=()=>{selectedTrainingCourse=null;updateTrainingCourseButtons();showOnly('trainingCoursesView')};$('openB2Lesson1Trainings').onclick=()=>openCourseTrainings('second-secondary-baccalaureate-physics','تدريبات الدرس الأول','🧭');$('openChapterTrainings').onclick=()=>openCourseTrainings('third-secondary-electricity-chapter-1','تدريبات الفصل الأول','⚡');'''
+          if old_click not in s:
+              raise SystemExit('course click target not found')
+          s = s.replace(old_click, new_click, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name "YR Platform Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add student.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Add separate B2 lesson 1 training icon"
+          git push
