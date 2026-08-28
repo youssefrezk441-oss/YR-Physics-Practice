@@ -560,7 +560,7 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
 import{loadAdminAccess}from'./admin-access.js';
 const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-try{const ctx=await loadAdminAccess(sb);if(!ctx.isOwner)throw new Error('owner only');document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحساب المالك فقط.</p><a href="admin-home.html">العودة إلى لوحة الإدارة</a></div>'}
+try{await loadAdminAccess(sb);document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}catch(e){document.getElementById('gate').innerHTML='<div class="gateCard"><h2>مرجع المدرس</h2><p>هذه الصفحة متاحة لحسابات الإدارة فقط.</p><a href="admin-home.html">العودة إلى لوحة الإدارة</a></div>'}
 </script>
 </body>
 </html>
