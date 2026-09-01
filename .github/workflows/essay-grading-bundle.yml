@@ -24,11 +24,12 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          jq -e '.request_id and .question_id' .grading/request.json >/dev/null
+          jq -e '.request_id and ((.all_pending == true) or (.question_id != null))' .grading/request.json >/dev/null
           echo "present=true" >> "$GITHUB_OUTPUT"
           echo "request_id=$(jq -r '.request_id' .grading/request.json)" >> "$GITHUB_OUTPUT"
-          echo "question_id=$(jq -r '.question_id' .grading/request.json)" >> "$GITHUB_OUTPUT"
-          echo "max_responses=$(jq -r '.max_responses // 25' .grading/request.json)" >> "$GITHUB_OUTPUT"
+          echo "question_id=$(jq -r '.question_id // ""' .grading/request.json)" >> "$GITHUB_OUTPUT"
+          echo "all_pending=$(jq -r '.all_pending // false' .grading/request.json)" >> "$GITHUB_OUTPUT"
+          echo "max_responses=$(jq -r '.max_responses // 250' .grading/request.json)" >> "$GITHUB_OUTPUT"
 
       - id: oidc
         if: steps.request.outputs.present == 'true'
@@ -45,14 +46,16 @@ jobs:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
           REQUEST_ID: ${{ steps.request.outputs.request_id }}
           QUESTION_ID: ${{ steps.request.outputs.question_id }}
+          ALL_PENDING: ${{ steps.request.outputs.all_pending }}
           MAX_RESPONSES: ${{ steps.request.outputs.max_responses }}
         shell: bash
         run: |
           payload=$(jq -nc \
             --arg request_id "$REQUEST_ID" \
             --arg question_id "$QUESTION_ID" \
+            --argjson all_pending "$ALL_PENDING" \
             --argjson max_responses "$MAX_RESPONSES" \
-            '{request_id:$request_id,question_id:$question_id,max_responses:$max_responses}')
+            '{request_id:$request_id,question_id:$question_id,all_pending:$all_pending,max_responses:$max_responses}')
           curl --fail-with-body --silent --show-error \
             -H "Authorization: Bearer $OIDC_TOKEN" \
             -H "Content-Type: application/json" \
