@@ -1,0 +1,72 @@
+name: Essay grading bundle bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.grading/request.json'
+      - '.github/workflows/essay-grading-bundle.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: request
+        shell: bash
+        run: |
+          if [ ! -f .grading/request.json ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          jq -e '.request_id and .question_id' .grading/request.json >/dev/null
+          echo "present=true" >> "$GITHUB_OUTPUT"
+          echo "request_id=$(jq -r '.request_id' .grading/request.json)" >> "$GITHUB_OUTPUT"
+          echo "question_id=$(jq -r '.question_id' .grading/request.json)" >> "$GITHUB_OUTPUT"
+          echo "max_responses=$(jq -r '.max_responses // 25' .grading/request.json)" >> "$GITHUB_OUTPUT"
+
+      - id: oidc
+        if: steps.request.outputs.present == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const token = await core.getIDToken('yr-essay-grading-bundle');
+            core.setSecret(token);
+            core.setOutput('token', token);
+
+      - name: Build encrypted bundle
+        if: steps.request.outputs.present == 'true'
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+          QUESTION_ID: ${{ steps.request.outputs.question_id }}
+          MAX_RESPONSES: ${{ steps.request.outputs.max_responses }}
+        shell: bash
+        run: |
+          payload=$(jq -nc \
+            --arg request_id "$REQUEST_ID" \
+            --arg question_id "$QUESTION_ID" \
+            --argjson max_responses "$MAX_RESPONSES" \
+            '{request_id:$request_id,question_id:$question_id,max_responses:$max_responses}')
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "$payload" \
+            --output grading-bundle.enc \
+            'https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/essay-grading-bundle'
+          test -s grading-bundle.enc
+
+      - name: Upload encrypted grading bundle
+        if: steps.request.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: essay-grading-${{ steps.request.outputs.request_id }}
+          path: grading-bundle.enc
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
