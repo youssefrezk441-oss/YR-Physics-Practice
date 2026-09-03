@@ -1,9 +1,9 @@
 const page=(location.pathname.split('/').pop()||'').toLowerCase();
 if(page==='admin-honor.html'){
-  const KEY={grade3:'yrHonorCycleGrade3',grade2:'yrHonorCycleGrade2'};
+  const KEY={grade3:'yrHonorCycleGrade3',grade2:'yrHonorCycleGrade2',grade2_azhar:'yrHonorCycleGrade2Azhar'};
   const ACTIVE='yrHonorActiveGrade';
   const nativeFetch=globalThis.fetch.bind(globalThis);
-  let catalogs={grade2:[],grade3:[]},loaded=false;
+  let catalogs={grade2:[],grade2_azhar:[],grade3:[]},loaded=false;
   const selected=g=>localStorage.getItem(KEY[g])||'';
   const currentGrade=()=>document.querySelector('.tab.active')?.dataset?.grade||sessionStorage.getItem(ACTIVE)||'grade3';
 
@@ -29,7 +29,7 @@ if(page==='admin-honor.html'){
       const data=await response.clone().json();
       if(data?.available_cycles){
         catalogs=data.available_cycles;
-        for(const g of ['grade3','grade2']){
+        for(const g of ['grade3','grade2','grade2_azhar']){
           const actual=data?.grades?.[g]?.cycle?.id;
           const valid=(catalogs[g]||[]).some(x=>String(x.id)===String(selected(g)));
           if(actual&&!valid)localStorage.setItem(KEY[g],String(actual));
