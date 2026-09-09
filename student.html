@@ -152,6 +152,28 @@ async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView'
     throw new Error('تعذر ربط زر مرجع الشرح');
   }
 
+  /* ورشة المحاضرة الثالثة — طلاب الصف الثالث فقط */
+  if(!html.includes('id="openLecture3Workshop"')){
+    html=html.replace(
+      '<div class="studentHomeGrid">',
+      '<div class="studentHomeGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button>'
+    );
+  }
+
+  const workshopProfileAnchor="renderProfileMeta();const chapterJourneyButton=$('openChapterJourney');";
+  if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
+  html=html.replace(
+    workshopProfileAnchor,
+    "renderProfileMeta();const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
+  );
+
+  const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
+  if(!html.includes(workshopBindAnchor)) throw new Error('تعذر ربط زر ورشة المحاضرة الثالثة');
+  html=html.replace(
+    workshopBindAnchor,
+    "$('openLecture3Workshop').onclick=()=>{window.location.href='./lecture3-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+  );
+
   const referencesCss=`
 @media(min-width:761px){.studentHomeGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .referenceHomeCard{border-color:#bfdbfe;background:linear-gradient(180deg,#f8fbff,#fff)}
