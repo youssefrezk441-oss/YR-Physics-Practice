@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تحليل ورشة المحاضرة الثالثة — مستر يوسف رزق</title>
+<style>
+:root{
+  --bg:#f5f2eb;--card:#fffdf8;--ink:#17212b;--muted:#687078;--line:#d9d5cc;
+  --navy:#17324d;--navy2:#244763;--gold:#a67c34;--good:#256647;--warn:#9a6b16;--bad:#8c3c34;
+  --shadow:0 10px 28px rgba(23,33,43,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Tahoma","Arial",sans-serif}
+button,input,select{font:inherit}
+a{color:inherit}
+.topbar{
+  position:sticky;top:0;z-index:20;background:rgba(245,242,235,.94);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)
+}
+.topinner{max-width:1400px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand h1{font-size:20px;margin:0 0 3px;color:var(--navy)}
+.brand p{margin:0;color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--card);padding:9px 13px;border-radius:10px;cursor:pointer}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.wrap{max-width:1400px;margin:auto;padding:18px}
+.notice{display:none;margin:0 0 14px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+.notice.show{display:block}
+.notice.error{border-color:#d9aaa5;background:#fff5f3;color:#6d2823}
+.filters{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;margin-bottom:14px}
+.filters select,.filters input{
+  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)
+}
+.tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 14px}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:999px;cursor:pointer}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.panel{display:none}.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(8,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.stat .k{color:var(--muted);font-size:12px;margin-bottom:8px}
+.stat .v{font-size:26px;font-weight:700;color:var(--navy)}
+.stat .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px}
+.card h2,.card h3{margin:0 0 12px;color:var(--navy)}
+.card h2{font-size:17px}.card h3{font-size:15px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:10px 11px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle}
+th{background:#f1eee7;color:var(--navy);font-size:12px;position:sticky;top:0}
+td{font-size:13px}
+tr[data-click]{cursor:pointer}
+tr[data-click]:hover{background:#f8f4ec}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);background:#fff}
+.badge.good{color:var(--good);border-color:#aacbb8;background:#f2fbf5}
+.badge.warn{color:var(--warn);border-color:#d8c498;background:#fffaf0}
+.badge.bad{color:var(--bad);border-color:#d9aaa5;background:#fff5f3}
+.bar{height:8px;background:#e5e1d8;border-radius:999px;overflow:hidden;min-width:90px}
+.bar>i{display:block;height:100%;background:var(--navy)}
+.toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.search{max-width:360px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.muted{color:var(--muted)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.loading{padding:30px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(17,27,36,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.show{display:flex}
+.modalbox{background:var(--bg);width:min(1100px,100%);max-height:92vh;overflow:auto;border-radius:16px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.modalhead{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);z-index:2}
+.modalbody{padding:16px}
+.close{border:1px solid var(--line);background:var(--card);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:20px}
+.smallstats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0 14px}
+.smallstats .stat .v{font-size:20px}
+.section-gap{margin-top:14px}
+.answer-dist{display:flex;flex-wrap:wrap;gap:8px}
+.answer-chip{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
+@media(max-width:1150px){.stats{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:850px){
+ .filters{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}
+ .smallstats{grid-template-columns:repeat(2,1fr)}.topinner{align-items:flex-start}
+}
+@media(max-width:520px){.filters{grid-template-columns:1fr}.wrap{padding:12px}.stats{gap:8px}.stat .v{font-size:22px}.brand h1{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topinner">
+    <div class="brand">
+      <h1>تحليل ورشة المحاضرة الثالثة</h1>
+      <p>لوحة خاصة بالإدارة — لا تؤثر على لوحة الشرف أو دورات التقييم أو مؤشرات الطلاب الحالية</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="history.back()">رجوع</button>
+      <button class="btn primary" id="refreshBtn">تحديث</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="notice" class="notice"></div>
+
+  <div class="filters">
+    <select id="trackFilter">
+      <option value="home">التدريب المنزلي — 120 سؤال</option>
+      <option value="class">ورشة الحصة — 36 سؤال</option>
+      <option value="all">الكل — 156 سؤال</option>
+    </select>
+    <select id="groupFilter"><option value="">كل المجموعات</option></select>
+    <select id="skillFilter"><option value="">كل المهارات M1–M8</option></select>
+    <button class="btn" id="clearFilters">مسح الفلاتر</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="overview">نظرة عامة</button>
+    <button class="tab" data-tab="students">الطلاب</button>
+    <button class="tab" data-tab="questions">الأسئلة</button>
+    <button class="tab" data-tab="groups">المجموعات والمهارات</button>
+  </div>
+
+  <section id="panel-overview" class="panel active">
+    <div class="stats" id="overviewStats"></div>
+    <div class="grid2">
+      <div class="card">
+        <h2>أصعب الأسئلة من أول محاولة</h2>
+        <div id="hardestBox" class="tablewrap"></div>
+      </div>
+      <div class="card">
+        <h2>كيف أقرأ الأرقام؟</h2>
+        <div style="line-height:1.9;font-size:13px">
+          <p><b>First Attempt:</b> نسبة الأسئلة التي أُجيبت صحيحة من أول محاولة.</p>
+          <p><b>Direct Mastery:</b> وصل للإجابة الصحيحة بنفسه قبل أي مساعدة.</p>
+          <p><b>Assisted:</b> وصل للإجابة بعد استبعاد البدائل أو بعد Reveal في السؤال الرقمي.</p>
+          <p><b>Completion:</b> السؤال محسوب مكتمل فقط عندما تُحسم كل أجزائه؛ سؤال 359 له جزآن.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-students" class="panel">
+    <div class="card">
+      <div class="toolbar">
+        <h2>تحليل الطلاب</h2>
+        <input id="studentSearch" class="search" placeholder="ابحث بالاسم أو كود الطالب">
+      </div>
+      <div id="studentsBox" class="tablewrap"></div>
+    </div>
+  </section>
+
+  <section id="panel-questions" class="panel">
+    <div class="card">
+      <div class="toolbar">
+        <h2>تحليل الأسئلة</h2>
+        <input id="questionSearch" class="search" inputmode="numeric" placeholder="ابحث برقم السؤال مثل 250">
+      </div>
+      <div id="questionsBox" class="tablewrap"></div>
+    </div>
+  </section>
+
+  <section id="panel-groups" class="panel">
+    <div class="grid2">
+      <div class="card">
+        <h2>المجموعات</h2>
+        <div id="groupsBox" class="tablewrap"></div>
+      </div>
+      <div class="card">
+        <h2>المهارات M1–M8</h2>
+        <div id="skillsBox" class="tablewrap"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modalbox">
+    <div class="modalhead">
+      <strong id="modalTitle">التفاصيل</strong>
+      <button class="close" id="modalClose">×</button>
+    </div>
+    <div id="modalBody" class="modalbody"></div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm';
+
+const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co';
+const SUPABASE_KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+const FN='admin-l3-workshop-analytics';
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const pct=v=>v==null?'—':`${Number(v).toFixed(1)}%`;
+const num=v=>Number(v??0).toLocaleString('ar-EG');
+
+let activeTab='overview', studentTimer=null, questionTimer=null;
+
+function notice(msg,type=''){
+  const el=$('notice'); el.className='notice show'+(type?' '+type:''); el.textContent=msg;
+}
+function clearNotice(){ $('notice').className='notice'; $('notice').textContent=''; }
+function filters(){
+  return {track:$('trackFilter').value,group_code:$('groupFilter').value,skill:$('skillFilter').value};
+}
+async function call(action,extra={}){
+  const {data,error}=await sb.functions.invoke(FN,{body:{action,...filters(),...extra}});
+  if(error) throw error;
+  if(data?.error) throw new Error(data.message||data.error);
+  return data;
+}
+function statCard(k,v,sub=''){return `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div>${sub?`<div class="sub">${esc(sub)}</div>`:''}</div>`}
+function rateBadge(v){
+  if(v==null)return `<span class="badge">—</span>`;
+  const x=Number(v),c=x>=75?'good':x>=50?'warn':'bad';
+  return `<span class="badge ${c}">${pct(x)}</span>`;
+}
+function bar(v){
+  const x=Math.max(0,Math.min(100,Number(v||0)));
+  return `<div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${x}%"></i></div><span>${x.toFixed(1)}%</span></div>`;
+}
+function loading(id){$(id).innerHTML='<div class="loading">جاري تحميل البيانات…</div>'}
+function empty(msg='لا توجد بيانات بعد'){return `<div class="empty">${esc(msg)}</div>`}
+
+async function init(){
+  try{
+    clearNotice();
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){ notice('سجّل دخول الإدارة من المنصة أولًا، ثم افتح صفحة التحليل مرة أخرى.','error'); disableUI(); return; }
+    await call('ping');
+    await loadFilterOptions();
+    await loadAllForTab();
+  }catch(e){
+    console.error(e); notice('تعذر فتح لوحة التحليل. تأكد أنك داخل بحساب إدارة لديه صلاحية عرض الطلاب.','error'); disableUI();
+  }
+}
+function disableUI(){document.querySelectorAll('button,select,input').forEach(x=>x.disabled=true)}
+async function loadFilterOptions(){
+  const [g,s]=await Promise.all([call('groups'),call('skills')]);
+  $('groupFilter').innerHTML='<option value="">كل المجموعات</option>'+g.groups.map(x=>`<option value="${esc(x.group_code)}">${esc(x.group_code)}${x.center_name?' — '+esc(x.center_name):''}</option>`).join('');
+  $('skillFilter').innerHTML='<option value="">كل المهارات M1–M8</option>'+s.skills.map(x=>`<option value="${esc(x.skill)}">${esc(x.skill)} — ${esc(x.skill_name)}</option>`).join('');
+}
+async function loadAllForTab(){
+  clearNotice();
+  if(activeTab==='overview') return loadOverview();
+  if(activeTab==='students') return loadStudents();
+  if(activeTab==='questions') return loadQuestions();
+  if(activeTab==='groups') return loadGroupsSkills();
+}
+
+async function loadOverview(){
+  loading('hardestBox'); $('overviewStats').innerHTML='';
+  try{
+    const d=await call('overview'),o=d.overview;
+    $('overviewStats').innerHTML=[
+      statCard('الطلاب المؤهلون',num(o.eligible_students)),
+      statCard('بدأوا الورشة',num(o.started_students),`مشاركة ${pct(o.participation_rate)}`),
+      statCard('الأسئلة في المسار',num(o.questions)),
+      statCard('بدأت',num(o.attempted_questions)),
+      statCard('اكتملت',num(o.completed_questions),`متوسط إكمال ${pct(o.avg_completion_rate)}`),
+      statCard('صح من أول مرة',pct(o.first_attempt_rate)),
+      statCard('إتقان مباشر',pct(o.direct_mastery_rate)),
+      statCard('بمساعدة',pct(o.assisted_rate),`متوسط المحاولات ${o.avg_attempts_per_attempted_question}`)
+    ].join('');
+    if(!d.hardest_questions?.length){$('hardestBox').innerHTML=empty();return}
+    $('hardestBox').innerHTML=`<table><thead><tr><th>السؤال</th><th>المهارة</th><th>المستوى</th><th>طلاب حاولوا</th><th>First Attempt</th></tr></thead><tbody>${
+      d.hardest_questions.map(x=>`<tr data-click data-bank="${x.bank_no}"><td><b>${x.bank_no}</b></td><td>${esc(x.skill)} — ${esc(x.skill_name)}</td><td>${esc(x.difficulty)}</td><td>${num(x.students_attempted)}</td><td>${rateBadge(x.first_attempt_rate)}</td></tr>`).join('')
+    }</tbody></table>`;
+    bindQuestionRows();
+  }catch(e){console.error(e);notice('حدث خطأ أثناء تحميل النظرة العامة.','error');$('hardestBox').innerHTML=empty('تعذر التحميل')}
+}
+async function loadStudents(){
+  loading('studentsBox');
+  try{
+    const d=await call('students',{query:$('studentSearch').value,limit:150});
+    if(!d.students?.length){$('studentsBox').innerHTML=empty();return}
+    $('studentsBox').innerHTML=`<table><thead><tr><th>الطالب</th><th>المجموعة</th><th>بدأ</th><th>أكمل</th><th>أول مرة</th><th>إتقان مباشر</th><th>Assisted</th><th>محاولات</th></tr></thead><tbody>${
+      d.students.map(x=>{
+        const first=x.attempted_questions?100*x.first_correct_questions/x.attempted_questions:0;
+        return `<tr data-click data-user="${x.user_id}"><td><b>${esc(x.full_name||'—')}</b><div class="muted">${esc(x.student_code||'')}</div></td><td>${esc(x.group_code||'—')}</td><td>${num(x.attempted_questions)}</td><td>${num(x.completed_questions)}</td><td>${rateBadge(first)}</td><td>${num(x.direct_mastered_questions)}</td><td>${num(x.assisted_questions)}</td><td>${num(x.attempts)}</td></tr>`;
+      }).join('')
+    }</tbody></table>`;
+    bindStudentRows();
+  }catch(e){console.error(e);notice('تعذر تحميل الطلاب.','error');$('studentsBox').innerHTML=empty('تعذر التحميل')}
+}
+async function loadQuestions(){
+  loading('questionsBox');
+  try{
+    const d=await call('questions',{query:$('questionSearch').value,limit:200});
+    if(!d.questions?.length){$('questionsBox').innerHTML=empty();return}
+    $('questionsBox').innerHTML=`<table><thead><tr><th>السؤال</th><th>المهارة</th><th>الصعوبة</th><th>طلاب حاولوا</th><th>First Attempt</th><th>Direct</th><th>Assisted</th><th>متوسط المحاولات</th></tr></thead><tbody>${
+      d.questions.map(x=>`<tr data-click data-bank="${x.bank_no}"><td><b>${x.bank_no}</b></td><td>${esc(x.skill)} — ${esc(x.skill_name)}</td><td>${esc(x.difficulty)}</td><td>${num(x.students_attempted)}</td><td>${rateBadge(x.first_attempt_rate)}</td><td>${rateBadge(x.direct_mastery_rate)}</td><td>${rateBadge(x.assisted_rate)}</td><td>${x.avg_attempts==null?'—':Number(x.avg_attempts).toFixed(2)}</td></tr>`).join('')
+    }</tbody></table>`;
+    bindQuestionRows();
+  }catch(e){console.error(e);notice('تعذر تحميل الأسئلة.','error');$('questionsBox').innerHTML=empty('تعذر التحميل')}
+}
+async function loadGroupsSkills(){
+  loading('groupsBox');loading('skillsBox');
+  try{
+    const [g,s]=await Promise.all([call('groups'),call('skills')]);
+    $('groupsBox').innerHTML=g.groups?.length?`<table><thead><tr><th>المجموعة</th><th>بدأوا</th><th>متوسط الإكمال</th><th>First</th><th>Direct</th><th>Assisted</th></tr></thead><tbody>${
+      g.groups.map(x=>`<tr><td><b>${esc(x.group_code||'—')}</b><div class="muted">${esc(x.center_name||'')}</div></td><td>${num(x.started_students)} / ${num(x.students)}</td><td>${Number(x.avg_completed_questions||0).toFixed(1)}</td><td>${rateBadge(x.first_attempt_rate)}</td><td>${rateBadge(x.direct_mastery_rate)}</td><td>${rateBadge(x.assisted_rate)}</td></tr>`).join('')
+    }</tbody></table>`:empty();
+    $('skillsBox').innerHTML=s.skills?.length?`<table><thead><tr><th>المهارة</th><th>الأسئلة</th><th>محاولات طلاب×سؤال</th><th>First</th><th>Direct</th><th>Assisted</th></tr></thead><tbody>${
+      s.skills.map(x=>`<tr><td><b>${esc(x.skill)}</b><div class="muted">${esc(x.skill_name)}</div></td><td>${num(x.questions)}</td><td>${num(x.student_question_attempts)}</td><td>${rateBadge(x.first_attempt_rate)}</td><td>${rateBadge(x.direct_mastery_rate)}</td><td>${rateBadge(x.assisted_rate)}</td></tr>`).join('')
+    }</tbody></table>`:empty();
+  }catch(e){console.error(e);notice('تعذر تحميل تحليل المجموعات والمهارات.','error');$('groupsBox').innerHTML=empty('تعذر التحميل');$('skillsBox').innerHTML=empty('تعذر التحميل')}
+}
+
+function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+async function showStudent(userId){
+  openModal('تفاصيل الطالب','<div class="loading">جاري التحميل…</div>');
+  try{
+    const d=await call('student_detail',{user_id:userId});
+    const p=d.profile, attempted=d.questions.filter(x=>x.attempted_parts>0);
+    const completed=attempted.filter(x=>x.resolved_parts>=x.expected_parts).length;
+    const direct=attempted.filter(x=>x.mastered_parts>=x.expected_parts).length;
+    const assisted=attempted.filter(x=>x.resolved_parts>=x.expected_parts&&x.assisted_parts>0).length;
+    const first=attempted.filter(x=>x.first_correct_parts>=x.expected_parts).length;
+    const body=`
+      <div><h2 style="margin:0;color:var(--navy)">${esc(p.full_name||'—')}</h2><div class="muted">${esc(p.student_code||'')} — ${esc(p.group_code||'')} — ${esc(p.center_name||'')}</div></div>
+      <div class="smallstats">
+        ${statCard('بدأ',num(attempted.length))}
+        ${statCard('أكمل',num(completed))}
+        ${statCard('First Attempt',attempted.length?pct(100*first/attempted.length):'—')}
+        ${statCard('Direct',num(direct))}
+        ${statCard('Assisted',num(assisted))}
+      </div>
+      <div class="grid2 section-gap">
+        <div class="card"><h3>المهارات</h3><div class="tablewrap"><table><thead><tr><th>المهارة</th><th>بدأ</th><th>أكمل</th><th>First</th><th>Direct</th><th>Assisted</th></tr></thead><tbody>${
+          d.skills.map(x=>`<tr><td><b>${esc(x.skill)}</b><div class="muted">${esc(x.skill_name)}</div></td><td>${num(x.attempted_questions)}</td><td>${num(x.completed_questions)}</td><td>${x.attempted_questions?rateBadge(100*x.first_correct_questions/x.attempted_questions):'—'}</td><td>${num(x.direct_mastered_questions)}</td><td>${num(x.assisted_questions)}</td></tr>`).join('')
+        }</tbody></table></div></div>
+        <div class="card"><h3>الأسئلة التي بدأها</h3><div class="tablewrap"><table><thead><tr><th>السؤال</th><th>المهارة</th><th>المحاولات</th><th>الحالة</th></tr></thead><tbody>${
+          attempted.map(x=>{
+            const done=x.resolved_parts>=x.expected_parts,ass=x.assisted_parts>0,dir=x.mastered_parts>=x.expected_parts;
+            const state=dir?'<span class="badge good">إتقان مباشر</span>':ass?'<span class="badge warn">بمساعدة</span>':done?'<span class="badge">مكتمل</span>':'<span class="badge bad">غير مكتمل</span>';
+            return `<tr data-click data-bank="${x.bank_no}"><td><b>${x.bank_no}</b></td><td>${esc(x.skill)}</td><td>${num(x.attempts)}</td><td>${state}</td></tr>`;
+          }).join('')
+        }</tbody></table></div></div>
+      </div>`;
+    $('modalBody').innerHTML=body; bindQuestionRows();
+  }catch(e){console.error(e);$('modalBody').innerHTML=empty('تعذر تحميل تفاصيل الطالب')}
+}
+async function showQuestion(bankNo){
+  openModal(`تحليل السؤال ${bankNo}`,'<div class="loading">جاري التحميل…</div>');
+  try{
+    const d=await call('question_detail',{bank_no:Number(bankNo)});
+    const q=d.question;
+    const dist=(d.answer_distribution||[]).map(x=>`<div class="answer-chip"><b>${esc(x.answer_text||'—')}</b> — ${num(x.attempts)} محاولة${x.wrong_attempts?`، خطأ ${num(x.wrong_attempts)}`:''}</div>`).join('');
+    const body=`
+      <div><h2 style="margin:0;color:var(--navy)">السؤال ${q.bank_no}</h2><div class="muted">${esc(q.skill)} — ${esc(q.skill_name)} — ${esc(q.difficulty)}</div></div>
+      <div class="card section-gap"><h3>الإجابة المرجعية للإدارة</h3><div style="font-size:18px;font-weight:700">${esc(q.display_answer||'—')}</div></div>
+      <div class="card section-gap"><h3>توزيع الإجابات الفعلية</h3><div class="answer-dist">${dist||'<span class="muted">لا توجد محاولات بعد.</span>'}</div></div>
+      <div class="card section-gap"><h3>الطلاب الذين حاولوا السؤال</h3><div class="tablewrap">${
+        d.students?.length?`<table><thead><tr><th>الطالب</th><th>المجموعة</th><th>الجزء</th><th>المحاولات</th><th>أول مرة</th><th>Mastered</th><th>Assisted</th><th>آخر إجابة</th></tr></thead><tbody>${
+          d.students.map(x=>`<tr><td>${esc(x.full_name||'—')}<div class="muted">${esc(x.student_code||'')}</div></td><td>${esc(x.group_code||'—')}</td><td>${x.part_index||'—'}</td><td>${num(x.attempts_count)}</td><td>${x.first_attempt_correct?'<span class="badge good">صح</span>':'<span class="badge bad">لا</span>'}</td><td>${x.mastered?'<span class="badge good">نعم</span>':'—'}</td><td>${x.revealed?'<span class="badge warn">نعم</span>':'—'}</td><td>${esc(x.last_answer||'—')}</td></tr>`).join('')
+        }</tbody></table>`:empty()
+      }</div></div>`;
+    $('modalBody').innerHTML=body;
+  }catch(e){console.error(e);$('modalBody').innerHTML=empty('تعذر تحميل تحليل السؤال')}
+}
+function bindStudentRows(){document.querySelectorAll('tr[data-user]').forEach(r=>r.onclick=()=>showStudent(r.dataset.user))}
+function bindQuestionRows(){document.querySelectorAll('tr[data-bank]').forEach(r=>r.onclick=()=>showQuestion(r.dataset.bank))}
+
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+  activeTab=b.dataset.tab;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  $(`panel-${activeTab}`).classList.add('active');
+  loadAllForTab();
+}));
+$('refreshBtn').onclick=()=>loadAllForTab();
+$('clearFilters').onclick=()=>{$('trackFilter').value='home';$('groupFilter').value='';$('skillFilter').value='';loadAllForTab()};
+['trackFilter','groupFilter','skillFilter'].forEach(id=>$(id).addEventListener('change',()=>loadAllForTab()));
+$('studentSearch').addEventListener('input',()=>{clearTimeout(studentTimer);studentTimer=setTimeout(loadStudents,300)});
+$('questionSearch').addEventListener('input',()=>{clearTimeout(questionTimer);questionTimer=setTimeout(loadQuestions,300)});
+$('modalClose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+init();
+</script>
+</body>
+</html>
