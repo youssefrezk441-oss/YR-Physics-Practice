@@ -11,19 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Patch student.html only
-        shell: python
         run: |
+          python - <<'PY'
           from pathlib import Path
           p=Path('student.html')
           s=p.read_text(encoding='utf-8')
           if 'id="openLecture3Workshop"' in s:
               print('Workshop button already present; no change needed.')
               raise SystemExit(0)
-
           anchor='  /* شرح الحصص patch v1 */'
           if anchor not in s:
               raise SystemExit('Expected student.html anchor not found')
-
           patch=r'''  /* ورشة المحاضرة الثالثة — طلاب الصف الثالث فقط */
           if(!html.includes('id="openLecture3Workshop"')){
             html=html.replace(
@@ -31,20 +29,19 @@ jobs:
               '<div class="studentHomeGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button>'
             );
           }
-
           html=html.replace(
             "renderProfileMeta();const chapterJourneyButton=$('openChapterJourney');",
             "renderProfileMeta();const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
           );
-
           html=html.replace(
             "$('openTrainings').onclick=()=>showOnly('trainingMenuView');",
-            "$('openLecture3Workshop').onclick=()=>window.open('./lecture3-workshop.html','_self');$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+            "$('openLecture3Workshop').onclick=()=>window.location.href='./lecture3-workshop.html';$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
           );
 
 '''
           s=s.replace(anchor,patch+anchor,1)
           p.write_text(s,encoding='utf-8')
+          PY
       - name: Commit student.html
         run: |
           if git diff --quiet -- student.html; then
