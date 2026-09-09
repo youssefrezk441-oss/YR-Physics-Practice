@@ -182,11 +182,11 @@ tr[data-click]:hover{background:#f8f4ec}
 </div>
 
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
 
 const SUPABASE_URL='https://ltjdhconuiqblxfjzpzj.supabase.co';
 const SUPABASE_KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
-const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const FN='admin-l3-workshop-analytics';
 
 const $=id=>document.getElementById(id);
@@ -204,7 +204,12 @@ function filters(){
   return {track:$('trackFilter').value,group_code:$('groupFilter').value,skill:$('skillFilter').value};
 }
 async function call(action,extra={}){
-  const {data,error}=await sb.functions.invoke(FN,{body:{action,...filters(),...extra}});
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session?.access_token) throw new Error('missing_admin_session');
+  const {data,error}=await sb.functions.invoke(FN,{
+    body:{action,...filters(),...extra},
+    headers:{Authorization:`Bearer ${session.access_token}`}
+  });
   if(error) throw error;
   if(data?.error) throw new Error(data.message||data.error);
   return data;
