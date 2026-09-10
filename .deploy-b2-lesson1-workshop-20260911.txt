@@ -1,0 +1,1 @@
+Trigger GitHub Pages deployment after integrating the protected B2 lesson 1 workshop.
