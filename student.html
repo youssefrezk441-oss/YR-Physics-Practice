@@ -121,7 +121,7 @@ async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView'
   /* شرح الحصص patch v1 */
   if(!html.includes('id="openReferences"')){
     html=html.replace(
-      '<div class="studentHomeGrid">',
+      '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>',
       '<div class="studentHomeGrid"><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
     );
   }
@@ -164,14 +164,14 @@ async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView'
   if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopProfileAnchor,
-    "renderProfileMeta();const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
+    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton)b2Lesson1WorkshopButton.classList.toggle('hidden',!['N2-A','K2-A'].includes(String(profile?.group_code||'')));const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
   );
 
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(workshopBindAnchor)) throw new Error('تعذر ربط زر ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopBindAnchor,
-    "$('openLecture3Workshop').onclick=()=>{window.location.href='./lecture3-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+    "$('openB2Lesson1Workshop').onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};$('openLecture3Workshop').onclick=()=>{window.location.href='./lecture3-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
   );
 
   const referencesCss=`
