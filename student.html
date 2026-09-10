@@ -172,7 +172,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopProfileAnchor,
-    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton)b2Lesson1WorkshopButton.classList.toggle('hidden',!['N2-A','K2-A'].includes(String(profile?.group_code||'')));const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
+    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
   );
 
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
