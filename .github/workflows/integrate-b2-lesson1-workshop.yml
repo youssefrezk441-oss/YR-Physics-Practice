@@ -1,0 +1,209 @@
+name: Integrate B2 lesson 1 workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/integrate-b2-lesson1-workshop.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrate protected B2 workshop
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, json
+
+          # ---------- student dashboard card ----------
+          p = Path('student.html')
+          s = p.read_text(encoding='utf-8')
+
+          marker = '  /* شرح الحصص patch v1 */'
+          card_block = '''  /* B2 lesson 1 workshop card v2 */
+          if(!html.includes('id="openB2Lesson1Workshop"')){
+            html=html.replace(
+              '<div class="studentHomeGrid">',
+              '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>'
+            );
+          }
+
+          '''
+          if '/* B2 lesson 1 workshop card v2 */' not in s:
+              if marker not in s:
+                  raise SystemExit('student marker not found')
+              s = s.replace(marker, card_block + marker, 1)
+
+          # The references patch previously consumed the B2 card. Make it insert references
+          # before the existing cards instead of replacing the B2 card itself.
+          old_ref = '''html=html.replace(
+              '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>',
+              '<div class="studentHomeGrid"><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
+            );'''
+          new_ref = '''html=html.replace(
+              '<div class="studentHomeGrid">',
+              '<div class="studentHomeGrid"><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
+            );'''
+          if old_ref in s:
+              s = s.replace(old_ref, new_ref, 1)
+
+          # Ensure visibility is restricted to the two Baccalaureate groups.
+          if "const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop')" not in s:
+              anchor = "renderProfileMeta();const chapterJourneyButton=$('openChapterJourney');"
+              repl = "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton)b2Lesson1WorkshopButton.classList.toggle('hidden',!['N2-A','K2-A'].includes(String(profile?.group_code||'')));const chapterJourneyButton=$('openChapterJourney');"
+              if anchor not in s:
+                  raise SystemExit('profile visibility anchor not found')
+              s = s.replace(anchor, repl, 1)
+
+          if "$('openB2Lesson1Workshop').onclick" not in s:
+              anchor = "$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+              repl = "$('openB2Lesson1Workshop').onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+              if anchor not in s:
+                  raise SystemExit('workshop click anchor not found')
+              s = s.replace(anchor, repl, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+          # ---------- workshop: remove answer key from browser + server sync ----------
+          p = Path('b2-lesson1-workshop.html')
+          s = p.read_text(encoding='utf-8')
+          if 'B2_PLATFORM_INTEGRATION_V1' not in s:
+              m = re.search(r'const ALL=(\[.*?\]);\nconst STORE_KEY=', s, re.S)
+              if not m:
+                  raise SystemExit('question bank not found')
+              arr = json.loads(m.group(1))
+              for q in arr:
+                  accepted = str(q.get('accepted') or '')
+                  labels = []
+                  if q.get('grading') in ('AUTO-NUMERIC','AUTO-NUMERIC-MULTI'):
+                      parts = [x.strip() for x in accepted.split(';') if x.strip()]
+                      if not parts:
+                          labels = ['الإجابة']
+                      else:
+                          for i, x in enumerate(parts):
+                              labels.append(x.split('=',1)[0].strip() if '=' in x else ('الإجابة' if len(parts)==1 else f'الإجابة {i+1}'))
+                  q['fieldLabels'] = labels
+                  q['accepted'] = ''
+                  q['tolerance'] = ''
+              new_json = json.dumps(arr, ensure_ascii=False).replace('</','<\\/')
+              s = s[:m.start(1)] + new_json + s[m.end(1):]
+
+              # Hide the actual workshop until the server authorizes the logged-in student.
+              s = s.replace('</style>', '''
+          .platformGate{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;background:#f2f4f5;color:#16324f;font-family:Tahoma,Arial,sans-serif;padding:20px}
+          .platformGateBox{background:#fff;border:1px solid #d9dfe2;border-radius:16px;box-shadow:0 14px 38px rgba(22,50,79,.10);padding:24px;max-width:520px;text-align:center;line-height:1.8;font-weight:800}
+          body.platformPending>.shell,body.platformPending>.img-modal{visibility:hidden}
+          </style>''', 1)
+              s = s.replace('<body>', '<body class="platformPending"><div class="platformGate" id="platformGate"><div class="platformGateBox">جاري التحقق من صلاحية الدخول إلى الورشة...</div></div>', 1)
+
+              # Build numeric input fields without embedding expected answers.
+              s = re.sub(r'function parseParts\(q\)\{.*?\n\}', '''function parseParts(q){
+           const labels=Array.isArray(q.fieldLabels)&&q.fieldLabels.length?q.fieldLabels:["الإجابة"];
+           return labels.map(label=>({label,expected:""}));
+          }''', s, count=1, flags=re.S)
+
+              # Server integration helpers.
+              state_anchor = "if(!state.correct) state.correct={};"
+              platform_js = r'''
+          // B2_PLATFORM_INTEGRATION_V1
+          let platformSb=null,platformReady=false;
+          async function platformCall(action,extra={}){
+            if(!platformSb) throw new Error('الاتصال بالمنصة غير جاهز.');
+            const {data,error}=await platformSb.functions.invoke('b2-lesson1-workshop',{body:{action,...extra}});
+            if(error){
+              let msg=error.message||'تعذر الاتصال بالمنصة.';
+              try{if(error.context&&typeof error.context.json==='function'){const p=await error.context.json();msg=p?.message||p?.error||msg}}catch{}
+              throw new Error(msg);
+            }
+            if(data?.error) throw new Error(data.message||data.error);
+            return data;
+          }
+          function showPlatformDenied(msg){
+            document.body.classList.remove('platformPending');
+            const gate=document.getElementById('platformGate');
+            if(gate) gate.innerHTML='<div class="platformGateBox" style="color:#8a423d"><b>تعذر فتح الورشة.</b><br>'+escapeHtml(msg||'هذه الورشة غير متاحة لهذا الحساب.')+'<br><br><a href="student.html" style="color:#3166a8">العودة إلى المنصة</a></div>';
+            document.querySelector('.shell')?.remove();
+          }
+          async function initPlatform(){
+            try{
+              const mod=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm');
+              platformSb=mod.createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+              const {data:{session}}=await platformSb.auth.getSession();
+              if(!session){location.href='student.html';return false;}
+              await platformCall('ping');
+              const loaded=await platformCall('load');
+              state={answers:{},checked:{},correct:{}};
+              for(const r of (loaded.responses||[])){
+                const ans=r.answer_payload ?? r.answer_text ?? '';
+                state.answers[r.question_id]=ans;
+                state.checked[r.question_id]=true;
+                if(r.is_correct===true||r.is_correct===false) state.correct[r.question_id]=r.is_correct;
+              }
+              save();
+              platformReady=true;
+              document.body.classList.remove('platformPending');
+              document.getElementById('platformGate')?.remove();
+              return true;
+            }catch(e){showPlatformDenied(e.message||'هذه الورشة غير متاحة لهذا الحساب.');return false;}
+          }
+          '''
+              if state_anchor not in s:
+                  raise SystemExit('state anchor not found')
+              s = s.replace(state_anchor, state_anchor + platform_js, 1)
+
+              # Replace local answer checking with server-side checking/saving.
+              click_re = re.compile(r'\$\("checkBtn"\)\.onclick=\(\)=>\{.*?\n\};\n\$\("clearBtn"\)\.onclick=\(\)=>\{.*?\n\};', re.S)
+              click_new = r'''$("checkBtn").onclick=async()=>{
+           const q=qs()[index], ans=collect(q);
+           if(!nonempty(ans)){const fb=$("feedback");fb.className="feedback bad";fb.textContent="اكتب إجابتك أولًا.";return;}
+           const btn=$("checkBtn");btn.disabled=true;
+           try{
+             const res=await platformCall('save',{question_id:q.id,answer:ans});
+             state.answers[q.id]=ans;state.checked[q.id]=true;
+             if(res.is_correct===true||res.is_correct===false)state.correct[q.id]=res.is_correct;else delete state.correct[q.id];
+             save();
+             const fb=$("feedback");fb.className="feedback "+(res.is_correct===true?"good":res.is_correct===false?"bad":"saved");fb.textContent=res.message||"تم تسجيل الإجابة.";
+             renderFigure(q,true);updateStats();renderGrid();renderSidebar();buildPrint();
+           }catch(e){const fb=$("feedback");fb.className="feedback bad";fb.textContent=e.message||"تعذر حفظ الإجابة الآن.";}
+           finally{btn.disabled=false;}
+          };
+          $("clearBtn").onclick=async()=>{
+           const q=qs()[index];
+           try{await platformCall('clear',{question_id:q.id});delete state.answers[q.id];delete state.checked[q.id];delete state.correct[q.id];save();render();}
+           catch(e){const fb=$("feedback");fb.className="feedback bad";fb.textContent=e.message||"تعذر مسح الإجابة الآن.";}
+          };'''
+              s, n = click_re.subn(click_new, s, count=1)
+              if n != 1:
+                  raise SystemExit('answer handlers not found')
+
+              reset_re = re.compile(r'\$\("resetBtn"\)\.onclick=\(\)=>\{.*?\n\};', re.S)
+              reset_new = r'''$("resetBtn").onclick=async()=>{
+           if(confirm("هل تريد مسح كل إجابات ورشة الدرس الأول؟")){
+             try{await platformCall('reset');state={answers:{},checked:{},correct:{}};save();render();}
+             catch(e){alert(e.message||"تعذر إعادة المحاولة الآن.");}
+           }
+          };'''
+              s, n = reset_re.subn(reset_new, s, count=1)
+              if n != 1:
+                  raise SystemExit('reset handler not found')
+
+              # Do not run the workshop before authorization and remote state load.
+              if not s.rstrip().endswith('</html>'):
+                  raise SystemExit('unexpected html ending')
+              s = s.replace('\nrender();\n</script>', '\ninitPlatform().then(ok=>{if(ok)render()});\n</script>', 1)
+              p.write_text(s, encoding='utf-8')
+
+          PY
+      - name: Commit integration
+        run: |
+          git config user.name "YR Platform Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add student.html b2-lesson1-workshop.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Integrate protected B2 lesson 1 workshop"
+          git push
