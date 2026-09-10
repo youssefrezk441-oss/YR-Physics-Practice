@@ -1,0 +1,50 @@
+name: Patch B2 lesson 1 workshop card
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-b2-lesson1-workshop-card.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch student home
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('student.html')
+          s=p.read_text(encoding='utf-8')
+
+          if 'id="openB2Lesson1Workshop"' not in s:
+              target='<div class="studentHomeGrid">'
+              card='<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>'
+              if target not in s: raise SystemExit('studentHomeGrid target not found')
+              s=s.replace(target,card,1)
+
+          anchor="renderProfileMeta();const lecture3WorkshopButton=$('openLecture3Workshop');"
+          if "openB2Lesson1Workshop" in s and "b2Lesson1WorkshopButton" not in s:
+              if anchor not in s: raise SystemExit('profile visibility anchor not found')
+              repl="renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton)b2Lesson1WorkshopButton.classList.toggle('hidden',!['N2-A','K2-A'].includes(String(profile?.group_code||'')));const lecture3WorkshopButton=$('openLecture3Workshop');"
+              s=s.replace(anchor,repl,1)
+
+          bind="$('openLecture3Workshop').onclick=()=>{window.location.href='./lecture3-workshop.html'};"
+          if "openB2Lesson1Workshop" in s and "./b2-lesson1-workshop.html" not in s:
+              if bind not in s: raise SystemExit('workshop bind anchor not found')
+              s=s.replace(bind,"$('openB2Lesson1Workshop').onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};"+bind,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name "YR Platform Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add student.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Add B2 lesson 1 workshop card"
+          git push
