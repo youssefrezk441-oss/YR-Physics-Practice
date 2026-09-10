@@ -118,6 +118,14 @@ async function openChapterJourneyView(){clearMsg();showOnly('chapterJourneyView'
 "$('openAssessmentCycle').onclick=()=>openAssessmentCycleView();$('backAssessmentMenu').onclick=()=>showOnly('indicatorsMenuView');$('openChapterJourney').onclick=()=>openChapterJourneyView();$('backChapterJourneyMenu').onclick=()=>showOnly('indicatorsMenuView');",
 'أزرار رحلة الفصل الأول');
 
+  /* B2 lesson 1 workshop card v2 */
+if(!html.includes('id="openB2Lesson1Workshop"')){
+  html=html.replace(
+    '<div class="studentHomeGrid">',
+    '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>'
+  );
+}
+
   /* شرح الحصص patch v1 */
   if(!html.includes('id="openReferences"')){
     html=html.replace(
