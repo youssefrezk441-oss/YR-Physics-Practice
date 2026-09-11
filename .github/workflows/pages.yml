@@ -55,24 +55,47 @@ jobs:
             node --check "$f"
           done
 
-      - name: Inject B2 workshop responsive stylesheet
+      - name: Prepare B2 workshop for deployment
         run: |
           python - <<'PY'
           from pathlib import Path
+
           page=Path('b2-lesson1-workshop.html')
           css=Path('b2-workshop-mobile.css')
           if not page.exists():
               raise SystemExit('missing b2-lesson1-workshop.html')
           if not css.exists():
               raise SystemExit('missing b2-workshop-mobile.css')
+
           text=page.read_text(encoding='utf-8')
-          link='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-1">'
-          if link not in text:
+
+          # Mobile responsive stylesheet
+          link='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-2">'
+          if 'b2-workshop-mobile.css' not in text:
               if '</head>' not in text:
                   raise SystemExit('missing </head> in workshop page')
               text=text.replace('</head>',link+'\n</head>',1)
-              page.write_text(text,encoding='utf-8')
-          print('B2 responsive stylesheet linked for deployment')
+          else:
+              import re
+              text=re.sub(r'<link rel="stylesheet" href="\./b2-workshop-mobile\.css\?v=[^"]+">',link,text,count=1)
+
+          # Student-facing wording only — remove internal editorial/source note.
+          old='ورشة واحدة تحتوي على قسم الحصة والتدريب المنزلي. الأسئلة من المصدرين المعتمدين دون تأليف أو إعادة صياغة.'
+          new='تدريب شامل على أفكار الدرس الأول، مع متابعة تقدمك في كل مهارة.'
+          if old in text:
+              text=text.replace(old,new,1)
+
+          page.write_text(text,encoding='utf-8')
+
+          # Cache-bust the workshop navigation link in the deployed student page.
+          student=Path('student.html')
+          if student.exists():
+              s=student.read_text(encoding='utf-8')
+              s=s.replace("./b2-lesson1-workshop.html'","./b2-lesson1-workshop.html?v=20260911-2'" )
+              s=s.replace('./b2-lesson1-workshop.html"','./b2-lesson1-workshop.html?v=20260911-2"')
+              student.write_text(s,encoding='utf-8')
+
+          print('B2 workshop deployment prepared')
           PY
 
       - name: Configure Pages
