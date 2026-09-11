@@ -1,0 +1,79 @@
+/* B2 Lesson 1 workshop — mobile responsive override */
+html,body{max-width:100%;overflow-x:hidden}
+.shell{width:100%}
+.work-main,.card,.cardbody,.cardhead,.qtext,.figurebox,.figure-item,.options,.fieldgrid,.nav,.drawer{min-width:0;max-width:100%}
+.qtext,.stage,.skill,.filter-note,.skill-filter-btn{overflow-wrap:anywhere;word-break:normal}
+
+@media(max-width:900px){
+  .shell{max-width:100%;padding:12px 10px 56px;overflow-x:hidden}
+  .hero{padding:18px 16px;border-radius:15px;margin-bottom:12px}
+  h1{font-size:clamp(22px,7vw,30px)}
+  .hero p{font-size:14px}
+  .topbar{gap:8px;width:100%}
+  .tab{padding:9px 12px;flex:1 1 auto;text-align:center}
+  .utility{width:100%;margin-inline-start:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .iconbtn{width:100%;padding:9px 8px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+  .stat{padding:10px 11px;min-width:0}
+  .stat b{font-size:18px}
+
+  .work-layout{display:block!important;grid-template-columns:none!important;gap:0!important;margin-top:12px!important;width:100%!important;max-width:100%!important}
+  .side-rail{position:static!important;top:auto!important;width:100%!important;max-width:100%!important;max-height:none!important;overflow:visible!important;margin:0 0 12px!important;padding:12px!important;display:grid!important;grid-template-columns:78px minmax(0,1fr)!important;grid-template-areas:'title title' 'ring progress' 'sep sep' 'skilltitle skilltitle' 'note note' 'skills skills'!important;gap:8px 12px!important;border-radius:14px!important}
+  .side-rail>.side-title:first-child{grid-area:title;margin:0!important}
+  .overall-ring{grid-area:ring;width:72px!important;height:72px!important;margin:0!important;align-self:center}
+  .overall-ring:after{inset:7px!important}
+  .overall-ring span{font-size:16px!important}
+  .side-progress-list{grid-area:progress;gap:7px!important;align-self:center}
+  .side-progress-item>div:first-child{font-size:11px!important}
+  .side-sep{grid-area:sep;margin:2px 0!important}
+  .side-title.skill-title{grid-area:skilltitle;margin:0!important}
+  .filter-note{grid-area:note;margin:0!important;font-size:10.5px!important}
+  .skill-filter-list{grid-area:skills!important;display:flex!important;grid-template-columns:none!important;gap:7px!important;overflow-x:auto!important;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;padding:2px 0 5px;scrollbar-width:thin}
+  .skill-filter-btn{flex:0 0 auto!important;width:auto!important;min-width:138px;max-width:220px;padding:8px 10px!important;font-size:11.5px!important;scroll-snap-align:start}
+
+  .work-main{width:100%!important;max-width:100%!important;overflow:visible!important}
+  .card{width:100%!important;max-width:100%!important;border-radius:14px!important;overflow:hidden!important}
+  .cardhead{padding:13px 14px!important;gap:8px!important}
+  .cardbody{padding:16px 14px!important}
+  .qbadge{font-size:13px}
+  .stage{font-size:11.5px}
+  .skill{margin-inline-start:0!important;font-size:11px!important;max-width:100%}
+  .qtext{font-size:17px!important;line-height:1.85!important;margin-bottom:14px!important;width:100%!important}
+  .options{grid-template-columns:1fr!important;width:100%!important}
+  .opt{padding:11px 12px!important;min-width:0!important}
+  .fieldgrid{grid-template-columns:1fr!important}
+  textarea{min-height:110px}
+  .figurebox,.figurebox[data-count='1'],.figurebox[data-count='2']{width:100%!important;max-width:100%!important;grid-template-columns:1fr!important;padding:8px!important;overflow:hidden!important}
+  .figure-item{padding:6px!important;overflow:hidden!important}
+  .figurebox img{display:block!important;width:auto!important;max-width:100%!important;height:auto!important;margin:auto!important}
+  .actions{gap:8px!important}
+  .check,.clear{flex:1 1 auto;text-align:center}
+  .nav{display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:6px!important;align-items:center!important}
+  .nav button{padding:9px 8px!important;min-width:0!important}
+  .jump{font-size:11px!important;white-space:nowrap}
+  .drawer{padding:11px!important}
+  .gridnums{grid-template-columns:repeat(auto-fill,minmax(38px,1fr))!important}
+}
+
+@media(max-width:480px){
+  .shell{padding-inline:8px}
+  .hero{padding:16px 12px}
+  .eyebrow{font-size:11px}
+  .topbar{gap:6px}
+  .tab{font-size:13px;padding:8px 9px}
+  .stats{gap:6px}
+  .stat{padding:9px 8px}
+  .stat b{font-size:17px}
+  .stat span{font-size:10.5px}
+  .side-rail{grid-template-columns:66px minmax(0,1fr)!important;padding:10px!important;gap:7px 9px!important}
+  .overall-ring{width:62px!important;height:62px!important}
+  .overall-ring span{font-size:14px!important}
+  .side-progress-item>div:first-child{font-size:10.5px!important}
+  .skill-filter-btn{min-width:126px;max-width:190px;font-size:11px!important;padding:7px 9px!important}
+  .cardbody{padding:14px 11px!important}
+  .cardhead{padding:11px!important}
+  .qtext{font-size:16px!important;line-height:1.8!important}
+  .nav{grid-template-columns:1fr 74px 1fr!important}
+  .nav button{font-size:12px!important}
+  .jump{font-size:10px!important}
+}
