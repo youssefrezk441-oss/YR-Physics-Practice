@@ -55,6 +55,26 @@ jobs:
             node --check "$f"
           done
 
+      - name: Inject B2 workshop responsive stylesheet
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page=Path('b2-lesson1-workshop.html')
+          css=Path('b2-workshop-mobile.css')
+          if not page.exists():
+              raise SystemExit('missing b2-lesson1-workshop.html')
+          if not css.exists():
+              raise SystemExit('missing b2-workshop-mobile.css')
+          text=page.read_text(encoding='utf-8')
+          link='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-1">'
+          if link not in text:
+              if '</head>' not in text:
+                  raise SystemExit('missing </head> in workshop page')
+              text=text.replace('</head>',link+'\n</head>',1)
+              page.write_text(text,encoding='utf-8')
+          print('B2 responsive stylesheet linked for deployment')
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
