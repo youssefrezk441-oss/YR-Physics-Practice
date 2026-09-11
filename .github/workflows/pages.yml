@@ -55,47 +55,112 @@ jobs:
             node --check "$f"
           done
 
-      - name: Prepare B2 workshop for deployment
+      - name: Prepare B2 workshops for deployment
         run: |
           python - <<'PY'
+          import json,re
           from pathlib import Path
 
-          page=Path('b2-lesson1-workshop.html')
           css=Path('b2-workshop-mobile.css')
-          if not page.exists():
-              raise SystemExit('missing b2-lesson1-workshop.html')
           if not css.exists():
               raise SystemExit('missing b2-workshop-mobile.css')
 
-          text=page.read_text(encoding='utf-8')
-
-          # Mobile responsive stylesheet
-          link='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-2">'
+          # Lesson 1: keep the approved mobile layout and student-facing wording.
+          page1=Path('b2-lesson1-workshop.html')
+          if not page1.exists():
+              raise SystemExit('missing b2-lesson1-workshop.html')
+          text=page1.read_text(encoding='utf-8')
+          link1='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-3">'
           if 'b2-workshop-mobile.css' not in text:
-              if '</head>' not in text:
-                  raise SystemExit('missing </head> in workshop page')
-              text=text.replace('</head>',link+'\n</head>',1)
+              text=text.replace('</head>',link1+'\n</head>',1)
           else:
-              import re
-              text=re.sub(r'<link rel="stylesheet" href="\./b2-workshop-mobile\.css\?v=[^"]+">',link,text,count=1)
-
-          # Student-facing wording only — remove internal editorial/source note.
+              text=re.sub(r'<link rel="stylesheet" href="\./b2-workshop-mobile\.css\?v=[^"]+">',link1,text,count=1)
           old='ورشة واحدة تحتوي على قسم الحصة والتدريب المنزلي. الأسئلة من المصدرين المعتمدين دون تأليف أو إعادة صياغة.'
           new='تدريب شامل على أفكار الدرس الأول، مع متابعة تقدمك في كل مهارة.'
-          if old in text:
-              text=text.replace(old,new,1)
+          text=text.replace(old,new,1)
+          page1.write_text(text,encoding='utf-8')
 
-          page.write_text(text,encoding='utf-8')
+          # Lesson 2: mobile layout + protected platform bridge.
+          page2=Path('b2-lesson2-workshop.html')
+          bridge=Path('b2-lesson2-platform.js')
+          if not page2.exists():
+              raise SystemExit('missing b2-lesson2-workshop.html')
+          if not bridge.exists():
+              raise SystemExit('missing b2-lesson2-platform.js')
+          text=page2.read_text(encoding='utf-8')
+          link2='<link rel="stylesheet" href="./b2-workshop-mobile.css?v=20260911-3">'
+          if 'b2-workshop-mobile.css' not in text:
+              text=text.replace('</head>',link2+'\n</head>',1)
+          else:
+              text=re.sub(r'<link rel="stylesheet" href="\./b2-workshop-mobile\.css\?v=[^"]+">',link2,text,count=1)
 
-          # Cache-bust the workshop navigation link in the deployed student page.
+          # Remove client-visible answer keys while preserving numeric input labels/count.
+          m=re.search(r'const ALL=(\[.*?\]);\nconst STORE_KEY=',text,re.S)
+          if not m:
+              raise SystemExit('lesson 2 ALL bank not found')
+          bank=json.loads(m.group(1))
+          for q in bank:
+              g=str(q.get('grading') or '')
+              if g.startswith('AUTO-NUMERIC'):
+                  parts=[x.strip() for x in str(q.get('accepted') or '').split(';') if x.strip()]
+                  safe=[]
+                  for part in parts:
+                      if '=' in part:
+                          safe.append(part.split('=',1)[0].strip()+'=')
+                      else:
+                          safe.append('')
+                  q['accepted']='; '.join(safe) if len(parts)>1 else ''
+                  q['tolerance']=''
+              elif g.startswith('AUTO-MCQ'):
+                  q['accepted']=''
+              elif g=='AUTO-CHOICE':
+                  q['accepted']=''
+                  for group in q.get('choiceGroups') or []:
+                      group['accepted']=[]
+              elif g in ('AUTO/SEMANTIC','AUTO-HYBRID'):
+                  q['accepted']=''
+                  q['tolerance']=''
+          safe_json=json.dumps(bank,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
+          text=text[:m.start(1)]+safe_json+text[m.end(1):]
+
+          script='<script src="./b2-lesson2-platform.js?v=20260911-1"></script>'
+          if 'b2-lesson2-platform.js' not in text:
+              text=text.replace('</body>',script+'\n</body>',1)
+          page2.write_text(text,encoding='utf-8')
+
+          # Add Lesson 2 workshop card to the student home page and gate it through the protected backend.
           student=Path('student.html')
-          if student.exists():
-              s=student.read_text(encoding='utf-8')
-              s=s.replace("./b2-lesson1-workshop.html'","./b2-lesson1-workshop.html?v=20260911-2'" )
-              s=s.replace('./b2-lesson1-workshop.html"','./b2-lesson1-workshop.html?v=20260911-2"')
-              student.write_text(s,encoding='utf-8')
+          if not student.exists():
+              raise SystemExit('missing student.html')
+          s=student.read_text(encoding='utf-8')
+          card1='<button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>'
+          card2='<button id="openB2Lesson2Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🎯</div><h3>ورشة الدرس الثاني</h3><p>حركة المقذوفات الأفقية — ورشة الحصة والتدريب المنزلي.</p></button>'
+          if 'id="openB2Lesson2Workshop"' not in s:
+              if card1 not in s:
+                  raise SystemExit('lesson 1 workshop card anchor not found')
+              s=s.replace(card1,card1+card2,1)
 
-          print('B2 workshop deployment prepared')
+          if 'b2Lesson2WorkshopButton' not in s:
+              needle="catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');"
+              insert="catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const b2Lesson2WorkshopButton=$('openB2Lesson2Workshop');if(b2Lesson2WorkshopButton){b2Lesson2WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson2-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson2WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson2WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');"
+              if needle not in s:
+                  raise SystemExit('lesson 2 workshop visibility anchor not found')
+              s=s.replace(needle,insert,1)
+
+          if './b2-lesson2-workshop.html' not in s:
+              needle="const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};const l3w=$('openLecture3Workshop');"
+              insert="const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};const b2w2=$('openB2Lesson2Workshop');if(b2w2)b2w2.onclick=()=>{window.location.href='./b2-lesson2-workshop.html'};const l3w=$('openLecture3Workshop');"
+              if needle not in s:
+                  raise SystemExit('lesson 2 workshop bind anchor not found')
+              s=s.replace(needle,insert,1)
+
+          s=s.replace("./b2-lesson1-workshop.html'","./b2-lesson1-workshop.html?v=20260911-3'")
+          s=s.replace('./b2-lesson1-workshop.html"','./b2-lesson1-workshop.html?v=20260911-3"')
+          s=s.replace("./b2-lesson2-workshop.html'","./b2-lesson2-workshop.html?v=20260911-1'")
+          s=s.replace('./b2-lesson2-workshop.html"','./b2-lesson2-workshop.html?v=20260911-1"')
+          student.write_text(s,encoding='utf-8')
+
+          print('B2 lesson 1 and lesson 2 workshops prepared')
           PY
 
       - name: Configure Pages
