@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16324f">
+  <meta name="referrer" content="same-origin">
+  <title>ورشة المحاضرة الرابعة | مستر يوسف رزق</title>
+  <link rel="stylesheet" href="lecture4-workshop.css">
+  <script defer src="assets/l4-workshop/vendor/supabase-2.57.4.js"></script>
+  <script type="module" src="lecture4-workshop.js"></script>
+</head>
+<body>
+  <a class="skip" href="#question">انتقل إلى السؤال</a>
+  <header class="site-header"><a href="student.html" class="brand">مستر يوسف رزق<span>الفيزياء · الصف الثالث الثانوي</span></a><span class="chapter">الفصل الأول</span></header>
+  <main>
+    <section id="gate" class="gate" aria-live="polite"><h1>ورشة المحاضرة الرابعة</h1><p id="gate-message">جارٍ التحقق من تسجيل الدخول…</p><button id="retry" hidden>إعادة المحاولة</button><a id="login" href="student.html" hidden>العودة للمنصة</a></section>
+    <section id="welcome" class="welcome" hidden>
+      <p class="eyebrow">الفصل الأول · تابع توصيل المقاومات</p><h1>ورشة المحاضرة الرابعة</h1><p class="welcome-note">اختر مسارك، وابدأ الحل في كشكولك.</p>
+      <div class="tracks"><button class="track-card" data-track="class"><span class="track-title">ورشة الحصة <span>— 30 سؤالًا</span></span><span class="track-copy">نحل معًا، خطوة بخطوة داخل الشبكة.</span><span class="track-action">دخول ورشة الحصة ←</span></button><button class="track-card" data-track="home"><span class="track-title">التدريب المنزلي <span>— 157 سؤالًا</span></span><span class="track-copy">تدرّب بالترتيب أو اختر المهارة التي تحتاجها.</span><span class="track-action">دخول التدريب المنزلي ←</span></button></div>
+    </section>
+    <p id="notice" role="status" class="notice" hidden></p>
+    <section id="workspace" hidden>
+      <div class="toolbar"><button id="back" class="quiet">تغيير المسار</button><h1 id="track-title"></h1><button id="projector" class="quiet" aria-pressed="false">وضع العرض</button></div>
+      <p id="admin-note" class="notice" hidden>معاينة الإدارة — يمكنك تصفح الأسئلة؛ إرسال الإجابات متاح للطلاب فقط.</p>
+      <div class="layout">
+        <aside id="sidebar"><details id="navigator" open><summary>الأسئلة والمهارات</summary><div class="nav-content"><label for="skill">المهارة</label><select id="skill"><option value="all">كل المهارات</option></select><div class="progress-line"><span id="progress-text"></span><small id="mastery"></small></div><progress id="progress" value="0" max="1"></progress><button id="resume" class="quiet" hidden>استكمال آخر سؤال</button><p class="legend"><span>○ لم يُحل</span><span class="green">✓ إتقان</span><span class="amber">◐ بمساعدة</span></p><nav id="numbers" aria-label="أرقام الأسئلة"></nav></div></details></aside>
+        <article id="question" tabindex="-1">
+          <div class="question-heading"><div><p id="skill-name"></p><h2 id="question-title"></h2></div><span id="question-state" class="badge"></span></div>
+          <div class="image-tools"><span id="position"></span><button id="zoom" class="quiet">تكبير الصورة</button></div>
+          <img id="question-image" alt="" decoding="async">
+          <p id="image-error" role="alert" hidden>تعذر تحميل الصورة. <button id="retry-image" class="quiet">إعادة تحميل الصورة</button></p>
+          <div id="answers"></div>
+          <nav class="paging" aria-label="التنقل بين الأسئلة"><button id="previous">السابق</button><span id="page-number"></span><button id="next">التالي</button></nav>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer>مستر يوسف رزق · ورشة المحاضرة الرابعة</footer>
+  <dialog id="image-dialog" aria-label="صورة السؤال مكبرة"><div class="dialog-toolbar"><button id="close-image">إغلاق</button><button id="actual-size" aria-pressed="false">تكبير إضافي</button></div><div class="image-scroll"><img id="large-image" alt=""></div></dialog>
+  <noscript>يلزم تفعيل JavaScript لتسجيل الدخول واستخدام الورشة.</noscript>
+</body>
+</html>
