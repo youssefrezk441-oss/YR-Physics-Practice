@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1f3447">
+  <title>ورشة المحاضرة الرابعة | مستر يوسف رزق</title>
+  <link rel="stylesheet" href="lecture4-workshop.css?v=1">
+</head>
+<body>
+  <main class="shell">
+    <section id="boot" class="loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <b>جارٍ تجهيز ورشة المحاضرة الرابعة…</b>
+      <span>يتم التحقق من الحساب وتحميل بيانات الورشة.</span>
+    </section>
+    <section id="denied" class="deny hidden"></section>
+
+    <div id="app" class="hidden">
+      <header class="top">
+        <div class="brandmark">YR</div>
+        <div class="titlebox">
+          <h1>ورشة المحاضرة الرابعة</h1>
+          <p>الصف الثالث الثانوي · الفصل الأول · توصيل المقاومات</p>
+        </div>
+        <div class="who">
+          <b id="studentName">—</b>
+          <span id="studentGrade">—</span>
+        </div>
+      </header>
+
+      <div id="adminPreview" class="admin-preview hidden">معاينة الإدارة — لا يتم تسجيل محاولات أو تقدم.</div>
+
+      <section id="trackChooser">
+        <div class="notice">
+          <b>طريقة العمل:</b> حل خطواتك كاملة في الكشكول، ثم سجّل الناتج النهائي هنا. المحاولة الأولى تُستخدم في التحليل، وإظهار الإجابة بعد المحاولات المتاحة يُسجل كتعلّم بمساعدة وليس إتقانًا مستقلًا.
+        </div>
+        <div class="track-grid">
+          <button class="track" data-track="class" type="button">
+            <div class="track-icon">🧠</div>
+            <div>
+              <h2>ورشة الحصة</h2>
+              <p>مجموعة منتقاة لتمثيل القرارات العقلية الأساسية للمحاضرة الرابعة، بترتيب تدريجي.</p>
+              <b>30 سؤالًا</b>
+            </div>
+          </button>
+          <button class="track" data-track="home" type="button">
+            <div class="track-icon">🏠</div>
+            <div>
+              <h2>التدريب المنزلي</h2>
+              <p>التدريب الكامل المتبقي من بنك الأسئلة بعد استبعاد المكرر والخارج عن نطاق المحاضرة.</p>
+              <b>157 سؤالًا</b>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <section id="workspace" class="hidden">
+        <div class="toolbar">
+          <button id="backTracks" class="btn" type="button">↩ اختيار القسم</button>
+          <strong id="trackTitle" class="track-title">—</strong>
+          <button id="jumpUnfinished" class="btn subtle" type="button">أول سؤال غير مكتمل</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b id="doneStat">0/0</b><span>مكتمل</span></div>
+          <div class="stat"><b id="masteryStat">0%</b><span>إتقان مستقل</span></div>
+          <div class="stat"><b id="firstStat">—</b><span>صحة أول محاولة</span></div>
+          <div class="stat"><b id="attemptStat">0</b><span>إجمالي المحاولات</span></div>
+        </div>
+
+        <div class="progressbox">
+          <div class="progressrow"><span>التقدم في هذا القسم</span><b id="progressText">0 من 0</b></div>
+          <div class="bar"><div id="progressFill" class="fill"></div></div>
+        </div>
+
+        <div id="skillButtons" class="skills" aria-label="فلترة حسب المهارة"></div>
+
+        <div class="layout">
+          <article class="card question-card">
+            <div class="qhead">
+              <span id="bankNo" class="bank">سؤال البنك —</span>
+              <span id="skillPill" class="pill">—</span>
+              <span id="subskillPill" class="pill pale">—</span>
+              <span id="counter" class="counter">0 / 0</span>
+            </div>
+
+            <div id="imageLoading" class="image-loading hidden">جارٍ تحميل صورة السؤال…</div>
+            <div class="imgwrap"><canvas id="questionCanvas" aria-label="صورة السؤال"></canvas></div>
+
+            <section class="answer">
+              <h3 id="answerTitle">اختر إجابتك:</h3>
+              <div id="answerControls"></div>
+              <div id="feedback" class="feedback" aria-live="polite"></div>
+              <div class="actions">
+                <button id="prevBtn" class="btn" type="button">السابق</button>
+                <button id="nextBtn" class="btn primary" type="button">التالي</button>
+              </div>
+            </section>
+          </article>
+
+          <aside class="side">
+            <section class="panel">
+              <h3>الأسئلة</h3>
+              <div class="legend"><span><i class="l current"></i>الحالي</span><span><i class="l mastered"></i>متقن</span><span><i class="l assisted"></i>بمساعدة</span></div>
+              <div id="dots" class="dots"></div>
+            </section>
+            <section class="panel">
+              <h3>إتقان المهارات</h3>
+              <div id="skillProgress" class="mini"></div>
+            </section>
+            <section class="panel tip-panel">
+              <h3>قاعدة الورشة</h3>
+              <p>النتيجة وحدها لا تكفي في الكشكول: اكتب خطوات الحل حتى في السؤال الاختياري، ثم استخدم المنصة للتحقق.</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="lecture4-workshop.js?v=1"></script>
+</body>
+</html>
