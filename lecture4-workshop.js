@@ -184,6 +184,14 @@ function showFeedback(node, s, response) {
 function appendDisplay(parent, s) {
   if (typeof s.display_answer === 'string' && (s.revealed || s.assisted)) parent.append(el('p',s.display_answer,'answer-display'));
 }
+function answerList(value) {
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try { const parsed = JSON.parse(value); return Array.isArray(parsed) ? parsed : []; }
+    catch { return []; }
+  }
+  return [];
+}
 function optionText(item) {
   const value = typeof item === 'object' && item ? item.normalized ?? item.raw : item;
   const normalized = typeof value === 'string' ? value.trim() : '';
@@ -192,7 +200,7 @@ function optionText(item) {
 function renderMCQ(q) {
   const state = stateOf(q,'main');
   const wrap = el('div'); const buttons = el('div',undefined,'mcq');
-  const tried = new Set((state.tried_answers || []).map(optionText));
+  const tried = new Set(answerList(state.tried_answers).map(optionText));
   for (const option of q.answer_schema.options) {
     const b = el('button',option);
     const wrong = !state.mastered && tried.has(option);
@@ -244,7 +252,7 @@ async function send(q, part, answer, action) {
     const result = await api(action,payload);
     if (!app.authorized) return;
     const previous = stateOf(q,part.key);
-    const tried = [...(previous.tried_answers || [])];
+    const tried = [...answerList(previous.tried_answers)];
     if (action === 'attempt' && !result.duplicate && !tried.some(v => optionText(v) === answer)) tried.push(answer);
     const state = { ...previous, ...result, tried_answers:tried };
     if (action === 'attempt') state.last_answer = {raw:answer};
