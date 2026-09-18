@@ -1,0 +1,49 @@
+name: Harden lecture 3 workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/patches/harden-l3-workshop.patch'
+      - '.github/workflows/harden-l3-workshop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply workshop patch
+        run: |
+          if grep -q 'const pending=new Set();' lecture3-workshop.html; then
+            echo 'Patch already applied'
+          else
+            git apply --check .github/patches/harden-l3-workshop.patch
+            git apply .github/patches/harden-l3-workshop.patch
+          fi
+      - name: Verify workshop JavaScript
+        run: |
+          grep -q 'function normalizeTried' lecture3-workshop.html
+          grep -q 'pending.has(key)' lecture3-workshop.html
+          node - <<'NODE'
+          const fs=require('fs');
+          const source=fs.readFileSync('lecture3-workshop.html','utf8');
+          const scripts=[...source.matchAll(/<script(?:[^>]*)>([\\s\\S]*?)<\\/script>/g)].filter(x=>x[1].trim());
+          if(!scripts.length) throw new Error('Inline workshop script not found');
+          new Function(scripts.at(-1)[1]);
+          console.log('Workshop JavaScript syntax is valid');
+          NODE
+      - name: Commit workshop interface
+        run: |
+          if git diff --quiet; then
+            echo 'No changes needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lecture3-workshop.html
+          git commit -m 'Fix lecture 3 workshop interface'
+          git push

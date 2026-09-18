@@ -1,0 +1,96 @@
+diff --git a/lecture3-workshop.html b/lecture3-workshop.html
+index bde7ea1..4d60be3 100644
+--- a/lecture3-workshop.html
++++ b/lecture3-workshop.html
+@@ -89,6 +89,7 @@ const LETTERS=['أ','ب','ج','د'];
+ const $=id=>document.getElementById(id);
+ const isLocal=location.protocol==='file:';
+ let previewMode=isLocal, sb=null, profile=null, role='student', track=null, questions=[], progress=[], filtered=[], current=0, currentSkill='ALL';
++const pending=new Set();
+ 
+ const CLASS_ORDER=[22,53,141,343,45,8,80,20,131,227,171,315,55,308,181,199,158,324,250,341,172,229,237,50,175,288,221,15,160,338,248,241,331,168,19,155];
+ const HOME_ORDER=[300,349,61,222,54,359,264,23,105,24,298,295,353,115,1,2,203,12,47,48,82,5,9,11,10,46,49,86,76,41,77,78,13,14,21,42,79,52,88,89,90,4,3,303,242,180,214,216,234,176,178,228,81,66,326,304,91,185,309,174,318,313,173,184,182,230,192,226,235,244,246,319,179,183,165,169,191,212,236,240,238,312,316,317,320,329,330,332,342,51,197,231,87,233,325,232,344,247,162,249,157,167,323,252,16,17,239,328,18,164,251,339,340,187,370,327,335,333,243,245];
+@@ -108,6 +109,10 @@ function localQuestions(t){const arr=t==='class'?CLASS_ORDER:HOME_ORDER;return a
+ function progressMap(){const m=new Map();for(const p of progress)m.set(`${p.bank_no}:${p.part_index}`,p);return m}
+ function getP(bank,part=0){return progress.find(p=>Number(p.bank_no)===Number(bank)&&Number(p.part_index)===Number(part))||null}
+ function ensureP(bank,part=0){let p=getP(bank,part);if(!p){p={bank_no:Number(bank),part_index:Number(part),attempts_count:0,tried_answers:[],first_attempt_correct:null,mastered:false,revealed:false,last_answer:null};progress.push(p)}return p}
++function normalizeTried(v){if(Array.isArray(v))return [...new Set(v.map(String))];if(typeof v==='string'){try{const parsed=JSON.parse(v);return Array.isArray(parsed)?[...new Set(parsed.map(String))]:[]}catch{return []}}return []}
++function normalizeProgress(rows){return (Array.isArray(rows)?rows:[]).map(p=>({...p,tried_answers:normalizeTried(p?.tried_answers)}))}
++function syncProgress(serverProgress){if(!serverProgress)return null;const clean={...serverProgress,bank_no:Number(serverProgress.bank_no),part_index:Number(serverProgress.part_index),attempts_count:Number(serverProgress.attempts_count||0),tried_answers:normalizeTried(serverProgress.tried_answers),mastered:!!serverProgress.mastered,revealed:!!serverProgress.revealed};const i=progress.findIndex(p=>Number(p.bank_no)===clean.bank_no&&Number(p.part_index)===clean.part_index);if(i>=0)progress[i]=clean;else progress.push(clean);return clean}
++function pendingKey(bank,part=0){return `${Number(bank)}:${Number(part)}`}
+ function questionDone(q,pm=progressMap()){if(q.question_type==='multipart_mcq')return [1,2].every(i=>{const p=pm.get(`${q.bank_no}:${i}`);return p&&(p.mastered||p.revealed)});const p=pm.get(`${q.bank_no}:0`);return !!(p&&(p.mastered||p.revealed))}
+ function questionMastered(q,pm=progressMap()){if(q.question_type==='multipart_mcq')return [1,2].every(i=>pm.get(`${q.bank_no}:${i}`)?.mastered);return !!pm.get(`${q.bank_no}:0`)?.mastered}
+ 
+@@ -131,21 +136,21 @@ async function init(){
+ 
+ async function openTrack(t){
+  track=t;$('trackChooser').classList.add('hidden');$('workspace').classList.remove('hidden');$('trackTitle').textContent=t==='home'?'🏠 التدريب المنزلي':'🧠 ورشة الحصة';
+- try{if(previewMode){questions=localQuestions(t);progress=[]}else{const d=await call('list',{track:t});questions=(d.questions||[]).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));progress=d.progress||[]}}
++ try{if(previewMode){questions=localQuestions(t);progress=[]}else{const d=await call('list',{track:t});questions=(d.questions||[]).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));progress=normalizeProgress(d.progress)}}
+  catch(e){feedback('bad',e.message);return}
+  currentSkill='ALL';renderSkillButtons();applyFilter();const saved=Number(localStorage.getItem(`l3-${t}-bank`)||0);let idx=filtered.findIndex(q=>q.bank_no===saved);if(idx<0)idx=firstUnfinishedIndex();current=Math.max(0,idx);render();
+ }
+-function backTracks(){track=null;$('workspace').classList.add('hidden');$('trackChooser').classList.remove('hidden')}
++function backTracks(){if(pending.size)return;track=null;$('workspace').classList.add('hidden');$('trackChooser').classList.remove('hidden')}
+ function applyFilter(){filtered=currentSkill==='ALL'?[...questions]:questions.filter(q=>q.skill===currentSkill)}
+ function firstUnfinishedIndex(){const pm=progressMap();const i=filtered.findIndex(q=>!questionDone(q,pm));return i>=0?i:0}
+-function renderSkillButtons(){const skills=[...new Map(questions.map(q=>[q.skill,q.skill_name||SKILLS[q.skill]||q.skill])).entries()];$('skillButtons').innerHTML='<button class="skillBtn active" data-skill="ALL">كل المهارات</button>'+skills.map(([c,n])=>`<button class="skillBtn" data-skill="${c}">${c}</button>`).join('');$('skillButtons').querySelectorAll('button').forEach(b=>b.onclick=()=>{currentSkill=b.dataset.skill;document.querySelectorAll('.skillBtn').forEach(x=>x.classList.toggle('active',x===b));applyFilter();current=firstUnfinishedIndex();render()})}
++function renderSkillButtons(){const skills=[...new Map(questions.map(q=>[q.skill,q.skill_name||SKILLS[q.skill]||q.skill])).entries()];$('skillButtons').innerHTML='<button class="skillBtn active" data-skill="ALL">كل المهارات</button>'+skills.map(([c,n])=>`<button class="skillBtn" data-skill="${c}">${c}</button>`).join('');$('skillButtons').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(pending.size)return;currentSkill=b.dataset.skill;document.querySelectorAll('.skillBtn').forEach(x=>x.classList.toggle('active',x===b));applyFilter();current=firstUnfinishedIndex();render()})}
+ function feedback(kind,text){const f=$('feedback');f.className='feedback show '+kind;f.innerHTML=text}
+ function clearFeedback(){const f=$('feedback');f.className='feedback';f.textContent=''}
+ function showImage(q){const src=QUESTION_IMAGES[String(q.bank_no)];$('questionImg').src=src||'';$('questionImg').alt='سؤال البنك '+q.bank_no}
+ 
+ function render(){
+  if(!filtered.length){$('answerControls').innerHTML='';feedback('info','لا توجد أسئلة في هذا القسم.');return}
+- current=Math.max(0,Math.min(current,filtered.length-1));const q=filtered[current];localStorage.setItem(`l3-${track}-bank`,q.bank_no);$('bankNo').textContent='سؤال البنك '+q.bank_no;$('skillPill').textContent=q.skill+' · '+(q.skill_name||SKILLS[q.skill]||'');$('diffPill').textContent=q.difficulty||'—';$('counter').textContent=(current+1)+' / '+filtered.length;showImage(q);$('prevBtn').disabled=current===0;$('nextBtn').textContent=current===filtered.length-1?'إنهاء':'التالي';clearFeedback();renderAnswer(q);renderStats();renderDots();renderSkillProgress()
++ current=Math.max(0,Math.min(current,filtered.length-1));const q=filtered[current];localStorage.setItem(`l3-${track}-bank`,q.bank_no);$('bankNo').textContent='سؤال البنك '+q.bank_no;$('skillPill').textContent=q.skill+' · '+(q.skill_name||SKILLS[q.skill]||'');$('diffPill').textContent=q.difficulty||'—';$('counter').textContent=(current+1)+' / '+filtered.length;showImage(q);$('prevBtn').disabled=current===0||pending.size>0;$('nextBtn').disabled=pending.size>0;$('nextBtn').textContent=current===filtered.length-1?'إنهاء':'التالي';$('backTracks').disabled=pending.size>0;$('resumeBtn').disabled=pending.size>0;clearFeedback();renderAnswer(q);renderStats();renderDots();renderSkillProgress()
+ }
+ 
+ function renderAnswer(q){
+@@ -157,32 +162,34 @@ function renderAnswer(q){
+   else box.innerHTML=choicePreview();return
+  }
+  if(q.question_type==='multipart_mcq'){$('answerTitle').textContent='أجب عن كل مطلوب على حدة:';[1,2].forEach(part=>box.appendChild(buildMcq(q,part,`المطلوب (${part})`)));return}
+- if(q.question_type==='numeric'){$('answerTitle').textContent='اكتب الناتج النهائي:';const p=getP(q.bank_no,0);const row=document.createElement('div');row.className='numeric';const input=document.createElement('input');input.inputMode='decimal';input.placeholder='يمكن كتابة عدد عشري أو كسر';input.disabled=!!(p?.mastered||p?.revealed);const u=document.createElement('span');u.className='unit';u.textContent=q.unit_text||'';const b=document.createElement('button');b.className='btn primary';b.textContent='تحقق';b.disabled=input.disabled;b.onclick=async()=>{const n=parseNum(input.value);if(!Number.isFinite(n)){feedback('bad','اكتب قيمة رقمية صحيحة، ويمكنك استخدام عدد عشري أو كسر.');return}await submit(q,0,n)};input.onkeydown=e=>{if(e.key==='Enter'&&!b.disabled)b.click()};row.append(input,u,b);box.appendChild(row);showStateFeedback(q,0);return}
++ if(q.question_type==='numeric'){$('answerTitle').textContent='اكتب الناتج النهائي:';const p=getP(q.bank_no,0),busy=pending.has(pendingKey(q.bank_no,0));const row=document.createElement('div');row.className='numeric';const input=document.createElement('input');input.inputMode='decimal';input.placeholder=busy?'جارٍ التحقق...':'يمكن كتابة عدد عشري أو كسر';input.disabled=!!(p?.mastered||p?.revealed||busy);const u=document.createElement('span');u.className='unit';u.textContent=q.unit_text||'';const b=document.createElement('button');b.className='btn primary';b.textContent=busy?'جارٍ التحقق...':'تحقق';b.disabled=input.disabled;b.onclick=async()=>{const n=parseNum(input.value);if(!Number.isFinite(n)){feedback('bad','اكتب قيمة رقمية صحيحة، ويمكنك استخدام عدد عشري أو كسر.');return}await submit(q,0,n)};input.onkeydown=e=>{if(e.key==='Enter'&&!b.disabled)b.click()};row.append(input,u,b);box.appendChild(row);showStateFeedback(q,0);return}
+  $('answerTitle').textContent='اختر إجابتك:';box.appendChild(buildMcq(q,0,null));showStateFeedback(q,0)
+ }
+ function choicePreview(){return '<div class="choices">'+LETTERS.map(l=>`<button class="choice" disabled>${l}</button>`).join('')+'</div>'}
+-function buildMcq(q,part,label){const wrap=document.createElement('div');if(part){wrap.className='part';const h=document.createElement('h4');h.textContent=label;wrap.appendChild(h)}const grid=document.createElement('div');grid.className='choices';const p=getP(q.bank_no,part);const tried=(p?.tried_answers||[]).map(String);for(const l of LETTERS){const b=document.createElement('button');b.className='choice';b.textContent=l;b.disabled=!!(p?.mastered||p?.revealed||tried.includes(l));if(tried.includes(l)&&!(p?.mastered&&String(p.last_answer)===l))b.classList.add('wrong');if(p?.mastered&&String(p.last_answer)===l)b.classList.add('correct');b.onclick=()=>submit(q,part,l);grid.appendChild(b)}wrap.appendChild(grid);if(part){const f=document.createElement('div');f.id=`partFeedback-${part}`;f.className='feedback';wrap.appendChild(f);if(p)showPartFeedback(q,part,f)}return wrap}
++function buildMcq(q,part,label){const wrap=document.createElement('div');if(part){wrap.className='part';const h=document.createElement('h4');h.textContent=label;wrap.appendChild(h)}const grid=document.createElement('div');grid.className='choices';const p=getP(q.bank_no,part),tried=normalizeTried(p?.tried_answers),busy=pending.has(pendingKey(q.bank_no,part));for(const l of LETTERS){const b=document.createElement('button');b.className='choice';b.textContent=l;b.disabled=!!(p?.mastered||p?.revealed||tried.includes(l)||busy);if(tried.includes(l)&&!(p?.mastered&&String(p.last_answer)===l))b.classList.add('wrong');if(p?.mastered&&String(p.last_answer)===l)b.classList.add('correct');b.onclick=()=>submit(q,part,l);grid.appendChild(b)}wrap.appendChild(grid);if(part){const f=document.createElement('div');f.id=`partFeedback-${part}`;f.className='feedback';wrap.appendChild(f);if(p)showPartFeedback(q,part,f)}return wrap}
+ 
+ async function submit(q,part,answer){
++ const pidx=q.question_type==='multipart_mcq'?part:0,key=pendingKey(q.bank_no,pidx);if(pending.has(key))return;pending.add(key);render();
+  try{
+-  const pidx=q.question_type==='multipart_mcq'?part:0;const old=ensureP(q.bank_no,pidx);const beforeAttempts=Number(old.attempts_count||0);const normalized=String(answer);
+   const d=await call('attempt',{bank_no:q.bank_no,part_index:part,answer});
+-  if(d.duplicate){part?showPartMsg(part,'bad',esc(d.message)):feedback('bad',esc(d.message));return}
+-  const p=ensureP(q.bank_no,pidx);p.attempts_count=Number(d.attempts_count??beforeAttempts);p.mastered=!!d.mastered;p.revealed=!!d.revealed;p.last_answer=normalized;if(!Array.isArray(p.tried_answers))p.tried_answers=[];if(!p.tried_answers.includes(normalized))p.tried_answers.push(normalized);if(p.first_attempt_correct==null&&p.attempts_count===1)p.first_attempt_correct=!!d.correct;
+-  render();
+-  if(d.correct){const note=d.source_note?'<br>'+esc(d.source_note):'';part?showPartMsg(part,'ok','✅ إجابة صحيحة.'+note):feedback('ok','✅ إجابة صحيحة.'+note)}else{part?showPartMsg(part,'bad',esc(d.message||'ليست صحيحة.')):feedback('bad',esc(d.message||'ليست صحيحة.'))}
+- }catch(e){feedback('bad',esc(e.message||'تعذر التصحيح الآن.'))}
++  if(d.progress)syncProgress(d.progress);
++  pending.delete(key);render();
++  if(d.duplicate){part?showPartMsg(part,'info',esc(d.message)):feedback('info',esc(d.message));return}
++  if(d.correct){const note=d.source_note?'<br>'+esc(d.source_note):'';part?showPartMsg(part,'ok','✅ إجابة صحيحة.'+note):feedback('ok','✅ إجابة صحيحة.'+note)}
++  else if(d.assisted){const msg=d.message||('الإجابة: '+String(d.display_answer||''));part?showPartMsg(part,'info',esc(msg)):feedback('info',esc(msg))}
++  else{part?showPartMsg(part,'bad',esc(d.message||'ليست صحيحة.')):feedback('bad',esc(d.message||'ليست صحيحة.'))}
++ }catch(e){pending.delete(key);render();feedback('bad',esc(e.message||'تعذر التصحيح الآن.'))}
+ }
+ function showPartMsg(part,kind,text){const f=$(`partFeedback-${part}`);if(!f)return;f.className='feedback show '+kind;f.innerHTML=text}
+ function showPartFeedback(q,part,f){const p=getP(q.bank_no,part);if(!p)return;if(p.mastered){f.className='feedback show ok';f.textContent='✅ تم إتقان هذا المطلوب.'}else if(p.revealed){f.className='feedback show info';f.textContent='تم إظهار الإجابة لهذا المطلوب.'}else if(Number(p.attempts_count)>=3){f.className='feedback show bad';f.innerHTML='استهلكت 3 محاولات. <button class="btn reveal" data-reveal-part="'+part+'">إظهار الإجابة</button>';setTimeout(()=>{const b=f.querySelector('[data-reveal-part]');if(b)b.onclick=()=>reveal(q,part)},0)}}
+ function showStateFeedback(q,part){const p=getP(q.bank_no,part);if(!p)return;if(p.mastered)feedback('ok','✅ تم إتقان هذا السؤال.');else if(p.revealed)feedback('info','تم إظهار الإجابة لهذا السؤال.');else if(Number(p.attempts_count)>=3){feedback('bad','استهلكت 3 محاولات. يمكنك الآن إظهار الإجابة.');$('revealBtn').classList.remove('hidden');$('revealBtn').onclick=()=>reveal(q,part)}}
+-async function reveal(q,part){try{const d=await call('reveal',{bank_no:q.bank_no,part_index:part});const pidx=q.question_type==='multipart_mcq'?part:0;const p=ensureP(q.bank_no,pidx);p.revealed=true;render();if(part)showPartMsg(part,'info','الإجابة: <b>'+esc(d.display_answer)+'</b>');else feedback('info','الإجابة: <b>'+esc(d.display_answer)+'</b><br>سُجل السؤال كتعلم بمساعدة، وليس إتقانًا مستقلًا.')}catch(e){feedback('bad',esc(e.message||'تعذر إظهار الإجابة.'))}}
++async function reveal(q,part){const pidx=q.question_type==='multipart_mcq'?part:0,key=pendingKey(q.bank_no,pidx);if(pending.has(key))return;pending.add(key);render();try{const d=await call('reveal',{bank_no:q.bank_no,part_index:part});if(d.progress)syncProgress(d.progress);pending.delete(key);render();if(d.mastered){part?showPartMsg(part,'ok','✅ تم إتقان هذا المطلوب بالفعل.'):feedback('ok','✅ تم إتقان هذا السؤال بالفعل.')}else if(part)showPartMsg(part,'info','الإجابة: <b>'+esc(d.display_answer)+'</b>');else feedback('info','الإجابة: <b>'+esc(d.display_answer)+'</b><br>سُجل السؤال كتعلم بمساعدة، وليس إتقانًا مستقلًا.')}catch(e){pending.delete(key);render();feedback('bad',esc(e.message||'تعذر إظهار الإجابة.'))}}
+ 
+ function renderStats(){const pm=progressMap();const done=questions.filter(q=>questionDone(q,pm)).length,mastered=questions.filter(q=>questionMastered(q,pm)).length;const relevant=progress.filter(p=>questions.some(q=>q.bank_no===p.bank_no)&&p.first_attempt_correct!==null);const first=relevant.length?Math.round(100*relevant.filter(p=>p.first_attempt_correct).length/relevant.length):null;const attempts=progress.filter(p=>questions.some(q=>q.bank_no===p.bank_no)).reduce((s,p)=>s+Number(p.attempts_count||0),0);$('doneStat').textContent=done+'/'+questions.length;$('masteryStat').textContent=questions.length?Math.round(100*mastered/questions.length)+'%':'0%';$('firstStat').textContent=first==null?'—':first+'%';$('attemptStat').textContent=attempts;$('progressText').textContent=done+' من '+questions.length;$('progressFill').style.width=(questions.length?100*done/questions.length:0)+'%'}
+-function renderDots(){const pm=progressMap();$('dots').innerHTML=filtered.map((q,i)=>{let cls='dot';if(i===current)cls+=' current';else if(questionMastered(q,pm))cls+=' mastered';else if(questionDone(q,pm))cls+=' revealed';return `<button class="${cls}" data-i="${i}" title="سؤال البنك ${q.bank_no}">${i+1}</button>`}).join('');$('dots').querySelectorAll('button').forEach(b=>b.onclick=()=>{current=Number(b.dataset.i);render();scrollTo({top:0,behavior:'smooth'})})}
++function renderDots(){const pm=progressMap();$('dots').innerHTML=filtered.map((q,i)=>{let cls='dot';if(i===current)cls+=' current';else if(questionMastered(q,pm))cls+=' mastered';else if(questionDone(q,pm))cls+=' revealed';return `<button class="${cls}" data-i="${i}" title="سؤال البنك ${q.bank_no}" ${pending.size?'disabled':''}>${i+1}</button>`}).join('');$('dots').querySelectorAll('button').forEach(b=>b.onclick=()=>{current=Number(b.dataset.i);render();scrollTo({top:0,behavior:'smooth'})})}
+ function renderSkillProgress(){const pm=progressMap(),skills=[...new Set(questions.map(q=>q.skill))];$('skillProgress').innerHTML=skills.map(s=>{const arr=questions.filter(q=>q.skill===s),done=arr.filter(q=>questionDone(q,pm)).length,pct=arr.length?Math.round(100*done/arr.length):0;return `<div class="spRow"><b>${s}</b><div class="miniTrack"><div class="miniFill" style="width:${pct}%"></div></div><span>${done}/${arr.length}</span></div>`}).join('')}
+ 
+ $('openClass').onclick=()=>openTrack('class');$('openHome').onclick=()=>openTrack('home');$('backTracks').onclick=backTracks;$('resumeBtn').onclick=()=>{current=firstUnfinishedIndex();render()};$('printBtn').onclick=()=>window.print();$('prevBtn').onclick=()=>{if(current>0){current--;render();scrollTo({top:0,behavior:'smooth'})}};$('nextBtn').onclick=()=>{if(current<filtered.length-1){current++;render();scrollTo({top:0,behavior:'smooth'})}else{feedback('info','انتهيت من هذا القسم. يمكنك الرجوع لخريطة المهارات أو اختيار مسار آخر.')}};
+ init();
+ </script>
+-</body></html>
+\ No newline at end of file
++</body></html>
