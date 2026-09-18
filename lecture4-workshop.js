@@ -101,7 +101,7 @@ async function loadTrack(track) {
   for (const row of data.progress) {
     if (!banks.has(Number(row.bank_no))) continue;
     const key = partId(row.bank_no, row.part_key);
-    next.set(key, { ...row, display_answer: row.display_answer ?? old.get(key)?.display_answer });
+    next.set(key, canonicalProgress({ ...row, display_answer: row.display_answer ?? old.get(key)?.display_answer }));
   }
   app.progress = next;
 }
@@ -192,6 +192,21 @@ function answerList(value) {
   }
   return [];
 }
+function answerObject(value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try { const parsed = JSON.parse(value); return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null; }
+    catch { return null; }
+  }
+  return null;
+}
+function canonicalProgress(value = {}) {
+  return {
+    ...value,
+    tried_answers: answerList(value.tried_answers),
+    last_answer: answerObject(value.last_answer)
+  };
+}
 function optionText(item) {
   const value = typeof item === 'object' && item ? item.normalized ?? item.raw : item;
   const normalized = typeof value === 'string' ? value.trim() : '';
@@ -204,7 +219,9 @@ function renderMCQ(q) {
   for (const option of q.answer_schema.options) {
     const b = el('button',option);
     const wrong = !state.mastered && tried.has(option);
+    const correct = !!state.mastered && optionText(state.last_answer?.raw) === option;
     if (wrong) { b.className = 'wrong'; b.setAttribute('aria-label', `${option} — محاولة سابقة خاطئة`); }
+    if (correct) { b.className = 'correct'; b.setAttribute('aria-label', `${option} — الإجابة الصحيحة`); }
     b.disabled = app.role !== 'student' || !!state.mastered || !!state.revealed || wrong;
     b.onclick = () => send(q,{key:'main'},option,'attempt');
     buttons.append(b);
@@ -252,11 +269,10 @@ async function send(q, part, answer, action) {
     const result = await api(action,payload);
     if (!app.authorized) return;
     const previous = stateOf(q,part.key);
-    const tried = [...answerList(previous.tried_answers)];
-    if (action === 'attempt' && !result.duplicate && !tried.some(v => optionText(v) === answer)) tried.push(answer);
-    const state = { ...previous, ...result, tried_answers:tried };
-    if (action === 'attempt') state.last_answer = {raw:answer};
-    // Server flags remain the only source of correctness and completion.
+    const state = result.progress
+      ? canonicalProgress({ ...result.progress, display_answer: result.display_answer ?? previous.display_answer })
+      : canonicalProgress({ ...previous, ...result });
+    // The server returns the canonical persisted state after every action.
     app.progress.set(id,state);
     renderQuestion();
     const feedback = q.grading_mode === 'mcq' ? $('answers').querySelector('.feedback') : [...$('answers').querySelectorAll('form')].find(f => f.dataset.part === part.key)?.querySelector('.feedback');
@@ -287,7 +303,7 @@ async function bootstrap() {
     const ping = await api('ping');
     if (!['student','admin'].includes(ping.role)) throw new Error('تعذر التحقق من صلاحية الحساب.');
     app.userId = data.session.user.id; app.role = ping.role;
-    const response = await fetch(DATA_ROOT+'questions_public.json');
+    const response = await fetch(DATA_ROOT+'questions_public.json?v=20260918-2');
     if (!response.ok) throw new Error('تعذر تحميل ملف الأسئلة. أعد المحاولة.');
     app.questions = validatePublic(await response.json());
     readNavigation(); app.authorized = true;

@@ -2874,11 +2874,11 @@
     "image_width": 1516,
     "image_height": 537,
     "image_sha256": "9fdae9a5298526aa9dd34973b0642c3709338e155adc478d4c8eff3c5f96fdb8",
-    "grading_mode": "structured_text",
-    "question_type": "ordering",
+    "grading_mode": "symbolic",
+    "question_type": "symbolic",
     "active": true,
     "answer_schema": {
-      "type": "structured_text",
+      "type": "symbolic",
       "parts": [
         {
           "key": "main",
@@ -4358,17 +4358,17 @@
     "image_width": 1515,
     "image_height": 411,
     "image_sha256": "eac4c45db0522e63b70ae5f6def08fe227b44b00b5a18abd699047b09719b7d0",
-    "grading_mode": "structured_text",
-    "question_type": "choice",
+    "grading_mode": "multi_qualitative",
+    "question_type": "multi_qualitative",
     "active": true,
     "answer_schema": {
-      "type": "structured_text",
+      "type": "multi_qualitative",
       "parts": [
         {
           "key": "main",
           "unit": "",
           "input": "text",
-          "label": "اكتب الإجابة"
+          "label": "الإجابة"
         }
       ]
     }
@@ -4414,11 +4414,11 @@
     "image_width": 1531,
     "image_height": 362,
     "image_sha256": "62099a2225d4bf782acc0e1911aee7d76f5c4a638e48ccfc8162cf99ae866780",
-    "grading_mode": "structured_text",
-    "question_type": "comparison",
+    "grading_mode": "symbolic",
+    "question_type": "symbolic",
     "active": true,
     "answer_schema": {
-      "type": "structured_text",
+      "type": "symbolic",
       "parts": [
         {
           "key": "main",
@@ -4810,17 +4810,23 @@
     "image_width": 1508,
     "image_height": 438,
     "image_sha256": "197b992a49c4ed89130befb3cb5de4243153aff1193262270b320dde9f3c955a",
-    "grading_mode": "structured_text",
-    "question_type": "trend_pair",
+    "grading_mode": "multi_qualitative",
+    "question_type": "multi_qualitative",
     "active": true,
     "answer_schema": {
-      "type": "structured_text",
+      "type": "multi_qualitative",
       "parts": [
         {
-          "key": "main",
+          "key": "A1",
           "unit": "",
           "input": "text",
-          "label": "اكتب الإجابة"
+          "label": "الأميتر A1"
+        },
+        {
+          "key": "A2",
+          "unit": "",
+          "input": "text",
+          "label": "الأميتر A2"
         }
       ]
     }
@@ -5048,11 +5054,11 @@
     "image_width": 1385,
     "image_height": 354,
     "image_sha256": "b3150c82d232fd654320b76085db7837d2cda2f797753d26e1edbff4398ed712",
-    "grading_mode": "structured_text",
-    "question_type": "trend",
+    "grading_mode": "multi_qualitative",
+    "question_type": "multi_qualitative",
     "active": true,
     "answer_schema": {
-      "type": "structured_text",
+      "type": "multi_qualitative",
       "parts": [
         {
           "key": "main",

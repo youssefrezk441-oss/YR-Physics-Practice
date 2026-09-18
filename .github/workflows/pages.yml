@@ -36,6 +36,7 @@ jobs:
               'sessions-admin.html',
               'content-admin.html',
               'index.html',
+              'admin-l4-workshop-analytics.html',
           ]
           found = []
           for filename in files:
@@ -54,6 +55,12 @@ jobs:
             [ -e "$f" ] || continue
             node --check "$f"
           done
+          for f in /tmp/admin-l4-workshop-analytics-*.mjs; do
+            [ -e "$f" ] || continue
+            node --check "$f"
+          done
+          node --check lecture4-workshop.js
+          node tools/check_l4_workshop_contract.mjs
 
       - name: Prepare B2 workshops for deployment
         run: |
