@@ -1,0 +1,3 @@
+Lecture 3 workshop integrity, concurrency, and interface fixes deployed on 2026-09-18.
+Edge Function version: 5
+Interface commit: 48df5b10305807ee47865050822042359114a09b
