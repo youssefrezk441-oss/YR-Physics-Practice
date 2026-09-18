@@ -31,7 +31,7 @@ jobs:
           node - <<'NODE'
           const fs=require('fs');
           const source=fs.readFileSync('lecture3-workshop.html','utf8');
-          const scripts=[...source.matchAll(/<script(?:[^>]*)>([\\s\\S]*?)<\\/script>/g)].filter(x=>x[1].trim());
+          const scripts=[...source.matchAll(/<script(?:[^>]*)>([\s\S]*?)<\/script>/g)].filter(x=>x[1].trim());
           if(!scripts.length) throw new Error('Inline workshop script not found');
           new Function(scripts.at(-1)[1]);
           console.log('Workshop JavaScript syntax is valid');
