@@ -75,7 +75,7 @@ async function api(action, payload = {}) {
   return data;
 }
 function validatePublic(data) {
-  if (!Array.isArray(data) || data.length !== 187 || data.filter(q => q.track === 'class').length !== 30 || data.filter(q => q.track === 'home').length !== 157) throw new Error('ملف الأسئلة غير مكتمل.');
+  if (!Array.isArray(data) || data.length !== 55 || data.filter(q => q.track === 'class').length !== 30 || data.filter(q => q.track === 'home').length !== 25) throw new Error('ملف الأسئلة غير مكتمل.');
   const seen = new Set();
   const modes = ['mcq','numeric','multi_numeric','multi_qualitative','ratio','structured_text','symbolic'];
   for (const q of data) {
