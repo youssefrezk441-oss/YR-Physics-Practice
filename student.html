@@ -164,7 +164,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes('id="openLecture3Workshop"')){
     html=html.replace(
       '<div class="studentHomeGrid">',
-      '<div class="studentHomeGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button><button id="openLecture4Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">⚡</div><h3>ورشة المحاضرة الرابعة</h3><p>ورشة الحصة — 30 سؤالًا، والتدريب المنزلي — 157 سؤالًا.</p></button>'
+      '<div class="studentHomeGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button><button id="openLecture4Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">⚡</div><h3>ورشة المحاضرة الرابعة</h3><p>ورشة الحصة — 30 سؤالًا، والتدريب المنزلي — 157 سؤالًا.</p></button><button id="openLecture5Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🔋</div><h3>ورشة المحاضرة الخامسة</h3><p>قانون أوم للدائرة المغلقة — ورشة الحصة 32 سؤالًا، والتدريب المنزلي 20 سؤالًا.</p></button>'
     );
   }
 
@@ -172,14 +172,14 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopProfileAnchor,
-    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture4WorkshopButton=$('openLecture4Workshop');if(lecture4WorkshopButton)lecture4WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
+    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture4WorkshopButton=$('openLecture4Workshop');if(lecture4WorkshopButton)lecture4WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture5WorkshopButton=$('openLecture5Workshop');if(lecture5WorkshopButton)lecture5WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
   );
 
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(workshopBindAnchor)) throw new Error('تعذر ربط زر ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopBindAnchor,
-    "const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};const l3w=$('openLecture3Workshop');if(l3w)l3w.onclick=()=>{window.location.href='./lecture3-workshop.html'};const l4w=$('openLecture4Workshop');if(l4w)l4w.onclick=()=>{window.location.href='./lecture4-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+    "const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html'};const l3w=$('openLecture3Workshop');if(l3w)l3w.onclick=()=>{window.location.href='./lecture3-workshop.html'};const l4w=$('openLecture4Workshop');if(l4w)l4w.onclick=()=>{window.location.href='./lecture4-workshop.html'};const l5w=$('openLecture5Workshop');if(l5w)l5w.onclick=()=>{window.location.href='./lecture5-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
   );
 
   const referencesCss=`
