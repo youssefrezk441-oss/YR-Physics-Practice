@@ -303,7 +303,7 @@ async function bootstrap() {
     const ping = await api('ping');
     if (!['student','admin'].includes(ping.role)) throw new Error('تعذر التحقق من صلاحية الحساب.');
     app.userId = data.session.user.id; app.role = ping.role;
-    const response = await fetch(DATA_ROOT+'questions_public.json?v=20260918-2');
+    const response = await fetch(DATA_ROOT+'questions_public.json?v=20260922-1');
     if (!response.ok) throw new Error('تعذر تحميل ملف الأسئلة. أعد المحاولة.');
     app.questions = validatePublic(await response.json());
     readNavigation(); app.authorized = true;
