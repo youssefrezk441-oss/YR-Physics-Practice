@@ -9,9 +9,9 @@ const questions = JSON.parse(readFileSync(dataFile, 'utf8'));
 const errors = [];
 const fail = message => errors.push(message);
 
-if (!Array.isArray(questions) || questions.length !== 187) fail('Expected 187 questions.');
+if (!Array.isArray(questions) || questions.length !== 55) fail('Expected 55 questions.');
 if (questions.filter(q => q.track === 'class').length !== 30) fail('Expected 30 class questions.');
-if (questions.filter(q => q.track === 'home').length !== 157) fail('Expected 157 home questions.');
+if (questions.filter(q => q.track === 'home').length !== 25) fail('Expected 25 home questions.');
 
 const banks = new Set();
 const trackOrders = { class: new Set(), home: new Set() };
@@ -38,11 +38,14 @@ for (const q of questions) {
   if (sha !== q.image_sha256) fail(`Image hash mismatch for ${q.bank_no}.`);
 }
 
+const expectedHome = [260,302,396,83,193,271,399,25,60,390,139,354,257,297,65,381,114,153,392,32,43,95,223,102,40];
+const actualHome = questions.filter(q => q.track === 'home').sort((a,b)=>a.track_order-b.track_order).map(q => q.bank_no);
+if (JSON.stringify(actualHome) !== JSON.stringify(expectedHome)) {
+  fail('Homework question set/order does not match the approved 25-question rebuild.');
+}
+
 const critical = new Map([
-  [311, ['symbolic', ['main']]],
   [381, ['multi_qualitative', ['main']]],
-  [383, ['multi_qualitative', ['main']]],
-  [384, ['symbolic', ['main']]],
   [392, ['multi_qualitative', ['A1','A2']]]
 ]);
 for (const [bank, [mode, parts]] of critical) {
@@ -56,4 +59,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Lecture 4 contract OK: 187 questions, 187 images, tracks 30/157.');
+console.log('Lecture 4 contract OK: 55 questions, 55 images, tracks 30/25.');
