@@ -86,22 +86,42 @@ function validatePublic(data) {
   return data;
 }
 async function loadTrack(track) {
-  const data = await api('list', { track });
+  const data = await api('list', { track, client_version: '20260922-2' });
+  if (!Array.isArray(data.questions) || !Array.isArray(data.progress)) throw new Error('تعذر قراءة قائمة الأسئلة من الخادم. أعد المحاولة.');
+  const localByBank = new Map(app.questions.map(q => [Number(q.bank_no), q]));
+  const serverQuestions = data.questions.map(remote => {
+    const bank = Number(remote.bank_no);
+    const local = localByBank.get(bank);
+    if (!local) throw new Error(`تعذر العثور على صورة السؤال ${bank}. حدّث الصفحة ثم أعد المحاولة.`);
+    if (remote.grading_mode !== local.grading_mode) throw new Error(`تعارض في بيانات السؤال ${bank}. حدّث الصفحة.`);
+    return {
+      ...local,
+      track,
+      track_order: Number(remote.sort_order ?? local.track_order ?? 0),
+      skill: remote.skill ?? local.skill,
+      skill_name: remote.skill_name ?? local.skill_name,
+      subskill: remote.subskill ?? local.subskill,
+      subskill_name: remote.subskill_name ?? local.subskill_name,
+      grading_mode: remote.grading_mode ?? local.grading_mode,
+      question_type: remote.question_type ?? local.question_type,
+      answer_schema: remote.answer_schema ?? local.answer_schema
+    };
+  }).sort((a,b)=>(a.track_order-b.track_order)||(a.bank_no-b.bank_no));
+
+  // The server is authoritative for which questions are currently active.
+  app.questions = [
+    ...app.questions.filter(q => q.track !== track),
+    ...serverQuestions
+  ];
+
   const source = app.questions.filter(q => q.track === track);
-  if (!Array.isArray(data.questions) || data.questions.length !== source.length || !Array.isArray(data.progress)) throw new Error('قائمة الخادم غير مكتملة. أعد المحاولة.');
-  const returned = new Map(data.questions.map(q => [Number(q.bank_no), q]));
-  for (const q of source) {
-    const remote = returned.get(q.bank_no);
-    if (!remote || remote.grading_mode !== q.grading_mode) throw new Error(`تعارض في بيانات السؤال ${q.bank_no} بين الملف والخادم.`);
-  }
   const banks = new Set(source.map(q => q.bank_no));
-  // Preserve feedback in memory across list refreshes; authoritative state is replaced.
   const old = app.progress;
   const next = new Map([...old].filter(([key]) => !banks.has(Number(key.split(':')[0]))));
   for (const row of data.progress) {
     if (!banks.has(Number(row.bank_no))) continue;
     const key = partId(row.bank_no, row.part_key);
-    next.set(key, canonicalProgress({ ...row, display_answer: row.display_answer ?? old.get(key)?.display_answer }));
+    next.set(key, { ...row, display_answer: row.display_answer ?? old.get(key)?.display_answer });
   }
   app.progress = next;
 }
@@ -303,7 +323,7 @@ async function bootstrap() {
     const ping = await api('ping');
     if (!['student','admin'].includes(ping.role)) throw new Error('تعذر التحقق من صلاحية الحساب.');
     app.userId = data.session.user.id; app.role = ping.role;
-    const response = await fetch(DATA_ROOT+'questions_public.json?v=20260922-1');
+    const response = await fetch(DATA_ROOT+'questions_public.json?v=20260922-2');
     if (!response.ok) throw new Error('تعذر تحميل ملف الأسئلة. أعد المحاولة.');
     app.questions = validatePublic(await response.json());
     readNavigation(); app.authorized = true;
