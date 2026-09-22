@@ -37,6 +37,7 @@ jobs:
               'content-admin.html',
               'index.html',
               'admin-l4-workshop-analytics.html',
+              'admin-l5-workshop-analytics.html',
           ]
           found = []
           for filename in files:
@@ -55,7 +56,7 @@ jobs:
             [ -e "$f" ] || continue
             node --check "$f"
           done
-          for f in /tmp/admin-l4-workshop-analytics-*.mjs; do
+          for f in /tmp/admin-l4-workshop-analytics-*.mjs /tmp/admin-l5-workshop-analytics-*.mjs; do
             [ -e "$f" ] || continue
             node --check "$f"
           done
