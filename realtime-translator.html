@@ -37,8 +37,8 @@
 
 <script>
 (()=>{
-const SESSION_URL="https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/realtime-translation-session";
-const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0amRoY29udWlxYmx4Zmp6cHpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2MDg5MjUsImV4cCI6MjEwMjE4NDkyNX0.KXImtheb-2xtEMddWA2n2M4O4LgcMI9FBc0RO3GXLrc";
+const SESSION_URL="https://vkmaxldbqmkmvjaapiwk.supabase.co/functions/v1/realtime-translation-session";
+const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrbWF4bGRicW1rbXZqYWFwaXdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4Nzk5MjgsImV4cCI6MjEwNjQ1NTkyOH0.WDNm6tdViI2-jlVqSTnwDKW0iS3o57t27SkjpLc6ZBU";
 const $=id=>document.getElementById(id),chat=$('chat'),liveText=$('liveText'),startBtn=$('start'),stopBtn=$('stop'),statusEl=$('status'),dot=$('dot'),toast=$('toast');
 let stream=null,sessions=[],running=false,sourceText='',arTranslation='',zhTranslation='',timer=null,lastTranslation=null;
 
