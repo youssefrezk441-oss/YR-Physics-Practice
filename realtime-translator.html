@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Live Translator</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2a;--card:#122235;--text:#f8fafc;--muted:#94a3b8;--line:#21344a;--ar:#3b82f6;--zh:#ef4444;--ok:#22c55e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Arabic","Noto Sans SC",sans-serif}.app{max-width:520px;margin:auto;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 18px)}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}h1{font-size:1.05rem;margin:0}.sub{font-size:.7rem;color:var(--muted);margin-top:2px}.status{display:flex;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 9px;font-size:.72rem}.dot{width:8px;height:8px;border-radius:50%;background:#64748b}.dot.on{background:var(--ok);box-shadow:0 0 0 4px rgba(34,197,94,.12)}.chat{background:var(--panel);border:1px solid var(--line);border-radius:20px;min-height:58vh;max-height:66vh;overflow:auto;padding:10px}.empty{min-height:54vh;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px}.empty .mic{font-size:3rem;margin-bottom:10px}.msg{display:flex;margin:10px 0}.msg.ar{justify-content:flex-start}.msg.zh{justify-content:flex-end}.bubble{width:92%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 11px}.msg.ar .bubble{border-right:4px solid var(--ar)}.msg.zh .bubble{border-left:4px solid var(--zh)}.lang{font-size:.7rem;font-weight:800;margin-bottom:4px}.msg.ar .lang{color:#60a5fa}.msg.zh .lang{color:#f87171}.original{font-size:1.08rem;line-height:1.6;white-space:pre-wrap}.translationBox{margin-top:8px;padding:8px 9px;border-radius:12px;background:#0a1726;border:1px solid #1d3046}.translationLabel{font-size:.68rem;color:var(--muted);font-weight:800}.translation{font-size:1.13rem;font-weight:750;line-height:1.65;white-space:pre-wrap}.live{margin-top:9px;border:1px solid #3b2f12;background:#1c1608;border-radius:14px;padding:9px 10px}.live .label{font-size:.68rem;color:#fbbf24;font-weight:800}.liveText{min-height:24px;font-size:.96rem}.controls{display:grid;grid-template-columns:1fr 64px;gap:8px;margin-top:9px}.start,.stop{border:0;border-radius:18px;color:white}.start{background:#0f766e;min-height:68px;font-size:1.02rem;font-weight:900}.start.active{background:#166534}.stop{background:#172033;font-size:1.25rem}.tools{display:flex;gap:7px;margin-top:8px}.tools button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:9px;font-size:.78rem}.toast{display:none;margin-top:8px;border:1px solid #7f1d1d;background:#2a0f14;color:#fecaca;border-radius:12px;padding:9px;font-size:.78rem}.note{text-align:center;color:var(--muted);font-size:.67rem;margin-top:7px;line-height:1.4}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="top"><div><h1>Live Translator 🇪🇬 ⇄ 🇨🇳</h1><div class="sub">GPT Realtime Translate • Mobile</div></div><div class="status"><span id="dot" class="dot"></span><span id="status">جاهز</span></div></div>
+
+<section id="chat" class="chat">
+  <div id="empty" class="empty"><div><div class="mic">🎙️</div><strong>ضع الهاتف بينكما واضغط ابدأ</strong><div style="margin-top:7px">العربي أو الصيني يتكلم، والمنصة تعرض النص الأصلي وتحته الترجمة تلقائيًا.</div></div></div>
+</section>
+
+<section class="live"><div class="label">أسمع الآن</div><div id="liveText" class="liveText">—</div></section>
+
+<section class="controls">
+  <button id="start" class="start">🎤 ابدأ الاستماع</button>
+  <button id="stop" class="stop">■</button>
+</section>
+
+<section class="tools">
+  <button id="repeat">🔁 آخر ترجمة</button>
+  <button id="clear">🗑 مسح</button>
+</section>
+
+<div id="toast" class="toast"></div>
+<div class="note">عند أول تشغيل وافق على إذن الميكروفون.</div>
+</main>
+
+<script>
+(()=>{
+const SESSION_URL="https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/realtime-translation-session";
+const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0amRoY29udWlxYmx4Zmp6cHpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2MDg5MjUsImV4cCI6MjEwMjE4NDkyNX0.KXImtheb-2xtEMddWA2n2M4O4LgcMI9FBc0RO3GXLrc";
+const $=id=>document.getElementById(id),chat=$('chat'),liveText=$('liveText'),startBtn=$('start'),stopBtn=$('stop'),statusEl=$('status'),dot=$('dot'),toast=$('toast');
+let stream=null,sessions=[],running=false,sourceText='',arTranslation='',zhTranslation='',timer=null,lastTranslation=null;
+
+function status(t,on=false){statusEl.textContent=t;dot.classList.toggle('on',on);startBtn.classList.toggle('active',on)}
+function fail(t){toast.textContent=t;toast.style.display='block';setTimeout(()=>toast.style.display='none',7000)}
+function detect(t){const ar=(t.match(/[\u0600-\u06FF]/g)||[]).length,zh=(t.match(/[\u3400-\u9FFF]/g)||[]).length;if(zh>ar&&zh>0)return'zh';if(ar>0)return'ar';return'unknown'}
+function speak(text,lang){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.93;speechSynthesis.speak(u)}
+function add(src,original,translation){
+  const e=document.getElementById('empty');if(e)e.remove();
+  const art=document.createElement('article');art.className='msg '+src;
+  const b=document.createElement('div');b.className='bubble';
+  const l=document.createElement('div');l.className='lang';l.textContent=src==='zh'?'中文':'العربية';
+  const o=document.createElement('div');o.className='original';o.dir=src==='ar'?'rtl':'ltr';o.textContent=original;
+  const box=document.createElement('div');box.className='translationBox';
+  const tl=document.createElement('div');tl.className='translationLabel';tl.textContent='الترجمة';
+  const tr=document.createElement('div');tr.className='translation';tr.dir=src==='zh'?'rtl':'ltr';tr.textContent=translation;
+  box.append(tl,tr);
+  const a=document.createElement('div');a.style.cssText='display:flex;gap:6px;margin-top:8px';
+  [['🔊 الأصل',()=>speak(original,src==='zh'?'zh-CN':'ar-EG')],['🔊 الترجمة',()=>speak(translation,src==='zh'?'ar-EG':'zh-CN')]].forEach(([txt,fn])=>{
+    const bt=document.createElement('button');bt.textContent=txt;bt.style.cssText='border:1px solid var(--line);background:#0a1726;color:white;border-radius:999px;padding:6px 9px;font-size:.75rem';bt.onclick=fn;a.append(bt)
+  });
+  b.append(l,o,box,a);art.append(b);chat.append(art);chat.scrollTop=chat.scrollHeight;
+  lastTranslation={text:translation,lang:src==='zh'?'ar-EG':'zh-CN'};
+}
+function schedule(){clearTimeout(timer);timer=setTimeout(flush,1000)}
+function flush(){
+  const src=sourceText.trim();if(!src)return;
+  const lang=detect(src),translation=lang==='ar'?zhTranslation.trim():lang==='zh'?arTranslation.trim():'';
+  if(lang!=='unknown'&&translation)add(lang,src,translation);
+  sourceText='';arTranslation='';zhTranslation='';liveText.textContent='—'
+}
+async function getSecret(target){
+  const r=await fetch(SESSION_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON_KEY,'apikey':ANON_KEY},
+    body:JSON.stringify({targetLanguage:target})
+  });
+  const d=await r.json();
+  if(!r.ok)throw new Error(typeof d.error==='string'?d.error:(d.error?.message||'تعذر إنشاء جلسة Realtime'));
+  return d.value
+}
+async function makeSession(target){
+  const secret=await getSecret(target);
+  const pc=new RTCPeerConnection();
+  pc.addTrack(stream.getAudioTracks()[0],stream);
+  pc.ontrack=()=>{};
+  const dc=pc.createDataChannel('oai-events');
+  dc.onmessage=({data})=>{
+    let ev;try{ev=JSON.parse(data)}catch{return}
+    if(ev.type==='session.input_transcript.delta'&&target==='zh'){
+      sourceText+=ev.delta||'';
+      liveText.textContent=sourceText||'…';
+      schedule()
+    }
+    if(ev.type==='session.output_transcript.delta'){
+      if(target==='zh')zhTranslation+=ev.delta||'';
+      else arTranslation+=ev.delta||'';
+      schedule()
+    }
+    if(ev.type==='error')fail(ev.error?.message||'Realtime error')
+  };
+  const offer=await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  const r=await fetch('https://api.openai.com/v1/realtime/translations/calls',{
+    method:'POST',
+    headers:{Authorization:'Bearer '+secret,'Content-Type':'application/sdp'},
+    body:offer.sdp
+  });
+  if(!r.ok)throw new Error(await r.text());
+  await pc.setRemoteDescription({type:'answer',sdp:await r.text()});
+  return {pc,dc}
+}
+async function start(){
+  if(running)return;
+  try{
+    if(!navigator.mediaDevices?.getUserMedia)throw new Error('افتح الصفحة في Chrome أو Safari حديث.');
+    status('أطلب إذن الميكروفون…',true);
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
+    status('أتصل بـ GPT Realtime…',true);
+    const[zh,ar]=await Promise.all([makeSession('zh'),makeSession('ar')]);
+    sessions=[zh,ar];running=true;status('أستمع…',true);startBtn.textContent='🎙️ أستمع الآن'
+  }catch(e){
+    stop();
+    if(e?.name==='NotAllowedError')fail('تم رفض إذن الميكروفون. اسمح بالميكروفون لهذا الموقع ثم أعد المحاولة.');
+    else fail(e.message||'تعذر بدء الجلسة');
+  }
+}
+function stop(){
+  running=false;clearTimeout(timer);flush();
+  sessions.forEach(s=>{try{s.pc.close()}catch{}});
+  sessions=[];try{stream?.getTracks().forEach(t=>t.stop())}catch{}stream=null;
+  startBtn.textContent='🎤 ابدأ الاستماع';status('جاهز',false)
+}
+startBtn.onclick=start;stopBtn.onclick=stop;
+$('repeat').onclick=()=>{if(!lastTranslation)return fail('لا توجد ترجمة سابقة.');speak(lastTranslation.text,lastTranslation.lang)};
+$('clear').onclick=()=>{stop();lastTranslation=null;sourceText='';arTranslation='';zhTranslation='';chat.innerHTML='<div id="empty" class="empty"><div><div class="mic">🎙️</div><strong>ضع الهاتف بينكما واضغط ابدأ</strong></div></div>'};
+})();
+</script>
+</body>
+</html>
