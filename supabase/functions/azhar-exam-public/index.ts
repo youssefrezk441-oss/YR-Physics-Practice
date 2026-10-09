@@ -11,7 +11,7 @@ const originAllowed = new Set([
 ]);
 const enc = new TextEncoder();
 const letters = new Set(["أ", "ب", "ج", "د"]);
-const nameNorm = (v: string) => v.normalize("NFKC").trim().replace(/\s+/g, " ").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه");
+const nameNorm = (v: string) => v.normalize("NFKC").trim().replace(/[\u064B-\u065F\u0670\u0640]/g, "").replace(/\s+/g, " ").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه");
 async function sha(v: string) {
   const b = await crypto.subtle.digest("SHA-256", enc.encode(v));
   return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, "0")).join("");
@@ -33,7 +33,7 @@ function cleanAnswers(raw: unknown) {
 }
 function state(row: any) {
   const now = Date.now(), due = new Date(row.deadline_at).getTime();
-  return { name: row.student_name, group: row.group_code, started_at: row.started_at,
+  return { name: row.student_name, started_at: row.started_at,
     deadline_at: row.deadline_at, submitted_at: row.submitted_at,
     status: row.submitted_at ? "submitted" : now >= due ? "expired" : "active",
     answers: row.answers || {}, server_time: new Date().toISOString() };
@@ -55,17 +55,17 @@ async function admin(token: string, action: string, body: any) {
   const a = await sql`select public.admin_access_level('students', ${data.user.id}::uuid) as level`;
   if (!['view','edit'].includes(a[0]?.level)) throw fail(403, "صلاحية الإدارة مطلوبة.");
   if (action === "admin_list") {
-    const rows = await sql`select student_code, student_name, group_code, started_at, deadline_at,
+    const rows = await sql`select name_key, student_name, started_at, deadline_at,
       submitted_at, updated_at, (select count(*) from jsonb_object_keys(answers)) as answered
-      from private.azhar_exam_attempts where exam_id=${EXAM} order by student_code`;
+      from private.azhar_exam_name_attempts where exam_id=${EXAM} order by started_at desc`;
     return { attempts: rows.map((r: any) => ({...r, status: r.submitted_at ? 'submitted' : Date.now() >= new Date(r.deadline_at).getTime() ? 'expired' : 'active' })) };
   }
   if (action === "admin_detail") {
-    const code = String(body.student_code || '').trim();
-    const rows = await sql`select student_code, student_name, group_code, started_at, deadline_at,
-      submitted_at, answers from private.azhar_exam_attempts
-      where exam_id=${EXAM} and student_code=${code} limit 1`;
-    if (!rows.length) throw fail(404, "لا توجد محاولة لهذا الكود.");
+    const nameKey = String(body.name_key || '').trim();
+    const rows = await sql`select name_key, student_name, started_at, deadline_at,
+      submitted_at, answers from private.azhar_exam_name_attempts
+      where exam_id=${EXAM} and name_key=${nameKey} limit 1`;
+    if (!rows.length) throw fail(404, "لا توجد محاولة لهذا الاسم.");
     return { attempt: rows[0] };
   }
   throw fail(400, "طلب غير معروف.");
@@ -90,45 +90,39 @@ Deno.serve(async req => {
       result = await admin(token, action, body);
     } else if (action === "start") {
       await rateLimit(req);
-      const code = String(body.student_code || '').trim().toUpperCase();
-      const name = nameNorm(String(body.student_name || ''));
-      if (!/^[A-Z0-9-]{3,30}$/.test(code) || name.length < 5 || name.length > 100)
-        throw fail(400, "تحقق من كود الطالب والاسم كما هما في المنصة.");
-      const profiles = await sql`select user_id, student_code, full_name, group_code
-        from public.student_profiles where upper(student_code)=${code}
-          and is_active=true and group_code in ('K2-B','N2-B') limit 1`;
-      if (!profiles.length || nameNorm(profiles[0].full_name) !== name)
-        throw fail(403, "تعذر التحقق من بيانات الطالب. راجع الكود والاسم.");
+      const displayName = String(body.student_name || '').normalize('NFKC').trim().replace(/\s+/g,' ');
+      const name = nameNorm(displayName);
+      if (displayName.length > 100 || name.length < 8 || !/^[ء-ي]+(?: [ء-ي]+){2}$/.test(name))
+        throw fail(400, "اكتب الاسم الثلاثي بالعربية، ثلاث كلمات، دون أرقام أو رموز.");
       const tokenBytes = crypto.getRandomValues(new Uint8Array(32));
       const resumeToken = Array.from(tokenBytes, x => x.toString(16).padStart(2,'0')).join('');
       const hash = await sha(resumeToken);
-      const p = profiles[0];
-      const inserted = await sql`insert into private.azhar_exam_attempts
-        (exam_id,student_user_id,student_code,student_name,group_code,token_hash,deadline_at)
-        values (${EXAM},${p.user_id},${p.student_code},${p.full_name},${p.group_code},${hash},now()+interval '150 minutes')
+      const inserted = await sql`insert into private.azhar_exam_name_attempts
+        (exam_id,name_key,student_name,token_hash,deadline_at)
+        values (${EXAM},${name},${displayName},${hash},now()+interval '150 minutes')
         on conflict do nothing returning *`;
-      if (!inserted.length) throw fail(409, "بدأت لهذا الطالب محاولة بالفعل. افتح الامتحان من نفس المتصفح على الهاتف الذي بدأت منه.");
+      if (!inserted.length) throw fail(409, "استُخدم هذا الاسم الثلاثي لبدء محاولة بالفعل. افتح الامتحان من المتصفح نفسه، أو تواصل مع مستر يوسف رزق إذا تشابه اسمك مع طالب آخر.");
       result = { ...state(inserted[0]), token: resumeToken };
     } else if (["resume","save","submit"].includes(action)) {
       const token = String(body.token || '');
       if (!/^[0-9a-f]{64}$/.test(token)) throw fail(403, "تعذر استعادة المحاولة من هذا الجهاز.");
       const hash = await sha(token);
-      const rows = await sql`select * from private.azhar_exam_attempts where exam_id=${EXAM} and token_hash=${hash} limit 1`;
+      const rows = await sql`select * from private.azhar_exam_name_attempts where exam_id=${EXAM} and token_hash=${hash} limit 1`;
       if (!rows.length) throw fail(403, "تعذر استعادة المحاولة من هذا الجهاز.");
       let row = rows[0];
       if (Date.now() >= new Date(row.deadline_at).getTime() && !row.submitted_at) {
-        const done = await sql`update private.azhar_exam_attempts set submitted_at=deadline_at,updated_at=now()
-          where exam_id=${EXAM} and student_user_id=${row.student_user_id} and submitted_at is null returning *`;
+        const done = await sql`update private.azhar_exam_name_attempts set submitted_at=deadline_at,updated_at=now()
+          where exam_id=${EXAM} and name_key=${row.name_key} and submitted_at is null returning *`;
         if (done.length) row = done[0];
       }
       if (action === 'resume') result = state(row);
       else {
         if (row.submitted_at) throw fail(409, "انتهت المحاولة أو تم التسليم بالفعل.");
         const answers = cleanAnswers(body.answers);
-        const updated = await sql`update private.azhar_exam_attempts
+        const updated = await sql`update private.azhar_exam_name_attempts
           set answers=${sql.json(answers)}::jsonb, updated_at=now(),
               submitted_at=case when ${action}='submit' then now() else null end
-          where exam_id=${EXAM} and student_user_id=${row.student_user_id}
+          where exam_id=${EXAM} and name_key=${row.name_key}
             and token_hash=${hash} and submitted_at is null and deadline_at>now()
           returning *`;
         if (!updated.length) throw fail(409, "انتهى وقت المحاولة أو تم التسليم بالفعل.");
