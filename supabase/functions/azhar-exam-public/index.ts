@@ -55,9 +55,11 @@ async function admin(token: string, action: string, body: any) {
   const a = await sql`select public.admin_access_level('students', ${data.user.id}::uuid) as level`;
   if (!['view','edit'].includes(a[0]?.level)) throw fail(403, "صلاحية الإدارة مطلوبة.");
   if (action === "admin_list") {
-    const rows = await sql`select name_key, student_name, started_at, deadline_at,
-      submitted_at, updated_at, (select count(*) from jsonb_object_keys(answers)) as answered
-      from private.azhar_exam_name_attempts where exam_id=${EXAM} order by started_at desc`;
+    const rows = await sql`select a.name_key, a.student_name, a.started_at, a.deadline_at,
+      a.submitted_at, a.updated_at, (select count(*) from jsonb_object_keys(a.answers)) as answered,
+      (select count(*) from private.azhar_exam_activity v where v.exam_id=a.exam_id
+        and v.name_key=a.name_key and v.event_type='hidden') as exits
+      from private.azhar_exam_name_attempts a where a.exam_id=${EXAM} order by a.started_at desc`;
     return { attempts: rows.map((r: any) => ({...r, status: r.submitted_at ? 'submitted' : Date.now() >= new Date(r.deadline_at).getTime() ? 'expired' : 'active' })) };
   }
   if (action === "admin_detail") {
@@ -66,7 +68,10 @@ async function admin(token: string, action: string, body: any) {
       submitted_at, answers from private.azhar_exam_name_attempts
       where exam_id=${EXAM} and name_key=${nameKey} limit 1`;
     if (!rows.length) throw fail(404, "لا توجد محاولة لهذا الاسم.");
-    return { attempt: rows[0] };
+    const events = await sql`select event_type, client_at, recorded_at
+      from private.azhar_exam_activity where exam_id=${EXAM} and name_key=${nameKey}
+      order by client_at, recorded_at`;
+    return { attempt: {...rows[0], activity: events} };
   }
   throw fail(400, "طلب غير معروف.");
 }
@@ -103,7 +108,7 @@ Deno.serve(async req => {
         on conflict do nothing returning *`;
       if (!inserted.length) throw fail(409, "استُخدم هذا الاسم الثلاثي لبدء محاولة بالفعل. افتح الامتحان من المتصفح نفسه، أو تواصل مع مستر يوسف رزق إذا تشابه اسمك مع طالب آخر.");
       result = { ...state(inserted[0]), token: resumeToken };
-    } else if (["resume","save","submit"].includes(action)) {
+    } else if (["resume","save","submit","activity"].includes(action)) {
       const token = String(body.token || '');
       if (!/^[0-9a-f]{64}$/.test(token)) throw fail(403, "تعذر استعادة المحاولة من هذا الجهاز.");
       const hash = await sha(token);
@@ -116,6 +121,26 @@ Deno.serve(async req => {
         if (done.length) row = done[0];
       }
       if (action === 'resume') result = state(row);
+      else if (action === 'activity') {
+        if (!Array.isArray(body.events) || body.events.length > 30) throw fail(400, "بيانات النشاط غير صحيحة.");
+        const now = Date.now(), started = new Date(row.started_at).getTime();
+        const cutoff = new Date(row.submitted_at || row.deadline_at).getTime();
+        let accepted = 0;
+        for (const item of body.events) {
+          if (!item || typeof item !== 'object' ||
+              !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(item.id || '')) ||
+              !['hidden','visible'].includes(item.type)) throw fail(400, "حدث نشاط غير صحيح.");
+          const t = Date.parse(String(item.at || ''));
+          if (!Number.isFinite(t)) throw fail(400, "وقت النشاط غير صحيح.");
+          if (t < started - 300000 || t > Math.min(cutoff + 300000, now + 300000)) continue;
+          await sql`insert into private.azhar_exam_activity
+            (exam_id,name_key,event_id,event_type,client_at)
+            values (${EXAM},${row.name_key},${item.id}::uuid,${item.type},${new Date(t).toISOString()}::timestamptz)
+            on conflict do nothing`;
+          accepted++;
+        }
+        result = { ok: true, accepted };
+      }
       else {
         if (row.submitted_at) throw fail(409, "انتهت المحاولة أو تم التسليم بالفعل.");
         const answers = cleanAnswers(body.answers);
