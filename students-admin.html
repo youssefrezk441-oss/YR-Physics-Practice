@@ -111,7 +111,7 @@ const KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
 const sb=createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let students=[],groups=[],lastBulk={created:[],failed:[]},lastCredential=null,editingGroupId=null,editingStudentId=null;
+let students=[],groups=[],lastBulk={created:[],failed:[]},lastCredential=null,editingGroupId=null,editingStudentId=null,pendingEditId=new URLSearchParams(location.search).get('edit');
 
 function show(t,type='ok'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(t)+'</div>';setTimeout(()=>$('msg').innerHTML='',5000)}
 async function fn(body){const{data,error}=await sb.functions.invoke('admin-student',{body});if(error){let message=error.message||'تعذر الاتصال';try{const details=await error.context?.json();message=details?.message||message}catch{}throw new Error(message)}if(data?.error)throw new Error(data.message||data.error);return data}
@@ -153,7 +153,7 @@ $('group').onchange=syncGrade;
 $('loginBtn').onclick=async()=>{try{const{data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;if(data.user?.app_metadata?.role!=='admin'){await sb.auth.signOut();throw new Error('هذا الحساب ليس مديرًا.')}await openAdmin()}catch(e){show(e.message,'err')}};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();location.reload()};
 async function openAdmin(){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');await load()}
-async function load(){try{const d=await fn({action:'list_students'});students=d.students||[];groups=d.groups||[];renderCenterOptions();renderGroups();render()}catch(e){show(e.message,'err')}}
+async function load(){try{const d=await fn({action:'list_students'});students=d.students||[];groups=d.groups||[];renderCenterOptions();renderGroups();render();if(pendingEditId){const id=pendingEditId;pendingEditId=null;if(students.some(x=>x.user_id===id))openStudentEdit(id)}}catch(e){show(e.message,'err')}}
 
 function render(){
   const q=$('search').value.trim().toLowerCase();
