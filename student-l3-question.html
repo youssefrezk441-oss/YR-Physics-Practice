@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>العودة لسؤالي — ورشة المحاضرة الثالثة</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef3f9;font-family:Arial,"Noto Sans Arabic",sans-serif;color:#16324f}
+.bar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#16324f;color:white;padding:8px 16px}
+.bar a{background:#fff;border-radius:9px;color:#16324f;padding:8px 13px;font-weight:700;text-decoration:none}
+.bar span{font-size:13px;line-height:1.8}
+iframe{width:100%;height:calc(100dvh - 58px);border:0;display:block;background:#fff}
+.notice{position:absolute;top:70px;right:16px;left:16px;background:#eaf3ff;color:#17406c;border:1px solid #bfd4ec;padding:11px;border-radius:11px;text-align:center;max-width:490px;margin:auto}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="bar"><span>🎯 مراجعة السؤال داخل الورشة الأصلية — المحاضرة الثالثة</span><a href="student-ch1-mistakes.html">العودة لتحدّي أخطائي</a></div>
+<div id="status" class="notice">جارٍ فتح سؤالك داخل الورشة الأصلية...</div>
+<iframe id="workshop" title="ورشة المحاضرة الثالثة الأصلية" src="lecture3-workshop.html" referrerpolicy="same-origin"></iframe>
+<script>
+(function(){
+ const q=new URLSearchParams(location.search),track=q.get('track'),bank=Number(q.get('bank'));
+ const notice=document.getElementById('status'),frame=document.getElementById('workshop');
+ if(!['class','home'].includes(track)||!Number.isInteger(bank)||bank<=0){
+   notice.textContent='رابط السؤال غير صحيح. ارجع لقائمة أخطائك وحاول مرة أخرى.';
+   frame.removeAttribute('src');return;
+ }
+ try{localStorage.setItem('l3-'+track+'-bank',String(bank))}
+ catch(e){notice.textContent='تعذر حفظ رقم السؤال في المتصفح. ارجع لقائمة أخطائك.';return}
+ let tried=false,n=0;
+ frame.addEventListener('load',function(){
+   const timer=setInterval(()=>{
+     if(tried||n++>180){clearInterval(timer);if(!tried)notice.textContent='يمكنك اختيار مسار الورشة يدويًا للوصول لسؤالك.';return}
+     try{
+       const doc=frame.contentDocument,app=doc?.getElementById('app'),btn=doc?.getElementById(track==='home'?'openHome':'openClass');
+       if(!app||app.classList.contains('hidden')||!btn||btn.disabled)return;
+       tried=true;clearInterval(timer);
+       btn.click();notice.classList.add('hidden');
+     }catch(e){clearInterval(timer);notice.textContent='تعذر التنقل التلقائي. اختر المسار الصحيح يدويًا.'}
+   },250);
+ });
+})();
+</script>
+</body></html>
