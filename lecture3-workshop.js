@@ -14,7 +14,7 @@ function parseNum(v){const map={'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥
 async function call(action,extra={}){const {data,error}=await sb.functions.invoke('lecture3-workshop',{body:{action,...extra}});if(error){let msg=error.message||'تعذر الاتصال';try{if(error.context&&typeof error.context.json==='function'){const p=await error.context.json();msg=p?.message||p?.error||msg}}catch{}throw new Error(msg)}if(data?.error)throw new Error(data.message||data.error);return data}
 function showDenied(msg){$('boot').classList.add('hidden');$('app').classList.add('hidden');$('denied').textContent=msg;$('denied').classList.remove('hidden')}
 async function init(){try{await loadMeta();const {data:{session}}=await sb.auth.getSession();if(!session){location.href='student.html';return}const p=await call('ping');profile=p.profile;$('studentName').textContent=profile.full_name||'طالب الصف الثالث الثانوي';$('studentGrade').textContent=profile.grade_level||'';$('boot').classList.add('hidden');$('app').classList.remove('hidden');const target=new URLSearchParams(location.search);const t=target.get('track'),n=Number(target.get('bank'));if(['class','home'].includes(t)&&Number.isInteger(n)&&n>0)await openTrack(t,n)}catch(e){showDenied(e.message||'هذه الورشة غير متاحة لهذا الحساب.') }}
-async function openTrack(t,requestedBank=null){track=t;await loadAtlas(t);$('trackChooser').classList.add('hidden');$('workspace').classList.remove('hidden');$('trackTitle').textContent=t==='home'?'🏠 التدريب المنزلي':'🧠 أسئلة ورشة الحصة';const d=await call('list',{track:t});questions=d.questions||[];progress=d.progress||[];currentSkill='ALL';renderSkillButtons();applyFilter();const saved=Number(localStorage.getItem(`l3-${t}-bank`)||0);const wanted=Number.isInteger(Number(requestedBank))&&Number(requestedBank)>0?Number(requestedBank):saved;const idx=filtered.findIndex(q=>q.bank_no===wanted);current=idx>=0?idx:firstUnfinishedIndex();render()}
+async function openTrack(t,requestedBank=null){track=t;if(t==='class')await loadAtlas(t);$('trackChooser').classList.add('hidden');$('workspace').classList.remove('hidden');$('trackTitle').textContent=t==='home'?'🏠 التدريب المنزلي':'🧠 أسئلة ورشة الحصة';const d=await call('list',{track:t});questions=d.questions||[];progress=d.progress||[];currentSkill='ALL';renderSkillButtons();applyFilter();const saved=Number(localStorage.getItem(`l3-${t}-bank`)||0);const wanted=Number.isInteger(Number(requestedBank))&&Number(requestedBank)>0?Number(requestedBank):saved;const idx=filtered.findIndex(q=>q.bank_no===wanted);current=idx>=0?idx:firstUnfinishedIndex();render()}
 function firstUnfinishedIndex(){const pm=progressMap();const i=filtered.findIndex(q=>!questionDone(q,pm));return i>=0?i:0}
 function questionDone(q,pm){if(q.question_type==='multipart_mcq')return [1,2].every(i=>{const p=pm.get(`${q.bank_no}:${i}`);return p&&(p.mastered||p.revealed)});const p=pm.get(`${q.bank_no}:0`);return !!(p&&(p.mastered||p.revealed))}
 function questionMastered(q,pm){if(q.question_type==='multipart_mcq')return [1,2].every(i=>pm.get(`${q.bank_no}:${i}`)?.mastered);return !!pm.get(`${q.bank_no}:0`)?.mastered}
@@ -24,7 +24,36 @@ function getP(bank,part=0){return progress.find(p=>Number(p.bank_no)===Number(ba
 function setLocalProgress(bank,part,patch){let p=getP(bank,part);if(!p){p={bank_no:bank,part_index:part,attempts_count:0,tried_answers:[],first_attempt_correct:null,mastered:false,revealed:false,last_answer:null};progress.push(p)}Object.assign(p,patch)}
 function feedback(kind,text){const f=$('feedback');f.className='feedback show '+kind;f.innerHTML=text}
 function clearFeedback(){const f=$('feedback');f.className='feedback';f.textContent=''}
-function renderQuestionImage(bankNo){const m=atlasMeta?.questions?.[String(bankNo)],c=$('questionCanvas');if(!m||!c)return;const draw=()=>{c.width=m.w;c.height=m.h;const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(atlasImage,m.x,m.y,m.w,m.h,0,0,m.w,m.h)};if(atlasImage.complete&&atlasImage.naturalWidth)draw();else atlasImage.addEventListener('load',draw,{once:true})}
+const l3OriginalImageCache=new Map();
+let latestHomeQuestionImageRequest=0;
+function l3OriginalImagePath(bank){
+ const n=Number(bank),range=Math.floor((n-1)/20),label=String(range).padStart(2,'0');
+ if(range===8)return './assets/l3-mistake-images/range-'+label+'-'+(n<=165?0:n<=169?1:n<=173?2:n<=176?3:4)+'.json';
+ if(range===17)return './assets/l3-mistake-images/range-'+label+'-'+(n<=343?0:n<=353?1:2)+'.json';
+ return './assets/l3-mistake-images/range-'+label+'.json';
+}
+async function loadL3OriginalImage(bank){
+ const path=l3OriginalImagePath(bank);
+ if(!l3OriginalImageCache.has(path)){
+   const work=fetch(path,{cache:'force-cache'}).then(async response=>{if(!response.ok)throw Error('تعذر تحميل صورة السؤال');return response.json()}).catch(e=>{l3OriginalImageCache.delete(path);throw e});
+   l3OriginalImageCache.set(path,work);
+ }
+ const dict=await l3OriginalImageCache.get(path),data=dict[String(bank)];
+ if(typeof data!=='string'||!data.startsWith('data:image/webp;base64,'))throw Error('صورة السؤال غير متاحة');
+ return data;
+}
+async function renderHomeBankImage(bank){
+ const request=++latestHomeQuestionImageRequest,canvas=$('questionCanvas');
+ canvas.width=1;canvas.height=1;
+ try{
+  const data=await loadL3OriginalImage(bank),image=new Image();
+  image.src=data;await image.decode();
+  if(request!==latestHomeQuestionImageRequest||track!=='home'||filtered[current]?.bank_no!==bank)return;
+  canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;
+  canvas.getContext('2d').drawImage(image,0,0);
+ }catch(e){if(request===latestHomeQuestionImageRequest&&track==='home')feedback('bad','تعذر تحميل صورة السؤال. انتقل لسؤال آخر ثم عد إليه لإعادة المحاولة.')}
+}
+function renderQuestionImage(bankNo){if(track==='home'){void renderHomeBankImage(bankNo);return}const m=atlasMeta?.questions?.[String(bankNo)],c=$('questionCanvas');if(!m||!c)return;const draw=()=>{c.width=m.w;c.height=m.h;const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(atlasImage,m.x,m.y,m.w,m.h,0,0,m.w,m.h)};if(atlasImage.complete&&atlasImage.naturalWidth)draw();else atlasImage.addEventListener('load',draw,{once:true})}
 function render(){if(!filtered.length){$('answerControls').innerHTML='';feedback('info','لا توجد أسئلة في هذا القسم.');return}current=Math.max(0,Math.min(current,filtered.length-1));const q=filtered[current];localStorage.setItem(`l3-${track}-bank`,q.bank_no);$('bankNo').textContent='سؤال البنك '+q.bank_no;$('skillPill').textContent=q.skill+' · '+q.skill_name;$('diffPill').textContent=q.difficulty;$('counter').textContent=(current+1)+' / '+filtered.length;renderQuestionImage(q.bank_no);$('prevBtn').disabled=current===0;$('nextBtn').textContent=current===filtered.length-1?'إنهاء':'التالي';clearFeedback();renderAnswer(q);renderStats();renderDots();renderSkillProgress()}
 function renderAnswer(q){const box=$('answerControls');box.innerHTML='';$('revealBtn').classList.add('hidden');if(q.question_type==='multipart_mcq'){ $('answerTitle').textContent='أجب عن كل مطلوب على حدة:';[1,2].forEach(part=>box.appendChild(buildMcq(q,part,`المطلوب (${part})`)));return }if(q.question_type==='numeric'){ $('answerTitle').textContent='اكتب الناتج النهائي:';const p=getP(q.bank_no,0);const row=document.createElement('div');row.className='numeric';const input=document.createElement('input');input.inputMode='decimal';input.placeholder='مثال: 2.13 أو 66/31';input.disabled=!!(p?.mastered||p?.revealed);const u=document.createElement('span');u.className='unit';u.textContent=q.unit_text||'';const b=document.createElement('button');b.className='btn primary';b.textContent='تحقق';b.disabled=input.disabled;b.onclick=async()=>{const n=parseNum(input.value);if(!Number.isFinite(n)){feedback('bad','اكتب رقمًا صالحًا، ويمكنك كتابة كسر مثل 66/31.');return}await submit(q,0,n)};input.onkeydown=e=>{if(e.key==='Enter'&&!b.disabled)b.click()};row.append(input,u,b);box.appendChild(row);showStateFeedback(q,0);return }$('answerTitle').textContent='اختر إجابتك:';box.appendChild(buildMcq(q,0,null));showStateFeedback(q,0)}
 function buildMcq(q,part,label){const wrap=document.createElement('div');if(part){wrap.className='part';const h=document.createElement('h4');h.textContent=label;wrap.appendChild(h)}const grid=document.createElement('div');grid.className='choices';const p=getP(q.bank_no,part);const tried=(p?.tried_answers||[]).map(String);for(const l of LETTERS){const b=document.createElement('button');b.className='choice';b.textContent=l;b.disabled=!!(p?.mastered||p?.revealed||tried.includes(l));if(tried.includes(l)&&!p?.mastered)b.classList.add('wrong');if(p?.mastered&&String(p.last_answer)===l)b.classList.add('correct');b.onclick=()=>submit(q,part,l);grid.appendChild(b)}wrap.appendChild(grid);if(part){const f=document.createElement('div');f.id=`partFeedback-${part}`;f.className='feedback';wrap.appendChild(f);if(p)showPartFeedback(q,part,f)}return wrap}
