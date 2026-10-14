@@ -97,7 +97,7 @@ const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,
 const fmt=n=>Number(n||0).toLocaleString('ar-EG'),pct=(a,b)=>b?(100*a/b).toFixed(1)+'%':'—';
 const lectureName=n=>'المحاضرة '+({3:'الثالثة',4:'الرابعة',5:'الخامسة',6:'السادسة'}[n]||n);
 const trackName=t=>t==='class'?'الحصة':'التدريب المنزلي';
-let current='overview',page=0,studentsTotal=0,selectedId=null,selected=null,loading=false;
+let current='overview',page=0,studentsTotal=0,selectedId=null,selected=null,loading=false,allGroups=[];
 const filters=()=>({lecture:Number($('lecture').value),track:$('track').value,group_code:$('group').value});
 const safeRows=a=>Array.isArray(a)?a:[];
 const stat=(label,n,more='')=>'<div class="metric"><span>'+esc(label)+'</span><strong>'+fmt(n)+'</strong><small>'+esc(more)+'</small></div>';
@@ -112,20 +112,20 @@ async function loadOverview(){announce('جارٍ تحميل تحليل الفص�
  $('skillsTable').innerHTML=tbl(['المحاضرة · الفكرة','الخطأ','نسبة الخطأ'],safeRows(d.skills).map(x=>'<tr><td>'+lectureName(x.lecture)+'<div class="muted small">'+esc(x.skill_name||x.skill)+'</div></td><td class="num">'+fmt(x.wrong)+'</td><td><span class="pill warn">'+pct(x.wrong,x.attempted)+'</span></td></tr>'));
  $('hardTable').innerHTML=tbl(['السؤال','عدد الطلاب','الخطأ الأول'],safeRows(d.hardest).map(x=>'<tr><td><b>'+lectureName(x.lecture)+' · '+trackName(x.track)+'</b><div class="small muted">ورشة: '+fmt(x.workshop_no)+' · بنك: '+fmt(x.bank_no)+'</div><div class="small muted">'+esc(x.subskill_name||x.skill_name||'')+'</div></td><td class="num">'+fmt(x.students)+'</td><td><span class="pill bad">'+fmt(x.wrong)+' · '+pct(x.wrong,x.students)+'</span></td></tr>'));
  $('groupsTable').innerHTML=tbl(['المجموعة','المشاركون','الأسئلة المجربة','الخطأ الأول','نسبة الإجابة الصحيحة من أول مرة'],safeRows(d.groups).map(x=>'<tr><td><b>'+esc(x.group_code)+'</b></td><td>'+fmt(x.students)+'</td><td>'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+'</span></td><td>'+pct(x.first_correct,x.attempted)+'</td></tr>'));
- const prev=$('group').value;$('group').innerHTML='<option value="">كل المجموعات</option>'+safeRows(d.groups).map(x=>'<option value="'+esc(x.group_code)+'">'+esc(x.group_code)+'</option>').join('');$('group').value=prev;
+ const prev=$('group').value;if(!prev)allGroups=safeRows(d.groups).map(x=>x.group_code);$('group').innerHTML='<option value="">كل المجموعات</option>'+allGroups.map(code=>'<option value="'+esc(code)+'">'+esc(code)+'</option>').join('');$('group').value=prev;
  }catch(e){announce(e.message,true)}}
 async function loadStudents(){announce('جاري تحميل قائمة الطلاب...');try{
  const d=await api('students',{query:$('studentSearch').value.trim(),offset:page*100,limit:100});studentsTotal=Number(d.total||0);announce('');
- $('studentTable').innerHTML=tbl(['الطالب','المجموعة','الأسئلة المجربة','أخطاء البداية','صح أول مرة','تم تصحيحها','لم تكتمل','التقرير'],safeRows(d.students).map(x=>'<tr class="studentRow" data-user="'+esc(x.user_id)+'"><td><b>'+esc(x.full_name||'—')+'</b><div class="small muted">'+esc(x.student_code||'')+'</div></td><td>'+esc(x.group_code||'—')+'</td><td>'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+'</span></td><td>'+pct(x.first_correct,x.attempted)+'</td><td>'+fmt(x.corrected)+'</td><td>'+fmt(x.unfinished)+'</td><td><button class="btn" data-open="'+esc(x.user_id)+'">فتح</button></td></tr>'));
+ $('studentTable').innerHTML=tbl(['الطالب','المجموعة','الأسئلة المجربة','أخطاء البداية','صح أول مرة','تصحيح مستقل','غير مكتملة','التقرير'],safeRows(d.students).map(x=>'<tr class="studentRow" data-user="'+esc(x.user_id)+'"><td><b>'+esc(x.full_name||'—')+'</b><div class="small muted">'+esc(x.student_code||'')+'</div></td><td>'+esc(x.group_code||'—')+'</td><td>'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+'</span></td><td>'+pct(x.first_correct,x.attempted)+'</td><td>'+fmt(x.corrected)+'</td><td>'+fmt(x.unfinished)+'</td><td><button class="btn" data-open="'+esc(x.user_id)+'">فتح</button></td></tr>'));
  $('studentTable').querySelectorAll('[data-user]').forEach(tr=>tr.addEventListener('click',()=>openStudent(tr.dataset.user)));
  $('pageInfo').textContent='نتيجة '+(studentsTotal?fmt(page*100+1)+'–'+fmt(Math.min(studentsTotal,(page+1)*100)):'0')+' من '+fmt(studentsTotal);
  $('prevPage').disabled=page===0;$('nextPage').disabled=(page+1)*100>=studentsTotal;
  }catch(e){announce(e.message,true)}}
-function questionState(q){if(q.wrong_parts>0)return q.resolved_parts>=q.expected_parts?'تم تصحيح الخطأ لاحقًا':'خطأ أول لم يكتمل';if(q.correct_first_parts>=q.expected_parts)return 'صح من أول مرة';return 'غير مكتمل'}
+function questionState(q){if(q.wrong_parts>0)return q.used_reveal?'استعان بإظهار الإجابة':q.resolved_parts>=q.expected_parts?'صحح خطأه لاحقًا':'خطأ أول لم يكتمل';if(q.correct_first_parts>=q.expected_parts)return 'صح من أول مرة';return 'غير مكتمل'}
 async function openStudent(id){selectedId=id;announce('جارٍ تحميل تقرير الطالب...');try{
  selected=await api('student',{user_id:id});$('studentName').textContent=selected.profile.full_name||'ملف الطالب';
  $('studentInfo').textContent=[selected.profile.student_code,selected.profile.group_code,selected.profile.center_name].filter(Boolean).join(' · ');
- $('studentStats').innerHTML=stat('الأسئلة المجربة',selected.summary.attempted)+stat('أخطاء أول محاولة',selected.summary.wrong)+stat('صح أول مرة',selected.summary.first_correct)+stat('تم تصحيح خطئها',selected.summary.corrected,'لا تلغي الأخطاء الأولى');
+ $('studentStats').innerHTML=stat('الأسئلة المجربة',selected.summary.attempted)+stat('أخطاء أول محاولة',selected.summary.wrong)+stat('صح أول مرة',selected.summary.first_correct)+stat('تم تصحيح الخطأ',selected.summary.corrected,'دون إظهار الإجابة');
  $('questionStatus').value='wrong';renderDetails();announce('');current='detail';['overviewView','studentsView','detailView'].forEach(k=>$(k).classList.toggle('hidden',k!=='detailView'));
  window.history.replaceState(null,'',location.pathname+'?student='+encodeURIComponent(id));
  window.scrollTo({top:0,behavior:'instant'});
