@@ -6,6 +6,9 @@
 <title>منصة تدريبات الفيزياء — إدارة الطلاب | مستر يوسف رزق</title>
 <style>
 :root{font-family:Arial,"Noto Sans Arabic",sans-serif;background:#f5f7fb;color:#172033}*{box-sizing:border-box}body{margin:0;background:#f5f7fb}.wrap{max-width:1180px;margin:auto;padding:20px 14px 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.brand h1{font-size:22px;margin:0}.brand p{margin:5px 0 0;color:#667085;font-size:13px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:17px;padding:18px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.c12{grid-column:span 12}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,textarea,select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:10px 11px;font:inherit;background:#fff}input[readonly]{background:#f8fafc;color:#475467}textarea{min-height:180px;resize:vertical;direction:ltr;text-align:left}.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:#1d4ed8;color:#fff}.secondary{background:#eef2ff;color:#1d4ed8}.danger{background:#fff1f2;color:#be123c}.hidden{display:none!important}.muted{color:#667085}.small{font-size:12px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.msg{padding:11px 13px;border-radius:10px;margin-bottom:12px}.ok{background:#ecfdf3;color:#027a48}.err{background:#fff1f3;color:#be123c}.row{display:grid;grid-template-columns:100px minmax(260px,1fr) 95px 80px 110px 320px;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eaecf0}.row:last-child{border:0}.statusOn{color:#067647}.statusOff{color:#b42318}.stat{padding:12px;background:#f8fafc;border:1px solid #e4e7ec;border-radius:12px}.stat b{display:block;font-size:22px}.link{color:#1d4ed8;text-decoration:none;font-weight:800}.authbox{max-width:520px;margin:50px auto}.bulkResult{margin-top:12px;padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e4e7ec}.codehint{direction:ltr;text-align:left;font-family:monospace;background:#f8fafc;border-radius:10px;padding:10px;white-space:pre-wrap}.profileBtn{background:#172033;color:#fff}.searchBox{width:340px}.credential{margin-top:14px;padding:15px;border:1px solid #b7d7c5;background:#f0fdf4;border-radius:13px}.credential h3{margin:0 0 8px;font-size:16px}.credentialGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.credentialItem{background:#fff;border:1px solid #d1fadf;border-radius:10px;padding:10px}.credentialItem span{display:block;font-size:12px;color:#667085;margin-bottom:5px}.credentialItem strong{font-family:monospace;direction:ltr;display:block;font-size:17px}.notice{background:#fff8e7;border:1px solid #f2d49b;color:#7a4e00;border-radius:10px;padding:10px 12px;margin-top:12px}.phoneLine{margin-top:4px;color:#667085;font-size:12px}.phoneLine b{color:#344054}.formHint{margin-top:6px;color:#667085;font-size:12px}.autoCode{background:#eef6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:10px;padding:10px 12px;margin-top:12px}@media(max-width:900px){.row{grid-template-columns:1fr}.searchBox{width:100%}}@media(max-width:800px){.c6,.c4,.c3{grid-column:span 12}.top{align-items:flex-start;flex-direction:column}.credentialGrid{grid-template-columns:1fr}}
+
+.groupTable{display:grid;gap:9px;margin-top:14px}.groupItem{display:grid;grid-template-columns:minmax(120px,.5fr) minmax(150px,1fr) minmax(160px,1fr) 80px 90px 85px;gap:10px;align-items:center;padding:12px 14px;border:1px solid #e4e7ec;border-radius:12px;background:#f8fafc}.groupItem .muted{font-size:12px}.editInfo{background:#f0f7ff;border:1px solid #cfe0ff;padding:12px;border-radius:12px;font-size:12px;color:#24466f;line-height:1.9}.row{grid-template-columns:100px minmax(230px,1fr) 85px 70px 90px 400px}@media(max-width:1000px){.groupItem{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:900px){.row{grid-template-columns:1fr}}@media(max-width:600px){.groupItem{grid-template-columns:1fr}.groupItem .btn{width:100%}}.editStudent{background:#e5f0ff;color:#214f86}.dangerText{color:#b42318;font-size:12px}
+
 </style>
 </head>
 <body>
@@ -60,8 +63,36 @@
       <div id="bulkResult" class="bulkResult hidden"></div>
     </div>
 
+
+    <section class="card permissionEditOnly" id="groupManageCard">
+      <div class="toolbar" style="justify-content:space-between"><div><h2 style="margin:0;font-size:19px">إدارة المجموعات</h2><p class="muted small" style="margin:6px 0">أضف مجموعة، أو عدّل السنتر والصف وحالتها. كود المجموعة لا يتغير بعد إنشائها حفاظًا على السجلات.</p></div><button id="newGroupBtn" class="btn secondary">+ مجموعة جديدة</button></div>
+      <div class="editInfo" id="groupModeInfo" style="margin:14px 0">مجموعة جديدة: أدخل كودًا مثل N3-C أو K2-C، ثم السنتر والصف.</div>
+      <div class="grid">
+        <div class="c3"><label for="manageGroupCode">كود المجموعة</label><input id="manageGroupCode" type="text" dir="ltr" maxlength="24" placeholder="N3-C" style="text-transform:uppercase"></div>
+        <div class="c3"><label for="manageGroupCenter">السنتر</label><input id="manageGroupCenter" type="text" maxlength="120" list="centerSuggestions" placeholder="ذا فرست - ناهيا"><datalist id="centerSuggestions"></datalist></div>
+        <div class="c3"><label for="manageGroupGrade">الصف الدراسي</label><select id="manageGroupGrade"><option value="">— اختر الصف —</option><option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option><option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option></select></div>
+        <div class="c3"><label for="manageGroupStatus">حالة المجموعة</label><select id="manageGroupStatus"><option value="true">نشطة</option><option value="false">موقوفة</option></select></div>
+        <div class="c12 toolbar"><button id="saveGroupBtn" class="btn primary">إضافة المجموعة</button><button id="cancelGroupEdit" class="btn secondary hidden">إلغاء التعديل</button></div>
+      </div>
+      <div id="groupRows" class="groupTable"></div>
+    </section>
+
     <div class="grid" id="stats" style="margin-bottom:14px"></div>
 
+
+    <section class="card hidden permissionEditOnly" id="editStudentCard">
+      <div class="toolbar" style="justify-content:space-between"><h2 style="margin:0;font-size:19px">تعديل بيانات الطالب</h2><button id="cancelStudentEdit" class="btn secondary">إغلاق</button></div>
+      <p class="editInfo">يمكنك تعديل الاسم والتليفونات والمجموعة. سيظل كود الطالب وبيانات الدخول والدرجات ومحاولاته السابقة كما هي. النقل بين المجموعات يبدأ من تاريخ التعديل.</p>
+      <div class="grid" style="margin-top:12px">
+        <div class="c4"><label>كود الطالب (ثابت)</label><input id="editStudentCode" readonly></div>
+        <div class="c4"><label>اسم الطالب</label><input id="editStudentName" maxlength="200"></div>
+        <div class="c4"><label>المجموعة</label><select id="editStudentGroup"></select></div>
+        <div class="c4"><label>رقم تليفون الطالب</label><input id="editStudentPhone" type="tel" maxlength="40"></div>
+        <div class="c4"><label>رقم تليفون ولي الأمر</label><input id="editGuardianPhone" type="tel" maxlength="40"></div>
+        <div class="c4"><label>السنتر والصف (تلقائي)</label><input id="editStudentAuto" readonly></div>
+        <div class="c12 toolbar"><button id="saveStudentEdit" class="btn primary">حفظ تعديل الطالب</button></div>
+      </div>
+    </section>
     <div class="card">
       <div class="toolbar" style="justify-content:space-between">
         <div><h2 style="margin:0;font-size:19px">الطلاب</h2><div class="small muted" style="margin-top:4px">اضغط «ملف الطالب» لعرض جميع المحاولات. زر كلمة المرور يولّد كلمة مرور جديدة ويعرضها لك فورًا.</div></div>
@@ -80,10 +111,10 @@ const KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
 const sb=createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let students=[],groups=[],lastBulk={created:[],failed:[]},lastCredential=null;
+let students=[],groups=[],lastBulk={created:[],failed:[]},lastCredential=null,editingGroupId=null,editingStudentId=null;
 
 function show(t,type='ok'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(t)+'</div>';setTimeout(()=>$('msg').innerHTML='',5000)}
-async function fn(body){const{data,error}=await sb.functions.invoke('admin-student',{body});if(error)throw new Error(error.message||'تعذر الاتصال');if(data?.error)throw new Error(data.message||data.error);return data}
+async function fn(body){const{data,error}=await sb.functions.invoke('admin-student',{body});if(error){let message=error.message||'تعذر الاتصال';try{const details=await error.context?.json();message=details?.message||message}catch{}throw new Error(message)}if(data?.error)throw new Error(data.message||data.error);return data}
 
 function showCredential(code,password,title='بيانات الدخول'){
   lastCredential={code,password};
@@ -99,13 +130,13 @@ $('copyCredentialBtn').onclick=async()=>{
 };
 
 function renderCenterOptions(){
-  const centers=[...new Set(groups.map(g=>g.center_name).filter(Boolean))];
+  const centers=[...new Set(groups.filter(g=>g.is_active).map(g=>g.center_name).filter(Boolean))];
   $('center').innerHTML='<option value="">— اختر السنتر —</option>'+centers.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join('');
   renderGroupOptions();
 }
 function renderGroupOptions(){
   const center=$('center').value;
-  const available=groups.filter(g=>!center||g.center_name===center);
+  const available=groups.filter(g=>g.is_active&&(!center||g.center_name===center));
   $('group').disabled=!center;
   $('group').innerHTML=!center?'<option value="">— اختر السنتر أولًا —</option>':'<option value="">— اختر المجموعة —</option>'+available.map(g=>'<option value="'+esc(g.group_code)+'">'+esc(g.group_code)+'</option>').join('');
   $('grade').value='';
@@ -122,14 +153,15 @@ $('group').onchange=syncGrade;
 $('loginBtn').onclick=async()=>{try{const{data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;if(data.user?.app_metadata?.role!=='admin'){await sb.auth.signOut();throw new Error('هذا الحساب ليس مديرًا.')}await openAdmin()}catch(e){show(e.message,'err')}};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();location.reload()};
 async function openAdmin(){$('authView').classList.add('hidden');$('adminView').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');await load()}
-async function load(){try{const d=await fn({action:'list_students'});students=d.students||[];groups=d.groups||[];renderCenterOptions();render()}catch(e){show(e.message,'err')}}
+async function load(){try{const d=await fn({action:'list_students'});students=d.students||[];groups=d.groups||[];renderCenterOptions();renderGroups();render()}catch(e){show(e.message,'err')}}
 
 function render(){
   const q=$('search').value.trim().toLowerCase();
   const rows=students.filter(s=>!q||[s.student_code,s.full_name,s.grade_level,s.center_name,s.group_code,s.student_phone,s.guardian_phone].some(v=>String(v||'').toLowerCase().includes(q)));
   const active=students.filter(s=>s.is_active).length;
   $('stats').innerHTML='<div class="c4 stat"><b>'+students.length+'</b><span class="small muted">إجمالي الطلاب</span></div><div class="c4 stat"><b>'+active+'</b><span class="small muted">نشط</span></div><div class="c4 stat"><b>'+students.reduce((n,s)=>n+Number(s.attempt_count||0),0)+'</b><span class="small muted">إجمالي المحاولات</span></div>';
-  $('rows').innerHTML=rows.length?rows.map(s=>'<div class="row"><b>'+esc(s.student_code)+'</b><div><b>'+esc(s.full_name)+'</b><div class="small muted">'+esc(s.grade_level||'—')+' · '+esc(s.center_name||'—')+' · '+esc(s.group_code||'—')+'</div><div class="phoneLine"><b>الطالب:</b> '+esc(s.student_phone||'—')+' &nbsp; <b>ولي الأمر:</b> '+esc(s.guardian_phone||'—')+'</div></div><div><span class="'+(s.is_active?'statusOn':'statusOff')+'">'+(s.is_active?'● نشط':'● موقوف')+'</span></div><div><b>'+Number(s.attempt_count||0)+'</b><div class="small muted">محاولة</div></div><div><b>'+(s.average_percentage==null?'—':Number(s.average_percentage)+'%')+'</b><div class="small muted">متوسط</div></div><div class="toolbar"><a class="btn profileBtn" href="student-detail-admin.html?user_id='+encodeURIComponent(s.user_id)+'">ملف الطالب</a><button class="btn secondary reset" data-id="'+s.user_id+'" data-code="'+esc(s.student_code)+'">كلمة مرور جديدة</button><button class="btn '+(s.is_active?'danger':'primary')+' toggle" data-id="'+s.user_id+'" data-active="'+s.is_active+'">'+(s.is_active?'إيقاف':'تفعيل')+'</button></div></div>').join(''):'<p class="muted">لا يوجد طلاب.</p>';
+  $('rows').innerHTML=rows.length?rows.map(s=>'<div class="row"><b>'+esc(s.student_code)+'</b><div><b>'+esc(s.full_name)+'</b><div class="small muted">'+esc(s.grade_level||'—')+' · '+esc(s.center_name||'—')+' · '+esc(s.group_code||'—')+'</div><div class="phoneLine"><b>الطالب:</b> '+esc(s.student_phone||'—')+' &nbsp; <b>ولي الأمر:</b> '+esc(s.guardian_phone||'—')+'</div></div><div><span class="'+(s.is_active?'statusOn':'statusOff')+'">'+(s.is_active?'● نشط':'● موقوف')+'</span></div><div><b>'+Number(s.attempt_count||0)+'</b><div class="small muted">محاولة</div></div><div><b>'+(s.average_percentage==null?'—':Number(s.average_percentage)+'%')+'</b><div class="small muted">متوسط</div></div><div class="toolbar"><a class="btn profileBtn" href="student-detail-admin.html?user_id='+encodeURIComponent(s.user_id)+'">ملف الطالب</a><button class="btn editStudent permissionEditOnly" data-id="'+s.user_id+'">تعديل البيانات</button><button class="btn secondary reset" data-id="'+s.user_id+'" data-code="'+esc(s.student_code)+'">كلمة مرور جديدة</button><button class="btn '+(s.is_active?'danger':'primary')+' toggle" data-id="'+s.user_id+'" data-active="'+s.is_active+'">'+(s.is_active?'إيقاف':'تفعيل')+'</button></div></div>').join(''):'<p class="muted">لا يوجد طلاب.</p>';
+  document.querySelectorAll('.editStudent').forEach(b=>b.onclick=()=>openStudentEdit(b.dataset.id));
   document.querySelectorAll('.reset').forEach(b=>b.onclick=()=>resetPassword(b.dataset.id,b.dataset.code));
   document.querySelectorAll('.toggle').forEach(b=>b.onclick=()=>toggleStudent(b.dataset.id,b.dataset.active==='true'));
 }
@@ -192,6 +224,77 @@ async function resetPassword(id,code){
   try{const d=await fn({action:'reset_password',user_id:id});showCredential(code,d.password,'تم إنشاء كلمة مرور جديدة');show('تم تغيير كلمة المرور وإظهار الجديدة أمامك.')}catch(e){show(e.message,'err')}
 }
 async function toggleStudent(id,isActive){if(!confirm(isActive?'إيقاف حساب الطالب؟':'تفعيل حساب الطالب؟'))return;try{await fn({action:'set_active',user_id:id,is_active:!isActive});show('تم تحديث حالة الطالب.');await load()}catch(e){show(e.message,'err')}}
+
+
+function renderGroups(){
+ const names=[...new Set(groups.map(g=>g.center_name).filter(Boolean))];$('centerSuggestions').innerHTML=names.map(n=>'<option value="'+esc(n)+'"></option>').join('');
+ $('groupRows').innerHTML=groups.length?groups.map(g=>
+ '<div class="groupItem"><b dir="ltr">'+esc(g.group_code)+'</b><span>'+esc(g.center_name||'—')+'</span><span>'+esc(g.grade_level||'—')+'</span><span class="'+(g.is_active?'statusOn':'statusOff')+'">'+(g.is_active?'نشطة':'موقوفة')+'</span><span class="small muted">'+Number(g.active_students||0)+' طالب نشط</span><button class="btn secondary groupEdit" data-id="'+esc(g.id)+'">تعديل</button></div>'
+ ).join(''):'<p class="muted">لا توجد مجموعات مسجلة.</p>';
+ document.querySelectorAll('.groupEdit').forEach(b=>b.onclick=()=>openGroupEdit(b.dataset.id));
+}
+function resetGroupEditor(){
+ editingGroupId=null;
+ $('manageGroupCode').value='';$('manageGroupCode').readOnly=false;
+ $('manageGroupCenter').value='';$('manageGroupGrade').value='';
+ $('manageGroupStatus').value='true';$('manageGroupStatus').disabled=true;
+ $('saveGroupBtn').textContent='إضافة المجموعة';$('cancelGroupEdit').classList.add('hidden');
+ $('groupModeInfo').textContent='مجموعة جديدة: أدخل كودًا مثل N3-C أو K2-C، ثم السنتر والصف.';
+}
+function openGroupEdit(id){
+ const g=groups.find(x=>x.id===id);if(!g)return;
+ editingGroupId=id;$('manageGroupCode').value=g.group_code;$('manageGroupCode').readOnly=true;
+ $('manageGroupCenter').value=g.center_name||'';$('manageGroupGrade').value=g.grade_level||'';$('manageGroupStatus').value=String(g.is_active);$('manageGroupStatus').disabled=false;
+ $('saveGroupBtn').textContent='حفظ تعديلات المجموعة';$('cancelGroupEdit').classList.remove('hidden');
+ $('groupModeInfo').textContent='تعديل المجموعة '+g.group_code+' — كود المجموعة ثابت. تغيير السنتر أو الصف سيحدّث بيانات طلاب المجموعة الحاليين دون مساس بسجلات الحصص السابقة.';
+ $('groupManageCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('newGroupBtn').onclick=resetGroupEditor;
+$('cancelGroupEdit').onclick=resetGroupEditor;
+$('manageGroupStatus').disabled=true;
+$('saveGroupBtn').onclick=async()=>{
+ const code=$('manageGroupCode').value.trim().toUpperCase(),center=$('manageGroupCenter').value.trim(),grade=$('manageGroupGrade').value,active=$('manageGroupStatus').value==='true';
+ if(!code||!center||!grade){show('أدخل كود المجموعة والسنتر والصف.','err');return}
+ if(editingGroupId&&groups.find(g=>g.id===editingGroupId)?.grade_level!==grade){if(!confirm('تغيير الصف سيغيّر الصف الظاهر لجميع طلاب هذه المجموعة حاليًا. هل تريد المتابعة؟'))return}
+ try{
+   $('saveGroupBtn').disabled=true;
+   const d=editingGroupId?await fn({action:'update_group',group_id:editingGroupId,center_name:center,grade_level:grade,is_active:active}):await fn({action:'create_group',group_code:code,center_name:center,grade_level:grade});
+   resetGroupEditor();await load();show('تم حفظ المجموعة '+d.group.group_code+' بنجاح.');
+ }catch(e){show(e.message,'err')}finally{$('saveGroupBtn').disabled=false}
+};
+function fillStudentGroups(selected){
+ const opts=groups.filter(g=>g.is_active||g.group_code===selected);
+ $('editStudentGroup').innerHTML=opts.map(g=>'<option value="'+esc(g.group_code)+'">'+esc(g.group_code)+' — '+esc(g.center_name||'')+'</option>').join('');
+ $('editStudentGroup').value=selected||'';
+ updateStudentGroupMeta();
+}
+function updateStudentGroupMeta(){
+ const g=groups.find(x=>x.group_code===$('editStudentGroup').value);
+ $('editStudentAuto').value=g?(g.center_name||'')+' — '+(g.grade_level||''):'';
+}
+$('editStudentGroup').onchange=updateStudentGroupMeta;
+function openStudentEdit(id){
+ const s=students.find(x=>x.user_id===id);if(!s)return;
+ editingStudentId=id;
+ $('editStudentCode').value=s.student_code||'';
+ $('editStudentName').value=s.full_name||'';
+ $('editStudentPhone').value=s.student_phone||'';
+ $('editGuardianPhone').value=s.guardian_phone||'';
+ fillStudentGroups(s.group_code);
+ $('editStudentCard').classList.remove('hidden');$('editStudentCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('cancelStudentEdit').onclick=()=>{$('editStudentCard').classList.add('hidden');editingStudentId=null};
+$('saveStudentEdit').onclick=async()=>{
+ if(!editingStudentId)return;
+ const previous=students.find(s=>s.user_id===editingStudentId),toGroup=$('editStudentGroup').value;
+ if(previous?.group_code!==toGroup&&!confirm('سيتم نقل الطالب إلى '+toGroup+' مع الاحتفاظ بسجلاته ودرجاته السابقة. متابعة؟'))return;
+ try{
+  $('saveStudentEdit').disabled=true;
+  await fn({action:'update_student',user_id:editingStudentId,full_name:$('editStudentName').value,student_phone:$('editStudentPhone').value,guardian_phone:$('editGuardianPhone').value,group_code:toGroup});
+  $('editStudentCard').classList.add('hidden');editingStudentId=null;
+  await load();show('تم حفظ تعديلات الطالب بنجاح.');
+ }catch(e){show(e.message,'err')}finally{$('saveStudentEdit').disabled=false}
+};
 
 $('search').oninput=render;
 $('refreshBtn').onclick=load;
