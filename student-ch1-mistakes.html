@@ -84,7 +84,7 @@ const qs=new URLSearchParams(location.search);
 let original=[],shown=[],selectedKey=null,random=false,loading=false;
 
 function key(q){return q.lecture+':'+q.track+':'+q.bank_no}
-function originalUrl(q){const file='lecture'+q.lecture+'-workshop.html';const p=new URLSearchParams({track:q.track,bank:String(q.bank_no),from:'mistakes'});return './'+file+'?'+p.toString()}
+function originalUrl(q){const file=q.lecture===3?'student-l3-question.html':'lecture'+q.lecture+'-workshop.html';const p=new URLSearchParams({track:q.track,bank:String(q.bank_no),from:'mistakes'});return './'+file+'?'+p.toString()}
 function count(all,pred){return all.filter(pred).length}
 function stat(label,value){return '<div class="stat"><span>'+esc(label)+'</span><strong>'+Number(value||0).toLocaleString('ar-EG')+'</strong></div>'}
 function error(msg){$('errorBox').innerHTML=msg?'<div class="error">'+esc(msg)+'</div>':''}
