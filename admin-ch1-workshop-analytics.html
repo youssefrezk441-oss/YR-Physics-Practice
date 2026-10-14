@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تحليلات ورش الفصل الأول — مستر يوسف رزق</title>
+<style>
+:root{font-family:Arial,"Noto Sans Arabic",sans-serif;color:#16324f;background:#f5f7fa}
+*{box-sizing:border-box}body{margin:0;background:#f5f7fa}button,input,select{font:inherit}
+.wrap{max-width:1250px;margin:auto;padding:22px 16px 50px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:26px;margin:3px 0 6px}h2{font-size:20px;margin:0 0 14px}h3{font-size:16px;margin:0 0 10px}
+.muted{color:#64748b}.small{font-size:12px}.sub{font-size:13px;line-height:1.8;color:#607083}
+.card{background:white;border:1px solid #e0e7ef;border-radius:16px;padding:18px;margin-bottom:16px}
+.hero{background:linear-gradient(125deg,#16324f,#3166a8);color:white;border:0}.hero p{color:#e8effc;line-height:1.9;margin-bottom:0}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid #d3dfea;color:#16324f;background:white;cursor:pointer;text-decoration:none;display:inline-block;font-weight:700}
+.btn.primary{background:#3166a8;color:white;border-color:#3166a8}.btn.active{background:#16324f;color:#fff}.btn:disabled{opacity:.55;cursor:wait}
+.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+select,input{min-width:0;width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px;background:white;color:#172033}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{border:1px solid #e2e8f0;border-radius:13px;padding:16px;background:#fbfdff}.metric strong{display:block;font-size:28px;color:#16324f;margin:5px 0}.metric span{color:#64748b;font-size:13px}.metric small{color:#64748b}
+.section{margin-top:20px}.links{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.workshopLink{padding:15px;border-radius:13px;border:1px solid #dbe5f1;text-decoration:none;color:#16324f;background:#f8fbff;line-height:1.8}
+.workshopLink b{display:block;color:#254d86}.workshopLink span{font-size:12px;color:#607083}
+.tablewrap{max-width:100%;overflow:auto;border:1px solid #e5eaf0;border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:690px}
+th,td{padding:11px 12px;text-align:right;border-bottom:1px solid #e9eef4;vertical-align:middle}
+th{background:#f1f6fb;color:#1b3e67;font-weight:800;white-space:nowrap}
+tbody tr:hover{background:#f9fbff}tbody tr:last-child td{border-bottom:0}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:30px;font-size:12px;font-weight:700;background:#e9f1fa;color:#24518b}
+.pill.warn{background:#fff3df;color:#995c09}.pill.bad{background:#fce9ec;color:#a32a43}.pill.good{background:#e9f7ee;color:#186a3e}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.hidden{display:none!important}
+.message{padding:13px;border:1px solid #ead8aa;background:#fffaf0;border-radius:10px;margin:12px 0}
+.error{border-color:#ffd2d9;background:#fff1f3;color:#a52b40}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.studentRow{cursor:pointer}
+.detailTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+hr{border:0;border-top:1px solid #e6edf5;margin:20px 0}
+#loginView{max-width:480px;margin:80px auto}.loginFields{display:grid;gap:12px}
+.toolbar a:hover,.btn:hover,.workshopLink:hover{border-color:#3166a8}
+@media(max-width:850px){.grid,.links{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
+@media(max-width:540px){h1{font-size:23px}.grid,.links,.filters{grid-template-columns:1fr}.metric strong{font-size:24px}.wrap{padding:15px 10px}.card{padding:14px}}
+@media print{
+ body{background:white}.wrap{max-width:100%;padding:0}
+ .noPrint,header,.tabs,.filters,.links,#overviewView,#studentsView{display:none!important}
+ #detailView,.card{display:block!important;border:0;box-shadow:none}
+ .tablewrap{overflow:visible}table{min-width:0;font-size:10px}th,td{padding:6px}
+ h1,h2{page-break-after:avoid}tr{break-inside:avoid}
+}
+</style>
+</head>
+<body><div class="wrap">
+<section id="loginView" class="card hidden"><h2>دخول الإدارة</h2><div class="loginFields">
+<label>البريد الإلكتروني<input type="email" id="email" autocomplete="username"></label>
+<label>كلمة المرور<input type="password" id="password" autocomplete="current-password"></label>
+<button id="loginBtn" class="btn primary">تسجيل الدخول</button></div><div id="loginMsg"></div></section>
+<section id="app" class="hidden">
+<header><div><div class="small muted">منصة مستر يوسف رزق · الصف الثالث الثانوي</div><h1>تحليلات ورش الفصل الأول</h1></div><div class="toolbar noPrint"><a href="./" class="btn">الرئيسية</a><button id="refresh" class="btn">تحديث التحليل</button><button id="logoutBtn" class="btn">خروج</button></div></header>
+<section class="card hero noPrint"><h2>الفهم من أول محاولة، وليس الدرجة النهائية فقط</h2><p>يُصنَّف السؤال على أنه موضع خطأ إذا أخطأ الطالب في أول محاولة لأي جزء منه، حتى إذا صححه لاحقًا. السؤال الذي لم يبدأه لا يُعد خطأ، وعدم الإكمال يُعرض بصورة مستقلة.</p></section>
+<section class="card noPrint">
+<div class="filters">
+<div><label for="lecture">المحاضرة</label><select id="lecture"><option value="0">الفصل الأول كاملًا</option><option value="3">الورشة الثالثة</option><option value="4">الورشة الرابعة</option><option value="5">الورشة الخامسة</option><option value="6">الورشة السادسة</option></select></div>
+<div><label for="track">نوع التدريب</label><select id="track"><option value="all">الحصة والتدريب المنزلي</option><option value="class">ورشة الحصة</option><option value="home">التدريب المنزلي</option></select></div>
+<div><label for="group">المجموعة</label><select id="group"><option value="">كل المجموعات</option></select></div>
+<button id="reset" class="btn">إعادة التعيين</button>
+</div></section>
+<div id="notice" role="status" aria-live="polite"></div>
+<div class="tabs noPrint"><button class="btn active" data-tab="overview">التحليل المجمع</button><button class="btn" data-tab="students">تقارير الطلاب</button></div>
+<section id="overviewView">
+<div id="stats" class="grid"></div>
+<div class="card section"><h2>التحليل المنفصل لكل ورشة</h2>
+<div class="links noPrint" id="workshopLinks">
+<a class="workshopLink" href="admin-l3-workshop-analytics.html"><b>ورشة المحاضرة الثالثة</b><span>تحليل الطلاب والأسئلة والمهارات</span></a>
+<a class="workshopLink" href="admin-l4-workshop-analytics.html"><b>ورشة المحاضرة الرابعة</b><span>تحليل الطلاب والأسئلة والمهارات</span></a>
+<a class="workshopLink" href="admin-l5-workshop-analytics.html"><b>ورشة المحاضرة الخامسة</b><span>تحليل الطلاب والأسئلة والمهارات</span></a>
+<a class="workshopLink" href="admin-l6-workshop-analytics.html"><b>ورشة المحاضرة السادسة</b><span>تحليل الطلاب والأسئلة والمهارات</span></a>
+</div><h3 class="section">مقارنة الحصة والتدريب المنزلي</h3><div class="tablewrap" id="workshopTable"></div></div>
+<div class="two"><div class="card"><h2>الأفكار الأكثر احتياجًا للمراجعة</h2><p class="sub">ترتيب حسب عدد الطلاب والأسئلة التي ظهر فيها خطأ أولي؛ النسبة محسوبة من الأسئلة التي تمت تجربتها.</p><div class="tablewrap" id="skillsTable"></div></div>
+<div class="card"><h2>الأسئلة الأعلى صعوبة فعلية</h2><p class="sub">أسئلة حاولها ثلاثة طلاب على الأقل؛ الترتيب حسب نسبة الخطأ في المحاولة الأولى.</p><div class="tablewrap" id="hardTable"></div></div></div>
+<div class="card"><h2>مقارنة المجموعات</h2><div class="tablewrap" id="groupsTable"></div></div>
+</section>
+<section id="studentsView" class="hidden">
+<div class="card"><div class="detailTitle"><h2>التقارير الفردية للطلاب</h2><div class="toolbar noPrint"><input id="studentSearch" placeholder="ابحث باسم الطالب أو الكود" aria-label="البحث عن طالب" style="width:260px"><button id="searchBtn" class="btn">بحث</button></div></div><p class="sub">افتح أي طالب لمشاهدة قائمة جميع الأسئلة التي لم يحلها صحيحة من أول محاولة، مع اسم الورشة ونوعها ورقم السؤال والفكرة.</p><div class="tablewrap" id="studentTable"></div><div class="toolbar noPrint" style="margin-top:12px"><button id="prevPage" class="btn">السابق</button><span id="pageInfo" class="muted small"></span><button id="nextPage" class="btn">التالي</button></div></div>
+</section>
+<section id="detailView" class="hidden">
+<div class="card"><div class="detailTitle"><div><h2 id="studentName" style="margin:0"></h2><p id="studentInfo" class="sub" style="margin:7px 0 0"></p></div><div class="toolbar noPrint"><button id="backStudents" class="btn">العودة للطلاب</button><button id="exportCsv" class="btn">تصدير CSV</button><button id="printReport" class="btn primary">طباعة التقرير</button></div></div></div>
+<div id="studentStats" class="grid"></div>
+<div class="card section"><div class="detailTitle"><h2>تقرير أخطاء المحاولة الأولى</h2><div class="toolbar noPrint"><label for="questionStatus">عرض</label><select id="questionStatus" style="width:auto"><option value="wrong">الأخطاء فقط</option><option value="unfinished">الأسئلة غير المكتملة</option><option value="all">جميع الأسئلة التي بدأها</option></select></div></div><p class="sub">رقم الورشة هو ترتيب ظهور السؤال في مسار الحصة أو التدريب المنزلي، ورقم البنك رقم السؤال الأصلي. «تم التصحيح» لا يلغي الخطأ الأول.</p><div class="tablewrap" id="detailTable"></div></div>
+</section>
+</section></div>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+import{loadAdminAccess,canView}from'./admin-access.js';
+const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('ar-EG'),pct=(a,b)=>b?(100*a/b).toFixed(1)+'%':'—';
+const lectureName=n=>'المحاضرة '+({3:'الثالثة',4:'الرابعة',5:'الخامسة',6:'السادسة'}[n]||n);
+const trackName=t=>t==='class'?'الحصة':'التدريب المنزلي';
+let current='overview',page=0,studentsTotal=0,selectedId=null,selected=null,loading=false;
+const filters=()=>({lecture:Number($('lecture').value),track:$('track').value,group_code:$('group').value});
+const safeRows=a=>Array.isArray(a)?a:[];
+const stat=(label,n,more='')=>'<div class="metric"><span>'+esc(label)+'</span><strong>'+fmt(n)+'</strong><small>'+esc(more)+'</small></div>';
+const tbl=(headers,rows)=>rows.length?'<table><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table>':'<div class="message">لا توجد بيانات مطابقة للفلاتر.</div>';
+function announce(message,error=false){$('notice').innerHTML=message?'<div class="message '+(error?'error':'')+'">'+esc(message)+'</div>':''}
+async function api(action,extra={}){const {data,error}=await sb.functions.invoke('admin-ch1-workshop-analytics',{body:{action,...filters(),...extra}});if(error)throw Error(error.message||'فشل الاتصال');if(data?.error)throw Error(data.message||data.error);return data}
+function nav(tab){current=tab;['overviewView','studentsView','detailView'].forEach(id=>$(id).classList.toggle('hidden',id!==tab+'View'));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='overview')loadOverview();else if(tab==='students')loadStudents()}
+async function loadOverview(){announce('جارٍ تحميل تحليل الفصل الأول...');try{
+ const d=await api('overview'),s=d.summary||{};announce('');
+ $('stats').innerHTML=stat('الطلاب المشاركون',s.participating_students,'في الورش المختارة')+stat('الأسئلة التي تمت تجربتها',s.attempted,'سؤال × طالب')+stat('أسئلة بها خطأ أول',s.wrong,pct(s.wrong,s.attempted)+' من المحاولات الأولى')+stat('أسئلة صحيحة من البداية',s.first_correct,pct(s.first_correct,s.attempted)+' من الأسئلة المجربة');
+ $('workshopTable').innerHTML=tbl(['الورشة','نوع التدريب','الطلاب','الأسئلة المجربة','الخطأ الأول','صح أول مرة','غير مكتملة'],safeRows(d.workshops).map(x=>'<tr><td><b>'+lectureName(x.lecture)+'</b></td><td>'+trackName(x.track)+'</td><td class="num">'+fmt(x.students)+'</td><td class="num">'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+' · '+pct(x.wrong,x.attempted)+'</span></td><td><span class="pill good">'+pct(x.first_correct,x.attempted)+'</span></td><td class="num">'+fmt(x.unfinished)+'</td></tr>'));
+ $('skillsTable').innerHTML=tbl(['المحاضرة · الفكرة','الخطأ','نسبة الخطأ'],safeRows(d.skills).map(x=>'<tr><td>'+lectureName(x.lecture)+'<div class="muted small">'+esc(x.skill_name||x.skill)+'</div></td><td class="num">'+fmt(x.wrong)+'</td><td><span class="pill warn">'+pct(x.wrong,x.attempted)+'</span></td></tr>'));
+ $('hardTable').innerHTML=tbl(['السؤال','عدد الطلاب','الخطأ الأول'],safeRows(d.hardest).map(x=>'<tr><td><b>'+lectureName(x.lecture)+' · '+trackName(x.track)+'</b><div class="small muted">ورشة: '+fmt(x.workshop_no)+' · بنك: '+fmt(x.bank_no)+'</div><div class="small muted">'+esc(x.subskill_name||x.skill_name||'')+'</div></td><td class="num">'+fmt(x.students)+'</td><td><span class="pill bad">'+fmt(x.wrong)+' · '+pct(x.wrong,x.students)+'</span></td></tr>'));
+ $('groupsTable').innerHTML=tbl(['المجموعة','المشاركون','الأسئلة المجربة','الخطأ الأول','نسبة الإجابة الصحيحة من أول مرة'],safeRows(d.groups).map(x=>'<tr><td><b>'+esc(x.group_code)+'</b></td><td>'+fmt(x.students)+'</td><td>'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+'</span></td><td>'+pct(x.first_correct,x.attempted)+'</td></tr>'));
+ const prev=$('group').value;$('group').innerHTML='<option value="">كل المجموعات</option>'+safeRows(d.groups).map(x=>'<option value="'+esc(x.group_code)+'">'+esc(x.group_code)+'</option>').join('');$('group').value=prev;
+ }catch(e){announce(e.message,true)}}
+async function loadStudents(){announce('جاري تحميل قائمة الطلاب...');try{
+ const d=await api('students',{query:$('studentSearch').value.trim(),offset:page*100,limit:100});studentsTotal=Number(d.total||0);announce('');
+ $('studentTable').innerHTML=tbl(['الطالب','المجموعة','الأسئلة المجربة','أخطاء البداية','صح أول مرة','تم تصحيحها','لم تكتمل','التقرير'],safeRows(d.students).map(x=>'<tr class="studentRow" data-user="'+esc(x.user_id)+'"><td><b>'+esc(x.full_name||'—')+'</b><div class="small muted">'+esc(x.student_code||'')+'</div></td><td>'+esc(x.group_code||'—')+'</td><td>'+fmt(x.attempted)+'</td><td><span class="pill bad">'+fmt(x.wrong)+'</span></td><td>'+pct(x.first_correct,x.attempted)+'</td><td>'+fmt(x.corrected)+'</td><td>'+fmt(x.unfinished)+'</td><td><button class="btn" data-open="'+esc(x.user_id)+'">فتح</button></td></tr>'));
+ $('studentTable').querySelectorAll('[data-user]').forEach(tr=>tr.addEventListener('click',()=>openStudent(tr.dataset.user)));
+ $('pageInfo').textContent='نتيجة '+(studentsTotal?fmt(page*100+1)+'–'+fmt(Math.min(studentsTotal,(page+1)*100)):'0')+' من '+fmt(studentsTotal);
+ $('prevPage').disabled=page===0;$('nextPage').disabled=(page+1)*100>=studentsTotal;
+ }catch(e){announce(e.message,true)}}
+function questionState(q){if(q.wrong_parts>0)return q.resolved_parts>=q.expected_parts?'تم تصحيح الخطأ لاحقًا':'خطأ أول لم يكتمل';if(q.correct_first_parts>=q.expected_parts)return 'صح من أول مرة';return 'غير مكتمل'}
+async function openStudent(id){selectedId=id;announce('جارٍ تحميل تقرير الطالب...');try{
+ selected=await api('student',{user_id:id});$('studentName').textContent=selected.profile.full_name||'ملف الطالب';
+ $('studentInfo').textContent=[selected.profile.student_code,selected.profile.group_code,selected.profile.center_name].filter(Boolean).join(' · ');
+ $('studentStats').innerHTML=stat('الأسئلة المجربة',selected.summary.attempted)+stat('أخطاء أول محاولة',selected.summary.wrong)+stat('صح أول مرة',selected.summary.first_correct)+stat('تم تصحيح خطئها',selected.summary.corrected,'لا تلغي الأخطاء الأولى');
+ $('questionStatus').value='wrong';renderDetails();announce('');current='detail';['overviewView','studentsView','detailView'].forEach(k=>$(k).classList.toggle('hidden',k!=='detailView'));
+ window.history.replaceState(null,'',location.pathname+'?student='+encodeURIComponent(id));
+ window.scrollTo({top:0,behavior:'instant'});
+ }catch(e){announce(e.message,true)}}
+function filteredQuestions(){if(!selected)return[];return safeRows(selected.questions).filter(q=>$('questionStatus').value==='wrong'?q.wrong_parts>0:$('questionStatus').value==='unfinished'?q.resolved_parts<q.expected_parts:true)}
+function renderDetails(){const q=filteredQuestions();
+ $('detailTable').innerHTML=tbl(['الورشة','القسم','رقم الورشة','رقم البنك','الفكرة والمهارة','حالة الحل','المحاولات'],q.map(x=>'<tr><td><b>'+lectureName(x.lecture)+'</b></td><td>'+trackName(x.track)+'</td><td><b>'+fmt(x.workshop_no)+'</b></td><td>'+fmt(x.bank_no)+'</td><td><b>'+esc(x.subskill_name||x.skill_name||'—')+'</b>'+(x.subskill_name?'<div class="small muted">'+esc(x.skill_name)+'</div>':'')+'</td><td><span class="pill '+(x.wrong_parts>0?'bad':x.resolved_parts<x.expected_parts?'warn':'good')+'">'+questionState(x)+'</span>'+(x.wrong_parts>0&&x.expected_parts>1?'<div class="small muted">أجزاء بها خطأ أول: '+fmt(x.wrong_parts)+'</div>':'')+'</td><td>'+fmt(x.total_attempts)+'</td></tr>'));
+}
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function exportCsv(){if(!selected)return;const head=['الاسم','كود الطالب','المحاضرة','نوع الورشة','رقم السؤال بالورشة','رقم السؤال بالبنك','المهارة','الفكرة','الحالة','أجزاء خاطئة أول مرة','إجمالي المحاولات'];
+ const data=filteredQuestions().map(q=>[selected.profile.full_name,selected.profile.student_code,lectureName(q.lecture),trackName(q.track),q.workshop_no,q.bank_no,q.skill_name,q.subskill_name||q.skill_name,questionState(q),q.wrong_parts,q.total_attempts]);
+ const blob=new Blob(['\uFEFF'+[head,...data].map(row=>row.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='chapter1-workshop-errors-'+(selected.profile.student_code||'student')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function start(){const {data:{session}}=await sb.auth.getSession();if(!session||session.user?.app_metadata?.role!=='admin'){$('loginView').classList.remove('hidden');return}
+ try{const context=await loadAdminAccess(sb);if(!canView(context,'students'))throw Error('هذا الحساب لا يملك صلاحية مشاهدة تحليل الطلاب.');$('loginView').classList.add('hidden');$('app').classList.remove('hidden');await loadOverview();const id=new URLSearchParams(location.search).get('student');if(id&&/^[a-f0-9-]{36}$/i.test(id))await openStudent(id)}catch(e){$('app').classList.add('hidden');$('loginView').classList.remove('hidden');$('loginMsg').textContent=e.message}}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>nav(b.dataset.tab));
+['lecture','track','group'].forEach(id=>$(id).onchange=()=>{page=0;selected=null;window.history.replaceState(null,'',location.pathname);current==='students'?loadStudents():nav('overview')});
+$('refresh').onclick=()=>current==='students'?loadStudents():current==='detail'&&selectedId?openStudent(selectedId):loadOverview();
+$('reset').onclick=()=>{$('lecture').value='0';$('track').value='all';$('group').value='';page=0;nav('overview')};
+$('searchBtn').onclick=()=>{page=0;loadStudents()};$('studentSearch').onkeydown=e=>{if(e.key==='Enter'){page=0;loadStudents()}};
+$('prevPage').onclick=()=>{if(page>0){page--;loadStudents()}};$('nextPage').onclick=()=>{if((page+1)*100<studentsTotal){page++;loadStudents()}};
+$('backStudents').onclick=()=>{window.history.replaceState(null,'',location.pathname);nav('students')};
+$('questionStatus').onchange=renderDetails;$('exportCsv').onclick=exportCsv;$('printReport').onclick=()=>window.print();
+$('logoutBtn').onclick=async()=>{await sb.auth.signOut();location.reload()};
+$('loginBtn').onclick=async()=>{try{$('loginBtn').disabled=true;$('loginMsg').textContent='';const{data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;if(data.user?.app_metadata?.role!=='admin')throw Error('يتطلب الدخول حساب إدارة');await start()}catch(e){$('loginMsg').textContent=e.message}finally{$('loginBtn').disabled=false}};
+start();
+</script>
+</body></html>
