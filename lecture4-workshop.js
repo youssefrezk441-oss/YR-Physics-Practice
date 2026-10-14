@@ -328,6 +328,16 @@ async function bootstrap() {
     app.questions = validatePublic(await response.json());
     readNavigation(); app.authorized = true;
     $('gate').hidden = true; $('welcome').hidden = false; notice();
+    // Personal mistake report deep-link: only a valid question in the authenticated track opens.
+    const p = new URLSearchParams(location.search); const t=p.get('track'), bank=Number(p.get('bank'));
+    if (['class','home'].includes(t)&&Number.isInteger(bank)&&bank>0) {
+      await enterTrack(t);
+      if(app.track===t&&app.authorized){
+        app.filter='all'; $('skill').value='all';
+        if(inTrack().some(q=>Number(q.bank_no)===bank))navigate(bank);
+        else notice('السؤال لم يعد متاحًا في هذا المسار. يمكنك اختيار سؤال آخر.');
+      }
+    }
   } catch (error) { $('gate-message').textContent = error.message; $('retry').hidden = false; $('login').hidden = false; }
 }
 document.querySelectorAll('[data-track]').forEach(button => button.onclick = () => enterTrack(button.dataset.track));
