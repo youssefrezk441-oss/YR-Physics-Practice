@@ -82,7 +82,7 @@ const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,
 const lect={3:'الثالثة',4:'الرابعة',5:'الخامسة',6:'السادسة'},trackLabel=t=>t==='class'?'الحصة':'التدريب المنزلي';
 const qs=new URLSearchParams(location.search);
 let original=[],shown=[],selectedKey=null,random=false,loading=false;
-let atlas={home:null,class:null},atlasImage=null,atlasUrl=null,atlasMeta=null,atlasTrack=null,atlasBusy=null;
+
 function key(q){return q.lecture+':'+q.track+':'+q.bank_no}
 function originalUrl(q){const file='lecture'+q.lecture+'-workshop.html';const p=new URLSearchParams({track:q.track,bank:String(q.bank_no),from:'mistakes'});return './'+file+'?'+p.toString()}
 function count(all,pred){return all.filter(pred).length}
@@ -134,40 +134,57 @@ function renderQuestion(){
  $('prev').disabled=idx===0;$('next').disabled=idx===shown.length-1;
  $('prev').onclick=()=>{selectedKey=key(shown[idx-1]);renderList();renderQuestion()};
  $('next').onclick=()=>{selectedKey=key(shown[idx+1]);renderList();renderQuestion()};
- if(q.lecture===3)showAtlasQuestion(q);else{const img=document.createElement('img');img.alt='السؤال '+q.bank_no;img.decoding='async';img.loading='eager';img.onerror=()=>{if($('visual')&&key(shown.find(x=>key(x)===selectedKey)||{})===key(q))$('visual').innerHTML='<div class="image-msg">تعذر تحميل صورة السؤال؛ افتحه من الزر الموجود بالأسفل.</div>'};const src=imageSrc(q);if(src){$('visual').replaceChildren(img);img.src=src}else $('visual').innerHTML='<div class="image-msg">صورة السؤال غير متاحة هنا. افتح السؤال في ورشته الأصلية.</div>'}
+ if(q.lecture===3)showOriginalL3Image(q);else{const img=document.createElement('img');img.alt='السؤال '+q.bank_no;img.decoding='async';img.loading='eager';img.onerror=()=>{if($('visual')&&key(shown.find(x=>key(x)===selectedKey)||{})===key(q))$('visual').innerHTML='<div class="image-msg">تعذر تحميل صورة السؤال؛ افتحه من الزر الموجود بالأسفل.</div>'};const src=imageSrc(q);if(src){$('visual').replaceChildren(img);img.src=src}else $('visual').innerHTML='<div class="image-msg">صورة السؤال غير متاحة هنا. افتح السؤال في ورشته الأصلية.</div>'}
 }
 async function mark(q,reviewed){if(loading)return;loading=true;error('');$('reviewBtn').disabled=true;try{
  const d=await call('mark',{lecture:q.lecture,track:q.track,bank_no:q.bank_no,reviewed});
  const originalQuestion=original.find(x=>key(x)===key(q));if(originalQuestion)originalQuestion.reviewed=d.reviewed;
  renderStats();applyFilters(false);
  }catch(e){error(e.message);$('reviewBtn').disabled=false}finally{loading=false}}
-async function loadAtlas(track){
- if(atlasTrack===track&&atlasImage?.complete&&atlasImage.naturalWidth)return;
- if(atlasBusy)await atlasBusy;
- if(atlasTrack===track&&atlasImage?.naturalWidth)return;
- atlasBusy=(async()=>{
-  const meta=atlas[track]||(await fetch('./assets/l3-workshop/'+track+'/meta.json?v=1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('تعذر تحميل فهرس الصور');return r.json()}));
-  atlas[track]=meta;
-  const n=track==='home'?18:6;
-  const fragments=await Promise.all(Array.from({length:n},(_,i)=>fetch('./assets/l3-workshop/'+track+'/chunk-'+String(i+1).padStart(2,'0')+'.txt?v=1',{cache:'force-cache'}).then(r=>{if(!r.ok)throw Error('تعذر تحميل الأطلس');return r.text()})));
-  const raw=atob(fragments.join('').trim()),bytes=new Uint8Array(raw.length);
-  for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
-  const url=URL.createObjectURL(new Blob([bytes],{type:'image/webp'})),img=new Image();img.src=url;await img.decode();
-  if(atlasUrl)URL.revokeObjectURL(atlasUrl);
-  atlasUrl=url;atlasImage=img;atlasTrack=track;atlasMeta=meta;
- })();
- try{await atlasBusy}finally{atlasBusy=null}
+/* Original lecture-three images are published as on-demand JSON assets:
+   156 source WebP images preserved verbatim, split into small groups. */
+const l3ImageCache=new Map();
+function lecture3AssetPath(bank){
+  const n=Number(bank),range=Math.floor((n-1)/20),label=String(range).padStart(2,'0');
+  if(range===8){
+    const part=n<=165?0:n<=169?1:n<=173?2:n<=176?3:4;
+    return './assets/l3-mistake-images/range-'+label+'-'+part+'.json';
+  }
+  if(range===17){
+    const part=n<=343?0:n<=353?1:2;
+    return './assets/l3-mistake-images/range-'+label+'-'+part+'.json';
+  }
+  return './assets/l3-mistake-images/range-'+label+'.json';
 }
-async function showAtlasQuestion(q){
+async function fetchLecture3Images(path){
+ if(!l3ImageCache.has(path)){
+   const task=fetch(path,{cache:'force-cache'}).then(async r=>{
+     if(!r.ok)throw Error('تعذر تحميل أصل صورة السؤال ('+r.status+').');
+     return await r.json();
+   }).catch(e=>{l3ImageCache.delete(path);throw e});
+   l3ImageCache.set(path,task);
+ }
+ return await l3ImageCache.get(path);
+}
+async function showOriginalL3Image(q){
  const requestedKey=key(q);
- try{await loadAtlas(q.track);if(selectedKey!==requestedKey)return;
-  const m=atlasMeta?.questions?.[String(q.bank_no)];
-  if(!m)throw Error('صورة السؤال غير موجودة في الأطلس');
-  const visual=$('visual');if(!visual)return;
-  const canvas=document.createElement('canvas');canvas.width=m.w;canvas.height=m.h;canvas.setAttribute('role','img');canvas.setAttribute('aria-label','صورة السؤال '+q.bank_no);
-  canvas.getContext('2d').drawImage(atlasImage,m.x,m.y,m.w,m.h,0,0,m.w,m.h);
-  visual.replaceChildren(canvas);
- }catch(e){if(selectedKey===requestedKey)$('visual').innerHTML='<div class="image-msg">تعذر عرض صورة السؤال هنا. افتح السؤال في الورشة الأصلية لمراجعته.</div>'}
+ const visual=$('visual');
+ if(!visual)return;
+ try{
+  const images=await fetchLecture3Images(lecture3AssetPath(q.bank_no));
+  if(selectedKey!==requestedKey)return;
+  const original=images[String(q.bank_no)];
+  if(typeof original!=='string'||!original.startsWith('data:image/webp;base64,'))throw Error('صورة السؤال غير موجودة في المصدر.');
+  const img=new Image();img.alt='الصورة الأصلية الكاملة لسؤال البنك '+q.bank_no;img.decoding='async';img.loading='eager';
+  img.onerror=()=>{if(selectedKey===requestedKey&&$('visual'))$('visual').innerHTML='<div class="image-msg">حدث خطأ في تحميل الصورة. <button type="button" id="imageRetry" class="btn">إعادة المحاولة</button></div>';const b=$('imageRetry');if(b)b.onclick=()=>{l3ImageCache.delete(lecture3AssetPath(q.bank_no));showOriginalL3Image(q)}};
+  visual.replaceChildren(img);
+  img.src=original;
+ }catch(e){
+  if(selectedKey===requestedKey&&$('visual')){
+   $('visual').innerHTML='<div class="image-msg">تعذر تحميل الصورة. <button type="button" id="imageRetry" class="btn">حاول مرة أخرى</button></div>';
+   const b=$('imageRetry');if(b)b.onclick=()=>showOriginalL3Image(q);
+  }
+ }
 }
 $('lectureFilter').onchange=()=>applyFilters();$('trackFilter').onchange=()=>applyFilters();$('reviewFilter').onchange=()=>applyFilters();$('search').oninput=()=>applyFilters();
 $('shuffle').onclick=()=>{random=!random;if(random)original.forEach(q=>q.__random=Math.random());$('shuffle').textContent=random?'↩ الترتيب الأصلي':'🔀 تنويع الترتيب';applyFilters()};
