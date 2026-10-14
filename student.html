@@ -211,7 +211,7 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace(mistakesGradeAnchor,"renderProfileMeta();const mistakesHomeButton=$('openChapterMistakes');if(mistakesHomeButton)mistakesHomeButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const b2Lesson1WorkshopButton=");
   const mistakesActionAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(mistakesActionAnchor))throw new Error('تعذر ربط فتح ورشة الأخطاء');
-  html=html.replace(mistakesActionAnchor,"const mistakesBtn=$('openChapterMistakes');if(mistakesBtn)mistakesBtn.onclick=()=>{location.href='student-ch1-mistakes.html'};"+mistakesActionAnchor);
+  html=html.replace(mistakesActionAnchor,"const mistakesBtn=$('openChapterMistakes');if(mistakesBtn)mistakesBtn.onclick=()=>{location.href='student-ch1-mistakes.html?v=20261014-images-2'};"+mistakesActionAnchor);
   html=html.replace('</style>',
     '.errorsHomeCard{border:1px solid #a7c2e3!important;background:linear-gradient(180deg,#eff6ff,#fff)!important}.errorsHomeCard .studentNavIcon{background:#dbeafe!important}.errorsHomeCard h3{color:#16324f}.errorsHomeCard p{line-height:1.9}html[data-theme="dark"] .errorsHomeCard{background:linear-gradient(180deg,#172a48,#111827)!important;border-color:#37689b!important}html[data-theme="dark"] .errorsHomeCard h3{color:#dbeafe}'+'</style>');
 
