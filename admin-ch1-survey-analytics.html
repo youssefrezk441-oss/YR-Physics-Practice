@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تحليل استبيان الفصل الأول — إدارة مستر يوسف رزق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#16324F;--blue:#3166A8;--green:#188465;--ink:#1c3044;--grey:#63758a;--line:#e3e9f2;--bg:#f4f7fb;--card:#fff;--red:#a34951}
+*{box-sizing:border-box}body{font-family:Cairo,Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);direction:rtl;text-align:right;margin:0;line-height:1.8}button,input,select{font:inherit}a{color:inherit}.shell{max-width:1290px;margin:0 auto;padding:24px 17px 50px}header{background:var(--navy);color:#fff}header .inner{max-width:1290px;margin:auto;padding:18px 17px;display:flex;gap:14px;justify-content:space-between;align-items:center}header h1{font-size:20px;font-weight:800;line-height:1.6;margin:0}header p{font-size:11px;margin:2px 0 0;color:#dbe7f3}header a{background:#ffffff1c;border:1px solid #ffffff48;text-decoration:none;padding:7px 14px;border-radius:10px;font-size:12px;font-weight:700}
+h2{font-size:19px;margin:0 0 10px;color:var(--navy);line-height:1.6}h3{font-size:15px;margin:0 0 9px;color:var(--navy)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px #16324f05}
+.hidden,[hidden]{display:none!important}.gate{max-width:510px;margin:56px auto;padding:30px;text-align:center}.gate p{font-size:13px;color:var(--grey)}
+.gate a{display:inline-block;background:var(--navy);color:white;border-radius:9px;padding:9px 18px;text-decoration:none;font-size:13px;font-weight:800}
+.kicker{color:var(--blue);font-size:12px;font-weight:800}.muted{color:var(--grey)}.tiny{font-size:11px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}.toolbar .left{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:10px;padding:9px 14px;border:1px solid #cad6e6;background:white;color:var(--navy);font-size:12px;font-weight:800;cursor:pointer}.btn:hover{background:#eef4fa}.btn.primary{background:var(--navy);color:white;border-color:var(--navy)}.btn.primary:hover{background:#234c78}.btn:disabled{opacity:.55;cursor:not-allowed}.status{font-size:11px;color:var(--grey)}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}.metric{padding:17px 18px;border-radius:16px;background:white;border:1px solid var(--line)}.metric .label{font-size:11px;color:var(--grey);font-weight:700}.metric .num{font-size:28px;color:var(--navy);font-weight:800;line-height:1.4}.metric .small{font-size:10px;color:#7691ac}.metric.good .num{color:var(--green)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}.tab{background:#e9f0f8;border:1px solid #d6e2f0;color:#35526e;font-size:12px;font-weight:800;padding:9px 17px;border-radius:11px;cursor:pointer}.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.section{display:none}.section.active{display:block}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.intro-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:15px}
+.bar{margin:10px 0 15px}.bar-heading{display:flex;gap:8px;justify-content:space-between;align-items:flex-start;font-size:12px;margin-bottom:5px}.bar-heading b{font-weight:700;max-width:80%}.bar-heading span{white-space:nowrap;color:#627993;font-family:Arial,sans-serif;font-weight:700;direction:ltr}.track{height:9px;background:#edf2f8;border-radius:99px;overflow:hidden}.fill{height:100%;background:#3166a8;border-radius:99px}.fill.green{background:#258769}.fill.red{background:#ae6161}.empty{border-radius:11px;border:1px dashed #cbd6e4;text-align:center;padding:23px 15px;color:#7b8c9e;font-size:13px;background:#f9fbfe}
+.facts{background:#f5f9fc;border:1px solid #dde9f5;border-radius:10px;padding:12px 14px;font-size:12px;color:#43647f}.tag{display:inline-block;border-radius:99px;background:#edf4fd;color:#3166a8;padding:2px 9px;font-size:10px;font-weight:700}.tag.green{background:#e6f4ee;color:#1e7a60}.tag.red{background:#fff0f0;color:#a34c59}
+select,input[type=search]{border:1px solid #cdd9e8;background:white;border-radius:10px;padding:9px 13px;color:var(--ink);min-height:42px;max-width:100%;direction:rtl;text-align:right;font-size:12px}
+select.wide{width:100%}.question-picker{margin:8px 0 17px}
+.respondents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.response{border:1px solid var(--line);border-radius:15px;background:#fff;padding:15px 17px}.response-top{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}.response-title{font-size:14px;font-weight:800;color:var(--navy)}.response-summary{font-size:12px;color:#596b80;margin:9px 0}.response button{padding:7px 14px}.response .small{font-size:11px}
+.quote{border-right:3px solid #8caed0;background:#f6f9fd;padding:11px 14px;border-radius:9px;margin:10px 0;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.quote .source{color:#72879c;font-size:10px;font-weight:700}
+.all-answers{border-bottom:1px solid #e5ecf3;padding:12px 0}.all-answers:last-child{border:none}.all-answers dt{font-weight:800;font-size:12px;color:var(--navy);margin-bottom:4px}.all-answers dd{font-size:12px;margin:0;color:#364e63;white-space:pre-wrap;overflow-wrap:anywhere}
+.modal{position:fixed;inset:0;background:#0f233cbc;z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}.modal-body{max-width:850px;width:100%;max-height:92vh;overflow:auto;background:white;border-radius:17px;padding:20px 23px}.modal-head{display:flex;gap:12px;justify-content:space-between;align-items:center;padding-bottom:11px;border-bottom:1px solid #e7edf4;margin-bottom:15px}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.filter-row input{flex:1;min-width:210px}
+.question-section{margin-top:17px;color:#3166a8;font-size:12px;font-weight:900;background:#eef5fc;padding:8px 13px;border-radius:9px}
+#systemMsg{font-size:12px;color:#a74951;font-weight:700;margin:0 0 11px}
+@media(max-width:960px){.metrics{grid-template-columns:repeat(3,1fr)}.intro-grid,.two{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{padding:16px 11px 35px}header h1{font-size:17px}.panel{padding:15px}.metrics{grid-template-columns:repeat(2,1fr)}.metric{padding:14px}.metric .num{font-size:24px}.respondents{grid-template-columns:1fr}.toolbar{align-items:stretch}.toolbar .left{width:100%}.btn{font-size:11px;padding:9px}.modal-body{padding:14px}}
+@media print{header,.tabs,.toolbar,.btn,.filter-row{display:none!important}body{background:white}.panel,.metric{box-shadow:none;border:1px solid #aaa}}
+</style></head>
+<body><header><div class="inner"><div><h1>تحليلات استبيان الفصل الأول</h1><p>مستر يوسف رزق · تقرير إداري مجهول الهوية · الصف الثالث الثانوي</p></div><a href="./">← لوحة الإدارة</a></div></header>
+<main class="shell">
+<section id="gate" class="panel gate"><h2>جارٍ التحقق من صلاحية الإدارة...</h2><p id="gateMsg">نتحقق من جلسة تسجيل الدخول وصلاحية الاطلاع على ردود الاستبيان.</p><a href="./">لوحة الإدارة وتسجيل الدخول</a></section>
+<section id="app" class="hidden">
+<div class="toolbar">
+<div><div class="kicker">بيانات مباشرة من المنصة</div><h2 style="margin:0">استبيان الفصل الأول — تقرير النتائج</h2><div class="status" id="updatedAt">يتم جلب البيانات...</div></div>
+<div class="left"><label class="tiny muted"><input type="checkbox" id="autoRefresh" checked> تحديث تلقائي كل ٣٠ ثانية</label><button class="btn" id="refreshBtn">↻ تحديث الآن</button><button class="btn" id="exportBtn">↓ تصدير كل الردود CSV</button><a class="btn" target="_blank" rel="noopener" href="student-ch1-feedback-2026.html">استبيان الطلاب</a></div>
+</div>
+<div id="systemMsg" role="status"></div>
+<div class="metrics">
+<div class="metric"><div class="label">إجمالي الردود</div><div class="num" id="mTotal">—</div><div class="small">عدد الاستبيانات المستلمة</div></div>
+<div class="metric"><div class="label">وصلت اليوم</div><div class="num" id="mToday">—</div><div class="small">بتوقيت القاهرة</div></div>
+<div class="metric"><div class="label">متوسط استعداد الترشيح</div><div class="num" id="mRecommend">—</div><div class="small">من ١٠ · إجابات السؤال فقط</div></div>
+<div class="metric good"><div class="label">رشّح بالفعل</div><div class="num" id="mActual">—</div><div class="small" id="mActualSub">من الذين أجابوا عن السؤال</div></div>
+<div class="metric"><div class="label">مؤشر صافي الترشيح</div><div class="num" id="mNps">—</div><div class="small">نسبة ٩–١٠ ناقص نسبة ٠–٦</div></div>
+</div>
+<nav class="tabs" aria-label="أقسام التحليل">
+<button type="button" class="tab active" data-tab="overview">ملخص التحليلات</button>
+<button type="button" class="tab" data-tab="all">كل الاستبيانات</button>
+<button type="button" class="tab" data-tab="text">آراء الطلاب المكتوبة</button>
+</nav>
+<section class="section active" id="overview">
+<div class="intro-grid">
+<div class="panel"><h2>الترشيح والتجربة</h2><p class="tiny muted">نقيس النية والسلوك الفعلي منفصلين؛ عدم الترشيح مش معناه بالضرورة عدم الرضا.</p><h3>هل الطالب رشّح التجربة لصديق؟</h3><div id="referralDistribution"></div><h3 style="margin-top:21px">أهم أسباب الترشيح الفعلي</h3><div id="referralReasons"></div></div>
+<div class="panel"><h2>الأسباب التي تمنع الترشيح</h2><p class="tiny muted">الطالب ممكن يختار أكثر من سبب، وبالتالي إجمالي النسب قد يتجاوز ١٠٠٪.</p><div id="referralBarriers"></div></div>
+</div>
+<div class="two">
+<div class="panel"><h2>توزيع الدرجات من ٠ إلى ١٠</h2><div id="npsChart"></div><div class="facts">مؤشر صافي الترشيح = نسبة المروجين (٩–١٠) − نسبة غير المستعدين للترشيح (٠–٦). لا يقيس هذا المؤشر عدد الترشيحات التي حدثت فعلًا.</div></div>
+<div class="panel"><h2>أولويات الفصل الثاني</h2><div id="improvements"></div></div>
+</div>
+<div class="panel"><h2>تحليل أي سؤال بالتفصيل</h2><p class="tiny muted">يمكنك اختيار أي سؤال من الاستبيان؛ لا تُحتسب إجابات «لا ينطبق» ضمن نسب الاتفاق.</p><select class="wide question-picker" id="questionPick"></select><div id="questionAnalysis"></div></div>
+</section>
+<section class="section" id="all"><div class="panel"><h2>كل الردود الفردية</h2><p class="tiny muted">ردود مجهولة بأرقام عرض داخل اللوحة فقط. لا أسماء ولا أكواد طلاب. الوقت التفصيلي غير ظاهر لتقليل إمكانية ربط الرد بصاحبه.</p><div class="filter-row"><input type="search" id="answerSearch" placeholder="ابحث بكلمة في الإجابات المكتوبة أو اختيارات الطلاب..."><select id="ratingFilter"><option value="">كل درجات الترشيح</option><option value="high">٩–١٠</option><option value="mid">٧–٨</option><option value="low">٠–٦</option><option value="none">لم يُجب عن درجة الترشيح</option></select></div><div id="responseCount" class="tiny muted"></div><div id="respondents" class="respondents"></div></div></section>
+<section class="section" id="text"><div class="panel"><h2>الملاحظات المكتوبة كما وردت</h2><p class="tiny muted">الإجابات هنا آراء طلاب وليست حقائق مثبتة؛ اقرأ الإيجابي والسلبي معًا.</p><div class="filter-row"><input type="search" id="textSearch" placeholder="ابحث داخل تعليقات الطلاب"><select id="textKind"><option value="">كل التعليقات</option><option value="field_31">ما يجب الحفاظ عليه</option><option value="field_32">ما يجب تغييره</option><option value="field_33">كلام إضافي</option><option value="others">الأسباب المكتوبة الأخرى</option></select></div><div id="textCount" class="tiny muted"></div><div id="texts"></div></div></section>
+</section>
+</main>
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-body"><div class="modal-head"><div><h2 id="modalTitle" style="margin:0">رد مجهول</h2><p class="tiny muted" id="modalDate" style="margin:0"></p></div><button class="btn" id="modalClose">إغلاق ✕</button></div><div id="modalAnswers"></div></div></div>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+import {loadAdminAccess} from './admin-access.js';
+const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const TABLE='student_ch1_survey_responses_2026';
+const $=id=>document.getElementById(id);
+let questions=[],questionMap=new Map(),choiceMap=new Map(),rows=[],loading=false,tab='overview',timer=null,authorized=false;
+const safe=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const digits=n=>Number.isFinite(Number(n))?new Intl.NumberFormat('ar-EG',{maximumFractionDigits:1}).format(Number(n)):'—';
+const pct=(n,d)=>d?digits(100*n/d)+'٪':'—';
+const sectionLabels=['تجربتك العامة','الشرح والحصة','المذكرة والرسومات','الورش والواجب','المنصة والمتابعة','التقييم والتطوير'];
+const localDate=d=>new Intl.DateTimeFormat('ar-EG',{timeZone:'Africa/Cairo',year:'numeric',month:'short',day:'numeric'}).format(new Date(d));
+const cairoISO=d=>new Intl.DateTimeFormat('en-US',{timeZone:'Africa/Cairo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(d)).reduce((acc,x)=>(acc[x.type]=x.value,acc),{});
+const dateKey=d=>{const p=cairoISO(d);return p.year+'-'+p.month+'-'+p.day;};
+const answers=r=>r.answers||{};
+const get=(r,k)=>answers(r)[k];
+function getChoices(q){return choiceMap.get(q.code)||new Map();}
+function label(q,v){
+ if(v==null)return '—';
+ if(q.type==='nps')return String(v);
+ if(q.type==='likert'&&typeof v==='object')return Object.entries(v).map(([k,val])=>{
+  const s=q.statements?.find(x=>x.code===k);return (s?.label||k)+': '+(getChoices(q).get(String(val))||val);
+ }).join(' · ');
+ if(Array.isArray(v))return v.map(x=>getChoices(q).get(String(x))||String(x)).join('، ');
+ return getChoices(q).get(String(v))||String(v);
+}
+function displayBar(name,n,total,i=0){
+ let color=i%4===2?'green':i%4===3?'red':'';
+ return '<div class="bar"><div class="bar-heading"><b>'+safe(name)+'</b><span>'+digits(n)+' · '+pct(n,total)+'</span></div>'+
+ '<div class="track"><div class="fill '+color+'" style="width:'+Math.min(100,total?100*n/total:0)+'%"></div></div></div>';
+}
+function aggregate(q){
+ const tally=new Map();let participants=0;
+ for(const r of rows){const v=get(r,q.code);if(v===undefined||v===null||v===''||(Array.isArray(v)&&!v.length))continue;
+ participants++;
+ if(q.type==='likert')continue;
+ const vs=Array.isArray(v)?v:[v];for(const id of vs)tally.set(String(id),(tally.get(String(id))||0)+1);
+ }
+ return {tally,participants};
+}
+function plot(q,where,max=0){
+ const el=$(where);if(!el)return;
+ if(!rows.length){el.innerHTML='<div class="empty">لم تصل ردود بعد.</div>';return}
+ if(!q){el.innerHTML='<div class="empty">تعذر تحميل السؤال.</div>';return}
+ if(q.type==='likert'){renderLikert(q,el);return}
+ if(q.type==='long_text'){const texts=rows.map(r=>get(r,q.code)).filter(Boolean);el.innerHTML=texts.length?texts.slice(0,18).map(x=>'<div class="quote">'+safe(x)+'</div>').join(''):'<div class="empty">لا توجد إجابات مكتوبة لهذا السؤال حتى الآن.</div>';return}
+ const {tally,participants}=aggregate(q);
+ let choices=q.type==='nps'?Array.from({length:11},(_,i)=>({code:String(i),label:String(i)})):q.choices||[];
+ if(max)choices=choices.slice(0,max);
+ if(q.type==='checkbox'&&max)choices=choices.sort((a,b)=>(tally.get(b.code)||0)-(tally.get(a.code)||0));
+ el.innerHTML='<div class="tiny muted" style="margin-bottom:12px">عدد المجيبين عن هذا السؤال: '+digits(participants)+'</div>'+
+ (participants?choices.map((c,i)=>displayBar(c.label,tally.get(c.code)||0,participants,i)).join(''):'<div class="empty">لم يجب أحد عن هذا السؤال بعد.</div>');
+}
+function renderLikert(q,el){
+ let out=[];
+ for(const s of q.statements||[]){
+  let agree=0,disagree=0,neutral=0,n=0;
+  for(const r of rows){const id=get(r,q.code)?.[s.code];if(!id)continue;
+   const i=(q.choices||[]).findIndex(c=>c.code===id);if(i<0||i>=5)continue;
+   n++;if(i>=3)agree++;else if(i<=1)disagree++;else neutral++;
+  }
+  out.push('<div class="bar"><div class="bar-heading"><b>'+safe(s.label)+'</b><span>'+pct(agree,n)+' موافق · '+digits(n)+' مجيب</span></div>'+
+  '<div class="track"><div class="fill '+(n&&agree/n<.5?'red':'green')+'" style="width:'+(n?100*agree/n:0)+'%"></div></div><div class="tiny muted">غير موافق: '+digits(disagree)+' · محايد: '+digits(neutral)+' · لا ينطبق غير محسوب</div></div>');
+ }
+ el.innerHTML=out.join('')||'<div class="empty">لا توجد عبارات.</div>';
+}
+function statValue(qCode,fn){const present=rows.filter(x=>get(x,qCode)!==undefined&&get(x,qCode)!==null);return{n:present.length,yes:present.filter(fn).length}}
+function renderOverview(){
+ $('mTotal').textContent=digits(rows.length);
+ const dateNow=dateKey(new Date()),today=rows.filter(r=>dateKey(r.submitted_at)===dateNow).length;
+ $('mToday').textContent=digits(today);
+ const ratings=rows.map(r=>get(r,'field_36')).filter(v=>typeof v==='number'&&v>=0&&v<=10);
+ $('mRecommend').textContent=ratings.length?digits(ratings.reduce((x,y)=>x+y,0)/ratings.length):'—';
+ const actual=statValue('field_37',r=>get(r,'field_37')==='GfYP');
+ $('mActual').textContent=actual.n?pct(actual.yes,actual.n):'—';
+ $('mActualSub').textContent=digits(actual.yes)+' من '+digits(actual.n)+' أجابوا عن السؤال';
+ const promoters=ratings.filter(n=>n>=9).length,detractors=ratings.filter(n=>n<=6).length;
+ $('mNps').textContent=ratings.length?digits(Math.round(100*(promoters-detractors)/ratings.length)):'—';
+ plot(questionMap.get('field_37'),'referralDistribution');
+ plot(questionMap.get('field_38'),'referralReasons');
+ plot(questionMap.get('field_39'),'referralBarriers');
+ plot(questionMap.get('field_36'),'npsChart');
+ plot(questionMap.get('field_29'),'improvements');
+ plot(questionMap.get($('questionPick').value),'questionAnalysis');
+}
+function quotePayload(){
+ const out=[];
+ for(let i=0;i<rows.length;i++){
+  const r=rows[i];
+  for(const q of questions){
+   if(q.type==='long_text'&&get(r,q.code))out.push({n:i+1,kind:q.code,kindTitle:q.label,value:String(get(r,q.code)),day:r.submitted_at});
+   if(q.type==='radio'||q.type==='checkbox'){
+    const extra=get(r,q.code+'_other');if(extra)out.push({n:i+1,kind:'others',kindTitle:q.label+' — سبب آخر',value:String(extra),day:r.submitted_at});
+   }
+  }
+ }
+ return out;
+}
+function renderComments(){
+ const search=$('textSearch').value.trim().toLowerCase(),kind=$('textKind').value;
+ const a=quotePayload().filter(x=>(!kind||x.kind===kind)&&(!search||x.value.toLowerCase().includes(search)));
+ $('textCount').textContent=digits(a.length)+' تعليق في نتائج البحث';
+ $('texts').innerHTML=a.length?a.map(x=>'<div class="quote"><div class="source">رد مجهول #'+digits(x.n)+' · '+safe(localDate(x.day))+' · '+safe(x.kindTitle)+'</div>'+safe(x.value)+'</div>').join(''):'<div class="empty">لا توجد تعليقات مطابقة حاليًا.</div>';
+}
+function renderAll(){
+ const kw=$('answerSearch').value.trim().toLowerCase(),rate=$('ratingFilter').value;
+ const list=rows.map((r,i)=>({r,i})).filter(({r})=>{
+  const n=get(r,'field_36');
+  if(rate==='high'&&!(typeof n==='number'&&n>=9))return false;
+  if(rate==='mid'&&!(typeof n==='number'&&n>=7&&n<=8))return false;
+  if(rate==='low'&&!(typeof n==='number'&&n<=6))return false;
+  if(rate==='none'&&typeof n==='number')return false;
+  if(!kw)return true;
+  return questions.some(q=>{
+   const ans=get(r,q.code);return (ans!==undefined&&label(q,ans).toLowerCase().includes(kw))||
+     String(get(r,q.code+'_other')||'').toLowerCase().includes(kw);
+  });
+ });
+ $('responseCount').textContent='عدد الردود المعروضة: '+digits(list.length)+' من '+digits(rows.length);
+ $('respondents').innerHTML=list.length?list.map(({r,i})=>{
+  const n=get(r,'field_36');const rec=n===undefined?'لم يُجب عن الترشيح':digits(n)+' / ١٠ في احتمالية الترشيح';
+  const actual=questionMap.get('field_37');
+  const msg=actual&&get(r,'field_37')?label(actual,get(r,'field_37')):'لا توجد إجابة عن الترشيح الفعلي';
+  return '<article class="response"><div class="response-top"><div><div class="response-title">رد مجهول #'+digits(i+1)+'</div><div class="small muted">'+safe(localDate(r.submitted_at))+'</div></div><span class="tag '+(n>=9?'green':typeof n==='number'&&n<=6?'red':'')+'">'+safe(rec)+'</span></div><div class="response-summary">'+safe(msg)+'</div><button class="btn" data-show="'+i+'">عرض كل الإجابات ←</button></article>';
+ }).join(''):'<div class="empty">لا توجد نتائج مطابقة.</div>';
+}
+function openResponse(i){
+ const r=rows[i];if(!r)return;
+ $('modalTitle').textContent='الاستبيان المجهول رقم '+digits(i+1);
+ $('modalDate').textContent=localDate(r.submitted_at);
+ let html='',section=0;
+ for(const q of questions){
+  if(q.type==='page_break'){section++;html+='<div class="question-section">'+safe(sectionLabels[section-1]||q.label)+'</div>';continue}
+  const v=get(r,q.code),extra=get(r,q.code+'_other');
+  if(v===undefined&&extra===undefined)continue;
+  if(q.type==='likert'){
+   if(v&&typeof v==='object')for(const [statementCode,id] of Object.entries(v)){
+    const s=q.statements?.find(s=>s.code===statementCode);
+    html+='<div class="all-answers"><dt>'+safe(q.label)+' — '+safe(s?.label||statementCode)+'</dt><dd>'+safe(getChoices(q).get(String(id))||String(id))+'</dd></div>';
+   }
+  }else{
+   html+='<div class="all-answers"><dt>'+safe(q.label)+'</dt><dd>'+safe(label(q,v))+(extra?' — '+safe(extra):'')+'</dd></div>';
+  }
+ }
+ $('modalAnswers').innerHTML=html||'<div class="empty">لا توجد إجابات محفوظة.</div>';
+ $('modal').classList.remove('hidden');$('modalClose').focus();
+}
+function csvEscape(v){let s=String(v??'');if(/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function csvExport(){
+ if(!rows.length){$('systemMsg').textContent='لا توجد ردود لتصديرها بعد.';return}
+ const columns=[];
+ for(const q of questions){
+  if(q.type==='page_break')continue;
+  if(q.type==='likert'){for(const s of q.statements||[])columns.push({title:q.label+' — '+s.label,code:q.code,statement:s.code,q});}
+  else columns.push({title:q.label,code:q.code,q});
+  if((q.choices||[]).some(c=>c.isOther))columns.push({title:q.label+' — توضيح آخر',code:q.code+'_other',extra:true});
+ }
+ const header=['رقم مجهول','تاريخ الاستلام (القاهرة)',...columns.map(x=>x.title)];
+ const lines=rows.map((r,i)=>[i+1,localDate(r.submitted_at),...columns.map(c=>{
+  const val=get(r,c.code);if(c.extra)return val||'';
+  if(c.statement)return getChoices(c.q).get(String(val?.[c.statement]||''))||'';
+  return val===undefined?'':label(c.q,val);
+ })]);
+ const csv='\uFEFF'+[header,...lines].map(row=>row.map(csvEscape).join(',')).join('\r\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='تقرير_استبيان_الفصل_الأول_'+dateKey(new Date())+'.csv';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function setupMetadata(list){
+ questions=list;
+ questionMap=new Map(list.map(q=>[q.code,q]));
+ choiceMap=new Map(list.map(q=>[q.code,new Map((q.choices||[]).map(c=>[String(c.code),c.label]))]));
+ const sel=$('questionPick');let part=0;
+ sel.innerHTML=list.map(q=>{
+  if(q.type==='page_break'){part++;return '<option disabled>── '+safe(sectionLabels[part-1]||q.label)+' ──</option>';}
+  return '<option value="'+safe(q.code)+'">'+safe(q.label)+'</option>';
+ }).join('');
+ sel.value='ch1_teaching_duration';
+ if(!questionMap.has(sel.value))sel.value='field_2';
+}
+async function loadMetadata(){
+ const resp=await fetch('./student-ch1-feedback-2026.html',{cache:'no-store'});if(!resp.ok)throw Error('تعذّر تحميل أسئلة الاستبيان');
+ const html=await resp.text();const m=html.match(/const QUESTION_DATA=(\[[\s\S]*?\]);\s*const VERSION/);
+ if(!m)throw Error('تعذّر قراءة قائمة أسئلة الاستبيان');
+ const parsed=JSON.parse(m[1]);if(!Array.isArray(parsed)||!parsed.some(q=>q.code==='field_2'))throw Error('تعريف الأسئلة غير مكتمل');
+ setupMetadata(parsed);
+}
+async function refresh(){
+ if(!authorized||loading)return;loading=true;$('refreshBtn').disabled=true;$('systemMsg').textContent='';
+ try{
+  const all=[],pageSize=500;
+  for(let offset=0;offset<10000;offset+=pageSize){
+   const {data,error}=await sb.from(TABLE).select('id,submitted_at,form_version,answers').order('submitted_at',{ascending:false}).range(offset,offset+pageSize-1);
+   if(error)throw error;
+   all.push(...(data||[]));if(!data||data.length<pageSize)break;
+   if(offset+pageSize>=10000)throw Error('وصل عدد الردود للحد الأقصى لعرض الصفحة. يرجى تقسيم النتائج قبل التحليل.');
+  }
+  rows=all;
+  renderOverview();renderAll();renderComments();
+  const now=new Intl.DateTimeFormat('ar-EG',{timeZone:'Africa/Cairo',hour:'numeric',minute:'2-digit'}).format(new Date());
+  $('updatedAt').textContent='آخر تحديث للوحة: '+now+' · تحديث تلقائي كل ٣٠ ثانية طالما الصفحة مفتوحة';
+ }catch(e){
+  $('systemMsg').textContent='تعذر تحميل الردود: '+String(e.message||e)+'. جرب تحديث الصفحة أو إعادة تسجيل الدخول.';
+ }finally{loading=false;$('refreshBtn').disabled=false}
+}
+async function init(){
+ try{
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session?.user||session.user.app_metadata?.role!=='admin')throw Error('سجل الدخول أولًا باستخدام حساب إدارة المنصة.');
+  const ctx=await loadAdminAccess(sb);
+  if(!ctx.isOwner)throw Error('هذه الردود متاحة لحساب مالك المنصة فقط، ولا يستطيع مديرو المجموعات الاطلاع عليها.');
+  await loadMetadata();
+  authorized=true;$('gate').classList.add('hidden');$('app').classList.remove('hidden');
+  await refresh();
+  timer=setInterval(()=>{if($('autoRefresh').checked&&document.visibilityState==='visible')refresh()},30000);
+ }catch(e){$('gateMsg').textContent=String(e.message||e)}
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{
+ tab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+ document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===tab));
+}));
+$('refreshBtn').onclick=refresh;
+$('exportBtn').onclick=csvExport;
+$('questionPick').onchange=()=>plot(questionMap.get($('questionPick').value),'questionAnalysis');
+$('answerSearch').oninput=renderAll;$('ratingFilter').onchange=renderAll;
+$('textSearch').oninput=renderComments;$('textKind').onchange=renderComments;
+$('respondents').addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(b)openResponse(Number(b.dataset.show))});
+$('modalClose').onclick=()=>$('modal').classList.add('hidden');
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')$('modal').classList.add('hidden')});
+sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&authorized){authorized=false;rows=[];location.replace('./')}});
+init();
+</script></body></html>
