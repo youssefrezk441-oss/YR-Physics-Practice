@@ -279,7 +279,7 @@ async function init(){
   const {data:{session}}=await sb.auth.getSession();
   if(!session?.user||session.user.app_metadata?.role!=='admin')throw Error('سجل الدخول أولًا باستخدام حساب إدارة المنصة.');
   const ctx=await loadAdminAccess(sb);
-  if(!ctx.profile?.is_active)throw Error('هذا الحساب الإداري غير نشط ولا يمكنه عرض ردود الاستبيان.');
+  if(ctx.profile?.is_active===false)throw Error('هذا الحساب الإداري غير نشط ولا يمكنه عرض ردود الاستبيان.');
   await loadMetadata();
   authorized=true;$('gate').classList.add('hidden');$('app').classList.remove('hidden');
   await refresh();
