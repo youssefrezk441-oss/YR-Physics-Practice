@@ -77,6 +77,7 @@ Deno.serve(async(req:Request)=>{
       if(spec==null)return j({error:'invalid_part'},400);
       const normalized=normalizeAttempt(mode,body?.answer);
       if(normalized==null||normalized==='')return j({error:'invalid_answer',message:mode.includes('numeric')?'اكتب قيمة رقمية صحيحة.':'اكتب إجابة صالحة.'},400);
+      if(mode==='mcq'&&!MCQ_OPTIONS.includes(String(normalized)))return j({error:'invalid_answer',message:'اختر إجابة من أ أو ب أو ج أو د.'},400);
       const correct=gradePart(mode,spec,body?.answer);
       const outcome=await sql.begin(async tx=>{
         await tx`select pg_advisory_xact_lock(hashtextextended(${`${uid}:${bankNo}:${partKey}`},0))`;
