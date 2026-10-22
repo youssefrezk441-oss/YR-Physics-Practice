@@ -78,7 +78,7 @@ jobs:
           grep -q 'b2-lesson2-platform.js' b2-lesson2-workshop.html
           grep -q 'openB2Lesson2Workshop' student.html
           node tools/check_public_answer_keys.mjs
-      - name: Validate prepared deployment
+      - name: Validate client and data contracts
         run: |
           node tools/check_inline_scripts.mjs
           node tools/check_workshop_input_guards.mjs
@@ -86,7 +86,13 @@ jobs:
           node tools/check_submission_safety.mjs
           node tools/check_public_answer_keys.mjs
           node tools/check_l4_workshop_contract.mjs
+
+      - name: Run synthetic security tests
+        run: |
           node --test tools/tests/*.test.mjs
+
+      - name: Validate Edge Function source syntax
+        run: |
           node --experimental-strip-types --check supabase/functions/_shared/workshop-security.ts
           node --experimental-strip-types --check supabase/functions/_shared/regrade-impact.ts
           node --experimental-strip-types --check supabase/functions/lecture3-workshop/index.ts
