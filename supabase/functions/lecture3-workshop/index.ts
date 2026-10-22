@@ -1,6 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.105.0";
 import postgres from "npm:postgres@3.4.7";
+import { expectedAttempts, isStaleProgress, readWorkshopJson, staleProgressResult, WorkshopRequestError } from "../_shared/workshop-security.ts";
 
 const C = {
   "Access-Control-Allow-Origin": "*",
@@ -137,8 +138,11 @@ Deno.serve(async (req: Request) => {
 
   let body: Record<string, any> = {};
   try {
-    body = await req.json();
-  } catch {
+    body = await readWorkshopJson(req);
+  } catch (error) {
+    if (error instanceof WorkshopRequestError) {
+      return j({ error: error.code, message: error.message }, error.status);
+    }
     return j({ error: "invalid_json" }, 400);
   }
   const action = txt(body?.action, 40);
@@ -205,6 +209,15 @@ Deno.serve(async (req: Request) => {
       const answer = partAnswer(k.answer_key, partIndex);
       if (!answer) return j({ error: "invalid_part" }, 400);
       const pidx = Array.isArray(k.answer_key?.parts) ? Math.max(1, partIndex) : 0;
+      let expected: number | null;
+      try {
+        expected = expectedAttempts(body?.expected_attempts_count);
+      } catch (error) {
+        if (error instanceof WorkshopRequestError) {
+          return j({ error: error.code, message: error.message }, error.status);
+        }
+        return j({ error: "invalid_progress_version" }, 400);
+      }
 
       let normalized: string;
       let correct = false;
@@ -238,6 +251,16 @@ Deno.serve(async (req: Request) => {
             display_answer: displayFor(k, answer, pidx),
             progress: old,
           };
+        }
+        if (isStaleProgress(expected, attempts)) {
+          return staleProgressResult(old ?? {
+            bank_no: bankNo,
+            part_index: pidx,
+            attempts_count: 0,
+            tried_answers: [],
+            mastered: false,
+            revealed: false,
+          }, attempts);
         }
         if (answer.kind === "numeric" && attempts >= 3) {
           return {

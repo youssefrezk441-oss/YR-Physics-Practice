@@ -284,11 +284,12 @@ async function send(q, part, answer, action) {
   disabled.forEach(([node]) => node.disabled = true);
   $('answers').setAttribute('aria-busy','true');
   try {
+    const previous = stateOf(q,part.key);
     const payload = { bank_no:q.bank_no, part_key:part.key };
+    if (action === 'attempt') payload.expected_attempts_count = Number(previous.attempts_count || 0);
     if (action === 'attempt') payload.answer = answer;
     const result = await api(action,payload);
     if (!app.authorized) return;
-    const previous = stateOf(q,part.key);
     const state = result.progress
       ? canonicalProgress({ ...result.progress, display_answer: result.display_answer ?? previous.display_answer })
       : canonicalProgress({ ...previous, ...result });

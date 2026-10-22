@@ -1,8 +1,12 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import postgres from "npm:postgres@3.4.7";
 import { createClient } from "npm:@supabase/supabase-js@2.105.0";
+import { readWorkshopJson, WorkshopRequestError } from "../_shared/workshop-security.ts";
 
 const EXAM = "azhar-physics-g2-ch1-ch2-2026-10";
+// Student actions stay disabled unless production is deliberately configured to reopen the exam.
+// Administrative read-only actions remain available for historical submissions.
+const PUBLIC_EXAM_ENABLED = Deno.env.get("AZHAR_EXAM_PUBLIC_ENABLED") === "true";
 const DB_URL = Deno.env.get("SUPABASE_DB_URL")!;
 const sql = postgres(DB_URL, { max: 3, idle_timeout: 20, prepare: false });
 const originAllowed = new Set([
@@ -86,13 +90,20 @@ Deno.serve(async req => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers });
   if (req.method !== "POST") return new Response(JSON.stringify({error:"طلب غير مسموح."}), {status:405,headers});
   try {
-    if (Number(req.headers.get('content-length') || 0) > 90000) throw fail(413, "الطلب كبير جدًا.");
-    const body = await req.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await readWorkshopJson(req, 90000);
+    } catch (error) {
+      if (error instanceof WorkshopRequestError) throw fail(error.status, error.message);
+      throw error;
+    }
     const action = String(body?.action || '');
     let result: any;
     if (action.startsWith('admin_')) {
       const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
       result = await admin(token, action, body);
+    } else if (!PUBLIC_EXAM_ENABLED) {
+      throw fail(410, "هذا الامتحان متوقف مؤقتًا. لم تُحذف أي محاولة سابقة.");
     } else if (action === "start") {
       await rateLimit(req);
       const displayName = String(body.student_name || '').normalize('NFKC').trim().replace(/\s+/g,' ');

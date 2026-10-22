@@ -17,10 +17,19 @@ if (existsSync(output)) {
 
 // Student access is paused, but the source, admin viewer and Supabase records stay intact.
 const excluded = new Set([
+  '.brand-version',
+  'AGENTS.md',
+  'README.md',
   'azhar-comprehensive-exam.html',
 ]);
 const excludedPrefixes = [
+  '.deploy',
+  '.github/',
+  '.grading/',
   'chemsteroo/',
+  'supabase/',
+  'tools/',
+  'whatsapp-bridge/',
 ];
 
 const files = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
@@ -45,6 +54,11 @@ if (!existsSync(resolve(output, 'azhar-exam-submissions-admin.html'))) {
 }
 if (existsSync(resolve(output, 'chemsteroo'))) {
   throw new Error('The temporarily disabled Chemsteroo site must not be present in the Pages artifact.');
+}
+for (const internal of ['.github', '.grading', 'supabase', 'tools', 'whatsapp-bridge']) {
+  if (existsSync(resolve(output, internal))) {
+    throw new Error(`Internal source directory must not be present in the Pages artifact: ${internal}`);
+  }
 }
 
 console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.`);

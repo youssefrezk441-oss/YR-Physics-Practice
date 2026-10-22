@@ -1,6 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.105.0";
 import postgres from "npm:postgres@3.4.7";
+import { expectedAttempts, isStaleProgress, readWorkshopJson, staleProgressResult, WorkshopRequestError } from "../_shared/workshop-security.ts";
 
 const C={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS"};
 const url=Deno.env.get("SUPABASE_URL")??"";
@@ -54,7 +55,11 @@ Deno.serve(async(req:Request)=>{
   if(req.method==='OPTIONS')return new Response('ok',{headers:C});
   if(req.method!=='POST')return j({error:'method_not_allowed'},405);
   const a=await requireAllowed(req);if(!a)return j({error:'unauthorized',message:'يجب تسجيل الدخول بحساب طالب نشط.'},401);if(a.denied)return j({error:'grade_not_allowed',message:'هذه الورشة متاحة لطلاب الصف الثالث الثانوي فقط.'},403);
-  let body:any={};try{body=await req.json()}catch{return j({error:'invalid_json'},400)}
+  let body:Record<string,unknown>={};
+  try{body=await readWorkshopJson(req)}catch(e){
+    if(e instanceof WorkshopRequestError)return j({error:e.code,message:e.message},e.status);
+    return j({error:'invalid_json'},400);
+  }
   const action=txt(body?.action,40),uid=a.user.id;
   try{
     if(action==='ping')return j({ok:true,profile:{student_code:a.profile.student_code??null,full_name:a.profile.full_name??null,grade_level:a.profile.grade_level},role:a.role});
@@ -75,6 +80,11 @@ Deno.serve(async(req:Request)=>{
       if(!k)return j({error:'key_not_found'},500);
       const mode=String(q.grading_mode),spec=answerForPart(mode,k.answer_key,partKey);
       if(spec==null)return j({error:'invalid_part'},400);
+      let expected:number|null;
+      try{expected=expectedAttempts(body?.expected_attempts_count)}catch(e){
+        if(e instanceof WorkshopRequestError)return j({error:e.code,message:e.message},e.status);
+        return j({error:'invalid_progress_version'},400);
+      }
       const normalized=normalizeAttempt(mode,body?.answer);
       if(normalized==null||normalized==='')return j({error:'invalid_answer',message:mode.includes('numeric')?'اكتب قيمة رقمية صحيحة.':'اكتب إجابة صالحة.'},400);
       if(mode==='mcq'&&!MCQ_OPTIONS.includes(String(normalized)))return j({error:'invalid_answer',message:'اختر إجابة من أ أو ب أو ج أو د.'},400);
@@ -85,6 +95,7 @@ Deno.serve(async(req:Request)=>{
         const attempts=Number(old?.attempts_count??0),tried=safeArray(old?.tried_answers).map(String);
         if(old?.mastered)return {ok:true,already_mastered:true,correct:true,mastered:true,revealed:false,assisted:false,attempts_count:attempts,can_reveal:false,progress:old};
         if(old?.revealed)return {ok:true,already_revealed:true,correct:false,mastered:false,revealed:true,assisted:true,attempts_count:attempts,can_reveal:false,display_answer:displayPart(q,k,partKey,spec),progress:old};
+        if(isStaleProgress(expected,attempts))return staleProgressResult(old??{bank_no:bankNo,part_key:partKey,attempts_count:0,tried_answers:[],mastered:false,revealed:false},attempts);
         if(mode!=='mcq'&&attempts>=3)return {ok:true,locked:true,correct:false,mastered:false,revealed:false,assisted:false,attempts_count:attempts,can_reveal:true,message:'تم استنفاد 3 محاولات مختلفة. يمكنك إظهار الإجابة.',progress:old};
         if(tried.includes(String(normalized)))return {ok:true,duplicate:true,correct:false,mastered:false,revealed:false,assisted:false,attempts_count:attempts,can_reveal:mode!=='mcq'&&attempts>=3,message:'هذه الإجابة جربتها من قبل ولن تُحسب محاولة جديدة.',progress:old};
         const nextAttempts=attempts+1,newTried=[...tried,String(normalized)];
@@ -107,6 +118,7 @@ Deno.serve(async(req:Request)=>{
     if(action==='reveal'){
       if(a.role==='admin')return j({error:'admin_read_only'},403);
       const bankNo=Number(body?.bank_no),partKey=txt(body?.part_key||'main',50);
+      if(!Number.isInteger(bankNo)||!partKey)return j({error:'invalid_question'},400);
       const [q]=await sql`select bank_no,grading_mode,answer_schema from public.l4_workshop_questions where bank_no=${bankNo} and active=true limit 1`;
       if(!q||!validPartKeys(q).includes(partKey))return j({error:'question_not_found'},404);
       if(q.grading_mode==='mcq')return j({error:'reveal_not_applicable',message:'في الأسئلة الاختيارية تظهر الإجابة تلقائيًا بعد استبعاد جميع البدائل الخاطئة.'},403);

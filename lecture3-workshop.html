@@ -169,12 +169,12 @@ function choicePreview(){return '<div class="choices">'+LETTERS.map(l=>`<button 
 function buildMcq(q,part,label){const wrap=document.createElement('div');if(part){wrap.className='part';const h=document.createElement('h4');h.textContent=label;wrap.appendChild(h)}const grid=document.createElement('div');grid.className='choices';const p=getP(q.bank_no,part),tried=normalizeTried(p?.tried_answers),busy=pending.has(pendingKey(q.bank_no,part));for(const l of LETTERS){const b=document.createElement('button');b.className='choice';b.textContent=l;b.disabled=!!(p?.mastered||p?.revealed||tried.includes(l)||busy);if(tried.includes(l)&&!(p?.mastered&&String(p.last_answer)===l))b.classList.add('wrong');if(p?.mastered&&String(p.last_answer)===l)b.classList.add('correct');b.onclick=()=>submit(q,part,l);grid.appendChild(b)}wrap.appendChild(grid);if(part){const f=document.createElement('div');f.id=`partFeedback-${part}`;f.className='feedback';wrap.appendChild(f);if(p)showPartFeedback(q,part,f)}return wrap}
 
 async function submit(q,part,answer){
- const pidx=q.question_type==='multipart_mcq'?part:0,key=pendingKey(q.bank_no,pidx);if(pending.has(key))return;pending.add(key);render();
+ const pidx=q.question_type==='multipart_mcq'?part:0,key=pendingKey(q.bank_no,pidx),before=getP(q.bank_no,pidx);if(pending.has(key))return;pending.add(key);render();
  try{
-  const d=await call('attempt',{bank_no:q.bank_no,part_index:part,answer});
+  const d=await call('attempt',{bank_no:q.bank_no,part_index:part,answer,expected_attempts_count:Number(before?.attempts_count||0)});
   if(d.progress)syncProgress(d.progress);
   pending.delete(key);render();
-  if(d.duplicate){part?showPartMsg(part,'info',esc(d.message)):feedback('info',esc(d.message));return}
+  if(d.duplicate||d.stale){part?showPartMsg(part,'info',esc(d.message)):feedback('info',esc(d.message));return}
   if(d.correct){const note=d.source_note?'<br>'+esc(d.source_note):'';part?showPartMsg(part,'ok','✅ إجابة صحيحة.'+note):feedback('ok','✅ إجابة صحيحة.'+note)}
   else if(d.assisted){const msg=d.message||('الإجابة: '+String(d.display_answer||''));part?showPartMsg(part,'info',esc(msg)):feedback('info',esc(msg))}
   else{part?showPartMsg(part,'bad',esc(d.message||'ليست صحيحة.')):feedback('bad',esc(d.message||'ليست صحيحة.'))}

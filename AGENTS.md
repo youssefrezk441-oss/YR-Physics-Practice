@@ -49,7 +49,10 @@ This is a production educational system containing real student profiles, attend
 node tools/check_l4_workshop_contract.mjs
 node tools/check_inline_scripts.mjs
 node tools/check_workshop_input_guards.mjs
+node tools/check_supabase_security_contracts.mjs
+node tools/check_submission_safety.mjs
 node tools/check_public_answer_keys.mjs
+node --test tools/tests/*.test.mjs
 ```
 
 Also run syntax or type checks for every changed JavaScript or TypeScript file. Database and browser tests must use staging or mocks, never production student records.
