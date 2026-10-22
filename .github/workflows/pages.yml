@@ -93,12 +93,12 @@ jobs:
 
       - name: Validate Edge Function source syntax
         run: |
-          node --experimental-strip-types --check supabase/functions/_shared/workshop-security.ts
-          node --experimental-strip-types --check supabase/functions/_shared/regrade-impact.ts
-          node --experimental-strip-types --check supabase/functions/lecture3-workshop/index.ts
-          node --experimental-strip-types --check supabase/functions/lecture4-workshop/index.ts
-          node --experimental-strip-types --check supabase/functions/lecture6-workshop/index.ts
-          node --experimental-strip-types --check supabase/functions/azhar-exam-public/index.ts
+          node --check supabase/functions/_shared/workshop-security.ts
+          node --check supabase/functions/_shared/regrade-impact.ts
+          node --check supabase/functions/lecture3-workshop/index.ts
+          node --check supabase/functions/lecture4-workshop/index.ts
+          node --check supabase/functions/lecture6-workshop/index.ts
+          node --check supabase/functions/azhar-exam-public/index.ts
           node --check lecture3-workshop.js
           node --check lecture4-workshop.js
           node --check lecture6-workshop.js
