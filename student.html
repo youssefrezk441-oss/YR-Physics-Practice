@@ -126,11 +126,34 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   );
 }
 
+  /* ثالثة ثانوي — تجميع الورش حسب الفصل الدراسي */
+  if(!html.includes('id="openFirstTermWorkshops"')){
+    html=html.replace(
+      '<div class="studentHomeGrid">',
+      '<div class="studentHomeGrid"><button id="openFirstTermWorkshops" class="card studentNavCard termHomeCard firstTermCard hidden" type="button"><div class="studentNavIcon">⚡</div><h3>الفصل الأول</h3><p>كل ورش الفصل الأول وورشة الأخطاء في مكان واحد.</p><span class="termBadge">ورش الفصل الأول</span></button><button id="openSecondTermWorkshops" class="card studentNavCard termHomeCard secondTermCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>الفصل الثاني</h3><p>ورش الفصل الثاني، ويبدأ حاليًا بورشة المحاضرة الأولى.</p><span class="termBadge">جديد</span></button>'
+    );
+  }
+
+  if(!html.includes('id="firstTermWorkshopsView"')){
+    html=html.replace(
+      '<section id="trainingMenuView"',
+      `<section id="firstTermWorkshopsView" class="hidden">
+<div class="studentSubHead"><div><h2>⚡ الفصل الأول</h2><p class="sectionIntro">اختر الورشة التي تريد فتحها من ورش الفصل الأول.</p></div><button class="btn secondary studentBack" data-go-home>العودة للرئيسية</button></div>
+<div id="firstTermWorkshopsGrid" class="studentSubGrid"></div>
+</section>
+<section id="secondTermWorkshopsView" class="hidden">
+<div class="studentSubHead"><div><h2>🧲 الفصل الثاني</h2><p class="sectionIntro">ورش الفصل الثاني المنشورة والمتاحة لحسابك.</p></div><button class="btn secondary studentBack" data-go-home>العودة للرئيسية</button></div>
+<div id="secondTermWorkshopsGrid" class="studentSubGrid"></div>
+</section>
+<section id="trainingMenuView"`
+    );
+  }
+
   /* شرح الحصص patch v1 */
   if(!html.includes('id="openReferences"')){
     html=html.replace(
-      '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>',
-      '<div class="studentHomeGrid"><button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
+      '<button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button>',
+      '<button id="openB2Lesson1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧭</div><h3>ورشة الدرس الأول</h3><p>متجهات السرعة والسرعة النسبية — ورشة الحصة والتدريب المنزلي.</p></button><button id="openReferences" class="card studentNavCard referenceHomeCard" type="button"><div class="studentNavIcon">📖</div><h3>مرجع الشرح</h3><p>راجع أفكار وقوانين كل حصة بعد الشرح.</p></button>'
     );
   }
 
@@ -149,7 +172,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
     );
   }
 
-  html=html.replace("'dashboardView','trainingMenuView'","'dashboardView','referencesView','trainingMenuView'");
+  html=html.replace("'dashboardView','trainingMenuView'","'dashboardView','referencesView','firstTermWorkshopsView','secondTermWorkshopsView','trainingMenuView'");
 
   if(html.includes("$('openTrainings').onclick=()=>showOnly('trainingMenuView');")){
     html=html.replace(
@@ -163,16 +186,16 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   /* ورشة المحاضرة الثالثة — طلاب الصف الثالث فقط */
   if(!html.includes('id="openLecture3Workshop"')){
     html=html.replace(
-      '<div class="studentHomeGrid">',
-      '<div class="studentHomeGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button><button id="openLecture4Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">⚡</div><h3>ورشة المحاضرة الرابعة</h3><p>ورشة الحصة — 30 سؤالًا، والتدريب المنزلي — 25 سؤالًا.</p></button><button id="openLecture5Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🔋</div><h3>ورشة المحاضرة الخامسة</h3><p>قانون أوم للدائرة المغلقة — ورشة الحصة 32 سؤالًا، والتدريب المنزلي 20 سؤالًا.</p></button><button id="openLecture6Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🔌</div><h3>ورشة المحاضرة السادسة</h3><p>قانونا كيرشوف — ورشة الحصة 28 سؤالًا، والتدريب المنزلي 19 سؤالًا.</p></button>'
+      '<div id="firstTermWorkshopsGrid" class="studentSubGrid">',
+      '<div id="firstTermWorkshopsGrid" class="studentSubGrid"><button id="openLecture3Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧪</div><h3>ورشة المحاضرة الثالثة</h3><p>تدريب تفاعلي على أفكار المحاضرة الثالثة.</p></button><button id="openLecture4Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">⚡</div><h3>ورشة المحاضرة الرابعة</h3><p>ورشة الحصة — 30 سؤالًا، والتدريب المنزلي — 25 سؤالًا.</p></button><button id="openLecture5Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🔋</div><h3>ورشة المحاضرة الخامسة</h3><p>قانون أوم للدائرة المغلقة — ورشة الحصة 32 سؤالًا، والتدريب المنزلي 20 سؤالًا.</p></button><button id="openLecture6Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🔌</div><h3>ورشة المحاضرة السادسة</h3><p>قانونا كيرشوف — ورشة الحصة 28 سؤالًا، والتدريب المنزلي 19 سؤالًا.</p></button>'
     );
   }
 
   /* المحرك الموحد — لا يظهر أي رابط قبل أن يؤكد الخادم نشر الورشة وأهلية الطالب */
   if(!html.includes('id="openUnifiedL1Workshop"')){
     html=html.replace(
-      '<div class="studentHomeGrid">',
-      '<div class="studentHomeGrid"><button id="openUnifiedL1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الأولى — الفصل الثاني</h3><p>ورشة الحصة والتدريب المنزلي على المجال والفيض المغناطيسي.</p></button>'
+      '<div id="secondTermWorkshopsGrid" class="studentSubGrid">',
+      '<div id="secondTermWorkshopsGrid" class="studentSubGrid"><button id="openUnifiedL1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الأولى</h3><p>ورشة الحصة والتدريب المنزلي على المجال والفيض المغناطيسي.</p></button>'
     );
   }
 
@@ -180,21 +203,21 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopProfileAnchor,
-    "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const b2Lesson2WorkshopButton=$('openB2Lesson2Workshop');if(b2Lesson2WorkshopButton){b2Lesson2WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson2-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson2WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson2WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture4WorkshopButton=$('openLecture4Workshop');if(lecture4WorkshopButton)lecture4WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture5WorkshopButton=$('openLecture5Workshop');if(lecture5WorkshopButton)lecture5WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture6WorkshopButton=$('openLecture6Workshop');if(lecture6WorkshopButton)lecture6WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
+    "renderProfileMeta();const isThirdSecondary=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';const firstTermWorkshopsButton=$('openFirstTermWorkshops');if(firstTermWorkshopsButton)firstTermWorkshopsButton.classList.toggle('hidden',!isThirdSecondary);const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const b2Lesson2WorkshopButton=$('openB2Lesson2Workshop');if(b2Lesson2WorkshopButton){b2Lesson2WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson2-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson2WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson2WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',!isThirdSecondary);const lecture4WorkshopButton=$('openLecture4Workshop');if(lecture4WorkshopButton)lecture4WorkshopButton.classList.toggle('hidden',!isThirdSecondary);const lecture5WorkshopButton=$('openLecture5Workshop');if(lecture5WorkshopButton)lecture5WorkshopButton.classList.toggle('hidden',!isThirdSecondary);const lecture6WorkshopButton=$('openLecture6Workshop');if(lecture6WorkshopButton)lecture6WorkshopButton.classList.toggle('hidden',!isThirdSecondary);const chapterJourneyButton=$('openChapterJourney');"
   );
 
-  const unifiedWorkshopProfileAnchor="renderProfileMeta();const b2Lesson1WorkshopButton=";
+  const unifiedWorkshopProfileAnchor="renderProfileMeta();const isThirdSecondary=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';";
   if(!html.includes(unifiedWorkshopProfileAnchor))throw new Error('تعذر ربط صلاحية المحرك الموحد');
   html=html.replace(
     unifiedWorkshopProfileAnchor,
-    "renderProfileMeta();const unifiedL1WorkshopButton=$('openUnifiedL1Workshop');if(unifiedL1WorkshopButton){unifiedL1WorkshopButton.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{const allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lecture-1');unifiedL1WorkshopButton.classList.toggle('hidden',!allowed)}).catch(()=>unifiedL1WorkshopButton.classList.add('hidden'));}const b2Lesson1WorkshopButton="
+    "renderProfileMeta();const unifiedL1WorkshopButton=$('openUnifiedL1Workshop'),secondTermWorkshopsButton=$('openSecondTermWorkshops');if(unifiedL1WorkshopButton&&secondTermWorkshopsButton){unifiedL1WorkshopButton.classList.add('hidden');secondTermWorkshopsButton.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{const allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lecture-1');unifiedL1WorkshopButton.classList.toggle('hidden',!allowed);secondTermWorkshopsButton.classList.toggle('hidden',!allowed)}).catch(()=>{unifiedL1WorkshopButton.classList.add('hidden');secondTermWorkshopsButton.classList.add('hidden')});}const isThirdSecondary=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';"
   );
 
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(workshopBindAnchor)) throw new Error('تعذر ربط زر ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopBindAnchor,
-    "const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html?v=20260911-3'};const b2w2=$('openB2Lesson2Workshop');if(b2w2)b2w2.onclick=()=>{window.location.href='./b2-lesson2-workshop.html?v=20260911-1'};const l3w=$('openLecture3Workshop');if(l3w)l3w.onclick=()=>{window.location.href='./lecture3-workshop.html'};const l4w=$('openLecture4Workshop');if(l4w)l4w.onclick=()=>{window.location.href='./lecture4-workshop.html?v=20260922-2'};const l5w=$('openLecture5Workshop');if(l5w)l5w.onclick=()=>{window.location.href='./lecture5-workshop.html'};const l6w=$('openLecture6Workshop');if(l6w)l6w.onclick=()=>{window.location.href='./lecture6-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+    "const firstTermWorkshops=$('openFirstTermWorkshops');if(firstTermWorkshops)firstTermWorkshops.onclick=()=>showOnly('firstTermWorkshopsView');const secondTermWorkshops=$('openSecondTermWorkshops');if(secondTermWorkshops)secondTermWorkshops.onclick=()=>showOnly('secondTermWorkshopsView');const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html?v=20260911-3'};const b2w2=$('openB2Lesson2Workshop');if(b2w2)b2w2.onclick=()=>{window.location.href='./b2-lesson2-workshop.html?v=20260911-1'};const l3w=$('openLecture3Workshop');if(l3w)l3w.onclick=()=>{window.location.href='./lecture3-workshop.html'};const l4w=$('openLecture4Workshop');if(l4w)l4w.onclick=()=>{window.location.href='./lecture4-workshop.html?v=20260922-2'};const l5w=$('openLecture5Workshop');if(l5w)l5w.onclick=()=>{window.location.href='./lecture5-workshop.html'};const l6w=$('openLecture6Workshop');if(l6w)l6w.onclick=()=>{window.location.href='./lecture6-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
   );
 
   const unifiedWorkshopBindAnchor="const b2w=$('openB2Lesson1Workshop');";
@@ -206,6 +229,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
 
   const referencesCss=`
 @media(min-width:761px){.studentHomeGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.termHomeCard{position:relative;overflow:hidden}.termHomeCard .studentNavIcon{font-size:31px}.firstTermCard{border-color:#bfdbfe;background:linear-gradient(180deg,#eff6ff,#fff)}.secondTermCard{border-color:#c4b5fd;background:linear-gradient(180deg,#f5f3ff,#fff)}.firstTermCard .studentNavIcon{background:#dbeafe}.secondTermCard .studentNavIcon{background:#ede9fe}.termBadge{position:absolute;top:13px;left:13px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#fff;color:#344054;border:1px solid #d0d5dd}.secondTermCard .termBadge{background:#7c3aed;color:#fff;border-color:#7c3aed}html[data-theme="dark"] .firstTermCard,html[data-theme="dark"] .secondTermCard{background:#111827;border-color:#334155}html[data-theme="dark"] .firstTermCard .studentNavIcon{background:#1e3a5f}html[data-theme="dark"] .secondTermCard .studentNavIcon{background:#312e81}html[data-theme="dark"] .termBadge{background:#1f2937;color:#e5e7eb;border-color:#475467}html[data-theme="dark"] .secondTermCard .termBadge{background:#6d28d9;color:#fff;border-color:#7c3aed}
 .referenceHomeCard{border-color:#bfdbfe;background:linear-gradient(180deg,#f8fbff,#fff)}
 .referenceHomeCard .studentNavIcon{background:#dbeafe}
 .referenceLessonCard{border-color:#c7d2fe;background:linear-gradient(180deg,#fbfdff,#fff)}
@@ -224,8 +248,8 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   /* الفصل الأول — ورشة الأخطاء الشخصية (لطلاب ثالثة ثانوي فقط) */
   if(!html.includes('id="openChapterMistakes"')){
     html=html.replace(
-      '<div class="studentHomeGrid">',
-      '<div class="studentHomeGrid"><button id="openChapterMistakes" class="card studentNavCard errorsHomeCard hidden" type="button"><div class="studentNavIcon">🎯</div><h3>من الغلطة للإتقان!</h3><p>تحدّي أخطائي في الفصل الأول: ورشة شخصية تجمع الأسئلة التي احتجت لإعادة حلّها.</p></button>'
+      '<div id="firstTermWorkshopsGrid" class="studentSubGrid">',
+      '<div id="firstTermWorkshopsGrid" class="studentSubGrid"><button id="openChapterMistakes" class="card studentNavCard errorsHomeCard hidden" type="button"><div class="studentNavIcon">🎯</div><h3>من الغلطة للإتقان!</h3><p>تحدّي أخطائي في الفصل الأول: ورشة شخصية تجمع الأسئلة التي احتجت لإعادة حلّها.</p></button>'
     );
   }
   const mistakesGradeAnchor="renderProfileMeta();const unifiedL1WorkshopButton=";
