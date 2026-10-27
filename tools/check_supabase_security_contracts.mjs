@@ -10,6 +10,8 @@ const unified = read('supabase/functions/unified-workshop/index.ts');
 const unifiedAdmin = read('supabase/functions/admin-unified-workshop/index.ts');
 const unifiedMigration = read('supabase/migrations/20261024100000_unified_workshop_system.sql');
 const unifiedClient = read('workshop.js');
+const ch2Mistakes = read('supabase/functions/student-ch2-mistakes/index.ts');
+const ch2MistakesMigration = read('supabase/migrations/20261028120000_ch2_mistake_workshop.sql');
 const migrationText = readdirSync('supabase/migrations')
   .filter(name => name.endsWith('.sql'))
   .map(name => read(`supabase/migrations/${name}`))
@@ -122,6 +124,24 @@ for (const required of [
 requireContract(!/(delete\s+from|truncate)\s+(?:public|private)\./i.test(unifiedMigration), 'Unified workshop migration must not delete existing data.');
 requireContract(!/\b(public\.l[3456]_workshop_|private\.l[3456]_workshop_)/i.test(unifiedMigration), 'Unified workshop migration must not alter first-term workshop tables.');
 requireContract(!/reset|تصفير/i.test(unifiedClient), 'Unified student client must not offer a reset action.');
+
+for (const required of [
+  'auth.getUser(',
+  'private.ch2_verified_mistake_evidence',
+  'private.ch2_mistake_review_events',
+  'private.ch2_mistake_mastery_attempts',
+  'gradeWorkshopAnswer(',
+  'pg_advisory_xact_lock',
+  "definition.academic_term = 'second'",
+  'eligible_group_codes',
+]) {
+  requireContract(ch2Mistakes.includes(required), `Second-term mistake workshop contract is missing: ${required}.`);
+}
+requireContract(!ch2Mistakes.includes('body.user_id') && !ch2Mistakes.includes('body?.user_id'), 'Second-term mistakes must derive the student id from the bearer token.');
+requireContract(!/delete\s+from|truncate/i.test(ch2Mistakes), 'Second-term mistakes must not expose destructive behavior.');
+requireContract(!/\b(?:public|private)\.ch1[_a-z0-9]*/i.test(ch2MistakesMigration), 'Second-term mistake storage must remain independent from first-term tables.');
+requireContract(!/\b(?:delete\s+from|truncate|update\s+(?:public|private)\.)/i.test(ch2MistakesMigration), 'Second-term mistake migration must not modify or delete existing records.');
+requireContract(ch2MistakesMigration.includes("definition.academic_term = 'second'"), 'Second-term mistake evidence must enforce term isolation in SQL.');
 
 if (failures.length) throw new Error(failures.join('\n'));
 console.log(`Supabase security contracts OK: ${Object.keys(functions).length + 2} workshop functions and ${new Set(publicCreates).size} migration-created public tables checked.`);

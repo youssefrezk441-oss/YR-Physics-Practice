@@ -195,7 +195,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes('id="openUnifiedL1Workshop"')){
     html=html.replace(
       '<div id="secondTermWorkshopsGrid" class="studentSubGrid">',
-      '<div id="secondTermWorkshopsGrid" class="studentSubGrid"><button id="openUnifiedL1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الأولى</h3><p>ورشة الحصة والتدريب المنزلي على المجال والفيض المغناطيسي.</p></button>'
+      '<div id="secondTermWorkshopsGrid" class="studentSubGrid"><button id="openCh2Mistakes" class="card studentNavCard errorsHomeCard hidden" type="button"><div class="studentNavIcon">🎯</div><h3>من الغلطة للإتقان</h3><p>ورشة شخصية لأخطاء الفصل الثاني المثبتة، مع مراجعة ومحاولة إتقان مستقلة.</p></button><button id="openUnifiedL1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الأولى</h3><p>ورشة الحصة والتدريب المنزلي على المجال والفيض المغناطيسي.</p></button>'
     );
   }
 
@@ -210,7 +210,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes(unifiedWorkshopProfileAnchor))throw new Error('تعذر ربط صلاحية المحرك الموحد');
   html=html.replace(
     unifiedWorkshopProfileAnchor,
-    "renderProfileMeta();const unifiedL1WorkshopButton=$('openUnifiedL1Workshop'),secondTermWorkshopsButton=$('openSecondTermWorkshops');if(unifiedL1WorkshopButton&&secondTermWorkshopsButton){unifiedL1WorkshopButton.classList.add('hidden');secondTermWorkshopsButton.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{const allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lecture-1');unifiedL1WorkshopButton.classList.toggle('hidden',!allowed);secondTermWorkshopsButton.classList.toggle('hidden',!allowed)}).catch(()=>{unifiedL1WorkshopButton.classList.add('hidden');secondTermWorkshopsButton.classList.add('hidden')});}const isThirdSecondary=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';"
+    "renderProfileMeta();const unifiedL1WorkshopButton=$('openUnifiedL1Workshop'),ch2MistakesButton=$('openCh2Mistakes'),secondTermWorkshopsButton=$('openSecondTermWorkshops');let unifiedL1Allowed=false,ch2MistakesAllowed=false;const renderSecondTermAccess=()=>{if(secondTermWorkshopsButton)secondTermWorkshopsButton.classList.toggle('hidden',!(unifiedL1Allowed||ch2MistakesAllowed))};if(unifiedL1WorkshopButton&&secondTermWorkshopsButton){unifiedL1WorkshopButton.classList.add('hidden');secondTermWorkshopsButton.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{unifiedL1Allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lecture-1');unifiedL1WorkshopButton.classList.toggle('hidden',!unifiedL1Allowed);renderSecondTermAccess()}).catch(()=>{unifiedL1Allowed=false;unifiedL1WorkshopButton.classList.add('hidden');renderSecondTermAccess()});}if(ch2MistakesButton){ch2MistakesButton.classList.add('hidden');sb.functions.invoke('student-ch2-mistakes',{body:{action:'ping'}}).then(({data,error})=>{ch2MistakesAllowed=!error&&data?.ok&&data?.available;ch2MistakesButton.classList.toggle('hidden',!ch2MistakesAllowed);renderSecondTermAccess()}).catch(()=>{ch2MistakesAllowed=false;ch2MistakesButton.classList.add('hidden');renderSecondTermAccess()});}const isThirdSecondary=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';"
   );
 
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
@@ -224,7 +224,7 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
   if(!html.includes(unifiedWorkshopBindAnchor))throw new Error('تعذر ربط زر المحرك الموحد');
   html=html.replace(
     unifiedWorkshopBindAnchor,
-    "const unifiedL1=$('openUnifiedL1Workshop');if(unifiedL1)unifiedL1.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lecture-1'};const b2w=$('openB2Lesson1Workshop');"
+    "const ch2Mistakes=$('openCh2Mistakes');if(ch2Mistakes)ch2Mistakes.onclick=()=>{window.location.href='./student-ch2-mistakes.html'};const unifiedL1=$('openUnifiedL1Workshop');if(unifiedL1)unifiedL1.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lecture-1'};const b2w=$('openB2Lesson1Workshop');"
   );
 
   const referencesCss=`

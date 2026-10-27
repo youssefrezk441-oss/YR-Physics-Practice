@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#312e81">
+  <title>من الغلطة للإتقان — الفصل الثاني | مستر يوسف رزق</title>
+  <link rel="stylesheet" href="student-ch2-mistakes.css?v=20261028-1">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="student.html" class="back">← منصة الطالب</a>
+    <div><b>YR Physics Practice</b><span id="connection">جارٍ التحقق من حسابك…</span></div>
+  </header>
+
+  <main>
+    <section id="gate" class="panel gate" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>جارٍ تجهيز ورشتك الشخصية…</h1>
+      <p id="gate-message">نقرأ فقط أخطاء الفصل الثاني المثبتة لحسابك.</p>
+      <button id="retry" class="button secondary" type="button" hidden>إعادة المحاولة</button>
+      <a id="login" class="button" href="student.html" hidden>العودة لتسجيل الدخول</a>
+    </section>
+
+    <div id="app" hidden>
+      <section class="hero">
+        <div><span class="eyebrow">🧲 ورشة شخصية · الفصل الثاني</span><h1>من الغلطة للإتقان</h1><p id="welcome">الخطأ المثبت من المحاولة الأولى يتحول هنا إلى فرصة جديدة للفهم والإتقان.</p></div>
+        <div class="hero-mark" aria-hidden="true">🎯</div>
+      </section>
+
+      <section id="stats" class="stats" aria-label="ملخص الورشة"></section>
+      <p class="safety-note"><b>مهم:</b> الضغط على «راجعت» ينظم مراجعتك فقط. الإتقان لا يُسجل إلا بعد إجابة صحيحة في محاولة مستقلة جديدة. الأسئلة غير المكتملة ظاهرة منفصلة ولا تُحسب أخطاء.</p>
+
+      <section class="panel filters">
+        <div><label for="lecture-filter">المحاضرة</label><select id="lecture-filter"><option value="all">كل المحاضرات</option></select></div>
+        <div><label for="track-filter">نوع التدريب</label><select id="track-filter"><option value="all">الحصة والتدريب المنزلي</option><option value="class">ورشة الحصة</option><option value="home">التدريب المنزلي</option></select></div>
+        <div><label for="skill-filter">المهارة</label><select id="skill-filter"><option value="all">كل المهارات</option></select></div>
+        <div><label for="status-filter">الحالة</label><select id="status-filter"><option value="mistakes">كل الأخطاء المثبتة</option><option value="needs_review">يحتاج مراجعة</option><option value="reviewed">تمت مراجعته</option><option value="mastered">تم إتقانه</option><option value="incomplete">غير مكتمل — ليس خطأ</option><option value="all">كل الحالات</option></select></div>
+      </section>
+
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+      <section class="workspace">
+        <aside class="panel navigator">
+          <div class="nav-head"><h2>الأسئلة</h2><span id="item-count">—</span></div>
+          <div id="items" class="item-list"></div>
+        </aside>
+        <article id="question" class="panel question" tabindex="-1">
+          <div id="question-content" class="empty">جارٍ تحميل الأسئلة…</div>
+        </article>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="student-ch2-mistakes.js?v=20261028-1"></script>
+</body>
+</html>
