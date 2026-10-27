@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>ورش الفيزياء — مستر يوسف رزق</title>
+  <link rel="stylesheet" href="workshop.css?v=20261024-1">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="student.html" aria-label="العودة إلى منصة الطالب">← المنصة</a>
+    <div><b>YR Physics Workshop</b><span id="connection">جارٍ التحقق…</span></div>
+  </header>
+  <main>
+    <section id="gate" class="panel gate" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>جارٍ فتح الورشة بحسابك…</h1>
+      <p id="gate-message">نتحقق من الجلسة والأهلية من الخادم.</p>
+      <button id="retry" class="button secondary" hidden>إعادة المحاولة</button>
+      <a id="login" class="button" href="student.html" hidden>العودة لتسجيل الدخول</a>
+    </section>
+
+    <section id="welcome" class="panel" hidden>
+      <div class="student-line"><div><span>الطالب</span><b id="student-name">—</b><small id="student-meta">—</small></div><span id="role-badge" class="badge"></span></div>
+      <h1 id="workshop-title">ورشة الفيزياء</h1>
+      <p>اختر القسم، وسيُستكمل تقدمك المحفوظ على الخادم. لا توجد إعادة ضبط لمحاولاتك.</p>
+      <div id="track-cards" class="track-cards"></div>
+      <p id="welcome-notice" class="notice" role="status"></p>
+    </section>
+
+    <section id="workspace" hidden>
+      <div class="workspace-head panel">
+        <div><button id="back-tracks" class="text-button">← الأقسام</button><h1 id="track-title">—</h1><p id="track-mode">—</p></div>
+        <div class="progress-summary"><b id="progress-text" dir="ltr">0 / 0</b><progress id="progress" value="0" max="1"></progress></div>
+      </div>
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+      <div class="layout">
+        <aside class="panel navigator">
+          <label for="skill-filter">المهارة</label>
+          <select id="skill-filter"><option value="all">كل المهارات</option></select>
+          <div id="numbers" class="numbers" aria-label="التنقل بين الأسئلة"></div>
+          <div class="legend"><span><i data-state="first_try"></i>صحيح أول مرة</span><span><i data-state="later_independent"></i>إتقان لاحق</span><span><i data-state="assisted"></i>بمساعدة</span><span><i data-state="in_progress"></i>قيد الحل</span></div>
+        </aside>
+        <article id="question" class="panel question" tabindex="-1">
+          <div class="question-meta"><span id="position">—</span><span id="skill-name">—</span><span id="question-state" class="badge">لم يبدأ</span></div>
+          <h2 id="question-title">—</h2>
+          <p id="question-prompt" class="prompt" hidden></p>
+          <figure id="question-figure" hidden><img id="question-image" alt=""><figcaption><button id="zoom" class="text-button">تكبير الصورة الأصلية</button></figcaption></figure>
+          <div id="answers"></div>
+          <div class="question-nav"><button id="previous" class="button secondary">السابق</button><button id="next" class="button secondary">التالي</button></div>
+        </article>
+      </div>
+      <section id="submission-box" class="panel submission-box" hidden>
+        <div><h2>التسليم النهائي</h2><p>بعد التسليم تُثبت إجاباتك الأصلية، ولا يمكن تعديلها أو إعادة التسليم دون دورة يفتحها المسؤول.</p></div>
+        <button id="submit-track" class="button">تسليم التدريب المنزلي</button>
+      </section>
+    </section>
+  </main>
+  <dialog id="image-dialog"><div class="dialog-head"><b>الصورة الأصلية</b><button id="close-image" class="text-button">إغلاق</button></div><div class="image-scroll"><img id="large-image" alt=""></div></dialog>
+  <script type="module" src="workshop.js?v=20261024-1"></script>
+</body>
+</html>

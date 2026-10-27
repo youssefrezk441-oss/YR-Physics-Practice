@@ -30,6 +30,7 @@ const excludedPrefixes = [
   'supabase/',
   'tools/',
   'whatsapp-bridge/',
+  'WORKSHOP_',
 ];
 
 const files = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
@@ -59,6 +60,9 @@ for (const internal of ['.github', '.grading', 'supabase', 'tools', 'whatsapp-br
   if (existsSync(resolve(output, internal))) {
     throw new Error(`Internal source directory must not be present in the Pages artifact: ${internal}`);
   }
+}
+if (readdirSync(output).some((name) => name.startsWith('WORKSHOP_'))) {
+  throw new Error('Internal workshop delivery documentation must not be present in the Pages artifact.');
 }
 
 console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.`);

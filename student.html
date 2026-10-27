@@ -168,6 +168,14 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
     );
   }
 
+  /* المحرك الموحد — لا يظهر أي رابط قبل أن يؤكد الخادم نشر الورشة وأهلية الطالب */
+  if(!html.includes('id="openUnifiedL1Workshop"')){
+    html=html.replace(
+      '<div class="studentHomeGrid">',
+      '<div class="studentHomeGrid"><button id="openUnifiedL1Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الأولى — الفصل الثاني</h3><p>ورشة الحصة والتدريب المنزلي على المجال والفيض المغناطيسي.</p></button>'
+    );
+  }
+
   const workshopProfileAnchor="renderProfileMeta();const chapterJourneyButton=$('openChapterJourney');";
   if(!html.includes(workshopProfileAnchor)) throw new Error('تعذر ربط صلاحية ورشة المحاضرة الثالثة');
   html=html.replace(
@@ -175,11 +183,25 @@ if(!html.includes('id="openB2Lesson1Workshop"')){
     "renderProfileMeta();const b2Lesson1WorkshopButton=$('openB2Lesson1Workshop');if(b2Lesson1WorkshopButton){b2Lesson1WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson1-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson1WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson1WorkshopButton.classList.add('hidden'));}const b2Lesson2WorkshopButton=$('openB2Lesson2Workshop');if(b2Lesson2WorkshopButton){b2Lesson2WorkshopButton.classList.add('hidden');sb.functions.invoke('b2-lesson2-workshop',{body:{action:'ping'}}).then(({data,error})=>{b2Lesson2WorkshopButton.classList.toggle('hidden',!!error||!data?.ok)}).catch(()=>b2Lesson2WorkshopButton.classList.add('hidden'));}const lecture3WorkshopButton=$('openLecture3Workshop');if(lecture3WorkshopButton)lecture3WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture4WorkshopButton=$('openLecture4Workshop');if(lecture4WorkshopButton)lecture4WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture5WorkshopButton=$('openLecture5Workshop');if(lecture5WorkshopButton)lecture5WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const lecture6WorkshopButton=$('openLecture6Workshop');if(lecture6WorkshopButton)lecture6WorkshopButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const chapterJourneyButton=$('openChapterJourney');"
   );
 
+  const unifiedWorkshopProfileAnchor="renderProfileMeta();const b2Lesson1WorkshopButton=";
+  if(!html.includes(unifiedWorkshopProfileAnchor))throw new Error('تعذر ربط صلاحية المحرك الموحد');
+  html=html.replace(
+    unifiedWorkshopProfileAnchor,
+    "renderProfileMeta();const unifiedL1WorkshopButton=$('openUnifiedL1Workshop');if(unifiedL1WorkshopButton){unifiedL1WorkshopButton.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{const allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lecture-1');unifiedL1WorkshopButton.classList.toggle('hidden',!allowed)}).catch(()=>unifiedL1WorkshopButton.classList.add('hidden'));}const b2Lesson1WorkshopButton="
+  );
+
   const workshopBindAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(workshopBindAnchor)) throw new Error('تعذر ربط زر ورشة المحاضرة الثالثة');
   html=html.replace(
     workshopBindAnchor,
     "const b2w=$('openB2Lesson1Workshop');if(b2w)b2w.onclick=()=>{window.location.href='./b2-lesson1-workshop.html?v=20260911-3'};const b2w2=$('openB2Lesson2Workshop');if(b2w2)b2w2.onclick=()=>{window.location.href='./b2-lesson2-workshop.html?v=20260911-1'};const l3w=$('openLecture3Workshop');if(l3w)l3w.onclick=()=>{window.location.href='./lecture3-workshop.html'};const l4w=$('openLecture4Workshop');if(l4w)l4w.onclick=()=>{window.location.href='./lecture4-workshop.html?v=20260922-2'};const l5w=$('openLecture5Workshop');if(l5w)l5w.onclick=()=>{window.location.href='./lecture5-workshop.html'};const l6w=$('openLecture6Workshop');if(l6w)l6w.onclick=()=>{window.location.href='./lecture6-workshop.html'};$('openTrainings').onclick=()=>showOnly('trainingMenuView');"
+  );
+
+  const unifiedWorkshopBindAnchor="const b2w=$('openB2Lesson1Workshop');";
+  if(!html.includes(unifiedWorkshopBindAnchor))throw new Error('تعذر ربط زر المحرك الموحد');
+  html=html.replace(
+    unifiedWorkshopBindAnchor,
+    "const unifiedL1=$('openUnifiedL1Workshop');if(unifiedL1)unifiedL1.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lecture-1'};const b2w=$('openB2Lesson1Workshop');"
   );
 
   const referencesCss=`

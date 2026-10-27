@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>تحليلات نظام الورش الموحد</title>
+  <link rel="stylesheet" href="workshop.css?v=20261024-1">
+  <style>
+    main{max-width:1320px}.admin-head{display:flex;justify-content:space-between;gap:16px;align-items:center}.filters,.tabs{display:flex;gap:8px;flex-wrap:wrap}.filters select,.filters input,.admin-form input,.admin-form select,.admin-form textarea{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit}.tabs{margin:14px 0}.tab[aria-pressed=true]{background:var(--navy);color:#fff}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric b{display:block;font-size:27px}.metric span{color:var(--muted);font-size:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}tbody tr[data-user]{cursor:pointer}tbody tr[data-user]:hover{background:#f8fafc}.admin-form{display:grid;gap:10px}.admin-form label{display:grid;gap:4px;font-weight:800}.admin-form textarea{min-height:80px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.result{padding:12px;background:#f8fafc;border-radius:12px;white-space:pre-wrap;overflow:auto}.key-preview-image{display:block;max-width:100%;max-height:440px;object-fit:contain;margin:10px auto;border:1px solid var(--line);border-radius:10px}.danger{border-color:#fda29b}.empty{text-align:center;color:var(--muted);padding:25px}@media(max-width:760px){.metrics{grid-template-columns:repeat(2,1fr)}.two,.admin-head{grid-template-columns:1fr;display:grid}th,td{padding:8px}}
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <header class="topbar"><a class="back" href="admin-home.html">← الإدارة</a><div><b>تحليلات الورش الموحدة</b><span id="connection">جارٍ التحقق…</span></div></header>
+  <main>
+    <section class="panel admin-head"><div><h1>ورشة المحاضرة الأولى — الفصل الثاني</h1><p>بيانات حقيقية فقط من Edge Function المحمية؛ لا توجد أرقام تجريبية.</p></div><div class="filters"><select id="track"><option value="class">الحصة</option><option value="home">المنزلي</option></select><select id="cycle-source"><option value="initial">الدورة الأصلية</option><option value="admin_reopen">دورات الإعادة</option><option value="all">كل الدورات</option></select><input id="group" placeholder="كود المجموعة — اختياري"><input id="search" placeholder="بحث بالاسم أو الكود"><button id="refresh" class="button">تحديث</button><button id="export" class="button secondary">تصدير الجدول CSV</button></div></section>
+    <p id="notice" class="notice" role="status"></p>
+    <nav class="tabs" aria-label="أقسام التحليل"><button class="button secondary tab" data-tab="overview" aria-pressed="true">نظرة عامة</button><button class="button secondary tab" data-tab="students">الطلاب</button><button class="button secondary tab" data-tab="questions">الأسئلة</button><button class="button secondary tab" data-tab="skills">المهارات</button><button class="button secondary tab" data-tab="groups">المجموعات</button></nav>
+    <section id="content" class="panel"><div class="empty">جارٍ تحميل البيانات…</div></section>
+    <section id="edit-tools" class="two" hidden>
+      <form id="reopen-form" class="panel admin-form danger"><h2>إعادة فتح مدققة</h2><p>تُغلق الدورة الحالية وتُنشأ دورة جديدة؛ لا تُحذف أي محاولة.</p><label>معرف الطالب<input name="user_id" required></label><label>النطاق<select name="scope_kind"><option value="question">سؤال</option><option value="track">قسم</option><option value="workshop">الورشة</option></select></label><label>مرجع النطاق<input name="scope_ref" placeholder="BANK-L01-Q086 أو class"></label><label>السبب<textarea name="reason" minlength="8" required></textarea></label><button class="button">إنشاء دورة إعادة</button><pre id="reopen-result" class="result"></pre></form>
+      <form id="key-form" class="panel admin-form danger"><h2>تصحيح مفتاح ومعاينة أثر</h2><p>ينشئ نسخة جديدة ومعاينة فقط. الاعتماد يحتاج مسؤولًا ثانيًا، والتنفيذ خطوة مستقلة.</p><label>معرف السؤال<input name="question_ref" required></label><label>الجزء<input name="part_key" value="main" required></label><button id="inspect-key" type="button" class="button secondary">عرض السؤال والمفتاح الحالي</button><div id="key-detail" class="result"></div><label>الحرف الجديد<select name="option"><option>أ</option><option>ب</option><option>ج</option><option>د</option></select></label><label>الإجابة المعروضة<input name="display_answer" required></label><label>السبب<textarea name="reason" minlength="8" required></textarea></label><button class="button">إنشاء نسخة ومعاينة</button><pre id="key-result" class="result"></pre></form>
+    </section>
+    <section id="approval-tools" class="two" hidden>
+      <form id="approval-form" class="panel admin-form danger"><h2>اعتماد مسؤول ثانٍ</h2><p>الاعتماد لا يغير المفتاح أو النتائج حتى تنفيذ الخطوة التالية.</p><label>معرف المعاينة<input name="preview_id" required></label><label>ملخص الأثر JSON<textarea name="expected_summary" required></textarea></label><label>سبب الاعتماد<textarea name="reason" minlength="8" required></textarea></label><button class="button">اعتماد المعاينة</button><pre id="approval-result" class="result"></pre></form>
+      <form id="execution-form" class="panel admin-form danger"><h2>تنفيذ ذري لإعادة التقييم</h2><p>يعيد التحقق من المعاينة، ثم يفعّل المفتاح ويضيف قرارات تقييم جديدة دون تغيير الإجابات الأصلية.</p><label>معرف الاعتماد<input name="approval_id" required></label><label>السبب<textarea name="reason" minlength="8" required></textarea></label><label>اكتب عبارة التأكيد<input name="confirmation" placeholder="تنفيذ إعادة التقييم" required></label><button class="button">تنفيذ إعادة التقييم</button><pre id="execution-result" class="result"></pre></form>
+    </section>
+  </main>
+  <script type="module" src="admin-workshop-analytics.js?v=20261024-1"></script>
+</body>
+</html>

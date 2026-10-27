@@ -6,6 +6,10 @@ const functions = Object.fromEntries(['lecture3-workshop', 'lecture4-workshop', 
 const azhar = read('supabase/functions/azhar-exam-public/index.ts');
 const artifact = read('tools/build_pages_artifact.mjs');
 const versioning = read('supabase/migrations/20261022090000_answer_key_versioning_foundation.sql');
+const unified = read('supabase/functions/unified-workshop/index.ts');
+const unifiedAdmin = read('supabase/functions/admin-unified-workshop/index.ts');
+const unifiedMigration = read('supabase/migrations/20261024100000_unified_workshop_system.sql');
+const unifiedClient = read('workshop.js');
 const migrationText = readdirSync('supabase/migrations')
   .filter(name => name.endsWith('.sql'))
   .map(name => read(`supabase/migrations/${name}`))
@@ -37,7 +41,7 @@ requireContract(
   artifact.includes("'chemsteroo/'") && artifact.includes("'azhar-comprehensive-exam.html'"),
   'The Pages artifact must keep Chemsteroo and the Azhar student page paused.',
 );
-for (const internal of ["'.github/'", "'.grading/'", "'supabase/'", "'tools/'", "'whatsapp-bridge/'"]) {
+for (const internal of ["'.github/'", "'.grading/'", "'supabase/'", "'tools/'", "'whatsapp-bridge/'", "'WORKSHOP_'"]) {
   requireContract(artifact.includes(internal), `The Pages artifact must exclude internal source path ${internal}.`);
 }
 
@@ -67,5 +71,57 @@ requireContract(
   'The answer-key foundation migration must not modify or delete existing records.',
 );
 
+for (const required of [
+  'auth.getUser(',
+  'private.workshop_mutation_receipts',
+  'validateRequestId(body.request_id)',
+  'validateExpectedRevision(body.expected_revision)',
+  'pg_advisory_xact_lock',
+  'private.workshop_attempt_events',
+  'private.workshop_grading_decisions',
+  'admin_read_only',
+]) {
+  requireContract(unified.includes(required), `Unified student workshop contract is missing: ${required}.`);
+}
+requireContract(!unified.includes('body.user_id') && !unified.includes('body?.user_id'), 'Unified student workshop must derive the student id from the bearer token.');
+requireContract(!/delete\s+from|truncate/i.test(unified), 'Unified student workshop must not expose destructive reset behavior.');
+
+for (const required of [
+  "admin_access_level('students'",
+  'requireEdit(admin)',
+  'private.workshop_admin_events',
+  'second_admin_required',
+  'private.workshop_regrade_previews',
+  'private.workshop_regrade_approvals',
+  'regrade_executed: false',
+  'key_execute_regrade',
+  'regrade_population_changed',
+  'private.current_workshop_grading_decisions',
+  'private.workshop_regrade_execution_events',
+  'confirmation !== "تنفيذ إعادة التقييم"',
+]) {
+  requireContract(unifiedAdmin.includes(required), `Unified admin workshop contract is missing: ${required}.`);
+}
+requireContract(!/delete\s+from|truncate/i.test(unifiedAdmin), 'Unified admin workshop must reopen by cycle and never delete history.');
+
+for (const required of [
+  'private.workshop_definitions',
+  'private.workshop_versions',
+  'private.workshop_attempt_events',
+  'private.workshop_progress',
+  'private.workshop_submissions',
+  'private.workshop_grading_decisions',
+  'private.workshop_admin_events',
+  'private.workshop_regrade_previews',
+  'private.current_workshop_part_keys',
+  'enable row level security',
+  'revoke all on private.%I from public, anon, authenticated',
+]) {
+  requireContract(unifiedMigration.includes(required), `Unified workshop migration is missing: ${required}.`);
+}
+requireContract(!/(delete\s+from|truncate)\s+(?:public|private)\./i.test(unifiedMigration), 'Unified workshop migration must not delete existing data.');
+requireContract(!/\b(public\.l[3456]_workshop_|private\.l[3456]_workshop_)/i.test(unifiedMigration), 'Unified workshop migration must not alter first-term workshop tables.');
+requireContract(!/reset|تصفير/i.test(unifiedClient), 'Unified student client must not offer a reset action.');
+
 if (failures.length) throw new Error(failures.join('\n'));
-console.log(`Supabase security contracts OK: ${Object.keys(functions).length} workshop functions and ${new Set(publicCreates).size} migration-created public tables checked.`);
+console.log(`Supabase security contracts OK: ${Object.keys(functions).length + 2} workshop functions and ${new Set(publicCreates).size} migration-created public tables checked.`);

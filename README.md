@@ -21,6 +21,7 @@ node tools/check_workshop_input_guards.mjs
 node tools/check_supabase_security_contracts.mjs
 node tools/check_submission_safety.mjs
 node tools/check_public_answer_keys.mjs
+node tools/check_unified_workshop_content.mjs
 node --test tools/tests/*.test.mjs
 ```
 
@@ -39,6 +40,8 @@ node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
 الدفع إلى `main` يشغّل `.github/workflows/pages.yml`. الـworkflow يتحقق من جاهزية صفحات B2، يعيد تشغيل فحوص JavaScript وعقود الأسئلة، يبني حزمة عامة منفصلة، ثم ينشرها إلى GitHub Pages.
 
 نشر Supabase Edge Functions والمهاجرات ليس مؤتمتًا من هذا المستودع حاليًا. لا تنشر أي وظيفة أو migration قبل مراجعة بيئة الهدف وخطة الرجوع.
+
+محرك ورش الفصل الثاني الموحد موجود في `workshop.html` ووظيفتي `unified-workshop` و`admin-unified-workshop`. وثائق المعمارية والاختبار والنشر تبدأ من `WORKSHOP_SYSTEM_ARCHITECTURE.md`. ورشة المحاضرة الأولى تظل draft وغير متاحة حتى تطبيقها واختبارها واعتماد نشرها على Supabase؛ وجود ملفاتها العامة في المصدر لا ينشر مفاتيح المعلم ولا يفعّلها للطلاب.
 
 حالة Supabase المؤكدة والفجوات وخطوات staging موثقة في `supabase/README.md`. مخطط إصدارات مفاتيح الإجابة المضاف هو أساس غير منشور ولا يعيد تصحيح أي محاولة موجودة.
 

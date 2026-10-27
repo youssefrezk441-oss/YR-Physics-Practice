@@ -1,0 +1,1517 @@
+{
+  "schema_version": 1,
+  "workshop": {
+    "slug": "third-secondary-term-2-lecture-1",
+    "title": "ورشة المحاضرة الأولى - الفيض والمجال المغناطيسي",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 1,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "class",
+      "title": "ورشة الحصة",
+      "mode": "interactive",
+      "order": 1,
+      "policy": {
+        "max_unique_attempts": 2,
+        "reveal_after_attempts": 2,
+        "auto_reveal_mcq": true
+      }
+    },
+    {
+      "key": "home",
+      "title": "التدريب المنزلي",
+      "mode": "final_submit",
+      "order": 2,
+      "policy": {
+        "require_all_answers": true,
+        "allow_review_after_submit": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "MAG-001",
+      "name": "مفهوم المجال وخطوطه",
+      "order": 1
+    },
+    {
+      "id": "MAG-009",
+      "name": "تجربة أورستد والربط بين الكهرباء والمغناطيسية",
+      "order": 2
+    },
+    {
+      "id": "MAG-010",
+      "name": "شكل المجال الدائري المحيط بالسلك",
+      "order": 3
+    },
+    {
+      "id": "MAG-011",
+      "name": "قاعدة قبضة اليد اليمنى للسلك",
+      "order": 4
+    },
+    {
+      "id": "MAG-003",
+      "name": "تعريف الفيض المغناطيسي ووحدته",
+      "order": 5
+    },
+    {
+      "id": "MAG-005",
+      "name": "زاوية السطح وزاوية العمودي",
+      "order": 6
+    },
+    {
+      "id": "MAG-006",
+      "name": "قيم الفيض العظمى والصفرية",
+      "order": 7
+    },
+    {
+      "id": "MAG-008",
+      "name": "تغير الفيض والحركة والمنحنيات",
+      "order": 8
+    },
+    {
+      "id": "MAG-007",
+      "name": "إشارة الفيض وانعكاس العمودي",
+      "order": 9
+    },
+    {
+      "id": "MAG-012",
+      "name": "كثافة الفيض لسلك طويل",
+      "order": 10
+    },
+    {
+      "id": "MAG-014",
+      "name": "العلاقات البيانية B–I للسلك الطويل (ضمن النسخة النهائية للمحاضرة الأولى)",
+      "order": 11
+    },
+    {
+      "id": "MAG-002",
+      "name": "اتجاه خطوط المجال داخل المغناطيس وخارجه",
+      "order": 12
+    },
+    {
+      "id": "MAG-004",
+      "name": "تعريف كثافة الفيض B ووحدات التكافؤ",
+      "order": 13
+    },
+    {
+      "id": "MAG-013",
+      "name": "تأثير النفاذية المغناطيسية ووحدتها",
+      "order": 14
+    },
+    {
+      "id": "MAG-018",
+      "name": "التيار الاصطلاحي مقابل حركة الإلكترونات",
+      "order": 15
+    }
+  ],
+  "questions": [
+    {
+      "id": "YR-L01-C01",
+      "track": "class",
+      "order": 1,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "المجال وخطوطه",
+      "prompt": "لماذا لا يمكن أن تتقاطع خطوط المجال المغناطيسي عند نقطة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-001",
+      "skill_name": "مفهوم المجال وخطوطه",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "لأن المجال عند النقطة له اتجاه واحد محدد"
+            },
+            {
+              "value": "ب",
+              "label": "لأن الخطوط أسلاك مادية متصلة"
+            },
+            {
+              "value": "ج",
+              "label": "لأن كثافة المجال ثابتة دائمًا"
+            },
+            {
+              "value": "د",
+              "label": "لأن الخطوط تنتهي عند كل نقطة"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C04",
+      "track": "class",
+      "order": 2,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "تجربة أورستد",
+      "prompt": "في تجربة أورستد، ماذا يحدث عند عكس اتجاه التيار في السلك مع ثبات موضع البوصلة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-009",
+      "skill_name": "تجربة أورستد والربط بين الكهرباء والمغناطيسية",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "لا ينحرف مؤشر البوصلة في الحالتين"
+            },
+            {
+              "value": "ب",
+              "label": "تصبح كثافة مجال السلك صفرًا"
+            },
+            {
+              "value": "ج",
+              "label": "ينعكس اتجاه انحراف الإبرة عن وضعها الأصلي"
+            },
+            {
+              "value": "د",
+              "label": "يتحوّل مجال السلك إلى خطوط مستقيمة"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C05",
+      "track": "class",
+      "order": 3,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "المجال الدائري وبرادة الحديد",
+      "prompt": "عند نثر برادة الحديد على لوح يمر خلاله سلك مستقيم عمودي حامل للتيار، أي معلومة تكشفها البرادة مباشرة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-010",
+      "skill_name": "شكل المجال الدائري المحيط بالسلك",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "شكل المسارات الدائرية متحدة المركز حول السلك"
+            },
+            {
+              "value": "ب",
+              "label": "اتجاه المجال بالأَسهم الدقيقة دون بوصلة"
+            },
+            {
+              "value": "ج",
+              "label": "القيمة العددية لكثافة الفيض عند كل نقطة"
+            },
+            {
+              "value": "د",
+              "label": "شدة التيار بالأمبير"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C06",
+      "track": "class",
+      "order": 4,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "قاعدة قبضة اليد اليمنى",
+      "prompt": "يمر تيار اصطلاحي خارج مستوى الورقة نحو القارئ، ورمزه ⊙. ما اتجاه خطوط المجال حول السلك؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-011",
+      "skill_name": "قاعدة قبضة اليد اليمنى للسلك",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "مع اتجاه عقارب الساعة"
+            },
+            {
+              "value": "ب",
+              "label": "شعاعيًا بعيدًا عن السلك"
+            },
+            {
+              "value": "ج",
+              "label": "خطوط مستقيمة موازية للسلك"
+            },
+            {
+              "value": "د",
+              "label": "عكس اتجاه عقارب الساعة"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q078",
+      "track": "class",
+      "order": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 78",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q078.png",
+      "image_sha256": "e360eb3cccf32044b01b3ef625d37b390b45dc3420c82ad5188b303222f10f5a",
+      "skill": "MAG-011",
+      "skill_name": "قاعدة قبضة اليد اليمنى للسلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C02",
+      "track": "class",
+      "order": 6,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "مفهوم الفيض ومساحة السطح",
+      "prompt": "يدور سطح داخل مجال مغناطيسي منتظم ثابت، دون تحريكه من موضعه. ما العبارة الصحيحة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-003",
+      "skill_name": "تعريف الفيض المغناطيسي ووحدته",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تتغير كثافة الفيض B والفيض Φ معًا بالضرورة"
+            },
+            {
+              "value": "ب",
+              "label": "قد يتغير الفيض Φ بينما تبقى كثافة الفيض B ثابتة"
+            },
+            {
+              "value": "ج",
+              "label": "يبقى الفيض Φ ثابتًا في كل الأوضاع"
+            },
+            {
+              "value": "د",
+              "label": "تتغير كثافة الفيض B وحدها"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C03",
+      "track": "class",
+      "order": 7,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "زاوية المستوى والعمودي",
+      "prompt": "إذا كانت θ زاوية حادة بين اتجاه المجال ومستوى سطح مستوٍ، فما العلاقة التي تحسب مقدار الفيض خلاله في مجال منتظم؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-005",
+      "skill_name": "زاوية السطح وزاوية العمودي",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "Φ=BAcosθ"
+            },
+            {
+              "value": "ب",
+              "label": "Φ=BA sinθ"
+            },
+            {
+              "value": "ج",
+              "label": "Φ=B/A"
+            },
+            {
+              "value": "د",
+              "label": "Φ=BA tanθ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q032",
+      "track": "class",
+      "order": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "الفيض بعد دوران ملف عن الوضع العمودي على المجال",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q032.png",
+      "image_sha256": "ebc6f225e3774750d3c5b16bb2d09860897cb7a1db1755c13fced83887c90d95",
+      "skill": "MAG-005",
+      "skill_name": "زاوية السطح وزاوية العمودي",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q056",
+      "track": "class",
+      "order": 9,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "تحديد زاوية تجعل الفيض نصف قيمته العظمى",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q056.png",
+      "image_sha256": "1170498990b5bd9486bb8d43ea156d7ad552daaa01052193dd366213dea11e02",
+      "skill": "MAG-006",
+      "skill_name": "قيم الفيض العظمى والصفرية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q067",
+      "track": "class",
+      "order": 10,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 67",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q067.png",
+      "image_sha256": "605b51a5493b938c512edfc58def7c8d8018c878042e8bbc6f05d8b0aa0b0a94",
+      "skill": "MAG-003",
+      "skill_name": "تعريف الفيض المغناطيسي ووحدته",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q008",
+      "track": "class",
+      "order": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "استخراج أقصى فيض من نقطة على منحنى الفيض والزوايا",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q008.png",
+      "image_sha256": "3abba865b967f6c3505e8eefe79403fa6cc59777d333163802d95f7944fd92a1",
+      "skill": "MAG-008",
+      "skill_name": "تغير الفيض والحركة والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q070",
+      "track": "class",
+      "order": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 70",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q070.png",
+      "image_sha256": "46672d2ed65d89a08f8bfa767a764b763d4186c46d37527088c460d9ebb00ced",
+      "skill": "MAG-007",
+      "skill_name": "إشارة الفيض وانعكاس العمودي",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q080",
+      "track": "class",
+      "order": 13,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 80",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q080.png",
+      "image_sha256": "4beb18074e0f482c76bfdcd4a2dde4784e905632c58cc084cb3c79fa8836aee0",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q013",
+      "track": "class",
+      "order": 14,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "مقارنة كثافة المجال باستخدام البعد العمودي الحقيقي",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q013.png",
+      "image_sha256": "1d15dbc7d9197baf937c5af07a4e7079d9f5d1d5168362fa6d9b8e9afd884f8e",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q086",
+      "track": "class",
+      "order": 15,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 86",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q086.png",
+      "image_sha256": "281a1667c7865f9579f99ae40f0ba471a177dcec6e30ba742087f26f17913220",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q144",
+      "track": "class",
+      "order": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "مقارنة الاتجاه والمقدار لنقطتين على بعد متساوٍ",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q144.png",
+      "image_sha256": "4c8c9cc65c7ab71e26665991af6c03540b54059c781a3b8547f8bb3f0f778acc",
+      "skill": "MAG-011",
+      "skill_name": "قاعدة قبضة اليد اليمنى للسلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q165",
+      "track": "class",
+      "order": 17,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "استخراج البعد من ميل الرسم",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q165.png",
+      "image_sha256": "3ac7fac2c54a279e218ce3508d30c71c08c95376b1adea66d0d1241283271ce8",
+      "skill": "MAG-014",
+      "skill_name": "العلاقات البيانية B–I للسلك الطويل (ضمن النسخة النهائية للمحاضرة الأولى)",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q176",
+      "track": "class",
+      "order": 18,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "إيجاد البعد عن السلك",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q176.png",
+      "image_sha256": "b851f3cb67c9a6ace08c1a044406c988e4e38003681b672797c6e4d9d9c0ec80",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C07",
+      "track": "home",
+      "order": 1,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "المجال وخطوطه",
+      "prompt": "أي وصف يعبّر عن المجال المغناطيسي المنتظم؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-001",
+      "skill_name": "مفهوم المجال وخطوطه",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "ثابت المقدار فقط مع اختلاف الاتجاه"
+            },
+            {
+              "value": "ب",
+              "label": "خطوط دائرية حول سلك مستقيم"
+            },
+            {
+              "value": "ج",
+              "label": "كثافة الفيض فيه متساوية مقدارًا واتجاهًا في جميع النقاط"
+            },
+            {
+              "value": "د",
+              "label": "مجال تزداد شدته كلما ابتعدنا"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C11",
+      "track": "home",
+      "order": 2,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "خطوط المغناطيس داخلًا وخارجًا",
+      "prompt": "ما اتجاه خطوط المجال المغناطيسي داخل المغناطيس القضيب؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-002",
+      "skill_name": "اتجاه خطوط المجال داخل المغناطيس وخارجه",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "من الشمالي إلى الجنوبي"
+            },
+            {
+              "value": "ب",
+              "label": "من الجنوبي إلى الشمالي"
+            },
+            {
+              "value": "ج",
+              "label": "تخرج شعاعيًا من كلا القطبين"
+            },
+            {
+              "value": "د",
+              "label": "لا توجد خطوط مجال داخله"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C08",
+      "track": "home",
+      "order": 3,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "كثافة الفيض ووحداتها",
+      "prompt": "ما العلاقة الصحيحة بين وحدتَي التسلا والويبر في المجال المنتظم عند التعامد؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-004",
+      "skill_name": "تعريف كثافة الفيض B ووحدات التكافؤ",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "1 T = 1 Wb·m²"
+            },
+            {
+              "value": "ب",
+              "label": "1 T = 1 Wb/m²"
+            },
+            {
+              "value": "ج",
+              "label": "1 T = 1 Wb/m"
+            },
+            {
+              "value": "د",
+              "label": "1 T = 1 m²/Wb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q066",
+      "track": "home",
+      "order": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "منحنى الفيض خلال حلقة دائرية بدلالة نصف قطرها",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q066.png",
+      "image_sha256": "51a2876fe033af4ee3762c041e6334cc24522cf252a4325fe05c5b152d52609d",
+      "skill": "MAG-003",
+      "skill_name": "تعريف الفيض المغناطيسي ووحدته",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q083",
+      "track": "home",
+      "order": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 83",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q083.png",
+      "image_sha256": "0f314e896fc5d4446c2706a282907d8cdce7c1acb46610b8c8fffe6f457d3230",
+      "skill": "MAG-014",
+      "skill_name": "العلاقات البيانية B–I للسلك الطويل (ضمن النسخة النهائية للمحاضرة الأولى)",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C09",
+      "track": "home",
+      "order": 6,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "إشارة الفيض الجبرية",
+      "prompt": "عند ثبات B وA، كان الفيض الجبري +BA ثم استدار العمودي المختار للسطح 180°. ما التغير الجبري في الفيض؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-007",
+      "skill_name": "إشارة الفيض وانعكاس العمودي",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "صفر"
+            },
+            {
+              "value": "ب",
+              "label": "−BA"
+            },
+            {
+              "value": "ج",
+              "label": "−2BA"
+            },
+            {
+              "value": "د",
+              "label": "+2BA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q148",
+      "track": "home",
+      "order": 7,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "التناسب بين شدة المجال والبعد",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q148.png",
+      "image_sha256": "0838b4384e5e3468205f47fbb15039916fdead09ee31bc7a02a230ead9d97fac",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q009",
+      "track": "home",
+      "order": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "مقارنة شدة التيار مع اختلاف البعد عن أسلاك مستقيمة",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q009.png",
+      "image_sha256": "0e6355e7835ed7dbe3fbd39d84b16e5c74cc32c6bb10c1a2083e3363feb0a69b",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C10",
+      "track": "home",
+      "order": 9,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "نفاذية الوسط",
+      "prompt": "إذا تضاعفت نفاذية الوسط μ حول سلك مستقيم طويل مع بقاء التيار والبعد ثابتين في النموذج الدراسي، فكيف تتغير B؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-013",
+      "skill_name": "تأثير النفاذية المغناطيسية ووحدتها",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تتضاعف"
+            },
+            {
+              "value": "ب",
+              "label": "تقل للنصف"
+            },
+            {
+              "value": "ج",
+              "label": "لا تتغير"
+            },
+            {
+              "value": "د",
+              "label": "تصبح أربعة أمثالها"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q146",
+      "track": "home",
+      "order": 10,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "النسبة بين مجالين عند بعدين مختلفين",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q146.png",
+      "image_sha256": "9536f6e9950bbe3021cf0d8e7e12c2689ef59152c3d39c728fbde698bd0278a0",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q087",
+      "track": "home",
+      "order": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 87",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q087.png",
+      "image_sha256": "668410564bcacd4af1e833d57fa760cccf117519439e6ab411924a73fb56f987",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q088",
+      "track": "home",
+      "order": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 88",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q088.png",
+      "image_sha256": "ca2c58142f53ed1e5b08dc34bb7b09cda024f5e5523623f0dde07032db6a6733",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C12",
+      "track": "home",
+      "order": 13,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "كثافة الفيض لسلك طويل",
+      "prompt": "سلك أسطواني طويل نصف قطره r، ونقطة خارجه تبعد مسافة x عن سطحه. ما المسافة التي تُستخدم في قانون B خارج السلك؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "x فقط"
+            },
+            {
+              "value": "ب",
+              "label": "r فقط"
+            },
+            {
+              "value": "ج",
+              "label": "r + x"
+            },
+            {
+              "value": "د",
+              "label": "r − x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q170",
+      "track": "home",
+      "order": 14,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "تغير المجال مع البعد",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q170.png",
+      "image_sha256": "cb78c50724f50e12398784954473cae784a4f3d40e39ce026a378c9fbb10d750",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q084",
+      "track": "home",
+      "order": 15,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "حل الصورة 84",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q084.png",
+      "image_sha256": "ead96b77fb709cd634013b468fabf7bbb2490f25084564732ab4c880b1b80471",
+      "skill": "MAG-014",
+      "skill_name": "العلاقات البيانية B–I للسلك الطويل (ضمن النسخة النهائية للمحاضرة الأولى)",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L01-Q147",
+      "track": "home",
+      "order": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "مقارنة تيارات عند تساوي المجال",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1/BANK-L01-Q147.png",
+      "image_sha256": "9e0d954073702eba4397f57f515878f5a213487bf0c153f370d3bcba523e6b69",
+      "skill": "MAG-012",
+      "skill_name": "كثافة الفيض لسلك طويل",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أ"
+            },
+            {
+              "value": "ب",
+              "label": "ب"
+            },
+            {
+              "value": "ج",
+              "label": "ج"
+            },
+            {
+              "value": "د",
+              "label": "د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C13",
+      "track": "home",
+      "order": 17,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "اتجاه التيار والإلكترونات",
+      "prompt": "في سلك فلزي يمر به تيار مستمر، ما العلاقة بين اتجاه التيار الاصطلاحي واتجاه انجراف الإلكترونات؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-018",
+      "skill_name": "التيار الاصطلاحي مقابل حركة الإلكترونات",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاتجاهان متطابقان"
+            },
+            {
+              "value": "ب",
+              "label": "الإلكترونات ساكنة رغم وجود تيار"
+            },
+            {
+              "value": "ج",
+              "label": "الإلكترونات تتحرك عموديًا على التيار"
+            },
+            {
+              "value": "د",
+              "label": "يتعاكسان في الاتجاه"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YR-L01-C14",
+      "track": "home",
+      "order": 18,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "منحنيات مجال السلك",
+      "prompt": "يمثل خطان مستقيمان منحنيَي B مقابل I لسلكين عند وسطين مختلفين، لكن مسافة القياس عن السلك تختلف أيضًا. هل يكفي الميل الأكبر للحكم أن نفاذية ذلك الوسط أكبر؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-014",
+      "skill_name": "العلاقات البيانية B–I للسلك الطويل (ضمن النسخة النهائية للمحاضرة الأولى)",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "نعم، في جميع الحالات"
+            },
+            {
+              "value": "ب",
+              "label": "لا، لأن الميل يتناسب مع μ/d ويجب معرفة أو تثبيت d"
+            },
+            {
+              "value": "ج",
+              "label": "نعم، لأن الميل يساوي d فقط"
+            },
+            {
+              "value": "د",
+              "label": "لا، لأن B لا تعتمد على μ"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
