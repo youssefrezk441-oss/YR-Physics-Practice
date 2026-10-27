@@ -228,9 +228,9 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
       '<div class="studentHomeGrid"><button id="openChapterMistakes" class="card studentNavCard errorsHomeCard hidden" type="button"><div class="studentNavIcon">🎯</div><h3>من الغلطة للإتقان!</h3><p>تحدّي أخطائي في الفصل الأول: ورشة شخصية تجمع الأسئلة التي احتجت لإعادة حلّها.</p></button>'
     );
   }
-  const mistakesGradeAnchor="renderProfileMeta();const b2Lesson1WorkshopButton=";
+  const mistakesGradeAnchor="renderProfileMeta();const unifiedL1WorkshopButton=";
   if(!html.includes(mistakesGradeAnchor))throw new Error('تعذر ربط إظهار ورشة الأخطاء');
-  html=html.replace(mistakesGradeAnchor,"renderProfileMeta();const mistakesHomeButton=$('openChapterMistakes');if(mistakesHomeButton)mistakesHomeButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const b2Lesson1WorkshopButton=");
+  html=html.replace(mistakesGradeAnchor,"renderProfileMeta();const mistakesHomeButton=$('openChapterMistakes');if(mistakesHomeButton)mistakesHomeButton.classList.toggle('hidden',gradeLabel(profile?.grade_level)!=='الصف الثالث الثانوي');const unifiedL1WorkshopButton=");
   const mistakesActionAnchor="$('openTrainings').onclick=()=>showOnly('trainingMenuView');";
   if(!html.includes(mistakesActionAnchor))throw new Error('تعذر ربط فتح ورشة الأخطاء');
   html=html.replace(mistakesActionAnchor,"const mistakesBtn=$('openChapterMistakes');if(mistakesBtn)mistakesBtn.onclick=()=>{location.href='student-ch1-mistakes.html?v=20261014-images-2'};"+mistakesActionAnchor);
