@@ -36,4 +36,10 @@ export function parseEgyptianNationalId(value:unknown, today=new Date()){
   return{id,birthDate:`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`,last4:id.slice(-4)};
 }
 export function validatePassword(value:unknown){const p=String(value??"");if(p.length<10||p.length>128||!/[A-Za-z\p{L}]/u.test(p)||!/[0-9٠-٩]/.test(p))throw new IdentityInputError("weak_password","استخدم 10 أحرف على الأقل تشمل حروفًا وأرقامًا.");return p}
+export function assertExistingProfileIdentityConsent(input:{hasNationalId:boolean,collectionEnabled:boolean,accepted:boolean,noticeVersion:string,currentNoticeVersion:string}){
+  if(!input.hasNationalId)return false;
+  if(!input.collectionEnabled)throw new IdentityInputError("identity_collection_unavailable","جمع الرقم القومي غير متاح حاليًا. يمكنك تحديث بيانات التواصل فقط.");
+  if(!input.accepted||!input.noticeVersion||input.noticeVersion!==input.currentNoticeVersion)throw new IdentityInputError("privacy_consent_required","يلزم قراءة إشعار الخصوصية الحالي والموافقة عليه قبل إرسال الرقم القومي.");
+  return true;
+}
 export const constantStatusMessage="إذا كانت البيانات صحيحة فسيتم تنفيذ الطلب وفق حالته دون كشف وجود حساب من عدمه.";

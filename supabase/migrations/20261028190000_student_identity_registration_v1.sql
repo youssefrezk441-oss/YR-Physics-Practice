@@ -23,7 +23,8 @@ insert into private.student_identity_settings(singleton) values(true) on conflic
 create table if not exists private.student_registration_requests(
   id uuid primary key default gen_random_uuid(), public_ref uuid not null unique default gen_random_uuid(),
   status text not null default 'pending' check(status in('pending','needs_information','approved','rejected','cancelled')),
-  provisioning_status text not null default 'not_started' check(provisioning_status in('not_started','auth_created','profile_created','activation_issued','activated','failed')),
+  provisioning_status text not null default 'not_started' check(provisioning_status in('not_started','auth_creating','auth_created','profile_created','activation_issued','activated','failed')),
+  provisioning_lock_token uuid, provisioning_locked_at timestamptz,
   full_name text not null check(length(btrim(full_name)) between 8 and 160),
   national_id_ciphertext text, national_id_iv text, national_id_hmac text, national_id_last4 text,
   national_id_exception_requested boolean not null default false,
@@ -60,6 +61,12 @@ create table if not exists private.student_privacy_consents(
   notice_version text not null, consent_kind text not null check(consent_kind in('registration_and_identity_processing')),
   accepted_at timestamptz not null, recorded_at timestamptz not null default now(), unique(request_id,consent_kind)
 );
+create table if not exists private.student_profile_privacy_consents(
+  id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete restrict,
+  notice_version text not null, consent_kind text not null check(consent_kind in('existing_profile_identity_processing')),
+  accepted_at timestamptz not null, recorded_at timestamptz not null default now(),
+  unique(user_id,notice_version,consent_kind)
+);
 
 create table if not exists private.student_sensitive_identities(
   user_id uuid primary key references auth.users(id) on delete restrict,
@@ -94,6 +101,12 @@ create table if not exists private.student_code_reservations(
   reserved_at timestamptz not null default now(), assigned_at timestamptz, released_at timestamptz,
   check((status='assigned' and assigned_at is not null) or status<>'assigned'),
   check((status='released' and released_at is not null) or status<>'released')
+);
+create table if not exists private.student_identity_claims(
+  national_id_hmac text primary key, request_id uuid not null unique references private.student_registration_requests(id) on delete restrict,
+  status text not null default 'reserved' check(status in('reserved','assigned')),
+  user_id uuid references auth.users(id) on delete restrict, reserved_at timestamptz not null default now(), assigned_at timestamptz,
+  check((status='assigned' and user_id is not null and assigned_at is not null) or status='reserved')
 );
 
 create table if not exists private.student_profile_status(
@@ -177,6 +190,31 @@ begin
 end $$;
 revoke all on function private.reserve_student_code(uuid,text,text) from public,anon,authenticated;
 
+create or replace function private.reserve_student_identity_claim(p_request_id uuid,p_national_id_hmac text)
+returns boolean language plpgsql security definer set search_path=private,public,pg_temp as $$
+declare existing_request uuid;
+begin
+  insert into private.student_identity_claims(national_id_hmac,request_id)
+  select p_national_id_hmac,r.id from private.student_registration_requests r
+  where r.id=p_request_id and not r.national_id_exception_requested and r.national_id_hmac=p_national_id_hmac
+  on conflict do nothing;
+  select request_id into existing_request from private.student_identity_claims where national_id_hmac=p_national_id_hmac;
+  return existing_request=p_request_id;
+end $$;
+revoke all on function private.reserve_student_identity_claim(uuid,text) from public,anon,authenticated;
+
+create or replace function private.claim_student_registration_provisioning(p_request_id uuid,p_attempt_id uuid)
+returns boolean language sql security definer set search_path=private,public,pg_temp as $$
+  with claimed as (
+    update private.student_registration_requests
+    set provisioning_status=case when auth_user_id is null then 'auth_creating' else 'auth_created' end,
+        provisioning_lock_token=p_attempt_id,provisioning_locked_at=now(),updated_at=now()
+    where id=p_request_id and (provisioning_status not in('auth_creating','auth_created') or provisioning_locked_at is null or provisioning_locked_at<=now()-interval '5 minutes')
+    returning id
+  ) select exists(select 1 from claimed)
+$$;
+revoke all on function private.claim_student_registration_provisioning(uuid,uuid) from public,anon,authenticated;
+
 create or replace function private.claim_student_activation_token(p_token_hash text,p_payload_hmac text)
 returns table(id uuid,user_id uuid,request_id uuid,resume boolean)
 language plpgsql security definer set search_path=private,public,pg_temp as $$
@@ -209,7 +247,7 @@ end $$;
 revoke all on function private.claim_student_activation_token(text,text) from public,anon,authenticated;
 revoke all on function private.claim_student_password_reset_token(text,text) from public,anon,authenticated;
 
-do $$ declare t text; begin foreach t in array array['student_identity_settings','student_registration_requests','student_privacy_consents','student_sensitive_identities','student_identity_exceptions','student_code_reservations','student_login_identifiers','student_profile_status','student_profile_details','student_sensitive_change_requests','student_activation_tokens','student_account_recovery_requests','student_password_reset_tokens','student_identity_audit_events','student_identity_rate_limits'] loop execute format('alter table private.%I enable row level security',t);execute format('revoke all on private.%I from public,anon,authenticated',t);end loop;end $$;
+do $$ declare t text; begin foreach t in array array['student_identity_settings','student_registration_requests','student_privacy_consents','student_profile_privacy_consents','student_sensitive_identities','student_identity_exceptions','student_code_reservations','student_identity_claims','student_login_identifiers','student_profile_status','student_profile_details','student_sensitive_change_requests','student_activation_tokens','student_account_recovery_requests','student_password_reset_tokens','student_identity_audit_events','student_identity_rate_limits'] loop execute format('alter table private.%I enable row level security',t);execute format('revoke all on private.%I from public,anon,authenticated',t);end loop;end $$;
 comment on table private.student_sensitive_identities is 'Encrypted Egyptian national IDs. Decryption is server-only, separately authorized and audited.';
 comment on table private.student_identity_settings is 'Fail-closed feature controls; production activation requires a separate reviewed operation.';
 commit;
