@@ -6,6 +6,8 @@ cd "$(dirname "$0")/.."
 db_container=yr-identity-e2e-db
 auth_container=yr-identity-e2e-auth
 network=yr-identity-e2e-net
+postgres_image='postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b'
+gotrue_image='supabase/gotrue@sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b'
 jwt_secret=synthetic-local-jwt-secret-at-least-32-bytes
 service_jwt="$(node -e 'const c=require("node:crypto"),s=process.argv[1],b=v=>Buffer.from(JSON.stringify(v)).toString("base64url"),h=b({alg:"HS256",typ:"JWT"}),p=b({role:"service_role",iss:"supabase",iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+86400});process.stdout.write(`${h}.${p}.${c.createHmac("sha256",s).update(`${h}.${p}`).digest("base64url")}`)' "$jwt_secret")"
 gateway_pid=
@@ -16,6 +18,7 @@ cleanup() {
   test -z "$gateway_pid" || kill "$gateway_pid" 2>/dev/null || true
   docker rm -f "$auth_container" "$db_container" >/dev/null 2>&1 || true
   docker network rm "$network" >/dev/null 2>&1 || true
+  rm -f /tmp/yr-identity-gateway.log /tmp/yr-identity-function.log
 }
 trap cleanup EXIT INT TERM
 
@@ -24,7 +27,7 @@ docker network rm "$network" >/dev/null 2>&1 || true
 docker network create "$network" >/dev/null
 docker run -d --name "$db_container" --network "$network" \
   -e POSTGRES_PASSWORD=synthetic_test_only -e POSTGRES_DB=postgres \
-  -p 127.0.0.1:55432:5432 postgres:17-alpine >/dev/null
+  -p 127.0.0.1:55432:5432 "$postgres_image" >/dev/null
 
 ready=0
 for _ in $(seq 1 60); do
@@ -50,7 +53,7 @@ docker run -d --name "$auth_container" --network "$network" \
   -e GOTRUE_DB_DATABASE_URL="postgres://postgres:synthetic_test_only@${db_container}:5432/postgres?sslmode=disable" \
   -e GOTRUE_DB_NAMESPACE=auth -e GOTRUE_JWT_SECRET="$jwt_secret" -e GOTRUE_JWT_EXP=3600 \
   -e GOTRUE_EXTERNAL_EMAIL_ENABLED=true -e GOTRUE_MAILER_AUTOCONFIRM=true \
-  -e GOTRUE_DISABLE_SIGNUP=false supabase/gotrue:v2.197.0 >/dev/null
+  -e GOTRUE_DISABLE_SIGNUP=false "$gotrue_image" >/dev/null
 
 for _ in $(seq 1 90); do
   curl -fsS http://127.0.0.1:59999/health >/dev/null 2>&1 && break
@@ -77,7 +80,7 @@ STUDENT_IDENTITY_ENCRYPTION_KEY_B64='MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY
 STUDENT_IDENTITY_HMAC_KEY_B64='ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=' \
 STUDENT_IDENTITY_TEST_FAILPOINTS=synthetic-e2e-only \
 DENO_DIR=/tmp/yr-deno-cache npm_config_cache=/tmp/yr-npm-cache \
-npx --yes deno run --allow-net --allow-env supabase/functions/student-identity/index.ts \
+npx --yes deno@2.9.6 run --allow-net --allow-env supabase/functions/student-identity/index.ts \
   >/tmp/yr-identity-function.log 2>&1 &
 function_pid=$!
 
@@ -87,7 +90,10 @@ for _ in $(seq 1 60); do
   sleep 1
 done
 
-E2E_TARGET=local E2E_SUPABASE_URL=http://127.0.0.1:58000 \
-E2E_ANON_KEY=synthetic-anon E2E_SERVICE_ROLE_KEY="$service_jwt" \
-E2E_DB_CONTAINER="$db_container" E2E_ALLOW_WRITES=synthetic-e2e-only \
-node --test tools/tests/student-identity-staging.integration.mjs
+for pass in 1 2; do
+  echo "Local GoTrue E2E pass ${pass}/2"
+  E2E_TARGET=local E2E_SUPABASE_URL=http://127.0.0.1:58000 \
+  E2E_ANON_KEY=synthetic-anon E2E_SERVICE_ROLE_KEY="$service_jwt" \
+  E2E_DB_CONTAINER="$db_container" E2E_ALLOW_WRITES=synthetic-e2e-only \
+  node --test tools/tests/student-identity-staging.integration.mjs
+done

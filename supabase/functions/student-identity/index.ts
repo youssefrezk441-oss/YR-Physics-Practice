@@ -5,7 +5,7 @@ import{readWorkshopJson,WorkshopRequestError}from"../_shared/workshop-security.t
 
 const URL=Deno.env.get("SUPABASE_URL")??"",ANON=Deno.env.get("SUPABASE_ANON_KEY")??"",SERVICE=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"",DB=Deno.env.get("SUPABASE_DB_URL")??"";
 const ENC=Deno.env.get("STUDENT_IDENTITY_ENCRYPTION_KEY_B64")??"",HMAC=Deno.env.get("STUDENT_IDENTITY_HMAC_KEY_B64")??"";
-const SYNTHETIC_FAILPOINTS=Deno.env.get("STUDENT_IDENTITY_TEST_FAILPOINTS")==="synthetic-e2e-only";
+const SYNTHETIC_FAILPOINTS=Deno.env.get("STUDENT_IDENTITY_TEST_FAILPOINTS")==="synthetic-e2e-only"&&["127.0.0.1","localhost"].includes((()=>{try{return new globalThis.URL(URL).hostname}catch{return""}})());
 const auth=createClient(URL,ANON,{auth:{persistSession:false,autoRefreshToken:false}}),admin=createClient(URL,SERVICE,{auth:{persistSession:false,autoRefreshToken:false}}),sql=postgres(DB,{prepare:false,max:4,idle_timeout:20});
 const origins=new Set(["https://youssefrezk441-oss.github.io","http://127.0.0.1:8000","http://localhost:8000"]),enc=new TextEncoder();
 const txt=(v:unknown,n=300)=>String(v??"").normalize("NFKC").trim().slice(0,n);

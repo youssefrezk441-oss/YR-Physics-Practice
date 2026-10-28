@@ -5,8 +5,8 @@
 
 ## الاختبار المحلي
 
-المتطلبات: Docker، Node.js 24، وإمكانية تنزيل صور `postgres:17-alpine` و
-`supabase/gotrue:v2.197.0` وحزمة Deno. شغّل:
+المتطلبات: Docker وNode.js 24. يستخدم المشغّل صور PostgreSQL وGoTrue مثبتة
+بـSHA256، ويشغّل الرحلة مرتين في البيئة نفسها لإثبات نجاح التنظيف وإعادة التشغيل:
 
 ```bash
 bash tools/run_student_identity_local_e2e.sh
@@ -18,20 +18,37 @@ bash tools/run_student_identity_local_e2e.sh
 
 ## إنشاء مشروع Staging سحابي
 
-1. أنشئ مشروعًا جديدًا داخل مؤسسة Supabase مخصصة للاختبار إن أمكن. لا تربطه
-   بالإنتاج ولا تستخدم نسخة احتياطية أو بيانات أو مفاتيح منه.
-2. اختر منطقة قريبة من المستخدمين/الإنتاج لتقارب زمن الاستجابة. راجع شاشة إنشاء
-   المشروع وقت التنفيذ لمعرفة الخطة والتكلفة؛ الأسعار والحصة المجانية تتغير، ولا
-   ينشئ هذا المستودع مشروعًا مدفوعًا تلقائيًا.
-3. طبّق مخطط Staging فقط، ثم Migration الهوية، ثم انشر دالة
-   `student-identity` بمفاتيح تشفير/HMAC جديدة خاصة بـStaging.
-4. أنشئ GitHub Environment باسم `supabase-staging` مع موافقة يدوية، وأضف:
+1. استخدم مؤسسة Supabase منفصلة للاختبار إن كانت متاحة، أو مشروعًا معزولًا داخل
+   المؤسسة الحالية لا يشاركه الإنتاج في المفاتيح أو الشبكات أو النسخ الاحتياطية.
+   يلزم قرار المالك قبل إنشاء مشروع مدفوع. راجع صفحة الأسعار عند الإنشاء؛ لا يمكن
+   تثبيت تكلفة دقيقة في المستودع، وقد يكفي حد المشاريع المجانية أو يلزم مشروع مدفوع.
+2. اختر نفس منطقة الإنتاج إن كانت مناسبة ومتاحة لتقارب السلوك وزمن الاستجابة،
+   وإلا أقرب منطقة لمصر. المنطقة قرار إنشاء يصعب تغييره لاحقًا.
+3. أنشئ Schema واقعيًا بواسطة تصدير `pg_dump --schema-only` للهيكل المعتمد بعد
+   مراجعة الملف واستبعاد المالكين وبيانات الإحصاء والأسرار. لا تستخدم `pg_dump`
+   للبيانات، ولا تستعد نسخة احتياطية من الإنتاج. طبّق بعده migrations المطلوبة،
+   ومنها `20261028190000_student_identity_registration_v1.sql`.
+4. شغّل `tools/check_student_identity_staging_schema.sql`. الفحص يتطلب الجداول
+   الحقيقية للطلاب والمحاولات والتصحيح و`admin_access_level`، ويرفض جداول
+   `synthetic_*` القديمة. Fixture المحلي لا يُطبّق على Staging.
+5. أنشئ حساب إدارة اصطناعيًا في Auth بعنوان `example.invalid`، وأضف له
+   `app_metadata.role=admin` وصلاحية `students/edit` من نموذج الصلاحيات الحقيقي
+   الذي يستخدمه `admin_access_level`. تحقق باستعلام الدالة؛ ممنوع استبدالها بدالة
+   ترجع `edit` دائمًا. الاختبار ينشئ الطالب القديم والموقوف والمجموعة الخاصة به
+   تلقائيًا ثم ينظفها.
+6. ولّد مفتاحي AES-256 وHMAC جديدين خاصين بـStaging، واحفظهما كـEdge Function
+   secrets مع `SUPABASE_DB_URL`. لا تنسخ مفاتيح الإنتاج. انشر `student-identity`
+   على Staging فقط، واترك `STUDENT_IDENTITY_TEST_FAILPOINTS` غير معرف.
+7. أبقِ كل Feature Flags مغلقة قبل التشغيل.
+8. أنشئ GitHub Environment باسم `supabase-staging` مع موافقة يدوية، وأضف:
    - Variable: `STAGING_SUPABASE_URL`
    - Variable: `STAGING_PROJECT_REF`
    - Secret: `STAGING_SUPABASE_ANON_KEY`
    - Secret: `STAGING_SUPABASE_SERVICE_ROLE_KEY`
    - Secret: `STAGING_DATABASE_URL`
-5. يجب ألا يساوي `STAGING_PROJECT_REF` مرجع الإنتاج. الاختبار يستخرج المرجع
+   - Secret: `STAGING_ADMIN_EMAIL`
+   - Secret: `STAGING_ADMIN_PASSWORD`
+9. يجب ألا يساوي `STAGING_PROJECT_REF` مرجع الإنتاج. الاختبار يستخرج المرجع
    فعليًا من الرابط، ويطابقه مع قائمة السماح ومع رابط قاعدة البيانات قبل أي كتابة.
 
 تشغيل الاختبار يدويًا:
@@ -43,13 +60,25 @@ E2E_ALLOWED_PROJECT_REFS=TEST_REF \
 E2E_DB_URL='postgresql://...' \
 E2E_ANON_KEY='...' \
 E2E_SERVICE_ROLE_KEY='...' \
+E2E_STAGING_ADMIN_EMAIL='...' \
+E2E_STAGING_ADMIN_PASSWORD='...' \
 E2E_ALLOW_WRITES=synthetic-e2e-only \
 node --test tools/tests/student-identity-staging.integration.mjs
 ```
 
 المفاتيح لا توضع في الأمر فعليًا أو في السجلات؛ المثال يوضح أسماء المتغيرات فقط.
-الاختبار يوسم مستخدميه بمعرف تشغيل فريد، وينظف الطلبات والعلاقات التي أنشأها فقط
-باستخدام `student_identity_staging_cleanup.sql`، ثم يحذف مستخدمي Auth الموسومين.
+كل تشغيل يستخدم مجموعة فريدة ولا يستعمل `ON CONFLICT`. يسجل cleanup قبل أول
+مستخدم، ويستعيد Feature Flags الأصلية حتى عند الفشل. يثبت ملكية مستخدم Auth بعلامة
+التشغيل أو `registration_request_id` أو علاقة الطلب المسجلة قبل حذفه. ويُظهر فشلًا
+صريحًا مع Run ID إذا تعذر التنظيف. حساب إدارة Staging المسبق لا يحذفه الاختبار.
+
+حقن `auth_create_error` و`after_auth_create` محصور في Docker المحلي وCI. في
+Staging السحابي يظهر الاختباران كـskipped صراحة، ولا يجوز تعريف مفتاح failpoints
+على أي مشروع سحابي معتاد.
+
+بعد التشغيل راقب Logs لدالة `student-identity` وAuth وPostgres، ثم تأكد من نجاح
+cleanup وعدم وجود طلبات `residence_area` الخاصة بالـRun ID أو مجموعته. عند فشل
+cleanup أوقف أي إعادة تشغيل وراجع الـRun ID المطبوع؛ لا تنفذ حذفًا عامًا.
 
 ## ما لا يثبته نجاح Staging
 

@@ -2,9 +2,14 @@
 begin;
 create temporary table e2e_requests on commit drop as
   select id from private.student_registration_requests
-  where residence_area like '%__RUN_ID__%';
+  where residence_area = 'e2e:__RUN_ID__';
 create temporary table e2e_users on commit drop as
-  select id from auth.users where raw_app_meta_data->>'synthetic_run'='__RUN_ID__';
+  select id from auth.users where raw_app_meta_data->>'synthetic_run'='__RUN_ID__'
+  union select r.auth_user_id from private.student_registration_requests r
+    join e2e_requests er on er.id=r.id where r.auth_user_id is not null
+  union select u.id from auth.users u join private.student_registration_requests r
+    on u.raw_app_meta_data->>'registration_request_id'=r.public_ref::text
+    join e2e_requests er on er.id=r.id;
 
 delete from private.student_identity_audit_events
  where request_id in(select id from e2e_requests)
@@ -33,11 +38,16 @@ delete from private.student_identity_exceptions where user_id in(select id from 
 delete from private.student_login_identifiers where user_id in(select id from e2e_users);
 delete from private.student_profile_status where user_id in(select id from e2e_users);
 delete from private.student_profile_details where user_id in(select id from e2e_users);
-delete from public.synthetic_student_attempts where user_id in(select id from e2e_users);
-delete from public.synthetic_student_grades where user_id in(select id from e2e_users);
+do $$ begin
+  if to_regclass('private.local_e2e_academic_sentinel') is not null then
+    execute 'delete from private.local_e2e_academic_sentinel where user_id in(select id from e2e_users)';
+  end if;
+  if to_regclass('public.local_e2e_admin_permissions') is not null then
+    execute 'delete from public.local_e2e_admin_permissions where user_id in(select id from e2e_users)';
+  end if;
+end $$;
 delete from public.student_group_memberships where user_id in(select id from e2e_users);
 delete from public.student_profiles where user_id in(select id from e2e_users);
-delete from public.synthetic_admin_permissions where user_id in(select id from e2e_users);
-delete from public.student_groups where group_code='SYN-N2-A'
+delete from public.student_groups where group_code='__GROUP_CODE__'
   and not exists(select 1 from public.student_group_memberships m where m.group_id=student_groups.id);
 commit;

@@ -29,6 +29,16 @@ jobs:
           node --test tools/tests/student-bootstrap.e2e.test.cjs
       - name: Build Pages artifact without deploying
         run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
+  local-gotrue-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Isolated local GoTrue, PostgreSQL and Edge Function E2E (two clean runs)
+        run: bash tools/run_student_identity_local_e2e.sh
   staging-integration:
     if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' && vars.STAGING_PROJECT_REF != '' }}
     runs-on: ubuntu-latest
@@ -46,5 +56,10 @@ jobs:
           E2E_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
           E2E_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          E2E_STAGING_ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL }}
+          E2E_STAGING_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
           E2E_ALLOW_WRITES: synthetic-e2e-only
-        run: node tools/tests/student-identity-staging.integration.mjs
+        run: |
+          docker run --rm -i postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b \
+            psql "$E2E_DB_URL" -X -v ON_ERROR_STOP=1 < tools/check_student_identity_staging_schema.sql
+          node tools/tests/student-identity-staging.integration.mjs

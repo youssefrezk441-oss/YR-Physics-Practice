@@ -18,22 +18,22 @@ create table if not exists public.student_group_memberships(
   user_id uuid not null references public.student_profiles(user_id) on delete restrict,
   joined_on date, left_on date, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
-create table if not exists public.synthetic_admin_permissions(
+create table if not exists public.local_e2e_admin_permissions(
   user_id uuid primary key references auth.users(id) on delete cascade, scope text not null, access_level text not null
 );
 create or replace function public.admin_access_level(p_scope text,p_user_id uuid)
 returns text language sql stable security definer set search_path=public,pg_temp as $$
-  select coalesce((select access_level from public.synthetic_admin_permissions where user_id=p_user_id and scope=p_scope),'none')
+  select coalesce((select access_level from public.local_e2e_admin_permissions where user_id=p_user_id and scope=p_scope),'none')
 $$;
 
-create table if not exists public.synthetic_student_attempts(
-  id uuid primary key default gen_random_uuid(), user_id uuid not null, score integer not null, payload jsonb not null
-);
-create table if not exists public.synthetic_student_grades(
-  id uuid primary key default gen_random_uuid(), user_id uuid not null, grade numeric not null
+create schema if not exists private;
+create table if not exists private.local_e2e_academic_sentinel(
+  user_id uuid primary key references auth.users(id) on delete restrict,
+  attempt_count integer not null,
+  grade_total numeric not null
 );
 
 grant usage on schema public to anon,authenticated,service_role;
 grant select on public.student_groups to anon,authenticated;
-grant all on public.student_groups,public.student_profiles,public.student_group_memberships,public.synthetic_admin_permissions,public.synthetic_student_attempts,public.synthetic_student_grades to service_role;
+grant all on public.student_groups,public.student_profiles,public.student_group_memberships,public.local_e2e_admin_permissions to service_role;
 grant execute on function public.admin_access_level(text,uuid) to authenticated,service_role;
