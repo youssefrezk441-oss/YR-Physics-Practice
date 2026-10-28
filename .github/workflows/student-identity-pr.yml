@@ -1,0 +1,48 @@
+name: Student identity PR checks
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security-compatibility-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Identity unit and compatibility tests
+        run: node --test tools/tests/student-identity-core.test.mjs tools/tests/student-account-normalize.test.mjs tools/tests/student-identity-security-contract.test.mjs
+      - name: Security contracts
+        run: |
+          node tools/check_supabase_security_contracts.mjs
+          node tools/check_public_answer_keys.mjs
+          node tools/check_submission_safety.mjs
+          node tools/audit_student_profile_enforcement.mjs
+      - name: Migration and real PostgreSQL concurrency
+        run: bash tools/test_student_identity_migration.sh
+      - name: Bootstrap browser test
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          node --test tools/tests/student-bootstrap.e2e.test.cjs
+      - name: Build Pages artifact without deploying
+        run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
+  staging-integration:
+    if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' }}
+    runs-on: ubuntu-latest
+    environment: supabase-staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Supabase staging integration (synthetic accounts only)
+        env:
+          STAGING_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          STAGING_LEGACY_STUDENT_CODE: ${{ secrets.STAGING_LEGACY_STUDENT_CODE }}
+          STAGING_LEGACY_STUDENT_PASSWORD: ${{ secrets.STAGING_LEGACY_STUDENT_PASSWORD }}
+          STAGING_ALLOW_WRITES: 'false'
+        run: node tools/tests/student-identity-staging.integration.mjs

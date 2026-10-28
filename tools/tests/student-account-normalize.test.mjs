@@ -1,0 +1,3 @@
+import test from'node:test';import assert from'node:assert/strict';import{looksLikeEgyptianPhone,normalizeEgyptianPhone}from'../../student-account-normalize.js';
+for(const [raw,want] of [['01012345678','+201012345678'],['01112345678','+201112345678'],['01212345678','+201212345678'],['01512345678','+201512345678'],['+20 10 1234 5678','+201012345678'],['00201012345678','+201012345678'],['201012345678','+201012345678'],['۱۰۱۲۳۴۵۶۷۸','+201012345678']])test(`browser normalizes ${raw}`,()=>{assert.equal(looksLikeEgyptianPhone(raw),true);assert.equal(normalizeEgyptianPhone(raw),want)});
+test('browser rejects landline and malformed mobile values',()=>{assert.equal(looksLikeEgyptianPhone('0212345678'),false);assert.throws(()=>normalizeEgyptianPhone('01312345678'))});

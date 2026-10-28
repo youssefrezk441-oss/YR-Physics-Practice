@@ -1,0 +1,4 @@
+const digitMap={"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9","۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"};
+export const latinDigits=value=>String(value??'').replace(/[٠-٩۰-۹]/g,c=>digitMap[c]??c);
+export function normalizeEgyptianPhone(value){let phone=latinDigits(value).replace(/[^0-9+]/g,'');if(phone.startsWith('0020'))phone=`+20${phone.slice(4)}`;else if(phone.startsWith('20')&&phone.length===12)phone=`+${phone}`;else if(phone.startsWith('01')&&phone.length===11)phone=`+20${phone.slice(1)}`;else if(/^1[0125][0-9]{8}$/.test(phone))phone=`+20${phone}`;if(!/^\+201[0125][0-9]{8}$/.test(phone))throw Error('رقم الموبايل المصري غير صحيح.');return phone}
+export function looksLikeEgyptianPhone(value){const v=latinDigits(value).trim().replace(/[\s()\-]/g,'');return /^(?:\+?20|0020|0)?1[0125][0-9]{8}$/.test(v)}
