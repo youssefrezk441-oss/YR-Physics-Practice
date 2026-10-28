@@ -1,0 +1,2162 @@
+{
+  "schema_version": 1,
+  "delivery_contract": "paper_homework_capture_v1",
+  "workshop": {
+    "slug": "third-secondary-term-2-lecture-1-homework",
+    "title": "واجب المحاضرة الأولى — الفصل الثاني",
+    "subtitle": "الفيض والمجال المغناطيسي — كتاب الامتحان",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 1,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "home",
+      "title": "تسجيل إجابات الواجب الورقي",
+      "mode": "final_submit",
+      "order": 1,
+      "policy": {
+        "allow_unanswered": true,
+        "one_submission": true,
+        "essay_self_review": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "HW-MAG-001",
+      "name": "الفيض المغناطيسي وعلاقته بكثافة المجال والمساحة",
+      "order": 1
+    },
+    {
+      "id": "HW-MAG-002",
+      "name": "زاوية السطح والعمودي على الملف",
+      "order": 2
+    },
+    {
+      "id": "HW-MAG-003",
+      "name": "تغير الفيض والدوران والمنحنيات",
+      "order": 3
+    },
+    {
+      "id": "HW-MAG-004",
+      "name": "وحدات الكميات المغناطيسية والنفاذية",
+      "order": 4
+    },
+    {
+      "id": "HW-MAG-005",
+      "name": "اتجاه المجال حول سلك مستقيم",
+      "order": 5
+    },
+    {
+      "id": "HW-MAG-006",
+      "name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "order": 6
+    },
+    {
+      "id": "HW-MAG-007",
+      "name": "العلاقات البيانية B–I وB–1/d",
+      "order": 7
+    },
+    {
+      "id": "HW-MAG-008",
+      "name": "الدوائر الكهربائية وتأثيرها في المجال",
+      "order": 8
+    }
+  ],
+  "questions": [
+    {
+      "id": "EXAM-L01-HW-Q001",
+      "track": "home",
+      "order": 1,
+      "source_number": 1,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 1 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q001.jpg",
+      "image_sha256": "27d69fd95bb29fd4abe68d0cbfe91d237b704e51b1ef3248add853ac130838c2",
+      "skill": "HW-MAG-001",
+      "skill_name": "الفيض المغناطيسي وعلاقته بكثافة المجال والمساحة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q002",
+      "track": "home",
+      "order": 2,
+      "source_number": 2,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 2 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q002.jpg",
+      "image_sha256": "dacd6fa275ca76874fdeb97d2c4aa7e847564ba98b7a8f8e53155c08df15175a",
+      "skill": "HW-MAG-003",
+      "skill_name": "تغير الفيض والدوران والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q003",
+      "track": "home",
+      "order": 3,
+      "source_number": 3,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 3 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q003.jpg",
+      "image_sha256": "958ca24c5b90da3ce7df519aac2a99f53d3070fdca67a2a6b1cd4d68e165d61b",
+      "skill": "HW-MAG-001",
+      "skill_name": "الفيض المغناطيسي وعلاقته بكثافة المجال والمساحة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q004",
+      "track": "home",
+      "order": 4,
+      "source_number": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 4 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q004.jpg",
+      "image_sha256": "0ee2e4b3124794acea36f88384445d8e5d0f5e50b54d62dede5c1ab0e9b090ab",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q005",
+      "track": "home",
+      "order": 5,
+      "source_number": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 5 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q005.jpg",
+      "image_sha256": "5f8736223d654e7ba9c5904b419c62f2d05d700ded8f1f7f64bce0303e8248d7",
+      "skill": "HW-MAG-003",
+      "skill_name": "تغير الفيض والدوران والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب 1",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب 2",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "المطلوب 3",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_4",
+          "label": "المطلوب 4",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q006",
+      "track": "home",
+      "order": 6,
+      "source_number": 6,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 6 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q006.jpg",
+      "image_sha256": "2a7842e012cb8ce815f04e421c8a1eec7eb70a8f0eab543b67e82dba33feda1c",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q007",
+      "track": "home",
+      "order": 7,
+      "source_number": 7,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 7 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q007.jpg",
+      "image_sha256": "71b77383a8d8777fad14772923367cd491f4cfc50a1651b6fe4584a0a4d8b6a5",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q008",
+      "track": "home",
+      "order": 8,
+      "source_number": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 8 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q008.jpg",
+      "image_sha256": "68aae51584876019ab6ecc074f1490c860ab01776719d9ba42d79fcea0833d8b",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q009",
+      "track": "home",
+      "order": 9,
+      "source_number": 9,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 9 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q009.jpg",
+      "image_sha256": "f8afd30743256d63d6796fd574cb8188b6700ee0ce30710efac697ec84d454d1",
+      "skill": "HW-MAG-003",
+      "skill_name": "تغير الفيض والدوران والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "ربع دورة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "نصف دورة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "ثلث دورة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q010",
+      "track": "home",
+      "order": 10,
+      "source_number": 10,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 10 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q010.jpg",
+      "image_sha256": "da49942fb2295737071b8aaa4dc6fdfaa46683c1429a8bd9fa385b60301d3f08",
+      "skill": "HW-MAG-003",
+      "skill_name": "تغير الفيض والدوران والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q011",
+      "track": "home",
+      "order": 11,
+      "source_number": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 11 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q011.jpg",
+      "image_sha256": "10c511a721a09f0216d1b585cd320c37beeffcc94a5b2f977084d37bf03e3af6",
+      "skill": "HW-MAG-001",
+      "skill_name": "الفيض المغناطيسي وعلاقته بكثافة المجال والمساحة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q012",
+      "track": "home",
+      "order": 12,
+      "source_number": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 12 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q012.jpg",
+      "image_sha256": "28fdf75a7998b0ef23ee4f5b9251314773cbcbce9709cf2146b5b37dcb5f1a00",
+      "skill": "HW-MAG-001",
+      "skill_name": "الفيض المغناطيسي وعلاقته بكثافة المجال والمساحة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q013",
+      "track": "home",
+      "order": 13,
+      "source_number": 13,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 13 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q013.jpg",
+      "image_sha256": "ea2c9ebd4a679a5664bb6fb32ed6702889585a4b3a90cbdbc2c4c27d13e1e5a4",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "1-أ",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "1-ب",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "2-أ",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_4",
+          "label": "2-ب",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q014",
+      "track": "home",
+      "order": 14,
+      "source_number": 14,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 14 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q014.jpg",
+      "image_sha256": "a72d4e48da2754f98eb3ec1158795017a9db10bc7dc2b3ffc65ac45216a8b80c",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب 1",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب 2",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q015",
+      "track": "home",
+      "order": 15,
+      "source_number": 15,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 15 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q015.jpg",
+      "image_sha256": "19a17e7ee6cbe5e71671facca19e93778f947d54ebf717aa46c472c4c2c2ec8e",
+      "skill": "HW-MAG-003",
+      "skill_name": "تغير الفيض والدوران والمنحنيات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q016",
+      "track": "home",
+      "order": 16,
+      "source_number": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 16 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q016.jpg",
+      "image_sha256": "dee22b17ee3cd22fecda9c9b1b06fc50cd5e12e3e50b9f1f217cd968a93ba924",
+      "skill": "HW-MAG-004",
+      "skill_name": "وحدات الكميات المغناطيسية والنفاذية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q017",
+      "track": "home",
+      "order": 17,
+      "source_number": 17,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 17 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q017.jpg",
+      "image_sha256": "2b890538b2c39c57581022a7fc020bdcf8841c83436eabaae6b73567c128cf25",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q018",
+      "track": "home",
+      "order": 18,
+      "source_number": 18,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 18 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q018.jpg",
+      "image_sha256": "0a3099640dc47add91117849ec712b9dee14fb690f542ef14ce98e32ffdc82c2",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q019",
+      "track": "home",
+      "order": 19,
+      "source_number": 19,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 19 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q019.jpg",
+      "image_sha256": "1a69432c3f442bb5b089b2e0b2bd9d1d140889636cdcf7a00bbf872e6f6ee874",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q020",
+      "track": "home",
+      "order": 20,
+      "source_number": 20,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 20 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q020.jpg",
+      "image_sha256": "ae50156772f004ce38124cfcd2f27af6440bcec0e489d65c06eaa2b5cb488a72",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q021",
+      "track": "home",
+      "order": 21,
+      "source_number": 21,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 21 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q021.jpg",
+      "image_sha256": "ce49ebf8ca3bfb34722a81e21f4ae7d261b401f2aed53155f3508622bf8b13bb",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q022",
+      "track": "home",
+      "order": 22,
+      "source_number": 22,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 22 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q022.jpg",
+      "image_sha256": "158dbc1d1c4691f33d76e3277afd11d539d81d1c8d1297d893a0db024e931baf",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q023",
+      "track": "home",
+      "order": 23,
+      "source_number": 23,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 23 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q023.jpg",
+      "image_sha256": "de7476326096115000ff82c5e45f16f2eb5744ca6c3132fac855fb41753e31e7",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q024",
+      "track": "home",
+      "order": 24,
+      "source_number": 24,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 24 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q024.jpg",
+      "image_sha256": "4ee97692194ab9b6e0877a866ca488b2d63a72b272e59b8843b93351a3f69596",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q025",
+      "track": "home",
+      "order": 25,
+      "source_number": 25,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 25 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q025.jpg",
+      "image_sha256": "04ca6444dabc92fca5814c0ac34b20e155498115deaae66025a849b894cfd5bf",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q026",
+      "track": "home",
+      "order": 26,
+      "source_number": 26,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 26 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q026.jpg",
+      "image_sha256": "5c546c4f9f69da2a0c432f06495db23bef0840b88179c6ebf9a29ab44354fa2f",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q027",
+      "track": "home",
+      "order": 27,
+      "source_number": 27,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 27 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q027.jpg",
+      "image_sha256": "738717b46d88039730565f9e5da5279ca44c9f3e7b934c6269313591d1b96cfe",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q028",
+      "track": "home",
+      "order": 28,
+      "source_number": 28,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 28 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q028.jpg",
+      "image_sha256": "517253e5bce2ea509e2e6a91df7caf05e06b85d9de053f87c7adc66dc4412c64",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q029",
+      "track": "home",
+      "order": 29,
+      "source_number": 29,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 29 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q029.jpg",
+      "image_sha256": "6ff57eef509f0218f13ae79aa95bfd5e8fc29d1ee6ff16ceaced301fabced9f0",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب 1",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب 2",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q030",
+      "track": "home",
+      "order": 30,
+      "source_number": 30,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 30 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q030.jpg",
+      "image_sha256": "107a3b7caed73e84702342276f5ba7c9b07d9dc7f2a8bc335b1a5daa84f55482",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q031",
+      "track": "home",
+      "order": 31,
+      "source_number": 31,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 31 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q031.jpg",
+      "image_sha256": "01110bfb46bac2ef8b917df3d9daa83ca5584e5eeeb83776ac399ec90088c2c7",
+      "skill": "HW-MAG-007",
+      "skill_name": "العلاقات البيانية B–I وB–1/d",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q032",
+      "track": "home",
+      "order": 32,
+      "source_number": 32,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 32 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q032.jpg",
+      "image_sha256": "792ec0b798ea56428f6fc953c9d8d168765a9a246b1836123b19b72c94c932c7",
+      "skill": "HW-MAG-007",
+      "skill_name": "العلاقات البيانية B–I وB–1/d",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q033",
+      "track": "home",
+      "order": 33,
+      "source_number": 33,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 33 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q033.jpg",
+      "image_sha256": "7d378ea8a974cf26117757557e12d039c520ff28e4e44ee5e904a4229d74425b",
+      "skill": "HW-MAG-008",
+      "skill_name": "الدوائر الكهربائية وتأثيرها في المجال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q034",
+      "track": "home",
+      "order": 34,
+      "source_number": 34,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 34 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q034.jpg",
+      "image_sha256": "c984bb87dc40f7a365c54ec80fe0b0b8a231a710cc7ff812cc64d31ac2659301",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب 1",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب 2",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q081",
+      "track": "home",
+      "order": 35,
+      "source_number": 81,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 81 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q081.jpg",
+      "image_sha256": "c7c7d6e3e3f6fb62d65bfe43107ae57608aaaf5c1f3e725466480e251fadaa62",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q082",
+      "track": "home",
+      "order": 36,
+      "source_number": 82,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 82 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q082.jpg",
+      "image_sha256": "01442dc0a70ec30c46b01a7f175c06fbe5836bcd19b906900b6ce679da354701",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المسار 1",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المسار 2",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q083",
+      "track": "home",
+      "order": 37,
+      "source_number": 83,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 83 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q083.jpg",
+      "image_sha256": "f837e78dda2f521495b92456706afd7e6dcb6fdf5be184ed75deb1a538d6d354",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "الحالة الدائرية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "الحالة المربعة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q084",
+      "track": "home",
+      "order": 38,
+      "source_number": 84,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 84 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q084.jpg",
+      "image_sha256": "28c2a7db13723c242f9ed198982195ebb331488660cc4b8736f7a433de9f80c7",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب 1",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب 2",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q085",
+      "track": "home",
+      "order": 39,
+      "source_number": 85,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 85 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q085.jpg",
+      "image_sha256": "5d9b4a092df1cbf6947cba9b7323349bc344495d94510230019f82a1cbfcb12c",
+      "skill": "HW-MAG-002",
+      "skill_name": "زاوية السطح والعمودي على الملف",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "قيمة z",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q086",
+      "track": "home",
+      "order": 40,
+      "source_number": 86,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 86 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q086.jpg",
+      "image_sha256": "1b52f0d73dc311339baa33e917977ea819b82896afe7814fa67846c2beebe855",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "الشكل 1 — النقطة a",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "الشكل 1 — النقطة b",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_3",
+          "label": "الشكل 2 — النقطة a",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_4",
+          "label": "الشكل 2 — النقطة b",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q087",
+      "track": "home",
+      "order": 41,
+      "source_number": 87,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 87 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q087.jpg",
+      "image_sha256": "b5f2441dd0963df65c6c20009560eff30303ff230aadfdd8224c9250be5e2c04",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الرسم والاتجاه",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q088",
+      "track": "home",
+      "order": 42,
+      "source_number": 88,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 88 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q088.jpg",
+      "image_sha256": "fc615560e6a9b6343df92f25c094a6bc310b592a80ca20b0a11385083571a266",
+      "skill": "HW-MAG-006",
+      "skill_name": "مقدار كثافة الفيض حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "مقارنة كثافات الفيض",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q089",
+      "track": "home",
+      "order": 43,
+      "source_number": 89,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 89 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q089.jpg",
+      "image_sha256": "5bfa59c897c437637d7f0a4bec9d7a5354121fecddd9c815d26aa507ac34bdbb",
+      "skill": "HW-MAG-004",
+      "skill_name": "وحدات الكميات المغناطيسية والنفاذية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "ميل منحنى B–I",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "ميل منحنى B–1/d",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q090",
+      "track": "home",
+      "order": 44,
+      "source_number": 90,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 90 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q090.jpg",
+      "image_sha256": "1ab464149a5d313d43d7cafac99b7512bf33b26f1754fc413e88e24f48976d6c",
+      "skill": "HW-MAG-008",
+      "skill_name": "الدوائر الكهربائية وتأثيرها في المجال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "التغير عند غلق المفتاح",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q091",
+      "track": "home",
+      "order": 45,
+      "source_number": 91,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 91 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q091.jpg",
+      "image_sha256": "a35a4f34ee99a1d253375085b80c9a92dcc5b6de9a4c6ed88acd84173b14d9d5",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "تحديد موضع النقطة k",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-HW-Q092",
+      "track": "home",
+      "order": 46,
+      "source_number": 92,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 92 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-homework/EXAM-L01-HW-Q092.jpg",
+      "image_sha256": "9b12430c1db8a0df93f46f86420197e1f2d6b347d966e8e42e7133a1d0c996a7",
+      "skill": "HW-MAG-005",
+      "skill_name": "اتجاه المجال حول سلك مستقيم",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اتجاه التيار",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    }
+  ]
+}

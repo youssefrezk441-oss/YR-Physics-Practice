@@ -1,4 +1,4 @@
-export type Ch2MistakeEvidenceKind = "interactive_first_attempt" | "final_submission_wrong";
+export type Ch2MistakeEvidenceKind = "interactive_first_attempt" | "final_submission_wrong" | "paper_homework_wrong" | "paper_homework_essay_self_review";
 export type Ch2MistakeStatus = "needs_review" | "reviewed" | "mastered";
 
 export type Ch2MistakeEvidence = {
@@ -24,7 +24,7 @@ export type Ch2MistakeFilters = {
 };
 
 const UUID_V4 = "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-const MISTAKE_REF = new RegExp(`^(?:attempt:${UUID_V4}|submission:${UUID_V4}:${UUID_V4})$`, "i");
+const MISTAKE_REF = new RegExp(`^(?:attempt:${UUID_V4}|submission:${UUID_V4}:${UUID_V4}|homework:${UUID_V4}|homework-review:${UUID_V4})$`, "i");
 
 export function validateCh2MistakeRef(value: unknown): string {
   const reference = String(value ?? "").trim().toLowerCase();
@@ -36,6 +36,8 @@ export function isVerifiedCh2MistakeEvidence(evidence: Ch2MistakeEvidence): bool
   if (evidence.is_correct !== false) return false;
   if (evidence.source_kind === "interactive_first_attempt") return evidence.attempt_no === 1;
   if (evidence.source_kind === "final_submission_wrong") return evidence.submitted === true;
+  if (evidence.source_kind === "paper_homework_wrong") return evidence.submitted === true;
+  if (evidence.source_kind === "paper_homework_essay_self_review") return evidence.submitted === true;
   return false;
 }
 
