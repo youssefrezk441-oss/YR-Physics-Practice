@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>واجب المحاضرة الأولى — الفصل الثاني</title>
+  <link rel="stylesheet" href="lecture1-homework.css?v=20261028-1">
+</head>
+<body>
+  <header class="topbar"><a href="student.html">← المنصة</a><div><b>واجب المحاضرة الأولى</b><span id="connection">جارٍ التحقق…</span></div></header>
+  <main>
+    <section id="gate" class="panel gate" aria-live="polite"><div class="spinner"></div><h1>جارٍ فتح الواجب بحسابك…</h1><p id="gateMessage">لن تظهر مفاتيح الإجابة قبل التسليم النهائي.</p><button id="retry" class="button secondary" hidden>إعادة المحاولة</button></section>
+    <section id="workspace" hidden>
+      <div class="panel heading"><div><span class="eyebrow">الفصل الثاني · المحاضرة الأولى</span><h1>الفيض والمجال المغناطيسي — كتاب الامتحان</h1><p>سجّل هنا الإجابات التي كتبتها على الورق. يمكنك التعديل حتى التسليم النهائي.</p></div><div class="counts"><b id="answeredCount">0</b><span>مجاب</span><b id="unansweredCount">0</b><span>لم أحل</span></div></div>
+      <p id="notice" class="notice" aria-live="polite"></p>
+      <div class="layout">
+        <aside class="panel navigator"><div id="numbers" class="numbers"></div></aside>
+        <article class="panel question">
+          <div class="meta"><span id="position"></span><span id="skill"></span></div>
+          <h2 id="questionTitle"></h2>
+          <button id="zoom" class="imageButton" type="button"><img id="questionImage" alt="صورة السؤال الأصلية"></button>
+          <div id="parts"></div>
+          <div class="nav"><button id="previous" class="button secondary">السابق</button><button id="next" class="button secondary">التالي</button></div>
+        </article>
+      </div>
+      <section class="panel submitBox"><div><h2>التسليم النهائي</h2><p>بعد التسليم تُثبت إجاباتك الأصلية ولا يمكن تعديلها. غير المحلول يبقى منفصلًا ولا يُحسب خطأ.</p></div><button id="submit" class="button danger">تسليم الواجب</button></section>
+    </section>
+    <section id="results" hidden><div class="panel resultHead"><span>تم التسليم</span><h1 id="score"></h1><p id="resultSummary"></p></div><div id="resultList"></div></section>
+  </main>
+  <dialog id="imageDialog"><button id="closeImage" class="button secondary">إغلاق</button><img id="largeImage" alt="صورة السؤال بالحجم الأصلي"></dialog>
+  <script type="module" src="lecture1-homework.js?v=20261028-1"></script>
+</body>
+</html>

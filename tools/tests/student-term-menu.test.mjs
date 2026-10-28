@@ -40,7 +40,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
     'firstTermWorkshopsGrid', 'secondTermWorkshopsGrid',
     'openLecture3Workshop', 'openLecture4Workshop',
     'openLecture5Workshop', 'openLecture6Workshop',
-    'openChapterMistakes', 'openCh2Mistakes', 'openUnifiedL1Workshop',
+    'openChapterMistakes', 'openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop',
     'openReferences',
   ];
 
@@ -58,7 +58,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
     const position = html.indexOf(`id="${id}"`);
     assert.ok(position > firstGrid && position < secondGrid, `${id} must be inside the first-term menu`);
   }
-  for (const id of ['openCh2Mistakes', 'openUnifiedL1Workshop']) {
+  for (const id of ['openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop']) {
     assert.ok(html.indexOf(`id="${id}"`) > secondGrid, `${id} must be inside the second-term menu`);
   }
 
@@ -66,7 +66,8 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
   assert.match(html, /showOnly\('firstTermWorkshopsView'\)/);
   assert.match(html, /showOnly\('secondTermWorkshopsView'\)/);
   assert.match(html, /secondTermWorkshopsButton\.classList\.add\('hidden'\)/);
-  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|ch2MistakesAllowed\)\)/);
+  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|lecture1HomeworkAllowed\|\|ch2MistakesAllowed\)\)/);
+  assert.match(html, /functions\.invoke\('paper-homework',\{body:\{action:'ping',workshop_slug:'third-secondary-term-2-lecture-1-homework'\}\}\)/);
   assert.match(html, /functions\.invoke\('student-ch2-mistakes',\{body:\{action:'ping'\}\}\)/);
   assert.match(html, /ch2MistakesAllowed=!error&&data\?\.ok&&data\?\.available/);
 });

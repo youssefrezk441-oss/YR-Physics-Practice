@@ -93,9 +93,15 @@ async function loadMistakes(userId: string, groupCode: string): Promise<Evidence
   const rows = await sql`
     select evidence.*,
            review.reviewed_at,
-           mastery.mastered_at,
-           coalesce(mastery.attempts_count, 0)::int as mastery_attempts_count
-    from private.ch2_verified_mistake_evidence evidence
+           coalesce(mastery.mastered_at, essay_mastery.mastered_at) as mastered_at,
+           (coalesce(mastery.attempts_count, 0) + coalesce(essay_mastery.attempts_count, 0))::int as mastery_attempts_count,
+           case when essay_mastery.mastered_at is not null then 'essay_self_review'
+                when mastery.mastered_at is not null then 'server_graded' else null end as mastery_kind
+    from (
+      select * from private.ch2_verified_mistake_evidence
+      union all
+      select * from private.ch2_paper_homework_mistake_evidence
+    ) evidence
     left join lateral (
       select min(event.reviewed_at) as reviewed_at
       from private.ch2_mistake_review_events event
@@ -107,6 +113,13 @@ async function loadMistakes(userId: string, groupCode: string): Promise<Evidence
       from private.ch2_mistake_mastery_attempts attempt
       where attempt.user_id = evidence.user_id and attempt.mistake_ref = evidence.mistake_ref
     ) mastery on true
+    left join lateral (
+      select min(review_event.reviewed_at) filter (where review_event.assessment = 'correct') as mastered_at,
+             count(retry.id)::int as attempts_count
+      from private.ch2_essay_mastery_retries retry
+      left join private.ch2_essay_mastery_reviews review_event on review_event.retry_id = retry.id
+      where retry.user_id = evidence.user_id and retry.mistake_ref = evidence.mistake_ref
+    ) essay_mastery on true
     where evidence.user_id = ${userId}::uuid
       and (
         jsonb_array_length(evidence.eligible_group_codes) = 0
@@ -135,6 +148,7 @@ async function loadIncomplete(userId: string, groupCode: string): Promise<Eviden
              part.max_points, part.public_config
       from private.workshop_definitions definition
       join private.ch2_mistake_source_policies policy on policy.workshop_id = definition.id and policy.enabled
+        and policy.source_contract = 'unified_workshop_v1'
       join private.workshop_versions version on version.id = definition.active_version_id and version.status = 'published'
       join private.workshop_tracks track on track.version_id = version.id
       join private.workshop_track_questions placement on placement.track_id = track.id
@@ -146,32 +160,59 @@ async function loadIncomplete(userId: string, groupCode: string): Promise<Eviden
           jsonb_array_length(definition.eligible_group_codes) = 0
           or definition.eligible_group_codes ? ${groupCode}
         )
+    ), unified_incomplete as (
+      select source.* from source_parts source
+      where case
+        when source.mode = 'interactive' then not exists (
+          select 1 from private.workshop_cycles cycle
+          join private.workshop_attempt_events event on event.cycle_id = cycle.id
+            and event.track_id = source.track_id and event.part_id = source.part_id
+          where cycle.workshop_id = source.workshop_id and cycle.user_id = ${userId}::uuid
+            and cycle.source = 'initial'
+        )
+        when source.mode = 'final_submit' then not exists (
+          select 1 from private.workshop_cycles cycle
+          join private.workshop_submissions submission on submission.cycle_id = cycle.id
+            and submission.track_id = source.track_id
+          join private.workshop_submission_answers answer on answer.submission_id = submission.id
+            and answer.part_id = source.part_id
+          where cycle.workshop_id = source.workshop_id and cycle.user_id = ${userId}::uuid
+            and cycle.source = 'initial'
+        )
+        else false
+      end
+    ), paper_incomplete as (
+      select definition.id as workshop_id, definition.slug as workshop_slug,
+           definition.title as workshop_title, definition.lecture_no,
+           submission.version_id, track.id as track_id, track.track_key,
+           track.title as track_title, track.mode,
+           question.id as question_id, question.question_ref,
+           question.source_ref as bank_source_ref, question.source_kind as question_source_kind,
+           question.question_kind, question.title as question_title,
+           question.prompt_text, question.image_path, question.image_sha256,
+           question.skill_ref, skill.name as skill_name, question.difficulty,
+           part.id as part_id, part.part_key, part.label as part_label,
+           part.input_type, part.options_public, part.unit_text, part.max_points, part.public_config
+    from private.homework_submission_answers answer
+    join private.homework_submissions submission on submission.id = answer.submission_id
+      and submission.user_id = ${userId}::uuid
+    join private.workshop_definitions definition on definition.id = submission.workshop_id
+    join private.ch2_mistake_source_policies policy on policy.workshop_id = definition.id
+      and policy.enabled and policy.source_contract = 'paper_homework_capture_v1'
+    join private.workshop_tracks track on track.version_id = submission.version_id and track.track_key = 'home'
+    join private.workshop_questions question on question.id = answer.question_id
+    join private.workshop_skills skill on skill.version_id = question.version_id and skill.skill_ref = question.skill_ref
+    join private.workshop_question_parts part on part.id = answer.part_id
+      where definition.academic_term = 'second' and definition.status = 'published'
+        and answer.answer_state = 'unanswered'
+        and (jsonb_array_length(definition.eligible_group_codes) = 0 or definition.eligible_group_codes ? ${groupCode})
     )
-    select source.*
-    from source_parts source
-    where case
-      when source.mode = 'interactive' then not exists (
-        select 1
-        from private.workshop_cycles cycle
-        join private.workshop_attempt_events event on event.cycle_id = cycle.id
-          and event.track_id = source.track_id and event.part_id = source.part_id
-        where cycle.workshop_id = source.workshop_id and cycle.user_id = ${userId}::uuid
-          and cycle.source = 'initial'
-      )
-      when source.mode = 'final_submit' then not exists (
-        select 1
-        from private.workshop_cycles cycle
-        join private.workshop_submissions submission on submission.cycle_id = cycle.id
-          and submission.track_id = source.track_id
-        join private.workshop_submission_answers answer on answer.submission_id = submission.id
-          and answer.part_id = source.part_id
-        where cycle.workshop_id = source.workshop_id and cycle.user_id = ${userId}::uuid
-          and cycle.source = 'initial'
-      )
-      else false
-    end
-    order by source.lecture_no, case when source.track_key = 'class' then 0 else 1 end,
-             source.question_ref, source.part_key
+    select * from (
+      select * from unified_incomplete
+      union all
+      select * from paper_incomplete
+    ) incomplete
+    order by lecture_no, case when track_key = 'class' then 0 else 1 end, question_ref, part_key
     limit 1000`;
   return rows as unknown as EvidenceRow[];
 }
@@ -218,7 +259,11 @@ function filtersFrom(body: Record<string, any>): Ch2MistakeFilters {
 
 async function evidenceForUser(query: postgres.TransactionSql, userId: string, groupCode: string, mistakeRef: string) {
   const [row] = await query`
-    select * from private.ch2_verified_mistake_evidence
+    select * from (
+      select * from private.ch2_verified_mistake_evidence
+      union all
+      select * from private.ch2_paper_homework_mistake_evidence
+    ) evidence
     where user_id = ${userId}::uuid and mistake_ref = ${mistakeRef}
       and (
         jsonb_array_length(eligible_group_codes) = 0
@@ -279,6 +324,7 @@ Deno.serve(async (req: Request) => {
         reviewed_at: row.reviewed_at,
         mastered_at: row.mastered_at,
         mastery_attempts_count: Number(row.mastery_attempts_count ?? 0),
+        mastery_kind: row.mastery_kind ?? null,
         status: classifyCh2MistakeStatus({
           reviewed_at: row.reviewed_at,
           mastery_attempts: row.mastered_at ? [{ is_correct: true, attempted_at: row.mastered_at }] : [],
@@ -362,6 +408,68 @@ Deno.serve(async (req: Request) => {
       return response(req, payload);
     }
 
+    if (action === "begin_essay_mastery") {
+      const payload = await sql.begin(async (tx) => {
+        await tx`select pg_advisory_xact_lock(hashtextextended(${`ch2-essay:${account.user.id}:${mistakeRef}`}, 0))`;
+        const [storedReceipt] = await tx`select action, body_sha256, response_json from private.workshop_mutation_receipts where user_id = ${account.user.id}::uuid and request_id = ${requestId}::uuid`;
+        if (storedReceipt) {
+          if (storedReceipt.action !== "ch2_begin_essay_mastery" || storedReceipt.body_sha256 !== bodyHash) throw new WorkshopContractError(409, "request_id_reused", "تم استخدام معرف الطلب مع بيانات مختلفة.");
+          return storedReceipt.response_json;
+        }
+        const evidence = await evidenceForUser(tx, account.user.id, groupCode, mistakeRef);
+        if (!evidence || evidence.evidence_kind !== "paper_homework_essay_self_review") throw new WorkshopContractError(404, "essay_mistake_not_found", "هذا ليس خطأً مقاليًا مثبتًا في سجلك.");
+        const answer = jsonObject(body.answer);
+        const answerText = text(answer.text, 4000);
+        const imageIds = safeArray(answer.image_ids).map(String).filter((id) => /^[0-9a-f-]{36}$/i.test(id)).slice(0, 3);
+        if (!answerText && imageIds.length === 0) throw new WorkshopContractError(400, "empty_answer", "اكتب محاولة جديدة مستقلة قبل عرض الحل.");
+        const [mastered] = await tx`
+          select 1 from private.ch2_essay_mastery_retries retry
+          join private.ch2_essay_mastery_reviews review on review.retry_id = retry.id and review.assessment = 'correct'
+          where retry.user_id = ${account.user.id}::uuid and retry.mistake_ref = ${mistakeRef} limit 1`;
+        if (mastered) throw new WorkshopContractError(409, "already_mastered", "تم تسجيل إتقان هذا المطلوب بتقييم ذاتي سابق.");
+        const [key] = await tx`select key_version_id, display_answer, explanation from private.current_workshop_part_keys where part_id = ${evidence.part_id}::uuid limit 1`;
+        if (!key) throw new WorkshopContractError(503, "key_not_available", "الحل النموذجي غير متاح حاليًا.");
+        const [retry] = await tx`
+          insert into private.ch2_essay_mastery_retries
+            (request_id, user_id, mistake_ref, workshop_id, version_id, question_id, part_id, answer_json, key_version_id)
+          values (${requestId}::uuid, ${account.user.id}::uuid, ${mistakeRef}, ${evidence.workshop_id}::uuid,
+            ${evidence.version_id}::uuid, ${evidence.question_id}::uuid, ${evidence.part_id}::uuid,
+            ${tx.json({ text: answerText, image_ids: imageIds })}, ${key.key_version_id}::uuid)
+          returning id, attempted_at`;
+        const result = { ok: true, retry_id: retry.id, attempted_at: retry.attempted_at, model_answer: key.display_answer, solution_steps: key.explanation,
+          message: "تم تثبيت محاولتك الجديدة أولًا. راجعها الآن أمام الحل ثم ثبّت تقييمك الذاتي." };
+        await tx`insert into private.workshop_mutation_receipts(request_id, user_id, action, body_sha256, response_json)
+          values (${requestId}::uuid, ${account.user.id}::uuid, 'ch2_begin_essay_mastery', ${bodyHash}, ${tx.json(result)})`;
+        return result;
+      });
+      return response(req, payload);
+    }
+
+    if (action === "assess_essay_mastery") {
+      const retryId = text(body.retry_id, 40);
+      const assessment = text(body.assessment, 20);
+      if (!new Set(["correct", "partial", "incorrect"]).has(assessment)) throw new WorkshopContractError(400, "invalid_assessment", "اختر تقييمًا صحيحًا للمحاولة.");
+      const payload = await sql.begin(async (tx) => {
+        const [storedReceipt] = await tx`select action, body_sha256, response_json from private.workshop_mutation_receipts where user_id = ${account.user.id}::uuid and request_id = ${requestId}::uuid`;
+        if (storedReceipt) {
+          if (storedReceipt.action !== "ch2_assess_essay_mastery" || storedReceipt.body_sha256 !== bodyHash) throw new WorkshopContractError(409, "request_id_reused", "تم استخدام معرف الطلب مع بيانات مختلفة.");
+          return storedReceipt.response_json;
+        }
+        const [retry] = await tx`select id from private.ch2_essay_mastery_retries where id = ${retryId}::uuid and user_id = ${account.user.id}::uuid and mistake_ref = ${mistakeRef} for update`;
+        if (!retry) throw new WorkshopContractError(404, "retry_not_found", "المحاولة المقالية الجديدة غير موجودة.");
+        const [review] = await tx`insert into private.ch2_essay_mastery_reviews(request_id, user_id, retry_id, assessment)
+          values (${requestId}::uuid, ${account.user.id}::uuid, ${retry.id}::uuid, ${assessment})
+          on conflict (retry_id) do nothing returning reviewed_at`;
+        if (!review) throw new WorkshopContractError(409, "assessment_locked", "تم تثبيت تقييم هذه المحاولة من قبل.");
+        const result = { ok: true, assessment, status: assessment === "correct" ? "mastered" : "reviewed", mastery_kind: "essay_self_review", reviewed_at: review.reviewed_at,
+          message: assessment === "correct" ? "سُجل الإتقان كتقييم ذاتي صريح، مع بقاء الخطأ والمحاولة الأصلية." : "تم حفظ التقييم الذاتي. يمكنك إنشاء محاولة مستقلة أخرى لاحقًا." };
+        await tx`insert into private.workshop_mutation_receipts(request_id, user_id, action, body_sha256, response_json)
+          values (${requestId}::uuid, ${account.user.id}::uuid, 'ch2_assess_essay_mastery', ${bodyHash}, ${tx.json(result)})`;
+        return result;
+      });
+      return response(req, payload);
+    }
+
     if (action === "attempt_mastery") {
       const payload = await sql.begin(async (tx) => {
         await tx`select pg_advisory_xact_lock(hashtextextended(${`ch2-mastery:${account.user.id}:${mistakeRef}`}, 0))`;
@@ -375,6 +483,7 @@ Deno.serve(async (req: Request) => {
         }
         const evidence = await evidenceForUser(tx, account.user.id, groupCode, mistakeRef);
         if (!evidence) throw new WorkshopContractError(404, "mistake_not_found", "هذا الخطأ غير موجود في سجلك المثبت.");
+        if (evidence.evidence_kind === "paper_homework_essay_self_review") throw new WorkshopContractError(409, "essay_requires_self_review", "السؤال المقالي يحتاج محاولة جديدة ثم تقييمًا ذاتيًا منفصلًا؛ لا يُصحح نصه آليًا.");
         const [mastered] = await tx`
           select id from private.ch2_mistake_mastery_attempts
           where user_id = ${account.user.id}::uuid and mistake_ref = ${mistakeRef} and is_correct
