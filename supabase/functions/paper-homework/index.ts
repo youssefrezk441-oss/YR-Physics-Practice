@@ -67,6 +67,54 @@ async function requireStudent(req: Request) {
   return { user: data.user, profile };
 }
 
+async function requireAdmin(req: Request) {
+  const authorization = req.headers.get("authorization") ?? "";
+  if (!authorization.startsWith("Bearer ")) return null;
+  const { data, error } = await authClient.auth.getUser(authorization.slice(7));
+  if (error || !data.user) return null;
+  const [permission] = await sql`select public.admin_access_level('students', ${data.user.id}::uuid) as level`;
+  return permission?.level && permission.level !== "none" ? { user: data.user, level: permission.level } : null;
+}
+
+const adminActions = new Set(["overview", "students", "student_detail", "questions", "skills"]);
+
+async function handleAdmin(req: Request, body: Record<string, unknown>, action: string) {
+  const admin = await requireAdmin(req);
+  if (!admin) return respond(req, { error: "unauthorized", message: "لا توجد صلاحية إدارية." }, 401);
+  const slug = text(body.workshop_slug || "third-secondary-term-2-lecture-1-homework", 180);
+  const group = text(body.group_code, 80);
+  const search = text(body.search, 120);
+  const [work] = await sql`select id, active_version_id as version_id, title, grade_level, eligible_group_codes from private.workshop_definitions where slug=${slug} limit 1`;
+  if (!work) return respond(req, { error: "not_found", message: "الواجب غير موجود." }, 404);
+  if (action === "overview") {
+    const [eligible] = await sql`select count(*)::int as count from public.student_profiles profile left join public.student_groups student_group on student_group.group_code=profile.group_code where profile.is_active and (coalesce(student_group.grade_level,profile.grade_level,'')='3 ثانوي' or coalesce(student_group.grade_level,profile.grade_level,'') like '%الثالث%') ${group ? sql`and profile.group_code=${group}` : sql``}`;
+    const [metrics] = await sql`select count(*)::int as submitted,coalesce(avg(case when mcq_max_score>0 then mcq_score*100/mcq_max_score end),0)::numeric(10,2) as average_mcq,coalesce(sum(unanswered_parts),0)::int as unanswered from private.homework_submissions submission join public.student_profiles profile on profile.user_id=submission.user_id where submission.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
+    const [essays] = await sql`select count(*) filter(where review.assessment='correct')::int as correct,count(*) filter(where review.assessment='partial')::int as partial,count(*) filter(where review.assessment='incorrect')::int as incorrect,count(*) filter(where answer.response_kind='essay_self_review' and review.id is null)::int as pending from private.homework_submission_answers answer join private.homework_submissions submission on submission.id=answer.submission_id left join private.homework_self_review_events review on review.submission_answer_id=answer.id join public.student_profiles profile on profile.user_id=submission.user_id where submission.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
+    const [mistakes] = await sql`select count(*)::int as total,
+      count(*) filter(where exists(select 1 from private.ch2_mistake_review_events review where review.user_id=evidence.user_id and review.mistake_ref=evidence.mistake_ref))::int as reviewed,
+      count(*) filter(where exists(select 1 from private.ch2_mistake_mastery_attempts attempt where attempt.user_id=evidence.user_id and attempt.mistake_ref=evidence.mistake_ref and attempt.is_correct)
+        or exists(select 1 from private.ch2_essay_mastery_retries retry join private.ch2_essay_mastery_reviews review on review.retry_id=retry.id and review.assessment='correct' where retry.user_id=evidence.user_id and retry.mistake_ref=evidence.mistake_ref))::int as mastered
+      from private.ch2_paper_homework_mistake_evidence evidence join public.student_profiles profile on profile.user_id=evidence.user_id
+      where evidence.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
+    return respond(req, { ok: true, level: admin.level, overview: { eligible: Number(eligible.count), submitted: Number(metrics.submitted), unsubmitted: Math.max(0, Number(eligible.count) - Number(metrics.submitted)), average_mcq: Number(metrics.average_mcq), unanswered: Number(metrics.unanswered), essay_self_review: essays, mistake_progress: mistakes } });
+  }
+  if (action === "students") {
+    const rows = await sql`select profile.user_id,profile.student_code,profile.full_name,profile.group_code,submission.id as submission_id,submission.mcq_score,submission.mcq_max_score,submission.answered_parts,submission.unanswered_parts,submission.submitted_at from public.student_profiles profile left join private.homework_submissions submission on submission.user_id=profile.user_id and submission.workshop_id=${work.id}::uuid where profile.is_active and (profile.grade_level='3 ثانوي' or profile.grade_level like '%الثالث%') ${group ? sql`and profile.group_code=${group}` : sql``} ${search ? sql`and (profile.full_name ilike ${`%${search}%`} or profile.student_code ilike ${`%${search}%`})` : sql``} order by (submission.id is null),profile.full_name limit 500`;
+    return respond(req, { ok: true, students: rows });
+  }
+  if (action === "student_detail") {
+    const userId = text(body.user_id, 40);
+    const rows = await sql`select question.question_ref,question.source_ref,question.title,question.image_path,question.skill_ref,skill.name as skill_name,part.part_key,part.label,answer.response_kind,answer.answer_state,answer.answer_json,answer.is_correct,answer.awarded_points,answer.max_points,review.assessment,review.reviewed_at from private.homework_submission_answers answer join private.homework_submissions submission on submission.id=answer.submission_id join private.workshop_questions question on question.id=answer.question_id join private.workshop_skills skill on skill.version_id=question.version_id and skill.skill_ref=question.skill_ref join private.workshop_question_parts part on part.id=answer.part_id left join private.homework_self_review_events review on review.submission_answer_id=answer.id where submission.workshop_id=${work.id}::uuid and submission.user_id=${userId}::uuid order by question.question_ref,part.sort_order`;
+    return respond(req, { ok: true, answers: rows });
+  }
+  if (action === "questions") {
+    const rows = await sql`select question.question_ref,question.source_ref,question.title,question.skill_ref,skill.name as skill_name,part.part_key,part.label,count(answer.id)::int as submissions,count(*) filter(where answer.answer_state='answered' and answer.is_correct=false)::int as wrong,count(*) filter(where answer.answer_state='unanswered')::int as unanswered from private.workshop_questions question join private.workshop_skills skill on skill.version_id=question.version_id and skill.skill_ref=question.skill_ref join private.workshop_question_parts part on part.question_id=question.id left join private.homework_submission_answers answer on answer.question_id=question.id and answer.part_id=part.id left join private.homework_submissions submission on submission.id=answer.submission_id left join public.student_profiles profile on profile.user_id=submission.user_id where question.version_id=${work.version_id}::uuid ${group ? sql`and (profile.group_code=${group} or profile.user_id is null)` : sql``} group by question.question_ref,question.source_ref,question.title,question.skill_ref,skill.name,part.part_key,part.label,part.sort_order order by wrong desc,question.question_ref,part.sort_order`;
+    return respond(req, { ok: true, questions: rows });
+  }
+  const rows = await sql`select skill.skill_ref,skill.name,count(answer.id) filter(where answer.answer_state='answered')::int as answered,count(answer.id) filter(where answer.answer_state='answered' and answer.is_correct=false)::int as wrong,count(answer.id) filter(where answer.answer_state='unanswered')::int as unanswered from private.workshop_skills skill join private.workshop_questions question on question.version_id=skill.version_id and question.skill_ref=skill.skill_ref join private.workshop_question_parts part on part.question_id=question.id left join private.homework_submission_answers answer on answer.part_id=part.id left join private.homework_submissions submission on submission.id=answer.submission_id left join public.student_profiles profile on profile.user_id=submission.user_id where skill.version_id=${work.version_id}::uuid ${group ? sql`and (profile.group_code=${group} or profile.user_id is null)` : sql``} group by skill.skill_ref,skill.name,skill.sort_order order by skill.sort_order`;
+  return respond(req, { ok: true, skills: rows });
+}
+
 async function getWorkshop(slug: string, groupCode: string) {
   const [row] = await sql`
     select definition.id, definition.slug, definition.title, definition.grade_level,
@@ -148,15 +196,22 @@ async function submissionResult(userId: string, workshopId: string) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: headers(req) });
   if (req.method !== "POST") return respond(req, { error: "method_not_allowed" }, 405);
-  const account = await requireStudent(req);
-  if (!account) return respond(req, { error: "unauthorized", message: "يجب تسجيل الدخول بحساب طالب نشط من الصف الثالث الثانوي." }, 401);
   let body: Record<string, unknown>;
-  try { body = await readWorkshopJson(req, 24 * 1024); }
+  try { body = await readWorkshopJson(req, 32 * 1024); }
   catch (error) {
     if (error instanceof WorkshopRequestError) return respond(req, { error: error.code, message: error.message }, error.status);
     return respond(req, { error: "invalid_json" }, 400);
   }
   const action = text(body.action, 60);
+  if (adminActions.has(action)) {
+    try { return await handleAdmin(req, body, action); }
+    catch (error) {
+      console.error("paper-homework-admin", action, error instanceof Error ? error.message : error);
+      return respond(req, { error: "server_error", message: "تعذر تحميل التقرير." }, 500);
+    }
+  }
+  const account = await requireStudent(req);
+  if (!account) return respond(req, { error: "unauthorized", message: "يجب تسجيل الدخول بحساب طالب نشط من الصف الثالث الثانوي." }, 401);
   const slug = text(body.workshop_slug, 160);
   const groupCode = String(account.profile.group_code ?? "");
   try {
