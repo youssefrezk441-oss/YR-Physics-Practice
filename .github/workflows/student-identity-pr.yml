@@ -30,7 +30,7 @@ jobs:
       - name: Build Pages artifact without deploying
         run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
   staging-integration:
-    if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' && vars.STAGING_PROJECT_REF != '' }}
     runs-on: ubuntu-latest
     environment: supabase-staging
     steps:
@@ -40,9 +40,11 @@ jobs:
           node-version: 24
       - name: Supabase staging integration (synthetic accounts only)
         env:
-          STAGING_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
-          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
-          STAGING_LEGACY_STUDENT_CODE: ${{ secrets.STAGING_LEGACY_STUDENT_CODE }}
-          STAGING_LEGACY_STUDENT_PASSWORD: ${{ secrets.STAGING_LEGACY_STUDENT_PASSWORD }}
-          STAGING_ALLOW_WRITES: 'false'
+          E2E_TARGET: staging
+          E2E_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+          E2E_ALLOWED_PROJECT_REFS: ${{ vars.STAGING_PROJECT_REF }}
+          E2E_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          E2E_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          E2E_DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          E2E_ALLOW_WRITES: synthetic-e2e-only
         run: node tools/tests/student-identity-staging.integration.mjs
