@@ -30,6 +30,7 @@ const excludedPrefixes = [
   'supabase/',
   'tools/',
   'whatsapp-bridge/',
+  'STUDENT_IDENTITY_',
   'WORKSHOP_',
 ];
 
@@ -63,6 +64,9 @@ for (const internal of ['.github', '.grading', 'supabase', 'tools', 'whatsapp-br
 }
 if (readdirSync(output).some((name) => name.startsWith('WORKSHOP_'))) {
   throw new Error('Internal workshop delivery documentation must not be present in the Pages artifact.');
+}
+if (readdirSync(output).some((name) => name.startsWith('STUDENT_IDENTITY_'))) {
+  throw new Error('Internal student identity documentation must not be present in the Pages artifact.');
 }
 
 console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.`);
