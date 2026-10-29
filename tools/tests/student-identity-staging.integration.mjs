@@ -75,10 +75,51 @@ function sql(q) {
   if (r.status) throw Error(String(r.stderr).trim());
   return r.stdout.trim();
 }
+// Only the disposable local Docker stack has a known synthetic HMAC key.
+// Track the exact limiter entries created by this test run, never purge the table.
+const localLimiterSecret = local
+    ? Buffer.from("fedcba9876543210fedcba9876543210")
+    : null,
+  localLimiterPairs = new Set();
+function localDigest(value) {
+  return createHmac("sha256", localLimiterSecret)
+    .update(value)
+    .digest("base64");
+}
+function trackLocalLimiter(path, body, ip) {
+  if (!local || path !== "/functions/v1/student-identity" || !body?.action) return;
+  const ipScopes = {
+    submit_registration: "registration",
+    registration_status: "registration_status",
+    request_recovery: "recovery",
+    reset_password: "password_reset",
+    activate: "activation",
+  };
+  const scope = ipScopes[body.action];
+  if (scope) localLimiterPairs.add(`${scope}:${localDigest(`rate:${scope}:${ip}`)}`);
+  if (body.action === "submit_registration" && body.student_phone) {
+    const phoneHmac = localDigest(`registration-phone:${body.student_phone}`);
+    localLimiterPairs.add(`registration_phone:${localDigest(`rate:registration_phone:${phoneHmac}`)}`);
+  }
+}
+function cleanupLocalLimiter() {
+  if (!local || !localLimiterPairs.size) return;
+  const pairs = [...localLimiterPairs].map((pair) => {
+    const colon = pair.indexOf(":");
+    const scope = pair.slice(0, colon), key = pair.slice(colon + 1);
+    assert.match(scope, /^[a-z_]+$/);
+    assert.match(key, /^[A-Za-z0-9+/]+={0,2}$/);
+    return `('${scope}','${key}')`;
+  });
+  const owned = `(scope,subject_hmac) in (values ${pairs.join(",")})`;
+  sql(`delete from private.student_identity_rate_limits where ${owned}`);
+  assert.equal(sql(`select count(*) from private.student_identity_rate_limits where ${owned}`), "0");
+}
 async function req(
   path,
   { body, token, admin = false, method = "POST", ip = "198.51.100.10" } = {},
 ) {
+  trackLocalLimiter(path, body, ip);
   const r = await fetch(url + path, {
     method,
     headers: {
@@ -184,6 +225,7 @@ async function cleanup() {
       .replaceAll("__RUN_ID__", run)
       .replaceAll("__GROUP_CODE__", group);
   sql(script);
+  cleanupLocalLimiter();
   for (const id of ids) {
     const r = await req(`/auth/v1/admin/users/${id}`, {
       admin: true,
@@ -449,6 +491,15 @@ test("immediate registration and 48-hour review journey", async (t) => {
     },
   );
   flags({ registration_rollout_scope: "staging" });
+  await t.test("registration rate limiting returns 429 on the sixth same-IP attempt", async () => {
+    const parts = crypto.getRandomValues(new Uint8Array(2));
+    const throttleIp = `198.51.${parts[0]}.${parts[1]}`;
+    for (let attempt = 1; attempt <= 6; attempt++) {
+      const response = await invoke("submit_registration", {}, undefined, throttleIp);
+      assert.equal(response.status, attempt <= 5 ? 400 : 429,
+        `Attempt ${attempt} unexpectedly returned ${response.status}: ${JSON.stringify(response.body)}`);
+    }
+  });
   await t.test("staging flags are applied explicitly", async () => {
     const c = await invoke("config");
     assert.equal(c.status, 200);
