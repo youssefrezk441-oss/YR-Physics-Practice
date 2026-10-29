@@ -74,6 +74,14 @@ Reference: https://supabase.com/docs/guides/functions/secrets
 7. Enable `limited` rollout only for synthetic invite holders. Verify registration, code display, immediate Auth login, pending status, approval, suspension and reactivation.
 8. Reconcile before/after student/account/grade/attempt snapshots. Keep public registration disabled until privacy, CAPTCHA and the remaining controls are approved.
 
+## Isolated restore project provisioned (2026-10-29)
+
+- With owner authorization, created a **separate Free-plan Supabase project at $0/month**, `YR Physics Restore Test`, ref `qencuevnaltliykfuhhl` in `eu-central-1`.
+- Creation returned `ACTIVE_HEALTHY`; a read-only post-creation check confirmed **0 Auth users, 0 Storage objects, 0 Storage buckets, 0 application migrations, and 0 Edge Functions**. It is isolated from production `ltjdhconuiqblxfjzpzj`.
+- **No production data copied or restored yet.** The backup dump and downloaded Storage objects remain on the owner's Mac, and the available Supabase connection cannot read those local bytes.
+- Next: design a scoped, safe restore procedure for the locally held `.dump` into this exact **test** project. Never pass production secrets, student record contents, or backup archive to GitHub/this chat. Before restore, ensure `pg_restore` commands **cannot connect to production** and confirm a database snapshot of the currently empty destination if needed.
+- **RESTORE GATE REMAINS OPEN:** only a successful restore and reconciliation of Auth, student tables, attempts, grading, and Storage metadata/files on the test project can clear it. Rebuild/test other project integrations separately. Do not launch identity registration on production yet.
+
 ## Current decision
 
 **HOLD — no production identity migrations, Edge Function deployment, Cron change, frontend merge or registration flag changes until the backup and secrets gates are verified.**
