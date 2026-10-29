@@ -82,6 +82,18 @@ Reference: https://supabase.com/docs/guides/functions/secrets
 - Next: design a scoped, safe restore procedure for the locally held `.dump` into this exact **test** project. Never pass production secrets, student record contents, or backup archive to GitHub/this chat. Before restore, ensure `pg_restore` commands **cannot connect to production** and confirm a database snapshot of the currently empty destination if needed.
 - **RESTORE GATE REMAINS OPEN:** only a successful restore and reconciliation of Auth, student tables, attempts, grading, and Storage metadata/files on the test project can clear it. Rebuild/test other project integrations separately. Do not launch identity registration on production yet.
 
+## Isolated restore successful: core database verified (2026-10-30)
+
+**The earlier isolated-restore gate is partially satisfied by real, transactionally committed restore to a separate Supabase project.** Do not misinterpret the now-verified database part as proof that Storage bytes or Supabase external configuration are restored.
+
+- Owner ran pinned, selective restore to project `qencuevnaltliykfuhhl`. Log: `RESTORE TRANSACTION COMMITTED`; archive checksum `MATCH`; selected archive objects 1062. The restore omitted managed schema definitions, extension contents, cron jobs, and managed migration history. It did NOT connect to production.
+- Read-only SQL independently checked source and destination after the restore. Both have 44 public tables, 77 private tables, 288 Auth users, 280 student profiles, 1,515 attempts, 6,033 L3 workshop events, and 138 Storage object metadata rows.
+- **Bucket count discrepancy was an incorrect expected value in the Mac helper.** Both production and test have the *same four buckets* and same per-bucket object counts and public/private settings: `answer-images=118` (private), `question-assets=20` (public), `homework-answer-images=0` (private), `private-backups=0` (private).
+- Cross-project fingerprints verified 17/18 selected tables, including responses (8,020), class_test_scores (764), L3–L6 progress, grading decisions and Storage metadata. `auth.users` had a different full-row hash after restore, although all 288 IDs, email, encrypted_password, app/user metadata, confirmation dates, and ban dates matched; the differences were confined among tested columns to `updated_at` and `last_sign_in_at`. Production had one Auth account updated since archive time. Do not assert exact byte-level equality of full Auth table.
+- Production had one `cron.job` record, while `cron.job` relation is absent in the test project; active scheduled production jobs were not copied into the test destination.
+- **Still outstanding:** verify physical Storage file-byte rehydration in isolated project (currently only DB metadata restored); validate Auth and Storage service behavior in the test destination; verify all required application tables/views, triggers, RLS policies, grades, and service settings as necessary for operational recovery; store confidential outputs locally only. Prevent any test project exposure or use as student frontend. Document retention and safe disposal of the identifiable test replica.
+- **PRODUCTION RELEASE GATE IS STILL HOLD** until the remaining recovery checks and identity release prerequisites are signed off. Do not interpret this progress record as permission to turn on registration or merge PR.
+
 ## Current decision
 
 **HOLD — no production identity migrations, Edge Function deployment, Cron change, frontend merge or registration flag changes until the backup and secrets gates are verified.**
