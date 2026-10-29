@@ -1,0 +1,28 @@
+# Security warnings and synthetic registration gate — 2026-10-30
+
+**Scope:** read-only audit of production Supabase project `ltjdhconuiqblxfjzpzj`, and GitHub PR #16 on `feature/student-identity-registration-v1`. The isolated restore project `qencuevnaltliykfuhhl` has **real student/Auth data** and MUST NOT be used for synthetic registration writes or exposed to students. No security-related production DDL/config/auth changes performed.
+
+## Verified adviser findings
+
+| Warning | Count | Concrete observation | Risk/response |
+|---|---:|---|---|
+| `security_definer_view` ERROR | 1 | `public.admin_short_text_reviews` is owner `postgres`, no `security_invoker` option, and depends on `private.question_keys`; `anon` has no SELECT on view, `authenticated` has SELECT; predicate calls `admin_has_access('essay_reviews','view')` using current `auth.uid()`. | Security-definer view bypasses underlying row-level policies as owner. There is an explicit server-side admin predicate, but do not infer this removes all risk. Verify authorization using **synthetic** authenticated/unauthenticated requests before considering `security_invoker=true`; conversion can change legacy review behavior. [Reference](https://supabase.com/docs/guides/database/database-linter?lint=0010_security_definer_view) |
+| Anonymous EXECUTE on definer RPC | 5 | `admin_access_level`, `admin_has_access`, `admin_is_owner`, `mark_answer_image_deleted`, `register_answer_image`. | `admin_access_level(section, user_id)` allows a caller-supplied UUID, revealing authorization level for that ID; other functions examined use `auth.uid()` and explicit ownership checks. Assess each role grant and legacy usage; prioritize removal of unnecessary anonymous RPC grants in a separately tested compatibility/security patch. |
+| Authenticated EXECUTE on definer RPC | 6 | Above five plus `ch1_survey_is_active_admin`. | Expected in some cases, but functions must authorize **each operation** using trusted session identity and server-side policy. No blanket revoke without a dependency audit. |
+| Mutable function search path | 1 | `private.answer_image_path_parts(text)`, an immutable SQL function splitting object paths, has no explicit `SET search_path`. | Low direct impact from inspected body; explicitly pin a secure search path after compatibility testing. [Reference](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable) |
+| Auth leaked-password protection | 1 | Supabase Auth project setting not enabled. | Enable and test compromised-password checking before general self-registration; setting change should be deliberate and tested for old/new Auth flows. [Reference](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) |
+| RLS enabled without policies | 93 INFO | Mostly `private` non-exposed tables; source `public` application tables show RLS. | Not automatically a vulnerability; deny-by-default may be intentional. Review any exposed schema separately. |
+
+## Authorization evidence
+
+- Read-only function inspection shows `admin_has_access(section,required)` obtains `auth.uid()` internally and `admin_is_owner()` does likewise. `admin_access_level(section,user_id)` uses its arbitrary UUID parameter; it should not be offered directly to anonymous users merely because the helper is useful internally.
+- `student-identity` Edge Function's `adminUser` first verifies bearer token with Supabase Auth `getUser`, requires `app_metadata.role==='admin'`, **then** requires `admin_access_level('students',verified_user_id)`. Both checks are needed. Unit/string contracts alone are insufficient; negative integration tests have been added to PR #16 to reject anonymous, student and metadata-only-admin calls, and to verify the student's review status does not change.
+- No source evidence justifies using the recovered real-data project for synthetic write testing. Local CI uses disposable Docker PostgreSQL + GoTrue + Deno Edge Function + Chromium with generated identities and clean-up; hosted Supabase Staging remains skipped until a **separate synthetic-only** project and scoped credentials are available. Free projects already occupied by production and restore copy.
+
+## Existing CI evidence (prior to additional negative tests)
+
+GitHub [workflow 40974344559](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40974344559): security/compatibility/bootstrap SUCCESS; Docker GoTrue E2E SUCCESS (pass 1: **23/23**, pass 2: **22 passed, 1 intentional browser skip**). Tests include registration code/password, default-closed flags, limited one-use invites, shared household number risk, immediate login, pending-only access after browser reload, exact 48-hour deadline, admin approval, late approval, rejection, manual suspension/reactivation, duplicate prevention, concurrent Auth claims and retries, kill switch and legacy account preservation. Cloud `staging-integration` SKIPPED.
+
+## Release decision
+
+**HOLD on enabling public or limited production registration until** all scoped security gaps are reviewed, negative authorization tests and CI pass, any necessary remediations are compatibility-tested, and separate Supabase cloud E2E + service configuration are verified. No production migrations, Edge Functions, Cron, UI merge, legacy account or grade writes are authorized by this audit. National-ID collection, SMS login and profile enforcement remain off. A third cloud project may incur cost; do not create a paid project without owner approval. Retain and securely dispose of the real-data restore project according to a defined retention decision.
