@@ -534,6 +534,47 @@ test("immediate registration and 48-hour review journey", async (t) => {
     assert.equal(me.body.review.status, "pending_review");
     assert.equal(me.body.review.educational_access, false);
   });
+  await t.test("student or anonymous requests cannot list or approve registrations", async () => {
+    const reference = sql(
+      `select public_ref from private.student_registration_requests where assigned_student_code='${code}'`,
+    );
+    for (const credential of [undefined, token]) {
+      for (const action of ["admin_list", "admin_decide"]) {
+        const payload = action === "admin_decide"
+          ? { reference, decision: "approved", reason: "unprivileged synthetic attempt" }
+          : {};
+        const result = await invoke(action, payload, credential);
+        assert.equal(result.status, 403, `denial expected for ${action}`);
+        assert.equal(result.body.error, "forbidden");
+      }
+    }
+    assert.equal(
+      sql(`select status from private.student_account_reviews where request_id=(select id from private.student_registration_requests where public_ref='${reference}')`),
+      "pending_review",
+      "an unprivileged request must not modify the review state",
+    );
+  });
+  await t.test("JWT admin metadata alone cannot approve without DB permission", async () => {
+    const impersonatorEmail = mail("unprivileged-admin");
+    const impersonatorPassword = "SyntheticUnprivilegedAdmin2026!";
+    await createAuth(impersonatorEmail, impersonatorPassword, "admin");
+    const impostor = await login(impersonatorEmail, impersonatorPassword);
+    assert.equal(impostor.status, 200);
+    const reference = sql(
+      `select public_ref from private.student_registration_requests where assigned_student_code='${code}'`,
+    );
+    const denied = await invoke(
+      "admin_decide",
+      { reference, decision: "approved", reason: "metadata-only synthetic attempt" },
+      impostor.body.access_token,
+    );
+    assert.equal(denied.status, 403);
+    assert.equal(denied.body.error, "forbidden");
+    assert.equal(
+      sql(`select status from private.student_account_reviews where request_id=(select id from private.student_registration_requests where public_ref='${reference}')`),
+      "pending_review",
+    );
+  });
   if (local && process.env.E2E_BROWSER_CURRENT === "1")
     await t.test(
       "real student.html keeps the GoTrue pending session and blocks educational UI",
