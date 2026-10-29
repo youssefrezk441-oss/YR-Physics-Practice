@@ -15,6 +15,7 @@ delete from private.student_identity_audit_events
  where request_id in(select id from e2e_requests)
     or actor_user_id in(select id from e2e_users)
     or subject_user_id in(select id from e2e_users);
+delete from private.student_account_reviews where request_id in(select id from e2e_requests) or user_id in(select id from e2e_users);
 delete from private.student_password_reset_tokens
  where user_id in(select id from e2e_users)
     or recovery_request_id in(

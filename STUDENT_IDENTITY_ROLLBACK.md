@@ -2,15 +2,18 @@
 
 ## تراجع فوري بلا فقد بيانات
 
-اضبط `registration_enabled=false`, `phone_login_enabled=false`, `profile_update_enabled=false`, `profile_enforcement_enabled=false`. تبقى مصادقة الكود القديمة كما هي. لا تحذف طلبات أو هويات أو سجلات تدقيق.
+اضبط `registration_enabled=false`, `immediate_registration_enabled=false`, `registration_rollout_scope='disabled'`, `phone_login_enabled=false`, `profile_update_enabled=false`, `profile_enforcement_enabled=false`. هذا يوقف استقبال حسابات جديدة فورًا ولا يغير الطلاب القدامى أو الحسابات الجديدة التي أُنشئت بالفعل. لا تحذف طلبات أو حالات مراجعة أو هويات أو سجلات تدقيق.
+
+للتجربة المحدودة استخدم `registration_rollout_scope='limited'` مع قائمة صريحة في
+`registration_rollout_group_codes`. القائمة فارغة افتراضيًا وتعني عدم فتح التسجيل لأي مجموعة.
 
 ## بعد وجود طلبات أو حسابات
 
 - أوقف الوصول فقط، ولا تحذف المستخدمين أو الملفات.
-- الحساب المنشأ غير المفعل يبقى `is_active=false` ويمكن استكماله لاحقًا.
+- الحساب `pending_review` أو المعلّق يبقى محفوظًا ويمكن للإدارة اعتماده لاحقًا بنفس الكود وكلمة المرور.
 - الهاتف الموثق يمكن تعطيل معرفه بوضع `disabled_at` دون حذف الرقم التاريخي.
 - لا تسقط جداول `private` بعد وجود بيانات. أي إزالة لاحقة تكون Migration أرشفة مستقلة بعد نسخة احتياطية ومراجعة قانونية.
 
 ## صفحات الويب
 
-يمكن الرجوع إلى commit السابق في Pages؛ `student-account-shell.js` مصمم fail-open، لذا غياب الدالة يعيد الدخول بالكود دون فرض جديد.
+يمكن الرجوع إلى واجهة سابقة في Pages بعد إغلاق التسجيل على الخادم. لا يُحذف جدول `student_account_reviews` ولا Cron أثناء التراجع. يجب إبقاء مسار حالة الحساب متاحًا للحسابات الجديدة؛ الرجوع إلى واجهة لا تعرف حالات المراجعة لا يُعتمد وحده كتراجع آمن.

@@ -27,7 +27,8 @@ bash tools/run_student_identity_local_e2e.sh
 3. أنشئ Schema واقعيًا بواسطة تصدير `pg_dump --schema-only` للهيكل المعتمد بعد
    مراجعة الملف واستبعاد المالكين وبيانات الإحصاء والأسرار. لا تستخدم `pg_dump`
    للبيانات، ولا تستعد نسخة احتياطية من الإنتاج. طبّق بعده migrations المطلوبة،
-   ومنها `20261028190000_student_identity_registration_v1.sql`.
+   ومنها `20261028190000_student_identity_registration_v1.sql` ثم
+   `20261028230000_immediate_registration_review.sql` بالترتيب.
 4. شغّل `tools/check_student_identity_staging_schema.sql`. الفحص يتطلب الجداول
    الحقيقية للطلاب والمحاولات والتصحيح و`admin_access_level`، ويرفض جداول
    `synthetic_*` القديمة. Fixture المحلي لا يُطبّق على Staging.
@@ -39,7 +40,10 @@ bash tools/run_student_identity_local_e2e.sh
 6. ولّد مفتاحي AES-256 وHMAC جديدين خاصين بـStaging، واحفظهما كـEdge Function
    secrets مع `SUPABASE_DB_URL`. لا تنسخ مفاتيح الإنتاج. انشر `student-identity`
    على Staging فقط، واترك `STUDENT_IDENTITY_TEST_FAILPOINTS` غير معرف.
-7. أبقِ كل Feature Flags مغلقة قبل التشغيل.
+7. أبقِ كل Feature Flags مغلقة قبل التشغيل، وبالأخص
+   `registration_enabled=false`, `immediate_registration_enabled=false`,
+   و`registration_rollout_scope='disabled'`. الاختبار يفتحها مؤقتًا داخل Staging
+   ثم يعيد القيم الأصلية داخل cleanup مضمون.
 8. أنشئ GitHub Environment باسم `supabase-staging` مع موافقة يدوية، وأضف:
    - Variable: `STAGING_SUPABASE_URL`
    - Variable: `STAGING_PROJECT_REF`
@@ -79,6 +83,11 @@ Staging السحابي يظهر الاختباران كـskipped صراحة، و
 بعد التشغيل راقب Logs لدالة `student-identity` وAuth وPostgres، ثم تأكد من نجاح
 cleanup وعدم وجود طلبات `residence_area` الخاصة بالـRun ID أو مجموعته. عند فشل
 cleanup أوقف أي إعادة تشغيل وراجع الـRun ID المطبوع؛ لا تنفذ حذفًا عامًا.
+
+الحساب الجديد في فترة المراجعة يملك `review_only`: ينجح Auth وتظهر له حالة
+المراجعة، لكن `student_profiles.is_active=false` يمنع الوظائف التعليمية القديمة
+إلى أن تعتمد الإدارة الحساب. هذا تقييد مقصود في أول إطلاق؛ لا يُوسّع النطاق قبل
+إثبات حماية كل Edge Function قديمة بفحص حالة المراجعة على الخادم.
 
 ## ما لا يثبته نجاح Staging
 

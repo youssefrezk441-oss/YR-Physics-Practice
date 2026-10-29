@@ -14,7 +14,7 @@ gateway_pid=
 function_pid=
 
 cleanup() {
-  test -z "$function_pid" || kill "$function_pid" 2>/dev/null || true
+  test -z "$function_pid" || kill -- "-$function_pid" 2>/dev/null || true
   test -z "$gateway_pid" || kill "$gateway_pid" 2>/dev/null || true
   docker rm -f "$auth_container" "$db_container" >/dev/null 2>&1 || true
   docker network rm "$network" >/dev/null 2>&1 || true
@@ -65,6 +65,8 @@ docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgre
   < tools/fixtures/student_identity_local_baseline.sql >/dev/null
 docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   < supabase/migrations/20261028190000_student_identity_registration_v1.sql >/dev/null
+docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+  < supabase/migrations/20261028230000_immediate_registration_review.sql >/dev/null
 docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   -c 'alter role postgres set search_path=auth,public' >/dev/null
 
@@ -80,7 +82,7 @@ STUDENT_IDENTITY_ENCRYPTION_KEY_B64='MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY
 STUDENT_IDENTITY_HMAC_KEY_B64='ZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTA=' \
 STUDENT_IDENTITY_TEST_FAILPOINTS=synthetic-e2e-only \
 DENO_DIR=/tmp/yr-deno-cache npm_config_cache=/tmp/yr-npm-cache \
-npx --yes deno@2.9.6 run --allow-net --allow-env supabase/functions/student-identity/index.ts \
+setsid npx --yes deno@2.9.6 run --allow-net --allow-env supabase/functions/student-identity/index.ts \
   >/tmp/yr-identity-function.log 2>&1 &
 function_pid=$!
 

@@ -37,10 +37,13 @@ insert into public.student_profiles(user_id,student_code,full_name,grade_level,i
 ('00000000-0000-0000-0000-000000000006','LEGACY-CODE','طالب قديم تجريبي رابع','الصف الثاني الثانوي',false,'Test Center','N2-A');
 SQL
 "${psql_cmd[@]}" < "$repo_dir/supabase/migrations/20261028190000_student_identity_registration_v1.sql"
+"${psql_cmd[@]}" < "$repo_dir/supabase/migrations/20261028230000_immediate_registration_review.sql"
 legacy_missing_memberships="$("${psql_cmd[@]}" -Atc "select count(*) from public.student_profiles p where p.user_id in('00000000-0000-0000-0000-000000000003','00000000-0000-0000-0000-000000000004','00000000-0000-0000-0000-000000000005','00000000-0000-0000-0000-000000000006') and not exists(select 1 from public.student_group_memberships m where m.user_id=p.user_id and m.left_on is null)" | tr -d '[:space:]')"
 test "$legacy_missing_memberships" = "4"
 legacy_nonnumeric="$("${psql_cmd[@]}" -Atc "select count(*) from public.student_profiles where student_code='LEGACY-CODE'" | tr -d '[:space:]')"
 test "$legacy_nonnumeric" = "1"
+legacy_review_rows="$("${psql_cmd[@]}" -Atc "select count(*) from private.student_account_reviews" | tr -d '[:space:]')"
+test "$legacy_review_rows" = "0"
 "${psql_cmd[@]}" <<'SQL'
 insert into private.student_registration_requests(id,full_name,national_id_hmac,national_id_last4,birth_date,grade_level,education_system,attendance_location,residence_area,student_phone_e164,guardian_phone_exception_requested,privacy_notice_version,privacy_accepted_at,status_token_hash,status_token_expires_at)
 values
@@ -98,4 +101,14 @@ activation_claims="$(cat "$tmp_dir/activation1" "$tmp_dir/activation2" | sort | 
 test "$activation_claims" = "f t "
 activation_blocked="$("${psql_cmd[@]}" -Atc "select count(*) from private.claim_student_activation_token('activation-token','different-payload')" | tr -d '[:space:]')"
 test "$activation_blocked" = "0"
+"${psql_cmd[@]}" <<'SQL'
+insert into private.student_account_reviews(user_id,request_id,status,access_scope,review_started_at,review_deadline_at)
+values('00000000-0000-0000-0000-000000000002','20000000-0000-0000-0000-000000000001','pending_review','review_only','2030-01-01 00:00:00+00','2030-01-03 00:00:00+00');
+SQL
+before_boundary="$("${psql_cmd[@]}" -Atc "select status from private.student_account_access('00000000-0000-0000-0000-000000000002','2030-01-02 23:59:59.999+00')" | cut -d'|' -f1)"
+test "$before_boundary" = "pending_review"
+at_boundary="$("${psql_cmd[@]}" -Atc "select status from private.student_account_access('00000000-0000-0000-0000-000000000002','2030-01-03 00:00:00+00')" | cut -d'|' -f1)"
+test "$at_boundary" = "suspended_pending_approval"
+legacy_access="$("${psql_cmd[@]}" -Atc "select status||'|'||legacy_account from private.student_account_access('00000000-0000-0000-0000-000000000003','2040-01-01')")"
+test "$legacy_access" = "approved|true"
 echo "student identity migration, legacy compatibility and concurrency: ok ($code1, $code2)"

@@ -5,6 +5,7 @@ begin
   if to_regclass('public.student_groups') is null then missing:=array_append(missing,'public.student_groups'); end if;
   if to_regclass('public.student_group_memberships') is null then missing:=array_append(missing,'public.student_group_memberships'); end if;
   if to_regclass('private.student_registration_requests') is null then missing:=array_append(missing,'private.student_registration_requests'); end if;
+  if to_regclass('private.student_account_reviews') is null then missing:=array_append(missing,'private.student_account_reviews'); end if;
   if to_regprocedure('public.admin_access_level(text,uuid)') is null then missing:=array_append(missing,'public.admin_access_level(text,uuid)'); end if;
   if to_regclass('private.workshop_attempt_events') is not null then academic_count:=academic_count+1; end if;
   if to_regclass('private.workshop_grading_decisions') is not null then academic_count:=academic_count+1; end if;
@@ -20,7 +21,8 @@ end $$;
 
 do $$ begin
   if exists(select 1 from private.student_identity_settings where singleton and
-    (registration_enabled or phone_login_enabled or profile_update_enabled
+    (registration_enabled or immediate_registration_enabled or registration_rollout_scope<>'disabled'
+     or phone_login_enabled or profile_update_enabled
      or profile_enforcement_enabled or national_id_collection_enabled or sms_provider_ready)) then
     raise exception 'all student identity feature flags must be closed before staging E2E';
   end if;
