@@ -5,7 +5,12 @@
 3. طبق `20261028190000_student_identity_registration_v1.sql` ثم `20261028230000_immediate_registration_review.sql`. تحقق أن كل Flags مغلقة.
 4. عالج حد Edge Functions ثم انشر `student-identity` مع `verify_jwt=false` لأن التسجيل والتفعيل عامان، بينما تتحقق الإجراءات الخاصة داخليًا من JWT والصلاحيات.
 5. اختبر التسجيل الفوري، كلمة المرور، الموافقة، انتهاء 48 ساعة، JWT القديم، التكرار، الفشل وإعادة المحاولة ببيانات اصطناعية. انشر تعريف Cron من `supabase/cron/student_identity_review_expiry.sql` على Staging فقط، واختبره دون الاعتماد عليه بدل فحص الطلب.
-6. انشر Pages إلى Preview. للتجربة المحدودة اضبط `registration_rollout_scope='limited'` واملأ `registration_rollout_group_codes` بمجموعة اختبار صريحة، ثم فعّل `immediate_registration_enabled` و`registration_enabled`. القائمة الفارغة تبقي التسجيل مغلقًا.
+6. انشر Pages إلى Preview. للتجربة المحدودة أنشئ دعوات اختبار في
+   `private.student_registration_invites` عبر أداة إدارة خادمية، واضبط
+   `registration_rollout_scope='limited'`. لا تُرسل الدعوة إلا لحسابات الاختبار.
+   اختيار مجموعة عامة وحده لا يفتح التسجيل. لا يعمل نطاق `staging` على مرجع
+   الإنتاج. قبل `all` جهز Turnstile Secret والواجهة واختبر Rate Limiting من خلال
+   الـGateway الحقيقي.
 7. لا تفعل الهاتف قبل إعداد SMS وربط الهاتف بالمستخدم نفسه وتوثيقه وحل المكررات؛ بعدها فعّل `sms_provider_ready` ثم `phone_login_enabled`.
 8. فعّل `profile_update_enabled` دون فرض، وراقب الإكمال.
 9. بعد تغطية كل وظائف الطالب بالخادم، فعّل `profile_enforcement_enabled` تدريجيًا. مفتاح التعطيل الفوري هو نفس الحقل.

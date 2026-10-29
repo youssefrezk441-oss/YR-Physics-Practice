@@ -37,8 +37,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Install browser for real student page with local GoTrue
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
       - name: Isolated local GoTrue, PostgreSQL and Edge Function E2E (two clean runs)
-        run: bash tools/run_student_identity_local_e2e.sh
+        env:
+          E2E_BROWSER: '1'
+        run: |
+          export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
+          bash tools/run_student_identity_local_e2e.sh
   staging-integration:
     if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' && vars.STAGING_PROJECT_REF != '' }}
     runs-on: ubuntu-latest

@@ -155,12 +155,15 @@
     <script type="module">
       import { identity, $, message } from "./student-identity-api.js";
       const f = $("form"),
-        requestKey = crypto.randomUUID();
+        requestKey = crypto.randomUUID(),
+        registrationInvite = new URLSearchParams(location.search).get("invite") || "";
       let cfg;
       try {
         cfg = await identity("config");
         if (!cfg.registration_enabled)
           throw Error("التسجيل الجديد غير متاح حاليًا.");
+        if (cfg.registration_invite_required && !registrationInvite)
+          throw Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل التجريبي.");
         const render = () => {
           const grade = f.grade_level.value;
           f.group_code.innerHTML =
@@ -197,6 +200,7 @@
         b.privacy_accepted = b.privacy === "on";
         b.privacy_notice_version = cfg.privacy_notice_version;
         b.request_idempotency_key = requestKey;
+        if (registrationInvite) b.registration_invite = registrationInvite;
         delete b.privacy;
         try {
           if (b.password !== b.password_confirm)

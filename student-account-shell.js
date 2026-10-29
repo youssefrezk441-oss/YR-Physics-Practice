@@ -124,6 +124,14 @@ async function gate(cfg) {
     data: { session },
   } = await sb.auth.getSession();
   if (!session?.user || session.user.app_metadata?.role !== "student") return;
+  if (
+    window.__yrStudentReview &&
+    !window.__yrStudentReview.legacy_account &&
+    window.__yrStudentReview.status !== "approved"
+  ) {
+    renderReviewGate(window.__yrStudentReview);
+    return;
+  }
   const { data, error } = await sb.functions.invoke("student-identity", {
     body: { action: "me" },
   });

@@ -94,8 +94,11 @@ done
 
 for pass in 1 2; do
   echo "Local GoTrue E2E pass ${pass}/2"
+  browser_current=0
+  if [[ "$pass" = 1 && "${E2E_BROWSER:-0}" = 1 ]]; then browser_current=1; fi
   E2E_TARGET=local E2E_SUPABASE_URL=http://127.0.0.1:58000 \
   E2E_ANON_KEY=synthetic-anon E2E_SERVICE_ROLE_KEY="$service_jwt" \
   E2E_DB_CONTAINER="$db_container" E2E_ALLOW_WRITES=synthetic-e2e-only \
+  E2E_BROWSER_CURRENT="$browser_current" \
   node --test tools/tests/student-identity-staging.integration.mjs
 done

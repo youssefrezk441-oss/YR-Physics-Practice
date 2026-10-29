@@ -4,7 +4,7 @@ alter table private.student_identity_settings
   add column if not exists immediate_registration_enabled boolean not null default false,
   add column if not exists registration_rollout_scope text not null default 'disabled'
     check (registration_rollout_scope in ('disabled','staging','limited','all')),
-  add column if not exists registration_rollout_group_codes text[] not null default '{}'::text[];
+  add column if not exists captcha_required_for_public_registration boolean not null default true;
 
 alter table private.student_registration_requests
   add column if not exists client_request_hmac text,
@@ -15,10 +15,30 @@ create unique index if not exists student_registration_client_request_uq
   on private.student_registration_requests(client_request_hmac) where client_request_hmac is not null;
 create unique index if not exists student_registration_phone_claim_uq
   on private.student_registration_requests(student_phone_hmac)
-  where student_phone_hmac is not null and status not in ('rejected','cancelled');
+  where student_phone_hmac is not null and status <> 'cancelled';
 create unique index if not exists student_registration_subject_claim_uq
   on private.student_registration_requests(registration_subject_hmac)
-  where registration_subject_hmac is not null and status not in ('rejected','cancelled');
+  where registration_subject_hmac is not null and status <> 'cancelled';
+
+create table if not exists private.student_registration_invites (
+  id uuid primary key default gen_random_uuid(),
+  token_hmac text not null unique,
+  label text not null check (length(btrim(label)) between 3 and 120),
+  allowed_group_code text references public.student_groups(group_code) on update cascade on delete restrict,
+  max_uses integer not null default 1 check (max_uses between 1 and 100),
+  used_count integer not null default 0 check (used_count between 0 and max_uses),
+  expires_at timestamptz not null,
+  enabled boolean not null default true,
+  created_at timestamptz not null default now()
+);
+create table if not exists private.student_registration_invite_redemptions (
+  invite_id uuid not null references private.student_registration_invites(id) on delete restrict,
+  request_hmac text not null,
+  redeemed_at timestamptz not null default now(),
+  primary key(invite_id,request_hmac),
+  unique(request_hmac)
+);
+revoke all on private.student_registration_invites,private.student_registration_invite_redemptions from public,anon,authenticated;
 
 alter table private.student_registration_requests drop constraint if exists student_registration_requests_check;
 alter table private.student_registration_requests add constraint student_registration_identity_path_check check (

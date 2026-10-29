@@ -131,7 +131,8 @@
               .map((r) => {
                 const dup =
                     !!r.duplicate_review?.national_id_already_registered ||
-                    Number(r.duplicate_review?.phone_request_count || 0) > 0,
+                    Number(r.duplicate_review?.existing_student_phone_matches || 0) > 0 ||
+                    Number(r.duplicate_review?.existing_family_phone_matches || 0) > 0,
                   h = left(r.review_deadline_at);
                 return `<tr><td>${esc(r.public_ref)}<br><b>${esc(r.assigned_student_code || "—")}</b></td><td><b>${esc(r.full_name)}</b>${dup ? '<br><b style="color:#b42318">مؤشر تكرار</b>' : ""}</td><td>${esc(r.grade_level)} · ${esc(r.education_system)}<br>المطلوبة: ${esc(r.requested_group_code || "—")}<br>الحالية: ${esc(r.assigned_group_code || "—")}</td><td>${esc(r.student_phone_e164)}<br>${new Date(r.created_at).toLocaleString("ar-EG")}</td><td><span class="pill">${esc(r.account_status || r.request_status)}</span><br>${r.review_deadline_at ? new Date(r.review_deadline_at).toLocaleString("ar-EG") : ""}<br>${h == null ? "" : h > 0 ? `متبقي ${h} ساعة` : "انتهت المهلة"}</td><td><button class="accountBtn secondary" data-ref="${esc(r.public_ref)}">قرار</button></td></tr>`;
               })

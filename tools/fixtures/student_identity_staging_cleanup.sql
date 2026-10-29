@@ -1,5 +1,7 @@
 -- Only the E2E runner substitutes __RUN_ID__. The run id is restricted to [A-Za-z0-9-].
 begin;
+delete from private.student_registration_invite_redemptions where invite_id in(select id from private.student_registration_invites where label='e2e:__RUN_ID__');
+delete from private.student_registration_invites where label='e2e:__RUN_ID__';
 create temporary table e2e_requests on commit drop as
   select id from private.student_registration_requests
   where residence_area = 'e2e:__RUN_ID__';

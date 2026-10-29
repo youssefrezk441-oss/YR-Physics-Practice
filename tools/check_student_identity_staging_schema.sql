@@ -6,6 +6,7 @@ begin
   if to_regclass('public.student_group_memberships') is null then missing:=array_append(missing,'public.student_group_memberships'); end if;
   if to_regclass('private.student_registration_requests') is null then missing:=array_append(missing,'private.student_registration_requests'); end if;
   if to_regclass('private.student_account_reviews') is null then missing:=array_append(missing,'private.student_account_reviews'); end if;
+  if to_regclass('private.student_registration_invites') is null then missing:=array_append(missing,'private.student_registration_invites'); end if;
   if to_regprocedure('public.admin_access_level(text,uuid)') is null then missing:=array_append(missing,'public.admin_access_level(text,uuid)'); end if;
   if to_regclass('private.workshop_attempt_events') is not null then academic_count:=academic_count+1; end if;
   if to_regclass('private.workshop_grading_decisions') is not null then academic_count:=academic_count+1; end if;

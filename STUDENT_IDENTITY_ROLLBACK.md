@@ -4,8 +4,9 @@
 
 اضبط `registration_enabled=false`, `immediate_registration_enabled=false`, `registration_rollout_scope='disabled'`, `phone_login_enabled=false`, `profile_update_enabled=false`, `profile_enforcement_enabled=false`. هذا يوقف استقبال حسابات جديدة فورًا ولا يغير الطلاب القدامى أو الحسابات الجديدة التي أُنشئت بالفعل. لا تحذف طلبات أو حالات مراجعة أو هويات أو سجلات تدقيق.
 
-للتجربة المحدودة استخدم `registration_rollout_scope='limited'` مع قائمة صريحة في
-`registration_rollout_group_codes`. القائمة فارغة افتراضيًا وتعني عدم فتح التسجيل لأي مجموعة.
+للتجربة المحدودة استخدم `registration_rollout_scope='limited'` مع دعوات قصيرة
+العمر ومحدودة الاستخدام في `private.student_registration_invites`. إيقاف الدعوة
+أو النطاق يمنع تسجيلًا جديدًا ولا يؤثر في الحسابات التي أُنشئت بالفعل.
 
 ## بعد وجود طلبات أو حسابات
 

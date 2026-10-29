@@ -21,7 +21,16 @@ const URL = Deno.env.get("SUPABASE_URL") ?? "",
   SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
   DB = Deno.env.get("SUPABASE_DB_URL") ?? "";
 const ENC = Deno.env.get("STUDENT_IDENTITY_ENCRYPTION_KEY_B64") ?? "",
-  HMAC = Deno.env.get("STUDENT_IDENTITY_HMAC_KEY_B64") ?? "";
+  HMAC = Deno.env.get("STUDENT_IDENTITY_HMAC_KEY_B64") ?? "",
+  CAPTCHA_SECRET = Deno.env.get("STUDENT_REGISTRATION_TURNSTILE_SECRET") ?? "";
+const PROJECT_HOST = (() => {
+    try {
+      return new globalThis.URL(URL).hostname;
+    } catch {
+      return "";
+    }
+  })(),
+  IS_PRODUCTION = PROJECT_HOST === "ltjdhconuiqblxfjzpzj.supabase.co";
 const SYNTHETIC_FAILPOINTS =
   Deno.env.get("STUDENT_IDENTITY_TEST_FAILPOINTS") === "synthetic-e2e-only" &&
   ["127.0.0.1", "localhost"].includes((() => {
@@ -41,6 +50,7 @@ const auth = createClient(URL, ANON, {
 const origins = new Set([
     "https://youssefrezk441-oss.github.io",
     "http://127.0.0.1:8000",
+    "http://127.0.0.1:58001",
     "http://localhost:8000",
   ]),
   enc = new TextEncoder();
@@ -139,6 +149,28 @@ async function limit(
     throw new IdentityInputError("rate_limited", "حاول مرة أخرى لاحقًا.");
   }
 }
+function clientIp(req: Request) {
+  const candidates = [
+    req.headers.get("cf-connecting-ip"),
+    req.headers.get("x-real-ip"),
+    req.headers.get("x-forwarded-for")?.split(",").at(-1),
+  ];
+  const value = candidates.map((v) => String(v ?? "").trim()).find((v) =>
+    /^[0-9a-f:.]{3,64}$/i.test(v)
+  );
+  return value || "unknown";
+}
+async function verifyCaptcha(token: string, ip: string) {
+  if (!CAPTCHA_SECRET || !token) return false;
+  const form = new URLSearchParams({ secret: CAPTCHA_SECRET, response: token });
+  if (ip !== "unknown") form.set("remoteip", ip);
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    { method: "POST", body: form },
+  );
+  const result = await response.json().catch(() => ({}));
+  return response.ok && result?.success === true;
+}
 const publicRequest = (r: any) => ({
   reference: r.public_ref,
   status: r.status,
@@ -175,19 +207,26 @@ Deno.serve(async (req) => {
   try {
     const cfg = await settings();
     if (action === "config") {
+      const scopeAllowed = cfg.registration_rollout_scope === "limited" ||
+        cfg.registration_rollout_scope === "all" ||
+        (cfg.registration_rollout_scope === "staging" && !IS_PRODUCTION);
       const groups =
-        cfg.registration_enabled && cfg.immediate_registration_enabled
-          ? await sql`select group_code,grade_level,center_name from public.student_groups where is_active and (${cfg.registration_rollout_scope}<>'limited' or group_code=any(${
-            cfg.registration_rollout_group_codes ?? []
-          }::text[])) order by grade_level,group_code limit 200`
+        cfg.registration_enabled && cfg.immediate_registration_enabled &&
+          scopeAllowed
+          ? await sql`select group_code,grade_level,center_name from public.student_groups where is_active order by grade_level,group_code limit 200`
           : [];
       return out(req, {
         ok: true,
         registration_enabled: cfg.registration_enabled &&
           cfg.immediate_registration_enabled &&
-          cfg.registration_rollout_scope !== "disabled" &&
-          (cfg.registration_rollout_scope !== "limited" || groups.length > 0),
+          scopeAllowed &&
+          (cfg.registration_rollout_scope !== "all" ||
+            !cfg.captcha_required_for_public_registration || !!CAPTCHA_SECRET),
         registration_rollout_scope: cfg.registration_rollout_scope,
+        registration_invite_required:
+          cfg.registration_rollout_scope === "limited",
+        captcha_required: cfg.registration_rollout_scope === "all" &&
+          cfg.captcha_required_for_public_registration,
         phone_login_enabled: cfg.phone_login_enabled && cfg.sms_provider_ready,
         profile_update_enabled: cfg.profile_update_enabled,
         profile_enforcement_enabled: cfg.profile_enforcement_enabled,
@@ -198,21 +237,30 @@ Deno.serve(async (req) => {
       });
     }
     if (action === "submit_registration") {
+      const scopeAllowed = cfg.registration_rollout_scope === "limited" ||
+        cfg.registration_rollout_scope === "all" ||
+        (cfg.registration_rollout_scope === "staging" && !IS_PRODUCTION);
       if (
         !cfg.registration_enabled || !cfg.immediate_registration_enabled ||
-        cfg.registration_rollout_scope === "disabled"
+        !scopeAllowed
       ) {
         return out(req, {
           error: "registration_unavailable",
           message: "التسجيل الجديد غير متاح حاليًا.",
         }, 503);
       }
-      await limit(
-        "registration",
-        req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown",
-        5,
-        60,
-      );
+      const requestIp = clientIp(req);
+      await limit("registration", requestIp, 5, 60);
+      if (
+        cfg.registration_rollout_scope === "all" &&
+        cfg.captcha_required_for_public_registration &&
+        !await verifyCaptcha(txt(body.captcha_token, 2048), requestIp)
+      ) {
+        throw new IdentityInputError(
+          "captcha_required",
+          "تعذر التحقق من اختبار الحماية. أعد المحاولة.",
+        );
+      }
       const password = validatePassword(body.password);
       if (password !== String(body.password_confirm ?? "")) {
         throw new IdentityInputError(
@@ -256,15 +304,6 @@ Deno.serve(async (req) => {
         privacy = txt(body.privacy_notice_version, 80),
         group = txt(body.group_code, 80);
       if (
-        cfg.registration_rollout_scope === "limited" &&
-        !(cfg.registration_rollout_group_codes ?? []).includes(group)
-      ) {
-        throw new IdentityInputError(
-          "registration_outside_rollout",
-          "التسجيل غير متاح لهذه المجموعة ضمن النطاق التجريبي الحالي.",
-        );
-      }
-      if (
         body.privacy_accepted !== true || privacy !== cfg.privacy_notice_version
       ) {
         throw new IdentityInputError(
@@ -279,17 +318,27 @@ Deno.serve(async (req) => {
             guardian ?? studentPhone
           }`,
         ),
+        inviteHmac = cfg.registration_rollout_scope === "limited"
+          ? await hmac(
+            `registration-invite:${txt(body.registration_invite, 200)}`,
+          )
+          : null,
         statusToken = b64(crypto.getRandomValues(new Uint8Array(32))),
         tokenHash = await hashToken(statusToken),
         attemptId = crypto.randomUUID();
+      await limit("registration_phone", phoneHmac, 3, 24 * 60);
       const [existingIdentity] = nationalHash
         ? await sql`select 1 from private.student_sensitive_identities where national_id_hmac=${nationalHash} limit 1`
         : [];
+      const phoneDigits = studentPhone.replace(/\D/g, "").slice(-10),
+        guardianDigits = guardian?.replace(/\D/g, "").slice(-10) ?? null;
+      const [existingProfiles] =
+        await sql`select count(*) filter(where right(regexp_replace(coalesce(student_phone,''),'\D','','g'),10)=${phoneDigits})::int student_phone_matches,count(*) filter(where ${guardianDigits}::text is not null and (right(regexp_replace(coalesce(student_phone,''),'\D','','g'),10)=${guardianDigits} or right(regexp_replace(coalesce(guardian_phone,''),'\D','','g'),10)=${guardianDigits}))::int family_phone_matches from public.student_profiles`;
       const r: any = await sql.begin(async (tx) => {
         await tx`select pg_advisory_xact_lock(hashtextextended(${phoneHmac},0))`;
         await tx`select pg_advisory_xact_lock(hashtextextended(${subjectHmac},0))`;
         const [existingPhone] =
-          await tx`select public_ref from private.student_registration_requests where student_phone_hmac=${phoneHmac} and client_request_hmac<>${requestHmac} and status not in('rejected','cancelled') limit 1`;
+          await tx`select public_ref from private.student_registration_requests where student_phone_hmac=${phoneHmac} and client_request_hmac<>${requestHmac} and status<>'cancelled' limit 1`;
         if (existingPhone) {
           throw new IdentityInputError(
             "duplicate_registration",
@@ -297,7 +346,7 @@ Deno.serve(async (req) => {
           );
         }
         const [existingSubject] =
-          await tx`select public_ref from private.student_registration_requests where registration_subject_hmac=${subjectHmac} and client_request_hmac<>${requestHmac} and status not in('rejected','cancelled') limit 1`;
+          await tx`select public_ref from private.student_registration_requests where registration_subject_hmac=${subjectHmac} and client_request_hmac<>${requestHmac} and status<>'cancelled' limit 1`;
         if (existingSubject) {
           throw new IdentityInputError(
             "duplicate_registration",
@@ -327,6 +376,28 @@ Deno.serve(async (req) => {
         let [x] =
           await tx`select * from private.student_registration_requests where client_request_hmac=${requestHmac} for update`;
         if (!x) {
+          if (cfg.registration_rollout_scope === "limited") {
+            const [invite] =
+              await tx`select id,allowed_group_code,max_uses,used_count from private.student_registration_invites where token_hmac=${inviteHmac} and enabled and expires_at>now() for update`;
+            if (
+              !invite ||
+              (invite.allowed_group_code && invite.allowed_group_code !== group)
+            ) {
+              throw new IdentityInputError(
+                "registration_invite_invalid",
+                "تعذر إكمال التسجيل بهذه الدعوة.",
+              );
+            }
+            const [redemption] =
+              await tx`insert into private.student_registration_invite_redemptions(invite_id,request_hmac) select ${invite.id}::uuid,${requestHmac} where ${invite.used_count}<${invite.max_uses} on conflict(request_hmac) do nothing returning invite_id`;
+            if (!redemption) {
+              throw new IdentityInputError(
+                "registration_invite_invalid",
+                "تعذر إكمال التسجيل بهذه الدعوة.",
+              );
+            }
+            await tx`update private.student_registration_invites set used_count=used_count+1 where id=${invite.id}::uuid`;
+          }
           [x] =
             await tx`insert into private.student_registration_requests(client_request_hmac,student_phone_hmac,registration_subject_hmac,identity_review_required,full_name,national_id_ciphertext,national_id_iv,national_id_hmac,national_id_last4,national_id_exception_requested,birth_date,grade_level,education_system,attendance_location,attendance_location_other,residence_area,student_phone_e164,guardian_phone_e164,guardian_phone_exception_requested,privacy_notice_version,privacy_accepted_at,status_token_hash,status_token_expires_at,duplicate_review,requested_group_code)
           values(${requestHmac},${phoneHmac},${subjectHmac},${!nationalHash},${fullName},${
@@ -340,7 +411,12 @@ Deno.serve(async (req) => {
             },${residence},${studentPhone},${guardian},${!guardian},${privacy},now(),${tokenHash},now()+interval '30 days',${
               tx.json({
                 national_id_already_registered: !!existingIdentity,
-                phone_request_count: 0,
+                existing_student_phone_matches: Number(
+                  existingProfiles?.student_phone_matches ?? 0,
+                ),
+                existing_family_phone_matches: Number(
+                  existingProfiles?.family_phone_matches ?? 0,
+                ),
               })
             },${group}) returning *`;
           await tx`insert into private.student_privacy_consents(request_id,notice_version,consent_kind,accepted_at) values(${x.id}::uuid,${privacy},${
@@ -469,7 +545,7 @@ Deno.serve(async (req) => {
     if (action === "registration_status") {
       await limit(
         "registration_status",
-        req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown",
+        clientIp(req),
         20,
         15,
       );
@@ -487,7 +563,7 @@ Deno.serve(async (req) => {
     if (action === "request_recovery") {
       await limit(
         "recovery",
-        req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown",
+        clientIp(req),
         5,
         60,
       );
@@ -520,7 +596,7 @@ Deno.serve(async (req) => {
     if (action === "reset_password") {
       await limit(
         "password_reset",
-        req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown",
+        clientIp(req),
         10,
         15,
       );
@@ -557,7 +633,7 @@ Deno.serve(async (req) => {
     if (action === "activate") {
       await limit(
         "activation",
-        req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown",
+        clientIp(req),
         10,
         15,
       );
@@ -797,8 +873,7 @@ Deno.serve(async (req) => {
           const now = SYNTHETIC_FAILPOINTS && body.test_now
             ? new Date(txt(body.test_now, 40))
             : new Date();
-          const target = decision === "reactivate" ? "approved" : decision;
-          await sql.begin(async (tx) => {
+          const target = await sql.begin(async (tx) => {
             const [review] =
               await tx`select ar.*,r.id request_id from private.student_account_reviews ar join private.student_registration_requests r on r.id=ar.request_id where r.public_ref=${ref}::uuid for update of ar`;
             if (!review) {
@@ -807,6 +882,23 @@ Deno.serve(async (req) => {
                 "طلب المراجعة غير موجود.",
               );
             }
+            if (
+              decision === "reactivate" &&
+              review.status !== "suspended_by_admin"
+            ) {
+              throw new IdentityInputError(
+                "invalid_reactivation",
+                "إعادة التفعيل متاحة فقط للحساب الموقوف يدويًا.",
+              );
+            }
+            let target = decision;
+            if (decision === "reactivate") {
+              target = review.previous_status === "approved"
+                ? "approved"
+                : now >= new Date(review.review_deadline_at)
+                ? "suspended_pending_approval"
+                : "pending_review";
+            }
             if (review.status === target && decision !== "reactivate") {
               throw new IdentityInputError(
                 "decision_already_applied",
@@ -814,15 +906,20 @@ Deno.serve(async (req) => {
               );
             }
             const active = target === "approved",
-              scope = active ? "full" : "none";
+              scope = active
+                ? "full"
+                : target === "pending_review"
+                ? "review_only"
+                : "none";
             await tx`update private.student_account_reviews set previous_status=status,status=${target},access_scope=${scope},decided_at=${now},decided_by=${a.user.id}::uuid,decision_reason=${reason},updated_at=${now} where user_id=${review.user_id}::uuid`;
             await tx`update public.student_profiles set is_active=${active},updated_at=${now} where user_id=${review.user_id}::uuid`;
-            await tx`update private.student_registration_requests set status=${
-              target === "approved" ? "approved" : "rejected"
-            },decision_reason=${reason},decided_at=${now},decided_by=${a.user.id}::uuid,updated_at=${now} where id=${review.request_id}::uuid`;
+            if (decision === "approved" || decision === "rejected") {
+              await tx`update private.student_registration_requests set status=${decision},decision_reason=${reason},decided_at=${now},decided_by=${a.user.id}::uuid,updated_at=${now} where id=${review.request_id}::uuid`;
+            }
             await tx`insert into private.student_identity_audit_events(request_id,actor_user_id,subject_user_id,event_type,reason,metadata) values(${review.request_id}::uuid,${a.user.id}::uuid,${review.user_id}::uuid,${`review_${decision}`},${reason},${
               tx.json({ from: review.status, to: target })
             })`;
+            return target;
           });
           return out(req, { ok: true, status: target });
         }
