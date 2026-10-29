@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>طلبات تسجيل الطلاب</title>
+    <link rel="stylesheet" href="student-account.css" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 9px;
+        border-bottom: 1px solid #e4e7ec;
+        text-align: right;
+        font-size: 13px;
+      }
+      .scroll {
+        overflow: auto;
+      }
+      .pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #eef2ff;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="accountPage" style="max-width: 1180px">
+      <a href="admin-home.html">← لوحة الإدارة</a>
+      <h1>طلبات تسجيل الطلاب</h1>
+      <p class="accountMuted">
+        اعتماد الحساب لا يغيّر الكود أو كلمة المرور. البيانات الحساسة الكاملة لا
+        تظهر هنا.
+      </p>
+      <div id="message" class="hidden"></div>
+      <div class="accountCard accountField">
+        <label for="reviewFilter">تقسيم طلبات التسجيل</label>
+        <select id="reviewFilter">
+          <option value="pending_review">قيد المراجعة</option>
+          <option value="approaching">اقترب انتهاء المهلة</option>
+          <option value="expired">انتهت المهلة</option>
+          <option value="approved">تم اعتمادها</option>
+          <option value="rejected">مرفوضة</option>
+          <option value="suspended_by_admin">موقوفة يدويًا</option>
+          <option value="all">الكل</option>
+        </select>
+      </div>
+      <section class="accountCard scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>الطلب والكود</th>
+              <th>الطالب</th>
+              <th>الدراسة والمجموعة</th>
+              <th>التواصل والوقت</th>
+              <th>الحالة والمهلة</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+      <section class="accountCard scroll">
+        <h2>طلبات الاستعادة</h2>
+        <table>
+          <tbody id="recoveryRows"></tbody>
+        </table>
+      </section>
+      <section id="decision" class="accountCard hidden">
+        <h2>قرار مراجعة الحساب</h2>
+        <form id="decisionForm" class="accountGrid">
+          <input name="reference" type="hidden" />
+          <div class="accountField">
+            <label>القرار</label
+            ><select name="decision">
+              <option value="approved">اعتماد الحساب</option>
+              <option value="rejected">رفض وإيقاف</option>
+              <option value="suspended_by_admin">إيقاف يدوي</option>
+              <option value="reactivate">إعادة التفعيل</option>
+            </select>
+          </div>
+          <div class="accountField full">
+            <label>سبب القرار</label
+            ><textarea name="reason" minlength="8" required></textarea>
+          </div>
+          <button class="accountBtn">حفظ القرار</button>
+        </form>
+      </section>
+      <section id="recoveryDecision" class="accountCard hidden">
+        <form id="recoveryForm">
+          <input name="reference" type="hidden" /><select name="decision">
+            <option value="approved">موافقة</option>
+            <option value="rejected">رفض</option></select
+          ><textarea name="reason" required></textarea
+          ><button class="accountBtn">حفظ</button>
+        </form>
+      </section>
+    </main>
+    <script type="module">
+      import { identity, sb, $, esc, message } from "./student-identity-api.js";
+      const {
+        data: { session },
+      } = await sb.auth.getSession();
+      if (!session?.user || session.user.app_metadata?.role !== "admin") {
+        location.replace("admin-home.html");
+        throw Error("admin required");
+      }
+      const left = (d) =>
+        d ? Math.ceil((new Date(d) - Date.now()) / 36e5) : null;
+      let requests = [];
+      const category = (r) => {
+        const status = r.account_status || r.request_status,
+          hours = left(r.review_deadline_at);
+        if (status === "pending_review" && hours !== null && hours <= 0)
+          return "expired";
+        if (status === "pending_review" && hours !== null && hours <= 12)
+          return "approaching";
+        if (status === "suspended_pending_approval") return "expired";
+        return status;
+      };
+      function renderRequests() {
+        const selected = $("reviewFilter").value;
+        const visible = requests.filter(
+          (r) => selected === "all" || category(r) === selected,
+        );
+        $("rows").innerHTML = visible.length
+          ? visible
+              .map((r) => {
+                const dup =
+                    !!r.duplicate_review?.national_id_already_registered ||
+                    Number(r.duplicate_review?.existing_student_phone_matches || 0) > 0 ||
+                    Number(r.duplicate_review?.existing_family_phone_matches || 0) > 0,
+                  h = left(r.review_deadline_at);
+                return `<tr><td>${esc(r.public_ref)}<br><b>${esc(r.assigned_student_code || "—")}</b></td><td><b>${esc(r.full_name)}</b>${dup ? '<br><b style="color:#b42318">مؤشر تكرار</b>' : ""}</td><td>${esc(r.grade_level)} · ${esc(r.education_system)}<br>المطلوبة: ${esc(r.requested_group_code || "—")}<br>الحالية: ${esc(r.assigned_group_code || "—")}</td><td>${esc(r.student_phone_e164)}<br>${new Date(r.created_at).toLocaleString("ar-EG")}</td><td><span class="pill">${esc(r.account_status || r.request_status)}</span><br>${r.review_deadline_at ? new Date(r.review_deadline_at).toLocaleString("ar-EG") : ""}<br>${h == null ? "" : h > 0 ? `متبقي ${h} ساعة` : "انتهت المهلة"}</td><td><button class="accountBtn secondary" data-ref="${esc(r.public_ref)}">قرار</button></td></tr>`;
+              })
+              .join("")
+          : '<tr><td colspan="6">لا توجد طلبات في هذا القسم.</td></tr>';
+        document.querySelectorAll("[data-ref]").forEach(
+          (b) =>
+            (b.onclick = () => {
+              $("decision").classList.remove("hidden");
+              $("decisionForm").reference.value = b.dataset.ref;
+            }),
+        );
+      }
+      async function load() {
+        try {
+          const d = await identity("admin_list");
+          requests = d.requests;
+          renderRequests();
+          $("recoveryRows").innerHTML = d.recovery_requests
+            .map(
+              (r) =>
+                `<tr><td>${esc(r.public_ref)}</td><td>${r.account_matched ? "مطابق" : "غير مطابق"}</td><td>${esc(r.status)}</td><td>${r.status === "pending" ? `<button data-recovery="${esc(r.public_ref)}">قرار</button>` : ""}</td></tr>`,
+            )
+            .join("");
+          document.querySelectorAll("[data-recovery]").forEach(
+            (b) =>
+              (b.onclick = () => {
+                $("recoveryDecision").classList.remove("hidden");
+                $("recoveryForm").reference.value = b.dataset.recovery;
+              }),
+          );
+        } catch (e) {
+          message(e.message);
+        }
+      }
+      $("decisionForm").onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+          await identity(
+            "admin_decide",
+            Object.fromEntries(new FormData(e.target)),
+          );
+          message("تم حفظ القرار دون تغيير بيانات الدخول.", true);
+          await load();
+        } catch (x) {
+          message(x.message);
+        }
+      };
+      $("recoveryForm").onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+          await identity(
+            "admin_recovery_decide",
+            Object.fromEntries(new FormData(e.target)),
+          );
+          message("تم حفظ القرار.", true);
+          await load();
+        } catch (x) {
+          message(x.message);
+        }
+      };
+      $("reviewFilter").onchange = renderRequests;
+      load();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>إنشاء حساب طالب</title>
+    <link rel="stylesheet" href="student-account.css" />
+    <style>
+      .successCode {
+        font-size: clamp(28px, 8vw, 48px);
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: #243b82;
+        text-align: center;
+        padding: 18px;
+        background: #eef2ff;
+        border-radius: 16px;
+      }
+      .passwordWrap {
+        display: flex;
+        gap: 8px;
+      }
+      .passwordWrap input {
+        flex: 1;
+      }
+      .countdown {
+        font-weight: 800;
+        color: #9a3412;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="accountPage">
+      <a href="student.html">← العودة للدخول</a>
+      <h1>إنشاء حساب جديد</h1>
+      <p class="accountMuted">
+        أنشئ حسابك واحصل على كودك فورًا. ستراجع الإدارة البيانات خلال 48 ساعة.
+      </p>
+      <form id="form" class="accountCard accountGrid">
+        <div class="accountField full">
+          <label>الاسم الرباعي</label
+          ><input name="full_name" required autocomplete="name" />
+        </div>
+        <div class="accountField">
+          <label>الصف الدراسي</label
+          ><select name="grade_level" required>
+            <option>الصف الثاني الثانوي</option>
+            <option>الصف الثالث الثانوي</option>
+          </select>
+        </div>
+        <div class="accountField">
+          <label>النظام التعليمي</label
+          ><select name="education_system" required>
+            <option>عام</option>
+            <option>أزهري</option>
+            <option>بكالوريا</option>
+          </select>
+        </div>
+        <div class="accountField full">
+          <label>المجموعة المطلوبة</label
+          ><select name="group_code" required>
+            <option value="">جارٍ تحميل المجموعات…</option>
+          </select>
+        </div>
+        <div class="accountField">
+          <label>مكان الحضور</label
+          ><select name="attendance_location" required>
+            <option>ناهيا</option>
+            <option>كفر حكيم</option>
+            <option>خصوصي</option>
+            <option>غير ذلك</option>
+          </select>
+        </div>
+        <div class="accountField">
+          <label>محل السكن</label><input name="residence_area" required />
+        </div>
+        <div class="accountField">
+          <label>رقم هاتف الطالب</label
+          ><input
+            name="student_phone"
+            required
+            inputmode="tel"
+            autocomplete="tel"
+          />
+        </div>
+        <div class="accountField">
+          <label>رقم ولي الأمر</label
+          ><input name="guardian_phone" required inputmode="tel" />
+        </div>
+        <div class="accountField">
+          <label>كلمة المرور</label>
+          <div class="passwordWrap">
+            <input
+              name="password"
+              type="password"
+              required
+              minlength="10"
+              autocomplete="new-password"
+            /><button type="button" class="accountBtn secondary toggle">
+              إظهار
+            </button>
+          </div>
+        </div>
+        <div class="accountField">
+          <label>تأكيد كلمة المرور</label>
+          <div class="passwordWrap">
+            <input
+              name="password_confirm"
+              type="password"
+              required
+              minlength="10"
+              autocomplete="new-password"
+            /><button type="button" class="accountBtn secondary toggle">
+              إظهار
+            </button>
+          </div>
+        </div>
+        <p class="accountMuted full">
+          10 أحرف على الأقل، وتضم حروفًا وأرقامًا. لا نخزن كلمة المرور في طلب
+          التسجيل ولا نعرضها بعد الإنشاء.
+        </p>
+        <div class="accountField full">
+          <label
+            ><input type="checkbox" name="privacy" required /> قرأت
+            <a href="student-privacy.html" target="_blank" rel="noopener"
+              >إشعار الخصوصية</a
+            >
+            وأوافق على معالجة بيانات التسجيل.</label
+          >
+        </div>
+        <div class="sensitiveNotice full">
+          التسجيل العادي لا يطلب الرقم القومي. جمع الهوية يظل مغلقًا حتى اعتماد
+          متطلبات الخصوصية بصورة مستقلة.
+        </div>
+        <div id="message" class="hidden full"></div>
+        <button class="accountBtn full" type="submit">
+          إنشاء الحساب والحصول على الكود
+        </button>
+      </form>
+      <section id="receipt" class="accountCard hidden">
+        <h2>تم إنشاء حسابك بنجاح! 🎉</h2>
+        <p>كود الطالب الخاص بك:</p>
+        <div id="studentCode" class="successCode"></div>
+        <button id="copyCode" class="accountBtn secondary">نسخ الكود</button>
+        <p>احتفظ بهذا الكود؛ ستستخدمه مع كلمة المرور لتسجيل الدخول.</p>
+        <p>الحالة: <b>قيد مراجعة الإدارة</b></p>
+        <p>تنتهي مهلة المراجعة: <b id="deadline"></b></p>
+        <p class="countdown">
+          إذا لم تتم الموافقة خلال 48 ساعة، سيتوقف الوصول مؤقتًا مع حفظ حسابك
+          وبياناتك.
+        </p>
+        <a class="accountBtn" href="student.html">الدخول إلى المنصة</a>
+      </section>
+    </main>
+    <script type="module">
+      import { identity, $, message } from "./student-identity-api.js";
+      const f = $("form"),
+        requestKey = crypto.randomUUID(),
+        registrationInvite = new URLSearchParams(location.search).get("invite") || "";
+      let cfg;
+      try {
+        cfg = await identity("config");
+        if (!cfg.registration_enabled)
+          throw Error("التسجيل الجديد غير متاح حاليًا.");
+        if (cfg.registration_invite_required && !registrationInvite)
+          throw Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل التجريبي.");
+        const render = () => {
+          const grade = f.grade_level.value;
+          f.group_code.innerHTML =
+            '<option value="">اختر المجموعة</option>' +
+            cfg.groups
+              .filter((g) =>
+                String(g.grade_level || "").includes(
+                  grade.includes("الثاني") ? "الثاني" : "الثالث",
+                ),
+              )
+              .map(
+                (g) =>
+                  `<option value="${g.group_code}">${g.group_code} — ${g.center_name || ""}</option>`,
+              )
+              .join("");
+        };
+        f.grade_level.onchange = render;
+        render();
+      } catch (e) {
+        message(e.message);
+        f.querySelector("button[type=submit]").disabled = true;
+      }
+      document.querySelectorAll(".toggle").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const i = b.previousElementSibling;
+            i.type = i.type === "password" ? "text" : "password";
+            b.textContent = i.type === "password" ? "إظهار" : "إخفاء";
+          }),
+      );
+      f.onsubmit = async (e) => {
+        e.preventDefault();
+        const b = Object.fromEntries(new FormData(f));
+        b.privacy_accepted = b.privacy === "on";
+        b.privacy_notice_version = cfg.privacy_notice_version;
+        b.request_idempotency_key = requestKey;
+        if (registrationInvite) b.registration_invite = registrationInvite;
+        delete b.privacy;
+        try {
+          if (b.password !== b.password_confirm)
+            throw Error("كلمتا المرور غير متطابقتين.");
+          const d = await identity("submit_registration", b);
+          $("studentCode").textContent = d.student_code;
+          $("deadline").textContent = new Date(
+            d.review_deadline_at,
+          ).toLocaleString("ar-EG");
+          $("receipt").classList.remove("hidden");
+          f.classList.add("hidden");
+          $("copyCode").onclick = async () => {
+            await navigator.clipboard.writeText(d.student_code);
+            $("copyCode").textContent = "تم النسخ";
+          };
+          message(d.message || "تم إنشاء الحساب.", true);
+        } catch (x) {
+          message(x.message);
+        }
+      };
+    </script>
+  </body>
+</html>

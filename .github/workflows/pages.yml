@@ -90,7 +90,11 @@ jobs:
 
       - name: Run synthetic security tests
         run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install chromium
+          export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
           node --test tools/tests/*.test.mjs
+          node --test tools/tests/*.test.cjs
 
       - name: Build public artifact
         run: |
@@ -103,6 +107,7 @@ jobs:
           test ! -e _site/tools
           test ! -e _site/whatsapp-bridge
           test ! -e _site/WORKSHOP_SYSTEM_ARCHITECTURE.md
+          test ! -e _site/STUDENT_IDENTITY_ARCHITECTURE.md
           test -e _site/azhar-exam-submissions-admin.html
 
       - name: Configure Pages

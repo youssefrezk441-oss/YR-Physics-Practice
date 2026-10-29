@@ -1,0 +1,110 @@
+name: Student identity PR checks
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security-compatibility-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Identity unit and compatibility tests
+        run: node --test tools/tests/student-identity-core.test.mjs tools/tests/student-account-normalize.test.mjs tools/tests/student-identity-security-contract.test.mjs
+      - name: Security contracts
+        run: |
+          node tools/check_supabase_security_contracts.mjs
+          node tools/check_public_answer_keys.mjs
+          node tools/check_submission_safety.mjs
+          node tools/audit_student_profile_enforcement.mjs
+      - name: Migration and real PostgreSQL concurrency
+        run: bash tools/test_student_identity_migration.sh
+      - name: Bootstrap browser test
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          node --test tools/tests/student-bootstrap.e2e.test.cjs
+      - name: Build Pages artifact without deploying
+        run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
+  local-gotrue-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install browser for real student page with local GoTrue
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Isolated local GoTrue, PostgreSQL and Edge Function E2E (two clean runs)
+        env:
+          E2E_BROWSER: '1'
+        run: |
+          export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
+          bash tools/run_student_identity_local_e2e.sh
+  staging-integration:
+    if: ${{ github.event_name == 'workflow_dispatch' && vars.STAGING_SUPABASE_URL != '' && vars.STAGING_PROJECT_REF != '' }}
+    runs-on: ubuntu-latest
+    environment: supabase-staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Supabase staging integration (synthetic accounts only)
+        env:
+          E2E_TARGET: staging
+          E2E_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+          E2E_ALLOWED_PROJECT_REFS: ${{ vars.STAGING_PROJECT_REF }}
+          E2E_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          E2E_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          E2E_DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          E2E_STAGING_ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL }}
+          E2E_STAGING_ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
+          E2E_ALLOW_WRITES: synthetic-e2e-only
+        run: |
+          docker run --rm -i postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b \
+            psql "$E2E_DB_URL" -X -v ON_ERROR_STOP=1 < tools/check_student_identity_staging_schema.sql
+          node tools/tests/student-identity-staging.integration.mjs
+
+  production-closed-smoke:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify new production Edge Function is safely disabled (NO WRITES)
+        env:
+          FUNCTION_URL: https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/student-identity
+        run: |
+          set -euo pipefail
+          config="$(curl --silent --show-error --fail-with-body --max-time 25 \
+            -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"config"}')"
+          CONFIG_JSON="$config" node -e '
+            const d=JSON.parse(process.env.CONFIG_JSON);
+            if(d.ok!==true || d.registration_enabled!==false ||
+               d.registration_rollout_scope!=="disabled" ||
+               d.phone_login_enabled!==false ||
+               d.profile_enforcement_enabled!==false ||
+               d.national_id_collection_enabled!==false)
+              throw Error("Production identity config must remain closed");
+            console.log("Production public config: CLOSED (PASS)");
+          '
+          status="$(curl --silent --show-error --max-time 25 \
+            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"submit_registration"}')"
+          test "$status" = 503
+          echo "Production submit_registration: HTTP 503 CLOSED (PASS)"
+          status="$(curl --silent --show-error --max-time 25 \
+            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"admin_list"}')"
+          test "$status" = 403
+          echo "Production anonymous admin_list: HTTP 403 (PASS)"
