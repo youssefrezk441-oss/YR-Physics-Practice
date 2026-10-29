@@ -71,3 +71,40 @@ jobs:
           docker run --rm -i postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b \
             psql "$E2E_DB_URL" -X -v ON_ERROR_STOP=1 < tools/check_student_identity_staging_schema.sql
           node tools/tests/student-identity-staging.integration.mjs
+
+  production-closed-smoke:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify new production Edge Function is safely disabled (NO WRITES)
+        env:
+          FUNCTION_URL: https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/student-identity
+        run: |
+          set -euo pipefail
+          config="$(curl --silent --show-error --fail-with-body --max-time 25 \
+            -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"config"}')"
+          CONFIG_JSON="$config" node -e '
+            const d=JSON.parse(process.env.CONFIG_JSON);
+            if(d.ok!==true || d.registration_enabled!==false ||
+               d.registration_rollout_scope!=="disabled" ||
+               d.phone_login_enabled!==false ||
+               d.profile_enforcement_enabled!==false ||
+               d.national_id_collection_enabled!==false)
+              throw Error("Production identity config must remain closed");
+            console.log("Production public config: CLOSED (PASS)");
+          '
+          status="$(curl --silent --show-error --max-time 25 \
+            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"submit_registration"}')"
+          test "$status" = 503
+          echo "Production submit_registration: HTTP 503 CLOSED (PASS)"
+          status="$(curl --silent --show-error --max-time 25 \
+            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"admin_list"}')"
+          test "$status" = 403
+          echo "Production anonymous admin_list: HTTP 403 (PASS)"
