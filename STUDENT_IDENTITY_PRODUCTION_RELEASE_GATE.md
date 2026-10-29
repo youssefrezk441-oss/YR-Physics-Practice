@@ -2,6 +2,24 @@
 
 This is a **readiness record, not an approval to deploy**. All production identity flags must remain disabled unless a separately checked release proceeds.
 
+## 2026-10-30 — production installation completed, activation still gated
+
+**Latest state (supersedes pre-deployment statements below):**
+- User authorized direct controlled production installation after a successful isolated DB + Storage recovery exercise. Real production project `ltjdhconuiqblxfjzpzj`.
+- Both additive identity migrations were **successfully applied** using the Supabase connector, recorded on the server as:
+  - `20261029234859_student_identity_registration_v1`
+  - `20261029234931_immediate_registration_review`
+  Their **repository file timestamps differ** (`20261028190000`, `20261028230000`). **Do not blindly run `supabase db push` with those files before reconciling migration history / filenames**, or it may attempt to reapply the same schema.
+- Function `student-identity` deployed ACTIVE, version 1, `verify_jwt=false` for public config/registration actions, while admin actions internally authenticate bearer JWT and verify server-side permissions. Deployed with both shared source modules. 96/100 Edge Function slots now in use.
+- The live production **GitHub runner smoke test PASSED**: public `config` returns closed flags, public registration attempt returns HTTP 503, and anonymous admin list returns HTTP 403. [Run 40976031421](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40976031421).
+- PR #16 was merged into `main` at `58f69e14e60df8a853a4b2fa368785a35faa47ba`. Its frontend source including student registration, status, recovery and admin review pages is now in the production GitHub branch. **GitHub Pages deployment status still needs a separate check**; source merge alone does not prove the live website has updated.
+- Existing `answer-image-maintenance-daily` Cron job remains active. Added independent `student-identity-expire-pending-reviews` job every 5 minutes, calling `private.suspend_expired_student_reviews(now())`. Legacy accounts have no review rows and are excluded.
+- Post-write read-only verification: 280 profiles, 288 Auth users, 1,515 attempts, 764 class-test scores, 138 Storage objects; **zero registration requests and zero new review rows**. Feature flags all OFF: `registration_enabled=false`, `immediate_registration_enabled=false`, `registration_rollout_scope='disabled'`, phone login, national ID collection, and profile enforcement disabled.
+- Post-installation security advisors: same preexisting `security_definer_view` ERROR and five WARN groupings; private RLS-without-policy INFO grew to 111 due newly created fail-closed private tables. No permission-grant widening was performed.
+- Independent synthetic CI passed twice using real local PostgreSQL, GoTrue and Edge Function, including rejection of anonymous, student and metadata-only-admin approval. **Cloud staging E2E remains skipped.** The isolated recovery project contains real student/Auth data and MUST NOT be used for synthetic registration writes.
+- Any activation of limited/public signup requires a separate controlled rollout decision: finalize privacy notice, review advisor findings, confirm Auth flow and live frontend, test invitation creation/admin approval in a synthetic cloud environment, verify abuse protection/CAPTCHA and server-side legacy guards. Do not enable `all`, SMS or national-ID collection without these. Keep legacy login working.
+- This record is not a claim that production signup is open; it is intentionally CLOSED.
+
 ## Verified production snapshot
 
 - Supabase project: `ltjdhconuiqblxfjzpzj` (YR Physics Practice), Free plan, PostgreSQL 17, ACTIVE_HEALTHY.
@@ -108,4 +126,4 @@ Reference: https://supabase.com/docs/guides/functions/secrets
 
 ## Current decision
 
-**HOLD — no production identity migrations, Edge Function deployment, Cron change, frontend merge or registration flag changes until the backup and secrets gates are verified.**
+**INSTALLATION COMPLETE, SIGNUP DISABLED.** Identity DB migrations, Edge Function, Cron and GitHub source merge are complete, with production smoke checks successful. Keep signup flags off until targeted activation gates above are satisfied. The pre-deployment HOLD statement above is historical.
