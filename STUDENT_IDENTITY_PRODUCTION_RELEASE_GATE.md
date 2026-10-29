@@ -12,6 +12,20 @@ This is a **readiness record, not an approval to deploy**. All production identi
 - All eight checks in `tools/student_identity_production_preflight.sql` passed against production without writes.
 - The branch PR #16 was in draft; the latest already-tested identity implementation and its local GoTrue CI are present. Before any release, check CI against the then-current head.
 
+## Owner-reported local backups and offline verification (2026-10-29)
+
+**Do not confuse archive integrity and row presence with a successful database restore.** The production data remains on a Free-plan project, and this is a non-sensitive progress record only.
+
+- Local PostgreSQL custom-format archive created by owner at `2026-10-29_23-31-29`; `pg_restore --list` was readable.
+- Owner ran offline restore verification: original SHA-256 checksum **MATCH**, complete archive stream could be decoded, but full plain-PostgreSQL restore **did not complete** (Supabase-managed schemas/extensions may be involved). Cause not yet proven, and full restoration remains **UNVERIFIED**.
+- Offline archive-row checker v2 completed with `pg_restore=0` and `row-counter=0`; `public.student_profiles=280` MATCH, `auth.users=288` MATCH, `public.attempts=1515` MATCH, `storage.objects=138` MATCH; `public.l3_workshop_events=6033` FOUND (no original reference in the local snapshot, separately corroborated against production). No record-level private data shared.
+- Owner's separate Storage backup reported `138/138` objects downloaded, `0` failures: 118 `answer-images` and 20 `question-assets`. Local-only source files and all exported objects must be kept private and encrypted. File-byte restore checks remain to be tested in an isolated destination.
+- Owner reported provisioning the two production Edge Function secrets. **Secrets' actual presence and correctness not independently verifiable** via available MCP actions; never reveal their values.
+- Latest production read-only snapshot during verification: 95 Edge Functions, 280 student profiles, 288 Auth users, 1,515 attempts, 138 Storage metadata objects; `student-identity` not yet deployed and feature migrations not applied.
+- No new production identity migrations, Edge Functions, registration flags, Cron or student data were changed by these checks.
+
+**Next gate:** demonstrate a restore to a truly isolated destination with Supabase-compatible extensions/managed schemas, reconcile Auth/Storage/grades, and document the outcome. A new test project may have cost; check and obtain the owner's cost approval before creating one. Do not use this production-data restore destination as the shared synthetic registration-test environment. Save evidence consisting of counts, status and sanitized error classes, not backup contents or credentials.
+
 ## Blocking prerequisites (must be completed first)
 
 ### 1. Restorable, current, off-site database backup — NOT VERIFIED
