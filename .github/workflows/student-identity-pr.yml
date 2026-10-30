@@ -27,6 +27,7 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
           node --test tools/tests/student-bootstrap.e2e.test.cjs
+          node --test tools/tests/student-recovery-admin.test.mjs
       - name: Build Pages artifact without deploying
         run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
   local-gotrue-e2e:

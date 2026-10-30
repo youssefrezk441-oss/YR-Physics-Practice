@@ -83,8 +83,10 @@
         </table>
       </section>
       <section class="accountCard scroll">
-        <h2>طلبات الاستعادة</h2>
+        <h2>طلبات استعادة حسابات الطلاب</h2>
+        <p class="accountMuted">تطابق كود الطالب أو رقم الهاتف مع حساب موجود لا يثبت هوية صاحب الطلب. لا تعتمد طلب الاستعادة إلا بعد التحقق من هوية الطالب.</p>
         <table>
+          <thead><tr><th>رقم الطلب</th><th>الطالب والمجموعة</th><th>مطابقة الحساب</th><th>الحالة</th><th>وقت الطلب</th><th>الإجراء</th></tr></thead>
           <tbody id="recoveryRows"></tbody>
         </table>
       </section>
@@ -109,13 +111,44 @@
         </form>
       </section>
       <section id="recoveryDecision" class="accountCard hidden">
-        <form id="recoveryForm">
-          <input name="reference" type="hidden" /><select name="decision">
-            <option value="approved">موافقة</option>
-            <option value="rejected">رفض</option></select
-          ><textarea name="reason" required></textarea
-          ><button class="accountBtn">حفظ</button>
+        <h2>مراجعة طلب استعادة الحساب</h2>
+        <p id="recoverySubject" class="accountMuted"></p>
+        <form id="recoveryForm" class="accountGrid">
+          <input name="reference" type="hidden" />
+          <div class="accountField"><label for="recoveryChoice">القرار</label>
+            <select id="recoveryChoice" name="decision" required>
+              <option value="">اختر القرار</option>
+              <option value="rejected">رفض الطلب</option>
+              <option value="approved">موافقة بعد التحقق من الهوية</option>
+            </select>
+          </div>
+          <div class="accountField full hidden" id="recoveryVerification">
+            <p class="accountMuted">لا تستخدم رقم التواصل المدخل في الطلب نفسه كإثبات للهوية؛ راجع الطالب حضوريًا أو تواصل معه على رقمه المسجل مسبقًا.</p>
+            <label for="recoveryVerificationMethod">طريقة التحقق</label>
+            <select id="recoveryVerificationMethod" name="verification_method">
+              <option value="">اختر طريقة التحقق</option>
+              <option value="in_person">التحقق حضوريًا من الطالب</option>
+              <option value="registered_phone">التواصل عبر الرقم المسجل لدى المنصة</option>
+            </select>
+            <label style="display:block;margin-top:12px"><input id="recoveryIdentityVerified" type="checkbox" /> أؤكد أنني تحققت من هوية الطالب</label>
+          </div>
+          <div class="accountField full"><label for="recoveryReason">سبب القرار وتفاصيل التحقق</label>
+            <textarea id="recoveryReason" name="reason" minlength="8" required></textarea>
+          </div>
+          <button type="submit" class="accountBtn">تأكيد القرار</button>
+          <button type="button" id="cancelRecovery" class="accountBtn secondary">إلغاء</button>
         </form>
+      </section>
+      <section id="recoveryTokenReceipt" class="accountCard hidden" role="status" aria-live="polite">
+        <h2>رمز إعادة تعيين كلمة المرور</h2>
+        <p>الرمز يظهر مرة واحدة في هذه الصفحة بعد الموافقة وصالح لمدة ساعتين. سلّمه سرًا للطالب الذي تحققت من هويته، ولا ترسله في مجموعات أو منشورات.</p>
+        <input id="recoveryTokenValue" readonly type="password" dir="ltr" autocomplete="off" style="width:100%" aria-label="رمز إعادة تعيين كلمة المرور">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button id="showRecoveryToken" type="button" class="accountBtn secondary">إظهار الرمز</button>
+          <button id="copyRecoveryToken" type="button" class="accountBtn">نسخ الرمز</button>
+          <button id="dismissRecoveryToken" type="button" class="accountBtn secondary">إخفاء وإنهاء</button>
+        </div>
+        <p class="accountMuted">يُستخدم الرمز في <a href="student-recovery.html" target="_blank" rel="noopener noreferrer">صفحة استعادة الحساب</a> ضمن «لديّ رمز إعادة التعيين». إذا ضاع، سيحتاج الطالب طلبًا جديدًا.</p>
       </section>
     </main>
     <script type="module">
@@ -188,19 +221,38 @@
           requests = d.requests;
           renderRequests();
           renderInviteControls(d);
-          $("recoveryRows").innerHTML = d.recovery_requests
-            .map(
-              (r) =>
-                `<tr><td>${esc(r.public_ref)}</td><td>${r.account_matched ? "مطابق" : "غير مطابق"}</td><td>${esc(r.status)}</td><td>${r.status === "pending" ? `<button data-recovery="${esc(r.public_ref)}">قرار</button>` : ""}</td></tr>`,
-            )
-            .join("");
-          document.querySelectorAll("[data-recovery]").forEach(
-            (b) =>
-              (b.onclick = () => {
-                $("recoveryDecision").classList.remove("hidden");
-                $("recoveryForm").reference.value = b.dataset.recovery;
-              }),
-          );
+          recoveryRequests = d.recovery_requests || [];
+          const canDecide = d.level === "edit";
+          $("recoveryRows").innerHTML = recoveryRequests.map((r) => {
+            const matched = !!r.account_matched;
+            const subject = matched && r.student_name
+              ? `<strong>${esc(r.student_name)}</strong><br><small>${esc(r.student_code || "—")} · ${esc(r.group_code || "بدون مجموعة")}</small>`
+              : "لا توجد بيانات طالب مرتبطة مؤكدة";
+            const status = {pending:"قيد الانتظار",approved:"موافق عليه",rejected:"مرفوض",completed:"اكتملت الاستعادة"}[r.status] || r.status;
+            const action = r.status === "pending" && canDecide
+              ? `<button type="button" data-recovery="${esc(r.public_ref)}">مراجعة</button>` : "—";
+            return `<tr>
+              <td dir="ltr" title="${esc(r.public_ref)}">#${esc(r.public_ref.slice(0,8))}</td>
+              <td>${subject}</td><td>${matched ? "حساب موجود — الهوية غير مثبتة" : "غير مطابق"}</td>
+              <td>${esc(status)}</td><td>${esc(new Date(r.created_at).toLocaleString("ar-EG"))}</td>
+              <td>${action}</td>
+            </tr>`;
+          }).join("") || '<tr><td colspan="6">لا توجد طلبات استعادة.</td></tr>';
+          document.querySelectorAll("[data-recovery]").forEach((button) => {
+            button.onclick = () => {
+              const row = recoveryRequests.find((r) => r.public_ref === button.dataset.recovery);
+              if (!row) return;
+              $("recoveryForm").reset();
+              $("recoveryForm").elements.namedItem("reference").value = row.public_ref;
+              $("recoverySubject").textContent = row.account_matched && row.student_name
+                ? row.student_name + " — " + (row.group_code || "بدون مجموعة")
+                : "لا يوجد حساب مرتبط؛ يتاح الرفض فقط.";
+              $("recoveryChoice").querySelector('option[value="approved"]').disabled = !row.account_matched;
+              syncRecoveryVerification();
+              $("recoveryDecision").classList.remove("hidden");
+              $("recoveryDecision").scrollIntoView({block:"nearest",behavior:"smooth"});
+            };
+          });
         } catch (e) {
           message(e.message);
         }
@@ -238,17 +290,77 @@
           message(x.message);
         }
       };
+      let recoveryRequests = [];
+      let currentRecoveryToken = null;
+      function syncRecoveryVerification() {
+        const approved = $("recoveryChoice").value === "approved";
+        $("recoveryVerification").classList.toggle("hidden", !approved);
+        $("recoveryVerificationMethod").required = approved;
+        $("recoveryIdentityVerified").required = approved;
+        if (!approved) {
+          $("recoveryVerificationMethod").value = "";
+          $("recoveryIdentityVerified").checked = false;
+        }
+      }
+      $("recoveryChoice").onchange = syncRecoveryVerification;
+      $("cancelRecovery").onclick = () => $("recoveryDecision").classList.add("hidden");
+      function clearRecoveryToken() {
+        currentRecoveryToken = null;
+        $("recoveryTokenValue").value = "";
+        $("recoveryTokenValue").type = "password";
+        $("recoveryTokenReceipt").classList.add("hidden");
+        $("showRecoveryToken").textContent = "إظهار الرمز";
+      }
+      $("dismissRecoveryToken").onclick = clearRecoveryToken;
+      $("showRecoveryToken").onclick = () => {
+        if (!currentRecoveryToken) return;
+        const input = $("recoveryTokenValue");
+        input.type = input.type === "password" ? "text" : "password";
+        $("showRecoveryToken").textContent = input.type === "text" ? "إخفاء الرمز" : "إظهار الرمز";
+      };
+      $("copyRecoveryToken").onclick = async () => {
+        if (!currentRecoveryToken) return;
+        try {
+          await navigator.clipboard.writeText(currentRecoveryToken);
+          $("copyRecoveryToken").textContent = "تم النسخ";
+        } catch {
+          $("recoveryTokenValue").type = "text";
+          $("recoveryTokenValue").select();
+          message("تعذر النسخ التلقائي. يمكنك نسخ الرمز المعروض يدويًا.");
+        }
+      };
+      window.addEventListener("pagehide",clearRecoveryToken);
       $("recoveryForm").onsubmit = async (e) => {
         e.preventDefault();
+        if (!e.target.reportValidity()) return;
+        const approved = $("recoveryChoice").value === "approved";
+        if (approved && (!$("recoveryIdentityVerified").checked || !$("recoveryVerificationMethod").value)) {
+          message("لا يمكن الموافقة قبل إثبات الهوية وتسجيل طريقة التحقق.");
+          return;
+        }
+        const submit = e.target.querySelector('button[type="submit"]');
+        const payload = Object.fromEntries(new FormData(e.target));
+        payload.identity_verified = approved && $("recoveryIdentityVerified").checked;
         try {
-          await identity(
-            "admin_recovery_decide",
-            Object.fromEntries(new FormData(e.target)),
-          );
-          message("تم حفظ القرار.", true);
+          submit.disabled = true;
+          const result = await identity("admin_recovery_decide", payload);
+          $("recoveryDecision").classList.add("hidden");
+          clearRecoveryToken();
+          if (approved && result.reset_token) {
+            currentRecoveryToken = result.reset_token;
+            $("recoveryTokenValue").value = currentRecoveryToken;
+            $("copyRecoveryToken").textContent = "نسخ الرمز";
+            $("recoveryTokenReceipt").classList.remove("hidden");
+            $("recoveryTokenReceipt").scrollIntoView({block:"nearest",behavior:"smooth"});
+            message("تم اعتماد طلب الاستعادة؛ انسخ الرمز الآن لأنه لن يظهر مرة أخرى.", true);
+          } else {
+            message("تم تسجيل قرار الرفض.", true);
+          }
           await load();
         } catch (x) {
-          message(x.message);
+          message(x.message || "تعذر تسجيل قرار الاستعادة.");
+        } finally {
+          submit.disabled = false;
         }
       };
       $("reviewFilter").onchange = renderRequests;
