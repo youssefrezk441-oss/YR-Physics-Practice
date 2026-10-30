@@ -19,8 +19,8 @@ test("honor edition selector requests a real server cycle ID without locally rec
 test("achievements show only the current student's grade and distinguish frozen rounds",async()=>{
  const adapter=await read("student-workspace-navigation-v1.js");
  assert.match(adapter,/const keys=grade&&all\[grade\]\?\[grade\]:Object\.keys\(all\)/);
- assert.match(adapter,/c\\.archived\\?"نسخة مؤرشفة وثابتة"/);
- assert.match(adapter,/c\\.status==="pending_review"\\?"دورة قيد التجهيز — لا يوجد ترتيب معتمد"/);
+ assert.match(adapter,/c\.archived\?"نسخة مؤرشفة وثابتة"/);
+ assert.match(adapter,/c\.status==="pending_review"\?"دورة قيد التجهيز — لا يوجد ترتيب معتمد"/);
  assert.match(adapter,/window\.yrWorkspaceLoadHonorCatalog\(\)/);
  assert.match(adapter,/yr:honor-editions-ready/);
  const css=await read("student-workspace-navigation-v1.css");
