@@ -434,6 +434,85 @@ test("immediate registration and 48-hour review journey", async (t) => {
     );
   const academic = academicFingerprint();
   const adminToken = (await login(adminEmail, adminPassword)).body.access_token;
+
+  if (local) await t.test("existing student completion: authenticated save, password and admin review", async (t) => {
+    const mailAddr=mail("profile-onboarding"), oldPass="ProfileTest2026!", newPass="UpdatedProfile2026!";
+    const uid=await createAuth(mailAddr,oldPass,"student"), code=group.replace(/-A$/,"-901"),
+      other=group.replace(/-A$/,"-B");
+    sql(`insert into public.student_groups(group_code,is_active,grade_level,center_name) values('${other}',true,'الصف الثاني الثانوي','Synthetic E2E B');
+       insert into public.student_profiles(user_id,student_code,full_name,grade_level,is_active,group_code,center_name,student_phone,guardian_phone)
+       values('${uid}','${code}','طالب اختباري قديم كامل','الصف الثاني الثانوي',true,'${group}','Synthetic E2E','+201012345590',null);
+       insert into public.student_group_memberships(group_id,user_id,joined_on)
+       select id,'${uid}',current_date from public.student_groups where group_code='${group}'`);
+    flags({profile_update_enabled:true});
+    const login1=await login(mailAddr,oldPass);assert.equal(login1.status,200,JSON.stringify(login1.body));
+    const token=login1.body.access_token;
+    const me0=await invoke("me",{},token);assert.equal(me0.status,200,JSON.stringify(me0.body));
+    assert.equal(me0.body.profile.student_code,code);assert.equal(me0.body.profile.profile_schema_version,0);
+    assert.ok(me0.body.groups.some(g=>g.group_code===other));
+    const payload={full_name:"طالب اختباري قديم كامل",grade_level:"الصف الثاني الثانوي",
+      education_system:"عام",attendance_location:"غير ذلك",group_code:group,
+      residence_area:"قرية تجريبية",student_phone:"01012345590",guardian_phone:"01112345678",
+      privacy_accepted:true,privacy_notice_version:"draft-v1"};
+    await t.test("anonymous and invalid-consent writes denied",async()=>{
+      assert.equal((await invoke("complete_profile_v2",{...payload,student_code:"FAKE-999"})).status,401);
+      assert.equal((await invoke("admin_profile_changes",{},token)).status,403);
+      const bad=await invoke("complete_profile_v2",{...payload,privacy_accepted:false},token);
+      assert.equal(bad.status,400,JSON.stringify(bad.body));
+    });
+    await t.test("prefilled data updates durably while code remains immutable",async()=>{
+      const saved=await invoke("complete_profile_v2",{...payload,student_code:"FAKE-999"},token);
+      assert.equal(saved.status,200,JSON.stringify(saved.body));assert.equal(saved.body.pending_change,false);
+      const me=await invoke("me",{},token);assert.equal(me.status,200,JSON.stringify(me.body));
+      assert.equal(me.body.profile.student_code,code);
+      assert.equal(me.body.profile.student_phone,"+201012345590");
+      assert.equal(me.body.profile.guardian_phone,"+201112345678");
+      assert.equal(me.body.details.education_system,"عام");
+      assert.equal(me.body.details.residence_area,"قرية تجريبية");
+      assert.equal(me.body.profile.profile_schema_version,1);assert.ok(me.body.profile.completed_at);
+      assert.equal(sql(`select count(*) from private.student_profile_change_requests where user_id='${uid}'`),"0");
+    });
+    await t.test("current password required; new login preserves student identity",async()=>{
+      const bad=await invoke("change_password",{current_password:"Incorrect2026!",new_password:newPass},token);
+      assert.equal(bad.status,401,JSON.stringify(bad.body));
+      const good=await invoke("change_password",{current_password:oldPass,new_password:newPass},token);
+      assert.equal(good.status,200,JSON.stringify(good.body));
+      assert.notEqual((await login(mailAddr,oldPass)).status,200);
+      const session=await login(mailAddr,newPass);assert.equal(session.status,200,JSON.stringify(session.body));
+      assert.equal(session.body.user.id,uid);
+      assert.equal((await invoke("me",{},session.body.access_token)).body.profile.student_code,code);
+    });
+    await t.test("reviewed group/name change cannot change educational assignment before approval",async()=>{
+      const fresh=(await login(mailAddr,newPass)).body.access_token;
+      const requested=await invoke("complete_profile_v2",{...payload,group_code:other,full_name:"طالب اختباري متغير كامل"},fresh);
+      assert.equal(requested.status,200,JSON.stringify(requested.body));
+      assert.equal(requested.body.pending_change,true);
+      assert.equal(sql(`select group_code from public.student_profiles where user_id='${uid}'`),group);
+      const list=await invoke("admin_profile_changes",{},adminToken);
+      assert.equal(list.status,200,JSON.stringify(list.body));
+      const request=list.body.requests.find(r=>r.user_id===uid);assert.ok(request);
+      assert.equal(request.requested_profile.group_code,other);
+      assert.equal((await invoke("admin_profile_change_decide",{request_id:request.id,decision:"approved",reason:"اختبار مسار الموافقة الإدارية"},fresh)).status,403);
+      const approved=await invoke("admin_profile_change_decide",{request_id:request.id,decision:"approved",reason:"اختبار مسار الموافقة الإدارية"},adminToken);
+      assert.equal(approved.status,200,JSON.stringify(approved.body));
+      assert.equal(sql(`select group_code from public.student_profiles where user_id='${uid}'`),other);
+      assert.equal(sql(`select student_code from public.student_profiles where user_id='${uid}'`),code);
+      assert.equal(sql(`select full_name from public.student_profiles where user_id='${uid}'`),"طالب اختباري متغير كامل");
+      assert.equal(sql(`select count(*) from public.student_group_memberships m join public.student_groups g on m.group_id=g.id where m.user_id='${uid}' and m.left_on is null and g.group_code='${other}'`),"1");
+    });
+    await t.test("rejection retains original student record",async()=>{
+      const fresh=(await login(mailAddr,newPass)).body.access_token;
+      const requested=await invoke("complete_profile_v2",{...payload,group_code:other,full_name:"اسم جديد قيد المراجعة"},fresh);
+      assert.equal(requested.status,200,JSON.stringify(requested.body));assert.equal(requested.body.pending_change,true);
+      const row=(await invoke("admin_profile_changes",{},adminToken)).body.requests.find(r=>r.user_id===uid);
+      assert.ok(row);
+      const declined=await invoke("admin_profile_change_decide",{request_id:row.id,decision:"rejected",reason:"رفض اختبار للتأكد من عدم تعديل الاسم"},adminToken);
+      assert.equal(declined.status,200,JSON.stringify(declined.body));
+      assert.equal(sql(`select full_name from public.student_profiles where user_id='${uid}'`),"طالب اختباري متغير كامل");
+      assert.equal((await invoke("me",{},fresh)).body.pending_change,false);
+    });
+    flags({profile_update_enabled:false,profile_enforcement_enabled:false});
+  });
   await t.test("flags are fail-closed", async () => {
     const c = await invoke("config");
     assert.equal(c.body.registration_enabled, false);
