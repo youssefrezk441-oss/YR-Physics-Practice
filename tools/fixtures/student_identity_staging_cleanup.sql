@@ -44,6 +44,7 @@ delete from private.student_sensitive_change_requests where user_id in(select id
 delete from private.student_sensitive_identities where user_id in(select id from e2e_users);
 delete from private.student_identity_exceptions where user_id in(select id from e2e_users);
 delete from private.student_login_identifiers where user_id in(select id from e2e_users);
+delete from private.student_profile_change_requests where user_id in(select id from e2e_users);
 delete from private.student_profile_status where user_id in(select id from e2e_users);
 delete from private.student_profile_details where user_id in(select id from e2e_users);
 do $$ begin
@@ -58,4 +59,6 @@ delete from public.student_group_memberships where user_id in(select id from e2e
 delete from public.student_profiles where user_id in(select id from e2e_users);
 delete from public.student_groups where group_code='__GROUP_CODE__'
   and not exists(select 1 from public.student_group_memberships m where m.group_id=student_groups.id);
+delete from public.student_groups where group_code='__SECOND_GROUP_CODE__'
+ and not exists(select 1 from public.student_group_memberships m where m.group_id=student_groups.id);
 commit;
