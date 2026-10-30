@@ -54,6 +54,17 @@ test("real compiled YR dashboard renders without horizontal overflow in light an
       "horizontal overflow at "+width+"/"+theme+" "+JSON.stringify(dimensions));
     assert.match(dimensions.hello,/طالب تجريبي/);
     if([1440,390].includes(width))await page.screenshot({path:"yr-internal-previews/dashboard-"+width+"-"+theme+".png",fullPage:true});
+    if(theme==="light"&&width===1440){
+     await page.locator('.yrWorkspaceSidebar [data-yr-go="learning"]').click();
+     await page.screenshot({path:"yr-internal-previews/learning-1440-light.png",fullPage:true});
+     await page.locator('.yrWorkspaceSidebar [data-yr-go="home"]').click();
+    }
+    if(theme==="light"&&width===390){
+     await page.locator('.yrMobileNav [data-yr-go="review"]').click();
+     await page.locator('#yrReviewView [data-yr-chapter="2"]').click();
+     await page.screenshot({path:"yr-internal-previews/review-390-light.png",fullPage:true});
+     await page.locator('.yrMobileNav [data-yr-go="home"]').click();
+    }
    }
    await page.close();
   }
