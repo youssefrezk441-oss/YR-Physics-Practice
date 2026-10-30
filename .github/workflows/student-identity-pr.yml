@@ -72,39 +72,43 @@ jobs:
             psql "$E2E_DB_URL" -X -v ON_ERROR_STOP=1 < tools/check_student_identity_staging_schema.sql
           node tools/tests/student-identity-staging.integration.mjs
 
-  production-closed-smoke:
+  production-readonly-smoke:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify new production Edge Function is safely disabled (NO WRITES)
+      - name: Verify production profile endpoints without writing data
         env:
           FUNCTION_URL: https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/student-identity
         run: |
           set -euo pipefail
           config="$(curl --silent --show-error --fail-with-body --max-time 25 \
-            -X POST "$FUNCTION_URL" \
-            -H 'Content-Type: application/json' \
+            -X POST "$FUNCTION_URL" -H 'Content-Type: application/json' \
             --data '{"action":"config"}')"
           CONFIG_JSON="$config" node -e '
             const d=JSON.parse(process.env.CONFIG_JSON);
-            if(d.ok!==true || d.service_ready!==true || d.registration_enabled!==false ||
-               d.registration_rollout_scope!=="disabled" ||
-               d.phone_login_enabled!==false ||
+            if(d.ok!==true || d.service_ready!==true ||
+               d.national_id_collection_enabled!==false ||
                d.profile_enforcement_enabled!==false ||
-               d.national_id_collection_enabled!==false)
-              throw Error("Production identity config must remain closed");
-            console.log("Production public config: CLOSED (PASS)");
+               typeof d.profile_update_enabled!=="boolean" ||
+               typeof d.registration_enabled!=="boolean" ||
+               (d.registration_enabled && (!d.captcha_required || !d.captcha_ready)))
+              throw Error("Production identity configuration violated safe baseline");
+            console.log("Production configuration: SAFE (PASS)");
           '
-          status="$(curl --silent --show-error --max-time 25 \
-            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
-            -H 'Content-Type: application/json' \
-            --data '{"action":"submit_registration"}')"
-          test "$status" = 503
-          echo "Production submit_registration: HTTP 503 CLOSED (PASS)"
-          status="$(curl --silent --show-error --max-time 25 \
-            -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
-            -H 'Content-Type: application/json' \
-            --data '{"action":"admin_list"}')"
-          test "$status" = 403
-          echo "Production anonymous admin_list: HTTP 403 (PASS)"
+          for action in me complete_profile_v2; do
+            status="$(curl --silent --show-error --max-time 25 \
+              -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+              -H 'Content-Type: application/json' \
+              --data "{\"action\":\"$action\"}")"
+            test "$status" = "401"
+            echo "Production anonymous $action: HTTP 401 (PASS)"
+          done
+          for action in admin_list admin_profile_changes; do
+            status="$(curl --silent --show-error --max-time 25 \
+              -o /dev/null -w '%{http_code}' -X POST "$FUNCTION_URL" \
+              -H 'Content-Type: application/json' \
+              --data "{\"action\":\"$action\"}")"
+            test "$status" = "403"
+            echo "Production anonymous $action: HTTP 403 (PASS)"
+          done
