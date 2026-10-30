@@ -79,7 +79,11 @@ function prefill(result){
  me=result;const p=result.profile||{},d=result.details||{};
  $("fixedStudentCode").value=p.student_code||"—";
  const p4=parts(p.full_name||"");["first_name","second_name","third_name","fourth_name"].forEach((n,i)=>get(n).value=p4[i]);
- get("grade_level").value=p.grade_level||"";
+ const gradeStored=clean(p.grade_level);
+ const codeForGrade=clean(p.group_code || p.student_code).toUpperCase();
+ const inferredGrade=gradeStored.includes("الثاني")||/^\w*2[-\d]/.test(codeForGrade)?"الصف الثاني الثانوي"
+   :gradeStored.includes("الثالث")||gradeStored.startsWith("3")||/^\w*3[-\d]/.test(codeForGrade)?"الصف الثالث الثانوي":"";
+ get("grade_level").value=inferredGrade;
  get("education_system").value=d.education_system||"";
  get("attendance_location").value=d.attendance_location||({"ذا فرست - ناهيا":"ناهيا","المستقبل - كفر حكيم":"كفر حكيم"}[p.center_name]||"");
  get("residence_area").value=d.residence_area||"";
