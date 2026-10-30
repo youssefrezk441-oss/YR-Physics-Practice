@@ -1,0 +1,138 @@
+/* YR Physics Practice — Mastery Journey identity, version 1.
+   Cosmetic layer only: account permissions, registration fields and handlers remain untouched. */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --deep:#0f4d3e;--blue:#21425b;--teal:#168a68;--gold:#d49a3a;
+  --ink:#203530;--muted:#667973;--line:#dce7df;--light:#f8f7f2;
+  --journey-green:#0f4d3e;--journey-green-2:#147b64;
+  --journey-cream:#f7f5ed;--journey-gold:#d49a3a;--journey-slate:#1e293b;
+  color-scheme:light;
+}
+body{background:#ecefe8;font-family:"Tajawal",Tahoma,Arial,sans-serif;color:var(--journey-slate);font-size:15px}
+.authPage{padding:25px}
+.authShell{
+  direction:ltr;
+  grid-template-columns:minmax(395px,.95fr) minmax(0,1.05fr);
+  max-width:1280px;min-height:calc(100dvh - 50px);
+  background:#fff;border:1px solid #d9e5db;
+  box-shadow:0 26px 70px #102c2720;border-radius:23px
+}
+.authShell>*{direction:rtl}
+.journeyVisual{
+  display:flex;flex-direction:column;min-height:760px;isolation:isolate;
+  padding:30px 35px 24px;overflow:hidden;
+  background:radial-gradient(ellipse at 100% 35%,#226a5759,transparent 55%),
+    linear-gradient(156deg,#154f41 0%,#0b3e34 58%,#062f2b 100%);
+  color:#fff;
+}
+.journeyVisual:before{content:"";z-index:-1;position:absolute;inset:0;background-image:radial-gradient(#fff2 1px,transparent 1px);background-size:23px 23px;opacity:.16}
+.journeyVisual:after{content:"";position:absolute;right:-115px;top:220px;width:380px;height:380px;pointer-events:none;border:1px solid #f5d7a325;border-radius:50%;box-shadow:0 0 0 52px #fff1,0 0 0 100px #fff1;z-index:-1}
+.journeyTop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.journeyLogo{display:flex;gap:10px;align-items:center;direction:ltr;text-align:left}
+.journeyLogo svg{width:54px;height:51px;flex-shrink:0;color:#fff}
+.journeyLogo strong{font:900 14px/1.1 Arial,sans-serif;letter-spacing:1px;color:#fff;white-space:nowrap}
+.journeyLogo strong span{color:#78d4ba}
+.journeyLogo small{display:block;font:700 10px Arial,sans-serif;letter-spacing:3px;color:#e7bc75;margin-top:6px}
+.journeyTopCaption{font-size:11px;font-weight:800;border:1px solid #ffffff40;border-radius:32px;padding:8px 11px;color:#f7ebd2;white-space:nowrap}
+.journeyHeroText{margin-top:34px;position:relative;z-index:1}
+.journeyKicker{font-weight:700;font-size:12px;color:#f3cca1;display:flex;align-items:center;gap:8px}
+.journeyKicker span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ebbd73}
+.journeyHeroText h1{font-size:clamp(33px,3.1vw,44px);line-height:1.36;letter-spacing:-1px;font-weight:900;margin:9px 0}
+.journeyHeroText h1 em{font-style:normal;color:#f4c778}
+.journeyHeroText p{font-size:15px;line-height:1.95;max-width:410px;color:#dceae2;margin:9px 0 0;font-weight:500}
+.journeyWave{display:block;width:165px;height:35px;margin:4px 0 -15px auto;opacity:.82}.journeyPortrait{position:relative;flex:1;display:flex;align-items:end;justify-content:center;min-height:245px;margin-top:8px;max-height:390px}
+.journeyPhotoBack{position:absolute;inset:9% 8% 0;background:linear-gradient(155deg,#f9f6e7,#e6ebe5);border-radius:48% 48% 19px 19px;box-shadow:0 20px 55px #001c1761,0 0 0 1px #fff3}
+.journeyPortrait img{
+  position:relative;display:block;width:auto;height:min(100%,358px);
+  max-width:88%;object-fit:cover;object-position:center 28%;
+  aspect-ratio:280/298;mix-blend-mode:normal;
+  border-radius:45% 45% 16px 16px;
+  background:#ebece8;box-shadow:0 9px 28px #031b1642;
+}
+.journeyPortraitName{position:absolute;bottom:16px;left:4px;right:auto;z-index:2;display:grid;gap:3px;max-width:190px;padding:12px 17px;background:#f8f9f0;border-right:4px solid #d49a3a;border-radius:11px;box-shadow:0 10px 30px #05181240;color:#0c4b3d}
+.journeyPortraitName small{font-size:11px;font-weight:700;color:#6b8278}
+.journeyPortraitName strong{font-size:19px;font-weight:900}
+.journeySteps{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:18px 12px 12px;background:#ffffff11;border:1px solid #ffffff26;border-radius:14px;position:relative;z-index:2;margin-top:10px}
+.journeySteps div{display:grid;justify-items:center;gap:2px}
+.journeyNumber{color:#f4ca86;font:700 10px Arial,sans-serif;letter-spacing:1px}
+.journeySteps strong{font-size:15px}
+.journeySteps i{height:1px;flex:1;max-width:40px;background:#d3c9a26e;position:relative}
+.journeySteps i:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:#dfb36f;left:-2px;top:-2px}
+.journeyBottom{margin-top:13px;text-align:center;color:#bbd6ca;font-size:11px}
+.contentPanel{background:#fff}
+.contentTop{padding-top:35px}
+.contentHeading{color:#214a40;font-size:15px}
+.secureIndicator:before{background:#1c9471;box-shadow:0 0 0 4px #1c94711a}
+.tabs{background:#f5f6f2;border:1px solid #e2eae4;margin-top:26px}
+.tab{color:#677b72;min-height:48px}
+.tab[aria-selected=true]{color:#0d5442;background:#fff;box-shadow:0 2px 8px #183f2b12}
+.formEyebrow{font-size:13px;color:#138467}
+.formTitle{color:#163e33;font-weight:900;font-size:clamp(25px,2.5vw,30px);letter-spacing:-.3px}
+.formDescription{color:#6a7d76;font-size:14px;line-height:1.8}
+.formRow label,.accountField label{color:#27483b;font-size:14px}
+.formRow input,.accountField input:not([type=checkbox]),.accountField select{background:#fff;border:1px solid #cddfd3;color:#162f27;font-size:14px}
+.formRow input:focus,.accountField input:focus,.accountField select:focus{border-color:#158c69;box-shadow:0 0 0 3px #168a6822}
+.formRow input::placeholder,.accountField input::placeholder{color:#8b9b93}
+.primaryButton,.accountBtn:not(.secondary){background:#0e6650;border-color:#0e6650;color:#fff}
+.primaryButton:hover,.accountBtn:not(.secondary):hover{background:#0a4d3d;border-color:#0a4d3d}
+.accountBtn.secondary,.toggle{color:#185844;border:1px solid #bedbd0;background:#f8faf7}
+.formFooter a,.helpBar a,.loginHelp a,.privacyLabel a{color:#107459}
+.chips span{background:#f5faf5;border-color:#e1ece4;color:#52746a;font-size:12px}
+.stepItem.active .stepCircle{background:#0f6852;border-color:#0f6852}
+.stepItem.active{color:#0f6852}
+.stepItem.done .stepCircle{background:#e1f6eb;border-color:#b8e2cd;color:#15684c}
+.panelTitle{color:#0c493a;font-size:22px}
+.panelIntro{color:#64766f;font-size:13px}
+.accountField input[type=checkbox]{accent-color:#0e7156}
+.reviewRow{background:#f7faf7}
+.subtleBox{background:#f7faf7;border-color:#dbe9dd}
+.receipt h2{color:#0e7156}
+.receipt .successCode{background:#ecf7ee;color:#174b38}
+.tab:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #dcaa59;outline-offset:3px}
+@media(max-width:1040px){
+  .authShell{grid-template-columns:minmax(310px,.82fr) minmax(0,1.18fr)}
+  .journeyVisual{padding:25px 23px;min-height:670px}
+  .journeyHeroText h1{font-size:33px}
+  .journeyTopCaption{display:none}
+  .journeyPortrait img{height:min(100%,315px)}
+  .journeyPortraitName strong{font-size:17px}
+}
+@media(max-width:730px){
+  body{background:#fff}
+  .authPage{padding:0}
+  .authShell{display:flex;flex-direction:column;min-height:100dvh;border:0;border-radius:0;box-shadow:none}
+  .journeyVisual{min-height:0;padding:17px 20px 15px;gap:0}
+  .journeyVisual:after{display:none}
+  .journeyTop{width:100%}
+  .journeyLogo svg{width:39px;height:39px}
+  .journeyLogo strong{font-size:11px}
+  .journeyLogo small{font-size:8px;margin-top:3px}
+  .journeyTopCaption{display:inline-block;font-size:10px;padding:6px 9px}
+  .journeyHeroText{margin:15px 0 4px 105px;min-height:112px}
+  .journeyKicker{font-size:10px}
+  .journeyHeroText h1{font-size:clamp(21px,5.2vw,29px);line-height:1.35;margin:8px 0}
+  .journeyHeroText p{font-size:11px;line-height:1.6;margin:7px 0 0}
+  .journeyPortrait{position:absolute;top:66px;left:14px;width:95px;max-height:145px;min-height:0;margin:0}
+  .journeyPhotoBack{inset:0 0 0 0;border-radius:40px 40px 8px 8px}
+  .journeyPortrait img{height:136px;max-width:100%;width:95px;object-position:center top;border-radius:40px 40px 9px 9px}
+  .journeyPortraitName{display:none}
+  .journeyWave{display:none}
+  .journeySteps{margin-top:12px;padding:9px 12px}
+  .journeySteps strong{font-size:11px}
+  .journeySteps .journeyNumber{font-size:8px}
+  .journeyBottom{display:none}
+  .contentTop{padding:16px 20px 0}
+  .tabs{margin:17px 20px 18px}
+  .view{padding:0 20px 30px}
+}
+@media(max-width:420px){
+  .journeyVisual{padding:15px 15px 12px}
+  .journeyHeroText{margin-right:0;margin-left:99px}
+  .journeyPortrait{left:12px;width:88px}
+  .journeyPortrait img{width:88px;height:132px}
+  .journeyHeroText h1{font-size:22px}
+  .journeyHeroText p{font-size:10px}
+  .journeyTopCaption{font-size:9px}
+  .stepItem{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
