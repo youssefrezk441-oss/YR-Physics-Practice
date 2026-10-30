@@ -132,14 +132,49 @@ function refreshReview(){
  if(!n)box.append(empty("مراجعة أخطاء الفصل "+where+" غير متاحة لحسابك حاليًا، أو لم تُنشر بعد."));
  displayChapterTabs("review");
 }
+let honorEditionCatalog=null,honorCatalogLoading=false,honorCatalogFailure=false;
+function renderHonorEditionCards(){
+ const box=$("yrAchievementCycles");if(!box)return;
+ box.replaceChildren();
+ const data=honorEditionCatalog;
+ if(!data){
+  box.append(empty(honorCatalogFailure?"تعذر تحميل جولات التقييم الآن. افتح لوحة الشرف للمحاولة مجددًا.":"جاري تحميل جولات التقييم المتاحة لحسابك..."));return;
+ }
+ const all=data.available_cycles||{};
+ const grade=data.profile?.grade_key;
+ const keys=grade&&all[grade]?[grade]:Object.keys(all);
+ const labels={grade3:"الصف الثالث الثانوي",grade2:"الصف الثاني — بكالوريا",grade2_azhar:"الصف الثاني — أزهر"};
+ let count=0;
+ for(const key of keys){
+  for(const c of all[key]||[]){
+   const btn=document.createElement("button");btn.type="button";btn.className="yrArchiveItem yrEditionButton";
+   const title=document.createElement("strong");title.textContent=c.title||c.code||"جولة تقييم";
+   const desc=document.createElement("span");desc.textContent=(labels[key]||"جولة تقييم")+" · "+(c.archived?"نسخة مؤرشفة وثابتة":"بيانات جولة غير مؤرشفة");
+   btn.append(title,desc);
+   btn.addEventListener("click",()=>window.yrWorkspaceOpenHonorCycle?.(key,c.id));
+   box.append(btn);count++;
+  }
+ }
+ if(!count)box.append(empty("لا توجد جولات تقييم مسجلة لهذا الحساب حاليًا."));
+}
 function refreshAchievements(){
  const box=$("yrAchievementCurrent");if(!box)return;
  box.replaceChildren();
- const n=collect(box,"اللوحة المتاحة الآن",[
-  ["openHonor","افتح لوحة الشرف الحالية",
-   "ترتيبات وتكريمات من بيانات المنصة الحالية؛ ليست إصدارًا مستقلًا للفصل الثاني.","☆"]
+ const n=collect(box,"لوحة الشرف",[
+  ["openHonor","افتح لوحة الشرف",
+   "الجولات المسجلة وإصداراتها المؤرشفة من محرك التقييم، مع فصل الصفوف والمسارات.","☆"]
  ]);
  if(!n)box.append(empty("لم تُنشر لوحة شرف متاحة لحسابك بعد."));
+ if($("yrAchievementsView")?.classList.contains("hidden"))return;
+ renderHonorEditionCards();
+ if(honorEditionCatalog||honorCatalogLoading||honorCatalogFailure)return;
+ if(typeof window.yrWorkspaceLoadHonorCatalog!=="function")return;
+ honorCatalogLoading=true;
+ window.yrWorkspaceLoadHonorCatalog().then(data=>{
+  honorEditionCatalog=data;honorCatalogFailure=false;renderHonorEditionCards();
+ }).catch(()=>{
+  honorCatalogFailure=true;renderHonorEditionCards();
+ }).finally(()=>{honorCatalogLoading=false});
 }
 function homeNext(){
  const home=$("dashboardView");if(!home||!home.classList.contains("hidden")&&document.querySelector(".yrHomeNext")===null){
@@ -265,7 +300,14 @@ document.addEventListener("keydown",e=>{
  const peer=document.querySelector('[data-yr-panel="'+active.dataset.yrPanel+'"][data-yr-chapter="'+which+'"]');
  if(peer){peer.click();peer.focus()}
 });
-document.addEventListener("yr:student-view",e=>updateActive(e.detail?.id||"dashboardView"));
+document.addEventListener("yr:student-view",e=>{
+ updateActive(e.detail?.id||"dashboardView");
+ if(e.detail?.id==="yrAchievementsView")refreshAchievements();
+});
+document.addEventListener("yr:honor-editions-ready",e=>{
+ honorEditionCatalog=e.detail;honorCatalogFailure=false;
+ if(!$("yrAchievementsView")?.classList.contains("hidden"))renderHonorEditionCards();
+});
 const user=$("userBar");
 if(user)new MutationObserver(updateReady).observe(user,{attributes:true,attributeFilter:["class"]});
 const meta=$("studentProfileMeta");
