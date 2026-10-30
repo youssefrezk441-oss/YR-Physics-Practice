@@ -278,12 +278,14 @@ async function verifyPendingStudentPage(code, password) {
         let body = readFileSync(file);
         if (
           file.endsWith("student-base.html") ||
-          file.endsWith("student-account-shell.js")
+          file.endsWith("student-account-shell.js") ||
+          file.endsWith("student-identity-api.js")
         )
           body = Buffer.from(
             body
               .toString()
-              .replaceAll("https://ltjdhconuiqblxfjzpzj.supabase.co", url),
+              .replaceAll("https://ltjdhconuiqblxfjzpzj.supabase.co", url)
+              .replaceAll("sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr","synthetic-anon"),
           );
         const type =
           extname(file) === ".html"
@@ -322,12 +324,11 @@ async function verifyPendingStudentPage(code, password) {
       if (response.status() >= 400)
         browserErrors.push(`response ${response.status()} ${response.url()}`);
     });
-    await page.goto("http://127.0.0.1:58001/student.html");
-    await page.waitForSelector("#studentCode");
-    await page.waitForSelector(".accountLinks");
-    await page.fill("#studentCode", code);
-    await page.fill("#studentPassword", password);
-    await page.click("#loginBtn");
+    await page.goto("http://127.0.0.1:58001/student-register.html?tab=login");
+    await page.waitForSelector("#accessStudentCode");
+    await page.fill("#accessStudentCode", code);
+    await page.fill("#accessPassword", password);
+    await page.click("#accessLoginBtn");
     try {
       await page.waitForSelector("#studentReviewGate", { timeout: 10000 });
     } catch {
@@ -441,7 +442,7 @@ test("immediate registration and 48-hour review journey", async (t) => {
       other=group.replace(/-A$/,"-B");
     sql(`insert into public.student_groups(group_code,is_active,grade_level,center_name) values('${other}',true,'الصف الثاني الثانوي','Synthetic E2E B');
        insert into public.student_profiles(user_id,student_code,full_name,grade_level,is_active,group_code,center_name,student_phone,guardian_phone)
-       values('${uid}','${code}','طالب اختباري قديم كامل','الصف الثاني الثانوي',true,'${group}','Synthetic E2E','+201012345590',null);
+       values('${uid}','${code}','طالب اختباري قديم كامل','الصف الثاني الثانوي',true,'${group}','Synthetic E2E','+201012345589',null);
        insert into public.student_group_memberships(group_id,user_id,joined_on)
        select id,'${uid}',current_date from public.student_groups where group_code='${group}'`);
     flags({profile_update_enabled:true});
@@ -452,7 +453,7 @@ test("immediate registration and 48-hour review journey", async (t) => {
     assert.ok(me0.body.groups.some(g=>g.group_code===other));
     const payload={full_name:"طالب اختباري قديم كامل",grade_level:"الصف الثاني الثانوي",
       education_system:"عام",attendance_location:"غير ذلك",group_code:group,
-      residence_area:"قرية تجريبية",student_phone:"01012345590",guardian_phone:"01112345678",
+      residence_area:"قرية تجريبية",student_phone:"01012345589",guardian_phone:"01112345677",
       privacy_accepted:true,privacy_notice_version:"draft-v1"};
     await t.test("anonymous and invalid-consent writes denied",async()=>{
       assert.equal((await invoke("complete_profile_v2",{...payload,student_code:"FAKE-999"})).status,401);
@@ -465,8 +466,8 @@ test("immediate registration and 48-hour review journey", async (t) => {
       assert.equal(saved.status,200,JSON.stringify(saved.body));assert.equal(saved.body.pending_change,false);
       const me=await invoke("me",{},token);assert.equal(me.status,200,JSON.stringify(me.body));
       assert.equal(me.body.profile.student_code,code);
-      assert.equal(me.body.profile.student_phone,"+201012345590");
-      assert.equal(me.body.profile.guardian_phone,"+201112345678");
+      assert.equal(me.body.profile.student_phone,"+201012345589");
+      assert.equal(me.body.profile.guardian_phone,"+201112345677");
       assert.equal(me.body.details.education_system,"عام");
       assert.equal(me.body.details.residence_area,"قرية تجريبية");
       assert.equal(me.body.profile.profile_schema_version,1);assert.ok(me.body.profile.completed_at);
