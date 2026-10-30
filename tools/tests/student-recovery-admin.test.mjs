@@ -33,6 +33,10 @@ async function withPage(fn){
   if(req.url?.split("?")[0]==="/admin-student-registrations.html"){
    res.writeHead(200,{"Content-Type":"text/html; charset=utf-8"});res.end(await readFile(pagePath));return;
   }
+  if(req.url?.split("?")[0]==="/student-account.css"){
+   res.writeHead(200,{"Content-Type":"text/css; charset=utf-8"});
+   res.end(await readFile(new URL("student-account.css",root)));return;
+  }
   res.writeHead(404);res.end("not found");
  });
  await new Promise(ok=>server.listen(0,"127.0.0.1",ok));
