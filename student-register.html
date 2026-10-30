@@ -1,275 +1,160 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>إنشاء حساب طالب</title>
-    <link rel="stylesheet" href="student-account.css" />
-    <style>
-      .successCode {
-        font-size: clamp(28px, 8vw, 48px);
-        font-weight: 900;
-        letter-spacing: 2px;
-        color: #243b82;
-        text-align: center;
-        padding: 18px;
-        background: #eef2ff;
-        border-radius: 16px;
-      }
-      .passwordWrap {
-        display: flex;
-        gap: 8px;
-      }
-      .passwordWrap input {
-        flex: 1;
-      }
-      .countdown {
-        font-weight: 800;
-        color: #9a3412;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="accountPage">
-      <a href="student.html">← العودة للدخول</a>
-      <h1>إنشاء حساب جديد</h1>
-      <p class="accountMuted">
-        أنشئ حسابك واحصل على كودك فورًا. ستراجع الإدارة البيانات خلال 48 ساعة.
-      </p>
-      <form id="form" class="accountCard accountGrid">
-        <div class="accountField full">
-          <label>الاسم الرباعي</label
-          ><input name="full_name" required autocomplete="name" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>إنشاء حساب طالب | YR Physics Practice</title>
+  <link rel="stylesheet" href="student-account.css">
+  <style>
+    :root{--navy:#152852;--blue:#254db3;--ink:#16243c;--muted:#66758b;--edge:#dde5f0;--surface:#f4f7fc}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(155deg,#e9f0ff 0%,#f7f9fd 42%,#f7f8fc 100%);color:var(--ink);min-height:100vh}
+    .accountPage{max-width:1030px;margin:0 auto;padding:30px 18px 60px}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:11px;font-size:17px;font-weight:900;color:var(--navy)}
+    .brandIcon{display:grid;place-items:center;background:var(--navy);color:#fff;border-radius:14px;width:44px;height:44px;font-size:15px;direction:ltr}
+    .backLink{color:var(--blue);font-weight:800;text-decoration:none;font-size:14px}
+    .intro{max-width:670px;margin:0 auto 22px;text-align:center}
+    .intro h1{font-size:clamp(25px,4vw,35px);line-height:1.4;margin:0 0 7px;color:var(--navy)}
+    .intro p{margin:0;color:var(--muted);font-size:15px;line-height:1.85}
+    .wizard{max-width:780px;margin:auto}
+    .stepper{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:18px 0}
+    .stepItem{text-align:center;color:#748198;font-weight:700;font-size:12px;line-height:1.6}
+    .stepCircle{display:grid;place-items:center;margin:0 auto 7px;width:38px;height:38px;border-radius:50%;background:#e7edf7;color:#556780;border:2px solid #e7edf7;font-size:15px}
+    .stepItem.active{color:var(--blue)} .stepItem.active .stepCircle{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .stepItem.done .stepCircle{background:#e5f4eb;border-color:#a7dec0;color:#15724c}
+    .accountCard{border:1px solid var(--edge);box-shadow:0 18px 45px rgba(17,38,85,.08);border-radius:22px;padding:clamp(18px,3.6vw,34px);margin-bottom:14px}
+    .step-panel[hidden]{display:none!important}
+    .panelTitle{font-size:21px;color:var(--navy);margin:0 0 5px;line-height:1.5}
+    .panelIntro{margin:0 0 22px;color:var(--muted);font-size:13px;line-height:1.8}
+    .accountGrid{gap:15px}.accountGrid>.full{grid-column:1/-1}
+    .accountField label{color:#24344e;font-size:13px}
+    .accountField input,.accountField select{min-height:48px;border-color:#ccd7e7;border-radius:12px;background:#fff;color:var(--ink);font-size:15px}
+    .accountField input:focus,.accountField select:focus{outline:3px solid #bdd3ff;outline-offset:0;border-color:var(--blue)}
+    .accountField input:disabled,.accountField select:disabled{background:#f2f4f8}
+    .accountField input[type=checkbox]{width:19px;height:19px;min-height:auto;accent-color:var(--blue)}
+    .hint{color:var(--muted);font-size:12px;line-height:1.8;margin:2px 0}
+    .optional{color:#738196;font-weight:500;font-size:11px}
+    .actions{display:flex;gap:10px;margin-top:23px;align-items:center;justify-content:space-between}
+    .actions .accountBtn{min-height:47px;min-width:145px}
+    .accountBtn{background:var(--blue);border-radius:12px}
+    .accountBtn:disabled{opacity:.52;cursor:not-allowed}
+    .actions .secondary{background:#fff;border:1px solid #ccd7e7;color:#33445b}
+    .passwordWrap{display:flex;gap:7px}
+    .passwordWrap input{min-width:0;flex:1}
+    .passwordWrap .accountBtn{flex:0 0 auto;padding:10px;min-width:66px}
+    .subtleBox{padding:13px 14px;border-radius:13px;background:var(--surface);color:#52617b;font-size:13px;line-height:1.9}
+    .reviewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .reviewRow{padding:13px;border:1px solid var(--edge);border-radius:11px;background:#fafbfd}
+    .reviewRow small{display:block;color:var(--muted);margin-bottom:3px}.reviewRow strong{font-size:14px;overflow-wrap:anywhere}
+    .privacyLabel{display:flex;align-items:start;gap:10px;font-weight:700;line-height:1.8}
+    .privacyLabel input{margin-top:6px;flex-shrink:0}
+    .privacyLabel a{color:var(--blue)}
+    .captchaPanel{margin-top:15px}
+    #message{max-width:780px;margin:0 auto 13px}
+    .successCode{font-size:clamp(27px,8vw,45px);font-weight:900;letter-spacing:2px;color:var(--blue);text-align:center;padding:18px;background:#eef3ff;border-radius:15px;direction:ltr}
+    .receipt{text-align:center;max-width:780px;margin:0 auto}
+    .receipt h2{color:#176349;margin:6px 0}
+    .receipt .note{background:#f0f6ff;border-radius:12px;padding:12px;color:#435678;line-height:1.8;margin:16px 0}
+    .statusPill{display:inline-block;border-radius:40px;background:#fff5dc;padding:7px 15px;color:#875b12;font-weight:800}
+    .helpBar{text-align:center;font-size:13px;color:#65768e;margin-top:18px;line-height:1.85}
+    .helpBar a{color:var(--blue);font-weight:800}
+    @media(max-width:680px){
+      .accountPage{padding:14px 12px 35px}.intro{text-align:right}.intro h1{font-size:26px}
+      .stepItem{font-size:10px}.stepCircle{width:32px;height:32px;font-size:12px}
+      .accountGrid,.reviewGrid{grid-template-columns:1fr}.accountCard{padding:18px}
+      .actions .accountBtn{min-width:0;flex:1}.actions{gap:9px}
+      .topline{margin-bottom:20px}.brand{font-size:14px}
+    }
+  </style>
+</head>
+<body>
+<main class="accountPage">
+  <header class="topline">
+    <div class="brand"><span class="brandIcon">YR</span><span>YR Physics Practice<br><small>مستر يوسف رزق</small></span></div>
+    <a href="student.html" class="backLink">العودة لتسجيل الدخول ←</a>
+  </header>
+  <div class="intro">
+    <h1>ابدأ رحلتك في الفيزياء ⚡</h1>
+    <p>أنشئ حسابك في خطوات بسيطة واحصل على كود الطالب. ستراجع الإدارة بياناتك بعد التسجيل.</p>
+  </div>
+  <div id="message" class="hidden" role="alert" aria-live="polite"></div>
+  <div id="wizard" class="wizard">
+    <nav class="stepper" aria-label="مراحل التسجيل">
+      <div class="stepItem active" data-step-marker="0"><div class="stepCircle">1</div>بيانات الطالب</div>
+      <div class="stepItem" data-step-marker="1"><div class="stepCircle">2</div>الدراسة والمجموعة</div>
+      <div class="stepItem" data-step-marker="2"><div class="stepCircle">3</div>التواصل والأمان</div>
+      <div class="stepItem" data-step-marker="3"><div class="stepCircle">4</div>مراجعة وإنشاء</div>
+    </nav>
+    <form id="form" class="accountCard" novalidate autocomplete="on">
+      <section class="step-panel" data-step="0" aria-labelledby="stepTitle0">
+        <h2 id="stepTitle0" class="panelTitle">بيانات الطالب</h2>
+        <p class="panelIntro">اكتب اسمك الرباعي مثلما تستخدمه في المركز، ليسهل التعرف على حسابك.</p>
+        <div class="accountGrid">
+          <div class="accountField"><label for="firstName">الاسم الأول</label><input id="firstName" name="first_name" required maxlength="45" autocomplete="given-name" placeholder="مثال: أحمد"></div>
+          <div class="accountField"><label for="secondName">الاسم الثاني</label><input id="secondName" name="second_name" required maxlength="45" placeholder="اسم الأب"></div>
+          <div class="accountField"><label for="thirdName">الاسم الثالث</label><input id="thirdName" name="third_name" required maxlength="45" placeholder="اسم الجد"></div>
+          <div class="accountField"><label for="fourthName">الاسم الرابع</label><input id="fourthName" name="fourth_name" required maxlength="45" autocomplete="family-name" placeholder="اسم العائلة"></div>
+          <p class="hint full">يمكن كتابة الاسم العربي المركب في الحقل المناسب. لن نطلب الرقم القومي في التسجيل العادي.</p>
         </div>
-        <div class="accountField">
-          <label>الصف الدراسي</label
-          ><select name="grade_level" required>
-            <option>الصف الثاني الثانوي</option>
-            <option>الصف الثالث الثانوي</option>
-          </select>
-        </div>
-        <div class="accountField">
-          <label>النظام التعليمي</label
-          ><select name="education_system" required>
-            <option>عام</option>
-            <option>أزهري</option>
-            <option>بكالوريا</option>
-          </select>
-        </div>
-        <div class="accountField full">
-          <label>المجموعة المطلوبة</label
-          ><select name="group_code" required>
-            <option value="">جارٍ تحميل المجموعات…</option>
-          </select>
-        </div>
-        <div class="accountField">
-          <label>مكان الحضور</label
-          ><select name="attendance_location" required>
-            <option>ناهيا</option>
-            <option>كفر حكيم</option>
-            <option>خصوصي</option>
-            <option>غير ذلك</option>
-          </select>
-        </div>
-        <div class="accountField">
-          <label>محل السكن</label><input name="residence_area" required />
-        </div>
-        <div class="accountField">
-          <label>رقم هاتف الطالب</label
-          ><input
-            name="student_phone"
-            required
-            inputmode="tel"
-            autocomplete="tel"
-          />
-        </div>
-        <div class="accountField">
-          <label>رقم ولي الأمر</label
-          ><input name="guardian_phone" required inputmode="tel" />
-        </div>
-        <div class="accountField">
-          <label>كلمة المرور</label>
-          <div class="passwordWrap">
-            <input
-              name="password"
-              type="password"
-              required
-              minlength="10"
-              autocomplete="new-password"
-            /><button type="button" class="accountBtn secondary toggle">
-              إظهار
-            </button>
-          </div>
-        </div>
-        <div class="accountField">
-          <label>تأكيد كلمة المرور</label>
-          <div class="passwordWrap">
-            <input
-              name="password_confirm"
-              type="password"
-              required
-              minlength="10"
-              autocomplete="new-password"
-            /><button type="button" class="accountBtn secondary toggle">
-              إظهار
-            </button>
-          </div>
-        </div>
-        <p class="accountMuted full">
-          10 أحرف على الأقل، وتضم حروفًا وأرقامًا. لا نخزن كلمة المرور في طلب
-          التسجيل ولا نعرضها بعد الإنشاء.
-        </p>
-        <div class="accountField full">
-          <label
-            ><input type="checkbox" name="privacy" required /> قرأت
-            <a href="student-privacy.html" target="_blank" rel="noopener"
-              >إشعار الخصوصية</a
-            >
-            وأوافق على معالجة بيانات التسجيل.</label
-          >
-        </div>
-        <div class="sensitiveNotice full">
-          التسجيل العادي لا يطلب الرقم القومي. جمع الهوية يظل مغلقًا حتى اعتماد
-          متطلبات الخصوصية بصورة مستقلة.
-        </div>
-        <div id="captchaWrap" class="accountField full hidden">
-          <label>التحقق الأمني قبل إنشاء الحساب</label>
-          <div id="turnstileWidget"></div>
-          <p class="accountMuted" id="captchaStatus" role="status">جارٍ تجهيز التحقق الآمن…</p>
-        </div>
-        <div id="message" class="hidden full"></div>
-        <button class="accountBtn full" type="submit">
-          إنشاء الحساب والحصول على الكود
-        </button>
-      </form>
-      <section id="receipt" class="accountCard hidden">
-        <h2>تم إنشاء حسابك بنجاح! 🎉</h2>
-        <p>كود الطالب الخاص بك:</p>
-        <div id="studentCode" class="successCode"></div>
-        <button id="copyCode" class="accountBtn secondary">نسخ الكود</button>
-        <p>احتفظ بهذا الكود؛ ستستخدمه مع كلمة المرور لتسجيل الدخول.</p>
-        <p>الحالة: <b>قيد مراجعة الإدارة</b></p>
-        <p>تنتهي مهلة المراجعة: <b id="deadline"></b></p>
-        <p class="countdown">
-          إذا لم تتم الموافقة خلال 48 ساعة، سيتوقف الوصول مؤقتًا مع حفظ حسابك
-          وبياناتك.
-        </p>
-        <a class="accountBtn" href="student.html">الدخول إلى المنصة</a>
       </section>
-    </main>
-    <script type="module">
-      import { identity, $, message } from "./student-identity-api.js";
-      const f = $("form"),
-        requestKey = crypto.randomUUID(),
-        registrationInvite = new URLSearchParams(location.search).get("invite") || "";
-      let cfg, turnstileId = null, captchaToken = "";
-      async function renderPublicCaptcha(sitekey) {
-        if (!sitekey) throw Error("التحقق الأمني غير مُجهز. تواصل مع الإدارة.");
-        $("captchaWrap").classList.remove("hidden");
-        if (!window.turnstile) {
-          await new Promise((resolve, reject) => {
-            const script = document.createElement("script");
-            script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-            script.async = true;
-            script.onload = resolve;
-            script.onerror = () => reject(Error("تعذر تحميل التحقق الأمني. تأكد من الاتصال بالإنترنت."));
-            document.head.append(script);
-          });
-        }
-        if (!window.turnstile) throw Error("تعذر تشغيل التحقق الأمني. أعد تحميل الصفحة.");
-        turnstileId = window.turnstile.render("#turnstileWidget", {
-          sitekey,
-          action: "student_registration",
-          callback: (token) => {
-            captchaToken = token;
-            $("captchaStatus").textContent = "تم التحقق. يمكنك إكمال التسجيل.";
-          },
-          "expired-callback": () => {
-            captchaToken = "";
-            $("captchaStatus").textContent = "انتهت صلاحية التحقق. أعد المحاولة.";
-          },
-          "error-callback": () => {
-            captchaToken = "";
-            $("captchaStatus").textContent = "تعذر التحقق. حاول مرة أخرى.";
-          }
-        });
-      }
-      try {
-        cfg = await identity("config");
-        if (!cfg.registration_enabled)
-          throw Error("التسجيل الجديد غير متاح حاليًا.");
-        if (cfg.registration_invite_required && !registrationInvite)
-          throw Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل.");
-        if (cfg.captcha_required) await renderPublicCaptcha(cfg.captcha_sitekey);
-        const render = () => {
-          const grade = f.grade_level.value;
-          f.group_code.innerHTML =
-            '<option value="">اختر المجموعة</option>' +
-            cfg.groups
-              .filter((g) =>
-                String(g.grade_level || "").includes(
-                  grade.includes("الثاني") ? "الثاني" : "الثالث",
-                ),
-              )
-              .map(
-                (g) =>
-                  `<option value="${g.group_code}">${g.group_code} — ${g.center_name || ""}</option>`,
-              )
-              .join("");
-        };
-        f.grade_level.onchange = render;
-        render();
-      } catch (e) {
-        message(e.message);
-        f.querySelector("button[type=submit]").disabled = true;
-      }
-      document.querySelectorAll(".toggle").forEach(
-        (b) =>
-          (b.onclick = () => {
-            const i = b.previousElementSibling;
-            i.type = i.type === "password" ? "text" : "password";
-            b.textContent = i.type === "password" ? "إظهار" : "إخفاء";
-          }),
-      );
-      f.onsubmit = async (e) => {
-        e.preventDefault();
-        const submitButton = f.querySelector('button[type="submit"]');
-        if (submitButton.disabled) return;
-        submitButton.disabled = true;
-        const b = Object.fromEntries(new FormData(f));
-        b.privacy_accepted = b.privacy === "on";
-        b.privacy_notice_version = cfg.privacy_notice_version;
-        b.request_idempotency_key = requestKey;
-        if (registrationInvite) b.registration_invite = registrationInvite;
-        if (cfg?.captcha_required) b.captcha_token = captchaToken;
-        delete b.privacy;
-        try {
-          if (b.password !== b.password_confirm)
-            throw Error("كلمتا المرور غير متطابقتين.");
-          if (cfg.captcha_required && !captchaToken)
-            throw Error("أكمل التحقق الأمني قبل إنشاء الحساب.");
-          const d = await identity("submit_registration", b);
-          $("studentCode").textContent = d.student_code;
-          $("deadline").textContent = new Date(
-            d.review_deadline_at,
-          ).toLocaleString("ar-EG");
-          $("receipt").classList.remove("hidden");
-          f.classList.add("hidden");
-          $("copyCode").onclick = async () => {
-            await navigator.clipboard.writeText(d.student_code);
-            $("copyCode").textContent = "تم النسخ";
-          };
-          message(d.message || "تم إنشاء الحساب.", true);
-        } catch (x) {
-          message(x.message);
-          if (cfg?.captcha_required && turnstileId !== null) {
-            captchaToken = "";
-            window.turnstile.reset(turnstileId);
-            $("captchaStatus").textContent = "أعد التحقق الأمني قبل المحاولة مرة أخرى.";
-          }
-          submitButton.disabled = false;
-        }
-      };
-    </script>
-  </body>
+      <section class="step-panel" data-step="1" aria-labelledby="stepTitle1" hidden>
+        <h2 id="stepTitle1" class="panelTitle">الدراسة والمجموعة</h2>
+        <p class="panelIntro">اختار صفك ونظامك ومكان حضورك، وهتظهر المجموعات المناسبة المتاحة.</p>
+        <div class="accountGrid">
+          <div class="accountField"><label for="grade">الصف الدراسي</label><select id="grade" name="grade_level" required><option value="">اختر الصف</option><option>الصف الثاني الثانوي</option><option>الصف الثالث الثانوي</option></select></div>
+          <div class="accountField"><label for="system">النظام التعليمي</label><select id="system" name="education_system" required><option value="">اختر النظام</option><option>عام</option><option>أزهري</option><option>بكالوريا</option></select></div>
+          <div class="accountField"><label for="location">مكان الحضور</label><select id="location" name="attendance_location" required><option value="">اختر المكان</option><option>ناهيا</option><option>كفر حكيم</option><option>خصوصي</option><option>غير ذلك</option></select></div>
+          <div class="accountField"><label for="residence">منطقة السكن <span class="optional">(اختياري)</span></label><input id="residence" name="residence_area" maxlength="160" placeholder="المنطقة أو القرية"></div>
+          <div class="accountField full"><label for="group">المجموعة</label><select id="group" name="group_code" required disabled><option value="">اختر الصف ومكان الحضور أولًا</option></select><p id="groupHint" class="hint" role="status">سيتم تحميل المجموعات من المنصة.</p></div>
+        </div>
+      </section>
+      <section class="step-panel" data-step="2" aria-labelledby="stepTitle2" hidden>
+        <h2 id="stepTitle2" class="panelTitle">التواصل وتأمين الحساب</h2>
+        <p class="panelIntro">اكتب أرقام تقدر الإدارة تتواصل معاك من خلالها، واختار كلمة مرور قوية.</p>
+        <div class="accountGrid">
+          <div class="accountField"><label for="phone">رقم موبايل الطالب</label><input id="phone" name="student_phone" type="tel" required inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="01xxxxxxxxx" maxlength="16"></div>
+          <div class="accountField"><label for="guardian">رقم موبايل ولي الأمر</label><input id="guardian" name="guardian_phone" type="tel" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx" maxlength="16"></div>
+          <p class="hint full">هنراجع صيغة الأرقام فقط. مش هنبعت رسالة تحقق SMS أو واتساب حاليًا، والرقم لن يعتبر موثقًا.</p>
+          <div class="accountField"><label for="password">كلمة المرور</label><div class="passwordWrap"><input id="password" name="password" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><button type="button" class="accountBtn secondary toggle" aria-label="إظهار كلمة المرور">إظهار</button></div></div>
+          <div class="accountField"><label for="passwordConfirm">تأكيد كلمة المرور</label><div class="passwordWrap"><input id="passwordConfirm" name="password_confirm" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><button type="button" class="accountBtn secondary toggle" aria-label="إظهار تأكيد كلمة المرور">إظهار</button></div></div>
+          <p class="hint full">كلمة المرور لا تقل عن 10 أحرف، وبها حروف وأرقام. لن تظهر للإدارة.</p>
+        </div>
+      </section>
+      <section class="step-panel" data-step="3" aria-labelledby="stepTitle3" hidden>
+        <h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الإنشاء</h2>
+        <p class="panelIntro">لو في معلومة غلط ارجع وعدّلها. بعد الإرسال هتحصل على كود الطالب.</p>
+        <div id="review" class="reviewGrid" aria-live="polite"></div>
+        <p class="subtleBox" style="margin-top:16px">رقم الهاتف غير موثق حاليًا، وإنشاء الحساب لا يعني اعتماده. الإدارة هتراجع البيانات خلال 48 ساعة.</p>
+        <div class="accountField" style="margin-top:17px">
+          <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على معالجة بيانات التسجيل. إذا كنت دون 18 سنة، اطلع ولي أمرك على الإشعار.</span></label>
+        </div>
+        <div id="captchaWrap" class="captchaPanel hidden">
+          <strong>التحقق الأمني</strong>
+          <div id="turnstileWidget" style="margin-top:9px"></div>
+          <p id="captchaStatus" class="hint" role="status">جارٍ تجهيز التحقق الأمني…</p>
+        </div>
+      </section>
+      <footer class="actions">
+        <button type="button" id="prev" class="accountBtn secondary" hidden>السابق</button>
+        <button type="button" id="next" class="accountBtn">التالي</button>
+        <button type="submit" id="submitBtn" class="accountBtn" hidden disabled>إنشاء الحساب والحصول على الكود</button>
+      </footer>
+    </form>
+    <div class="helpBar">عندك حساب بالفعل؟ <a href="student.html">ادخل باستخدام كود الطالب</a> — لو فقدت بياناتك تواصل مع إدارة المركز، ولا تنشئ حسابًا جديدًا.</div>
+  </div>
+  <section id="receipt" class="accountCard receipt hidden">
+    <h2>تم إنشاء حسابك بنجاح! 🎉</h2>
+    <p>كود الطالب الخاص بك</p>
+    <div id="studentCode" class="successCode"></div>
+    <button id="copyCode" type="button" class="accountBtn secondary" style="margin-top:10px">نسخ الكود</button>
+    <p class="statusPill" style="margin-top:18px">الحساب قيد مراجعة الإدارة</p>
+    <p>موعد انتهاء مهلة المراجعة: <b id="deadline"></b></p>
+    <div class="note">احتفظ بكود الطالب وكلمة المرور. إذا لم تتم الموافقة خلال المهلة، قد يتوقف الوصول مؤقتًا مع الاحتفاظ ببيانات الحساب.</div>
+    <a class="accountBtn" style="display:inline-block;text-decoration:none" href="student.html">الذهاب إلى تسجيل الدخول</a>
+  </section>
+</main>
+<script type="module" src="student-register-wizard.js"></script>
+</body>
 </html>
