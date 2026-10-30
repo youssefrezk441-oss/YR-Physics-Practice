@@ -138,3 +138,19 @@ html[data-theme="dark"] .yrStudentApp .yrMoreSheet{background:#172823}
  .yrStudentApp .yrHomeNext button{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.yrStudentApp .yrWorkspaceItem{transition:none}.yrStudentApp .yrWorkspaceItem:hover{transform:none}}
+
+
+/* Task-first dashboard and readable dark mode. */
+.yrStudentApp.yrWorkspaceReady #dashboardView>.yrSectionLead{display:none!important}
+.yrStudentApp.yrWorkspaceReady #dashboardView>.yrHomeNext{margin-top:20px}
+html[data-theme="dark"] .yrStudentApp .yrInternalBrand img{background:#EDF6EE;padding:4px;border-radius:10px}
+html[data-theme="dark"] .yrStudentApp .yrInternalTop .btn.secondary,
+html[data-theme="dark"] .yrStudentApp .yrInternalTop #logoutBtn{background:#234635!important;color:#E8F7EC!important;border-color:#4A755C!important}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero a.btn.secondary{background:#1A3E2E!important;color:#F1FFF5!important;border-color:#4D8061!important}
+@media(max-width:600px){
+ .yrStudentApp.yrWorkspaceReady #dashboardView:not(.hidden){display:flex;flex-direction:column}
+ .yrStudentApp.yrWorkspaceReady #dashboardView>.yrHomeNext{order:-1;margin:0 0 14px}
+ .yrStudentApp.yrWorkspaceReady #dashboardView>.yrDashboardHero{padding:23px 19px;gap:16px}
+ .yrStudentApp .yrDashboardHero #welcomeTitle{font-size:26px}
+ .yrStudentApp .yrInternalEyebrow{margin-bottom:10px}
+}
