@@ -172,3 +172,13 @@ html[data-theme="dark"] .yrStudentApp .yrHistoryFilterTabs button[aria-pressed="
 .yrStudentApp .yrHonorCycleButton[aria-pressed="true"]{background:#D6A149;border-color:#F4CA77;color:#23372E}
 .yrStudentApp .yrHonorCycleButton:focus-visible{outline:3px solid #FFF0B7;outline-offset:3px}
 @media(max-width:560px){.yrStudentApp .yrHonorCycleButton{width:100%}.yrStudentApp .yrHonorCycleSelector{padding:11px}}
+
+/* A pending chapter-two evaluation is a real cycle, but not a publishable ranking. */
+.yrStudentApp #honorContent.yrHonorPendingCycle > :not(#honorPendingNotice){display:none!important}
+.yrStudentApp .yrHonorPendingNotice{padding:clamp(20px,4vw,36px);margin:12px 0 24px;border:1px solid #AAC8BB;border-radius:20px;background:var(--yr-surface);color:var(--yr-ink);box-shadow:0 4px 24px #1438270D}
+.yrStudentApp .yrHonorPendingNotice.hidden{display:none}
+.yrStudentApp .yrHonorPendingEyebrow{display:block;margin-bottom:12px;color:#186B55;font-size:13px;font-weight:900}
+.yrStudentApp .yrHonorPendingNotice h3{font-size:clamp(23px,3vw,30px);line-height:1.4;margin:0 0 12px}
+.yrStudentApp .yrHonorPendingNotice p{line-height:1.85;margin:12px 0 0;max-width:75ch}
+html[data-theme="dark"] .yrStudentApp .yrHonorPendingNotice{border-color:#467B67;background:#173C30}
+html[data-theme="dark"] .yrStudentApp .yrHonorPendingEyebrow{color:#A4E2BF}
