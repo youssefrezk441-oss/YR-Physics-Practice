@@ -17,9 +17,11 @@
       const {sb}=await import('./student-identity-api.js');
       const {data:{session}}=await sb.auth.getSession();
       const legacyRequested=/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'');
-      if(!session?.user && !legacyRequested){
-        location.replace('./student-register.html?tab=login');
-        return;
+      if(!session?.user){
+        if(!legacyRequested){
+          location.replace('./student-register.html?tab=login');
+          return;
+        }
       }
       if(session?.user && session.user.app_metadata?.role!=='admin'){
         try{
