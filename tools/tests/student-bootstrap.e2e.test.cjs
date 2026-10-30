@@ -56,7 +56,7 @@ test(
           body: mockModule,
         }),
       );
-      await p.goto(`http://127.0.0.1:${s.address().port}/student.html`);
+      await p.goto(`http://127.0.0.1:${s.address().port}/student.html?legacy_login=1`);
       await p.waitForSelector("#studentCode");
       assert.ok(await p.locator("#dashboardView").count());
       assert.ok(await p.locator('a[href="student-register.html"]').count());
@@ -160,7 +160,7 @@ test(
       await p.fill('[name="password_confirm"]', "StudentPass2026!");
       await p.click("#next");
       await p.check('[name="privacy"]');
-      await p.click('button[type="submit"]');
+      await p.click("#submitBtn");
       await p.waitForSelector("#receipt:not(.hidden)");
       assert.equal(await p.locator("#studentCode").textContent(), "N2-777");
       assert.equal(
