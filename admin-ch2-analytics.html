@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تحليلات الفصل الثاني والواجبات — مستر يوسف رزق</title>
+<style>
+:root{font-family:Arial,"Noto Sans Arabic",sans-serif;color:#17304d;background:#f4f7fc}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fc;color:#17304d}button,input,select{font:inherit}
+main{max-width:1230px;margin:auto;padding:25px 17px 55px}
+header{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:17px}
+h1{font-size:27px;margin:7px 0}h2{font-size:19px;margin:0 0 13px}h3{font-size:16px;margin:0 0 10px}
+.muted{color:#62758c;line-height:1.75;font-size:13px}.small{font-size:11px}
+.kicker{font-size:12px;font-weight:900;color:#2756a0}.btn{border:1px solid #cedbed;border-radius:11px;padding:10px 14px;background:#fff;color:#20446f;text-decoration:none;cursor:pointer;font-weight:800;display:inline-block}.btn:hover{border-color:#4279b7}.btn.primary{background:#244e96;color:#fff;border-color:#244e96}
+.hero{background:#102644;color:#fff;border-radius:18px;padding:23px 25px;margin:0 0 16px}.hero p{margin:0;color:#d7e5f4;line-height:1.85}
+.card{background:white;border:1px solid #dde7f2;border-radius:16px;padding:19px;margin:13px 0}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.filters label{display:grid;gap:5px;min-width:150px;color:#38526e;font-size:12px;font-weight:800}
+.filters select,.filters input{padding:10px 12px;border:1px solid #cddaea;border-radius:10px;min-height:43px;background:white;color:#17304d}
+.filters label:first-child{flex:1}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.metric{border:1px solid #dfe8f3;border-radius:13px;padding:15px;background:#fbfdff}.metric b{font-size:27px;display:block;margin:4px 0;color:#16395c}.metric span{font-size:12px;color:#586e83}.metric small{font-size:11px;color:#8090a5}
+.tableWrap{overflow:auto;border:1px solid #e1e9f1;border-radius:11px}
+table{border-collapse:collapse;width:100%;min-width:790px;font-size:13px}
+th,td{text-align:right;border-bottom:1px solid #e8edf4;padding:11px 12px;vertical-align:top}
+th{background:#f1f6fc;color:#23456b;font-size:12px;white-space:nowrap}tr:last-child td{border-bottom:none}
+td a{color:#1b57a5;font-weight:800;text-decoration:none}td a:hover{text-decoration:underline}
+.pill{display:inline-block;border-radius:20px;padding:4px 9px;background:#e9f3fe;color:#275696;font-size:11px;font-weight:800}
+.pill.warn{background:#fff4de;color:#8f621c}.pill.good{background:#eaf8f0;color:#18623f}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:17px 0}.tab[aria-pressed=true]{background:#244e96;color:white}
+.warning{padding:13px 15px;border:1px solid #f2d2ab;background:#fff9ed;color:#845a1f;border-radius:11px;margin:12px 0;line-height:1.8}
+.empty{padding:23px;text-align:center;color:#768699;border:1px dashed #ccd8e6;border-radius:11px}
+.hidden{display:none!important}
+@media(max-width:760px){main{padding:15px 10px 40px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:19px}h1{font-size:23px}.filters{display:grid;grid-template-columns:1fr 1fr}.filters label{min-width:0}.filters label:first-child{grid-column:1/-1}}
+@media(max-width:430px){.filters{grid-template-columns:1fr}.filters label:first-child{grid-column:auto}.metric b{font-size:22px}.card{padding:13px}}
+</style></head><body><main>
+<header><div><div class="kicker">YR PHYSICS PRACTICE · التقارير التعليمية</div><h1>تحليلات الفصل الثاني والواجبات</h1></div><div><a class="btn" href="admin-home.html">← لوحة الإدارة</a></div></header>
+<div class="hero"><h2>صورة شاملة لأداء الطلاب</h2><p>تتجدد القائمة من الورش والواجبات المنشورة؛ نفصل ورشة الحصة عن التدريب المنزلي، ونقارن مشاركة الطلاب، والإكمال، والمحاولة الأولى، وتسليم الواجبات. لا تُحسب الأسئلة غير المحلولة خطأً.</p></div>
+<section class="card filters">
+<label for="gradeFilter">الصف الدراسي<select id="gradeFilter"><option value="">جميع الصفوف</option></select></label>
+<label for="groupFilter">كود المجموعة <span class="small">(اختياري)</span><input id="groupFilter" maxlength="80" placeholder="مثل N3-A"></label>
+<label for="trackFilter">نوع الورشة<select id="trackFilter"><option value="all">الحصة والمنزلي</option><option value="class">ورشة الحصة</option><option value="home">المنزلي</option></select></label>
+<label for="cycleFilter">الدورات<select id="cycleFilter"><option value="initial">المحاولات الأصلية</option><option value="all">كل الدورات</option><option value="admin_reopen">الإعادة فقط</option></select></label>
+<button class="btn primary" id="refresh" type="button">تحديث التحليل</button>
+</section>
+<p id="notice" class="muted" role="status" aria-live="polite">جارٍ التحقق من صلاحيات الإدارة…</p>
+<div class="tabs" role="group" aria-label="نوع التقرير">
+<button class="btn tab" data-tab="overview" aria-pressed="true">ملخص الفصل الثاني</button>
+<button class="btn tab" data-tab="students" aria-pressed="false">تحليل الطلاب المجمّع</button>
+<button class="btn tab" data-tab="questions" aria-pressed="false">الأسئلة والمهارات</button>
+</div>
+<section id="overviewView">
+<div id="metrics" class="metrics"></div>
+<div class="card"><h2>كل ورش الفصل الثاني المنشورة</h2><p class="muted">المشاركة والإكمال محسوبان لكل ورشة وقسم؛ لا نجمع أعداد الطلاب كأنهم أشخاص مختلفون.</p><div id="workshopTable" class="tableWrap"></div></div>
+<div class="card"><h2>كل واجبات الفصل الثاني المنشورة</h2><p class="muted">المتوسط يخص الاختيار المتعدد فقط؛ التقييم الذاتي للمقالي منفصل، وغير المجاب لا يُعد إجابة خاطئة.</p><div id="homeworkTable" class="tableWrap"></div></div>
+</section>
+<section id="studentsView" class="card hidden"><h2>متابعة الطلاب عبر الورش والواجبات</h2><p class="muted">القيم مجموع مشاركات كل طالب في الورش المختلفة، وعدد الواجبات التي سلّمها. اضغط «تحميل التحليل» لإحضار الأرقام الحقيقية.</p>
+<button id="loadStudents" class="btn primary" type="button">تحميل تحليل الطلاب</button>
+<div id="studentsTable" class="tableWrap" style="margin-top:13px"></div></section>
+<section id="questionsView" class="card hidden"><h2>الأسئلة والمهارات عبر ورش الفصل الثاني</h2><p class="muted">تظهر أعلى الأسئلة الصعبة وأهم المهارات من البيانات الأصلية لكل ورشة منشورة، مع إمكانية فتح تفاصيل الورشة.</p>
+<button id="loadQuestions" class="btn primary" type="button">تحميل الأسئلة والمهارات</button>
+<h3 style="margin-top:19px">الأسئلة الأكثر خطأً من البداية</h3><div id="questionsTable" class="tableWrap"></div>
+<h3 style="margin-top:22px">المهارات الأكثر احتياجًا للمراجعة</h3><div id="skillsTable" class="tableWrap"></div></section>
+</main><script type="module" src="admin-ch2-analytics.js"></script></body></html>
