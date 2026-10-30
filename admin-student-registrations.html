@@ -36,6 +36,25 @@
         تظهر هنا.
       </p>
       <div id="message" class="hidden"></div>
+      <section id="invitePanel" class="accountCard hidden">
+        <h2>دعوات التسجيل المحدودة</h2>
+        <p class="accountMuted">الدعوة تخص مجموعة محددة، ويمكن استخدامها مرة واحدة افتراضيًا. إنشاء رابط الدعوة لا يفتح التسجيل تلقائيًا؛ يظل التحكم في فتحه مستقلًا.</p>
+        <form id="inviteForm" class="accountGrid">
+          <div class="accountField full"><label>اسم الدعوة</label><input name="label" minlength="3" maxlength="120" required placeholder="دفعة جديدة — ناهيا" /></div>
+          <div class="accountField"><label>المجموعة</label><select name="group_code" id="inviteGroup" required></select></div>
+          <div class="accountField"><label>عدد الاستخدامات</label><input name="max_uses" type="number" min="1" max="25" value="1" required /></div>
+          <div class="accountField"><label>الصلاحية بالساعات</label><input name="expires_in_hours" type="number" min="1" max="168" value="72" required /></div>
+          <button class="accountBtn" type="submit">إنشاء رابط دعوة آمن</button>
+        </form>
+        <div id="inviteResult" class="hidden accountField" style="margin-top:16px">
+          <label for="inviteLink">رابط الدعوة (يُعرض مرة واحدة فقط)</label>
+          <input id="inviteLink" readonly dir="ltr" style="width:100%" />
+          <button id="copyInvite" type="button" class="accountBtn secondary">نسخ الرابط</button>
+          <p class="accountMuted">الرابط خاص بمن ترسل إليه الدعوة. لا تنشره علنًا، ولا يظهر لاحقًا في السجلات.</p>
+        </div>
+        <h3>آخر الدعوات</h3>
+        <div id="inviteList" class="scroll accountMuted">لا توجد دعوات.</div>
+      </section>
       <div class="accountCard accountField">
         <label for="reviewFilter">تقسيم طلبات التسجيل</label>
         <select id="reviewFilter">
@@ -146,11 +165,29 @@
             }),
         );
       }
+      function renderInviteControls(data) {
+        const edit = data.level === "edit";
+        $("invitePanel").classList.toggle("hidden", !edit);
+        if (!edit) return;
+        const current = $("inviteGroup").value;
+        const groups = data.groups || [];
+        $("inviteGroup").innerHTML = groups.map((g) =>
+          `<option value="${esc(g.group_code)}">${esc(g.group_code)} — ${esc(g.center_name)} / ${esc(g.grade_level)}</option>`
+        ).join("");
+        if (groups.some((g) => g.group_code === current)) $("inviteGroup").value = current;
+        const invites = data.invites || [];
+        $("inviteList").innerHTML = invites.length
+          ? `<table><thead><tr><th>الدعوة</th><th>المجموعة</th><th>الاستخدام</th><th>الصلاحية</th></tr></thead><tbody>${invites.map((i) =>
+              `<tr><td>${esc(i.label)}</td><td>${esc(i.allowed_group_code)}</td><td>${Number(i.used_count)}/${Number(i.max_uses)}</td><td>${i.enabled ? esc(new Date(i.expires_at).toLocaleString("ar-EG")) : "متوقفة"}</td></tr>`
+            ).join("")}</tbody></table>`
+          : "لا توجد دعوات.";
+      }
       async function load() {
         try {
           const d = await identity("admin_list");
           requests = d.requests;
           renderRequests();
+          renderInviteControls(d);
           $("recoveryRows").innerHTML = d.recovery_requests
             .map(
               (r) =>
@@ -168,6 +205,26 @@
           message(e.message);
         }
       }
+      $("inviteForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const button = e.target.querySelector('button[type="submit"]');
+        try {
+          button.disabled = true;
+          const result = await identity("admin_create_invite", Object.fromEntries(new FormData(e.target)));
+          $("inviteLink").value = result.registration_url;
+          $("inviteResult").classList.remove("hidden");
+          message("تم إنشاء دعوة خاصة بالمجموعة المحددة. التسجيل لا يزال خاضعًا لإعدادات المنصة.", true);
+          await load();
+        } catch (error) {
+          message(error.message || "تعذر إنشاء الدعوة.");
+        } finally {
+          button.disabled = false;
+        }
+      };
+      $("copyInvite").onclick = async () => {
+        await navigator.clipboard.writeText($("inviteLink").value);
+        $("copyInvite").textContent = "تم نسخ الرابط";
+      };
       $("decisionForm").onsubmit = async (e) => {
         e.preventDefault();
         try {

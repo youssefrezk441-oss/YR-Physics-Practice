@@ -88,7 +88,7 @@ jobs:
             --data '{"action":"config"}')"
           CONFIG_JSON="$config" node -e '
             const d=JSON.parse(process.env.CONFIG_JSON);
-            if(d.ok!==true || d.registration_enabled!==false ||
+            if(d.ok!==true || d.service_ready!==true || d.registration_enabled!==false ||
                d.registration_rollout_scope!=="disabled" ||
                d.phone_login_enabled!==false ||
                d.profile_enforcement_enabled!==false ||

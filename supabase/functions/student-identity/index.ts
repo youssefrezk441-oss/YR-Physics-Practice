@@ -91,6 +91,14 @@ async function hmac(value: string) {
   );
   return b64(await crypto.subtle.sign("HMAC", k, enc.encode(value)));
 }
+function cryptoReady(): boolean {
+  try {
+    return HMAC !== ENC && unb64(HMAC).byteLength === 32 &&
+      unb64(ENC).byteLength === 32;
+  } catch {
+    return false;
+  }
+}
 async function encrypt(value: string) {
   if (!ENC) throw new Error("identity_keys_unavailable");
   const iv = crypto.getRandomValues(new Uint8Array(12)),
@@ -217,7 +225,8 @@ Deno.serve(async (req) => {
           : [];
       return out(req, {
         ok: true,
-        registration_enabled: cfg.registration_enabled &&
+        service_ready: cryptoReady(),
+        registration_enabled: cryptoReady() && cfg.registration_enabled &&
           cfg.immediate_registration_enabled &&
           scopeAllowed &&
           (cfg.registration_rollout_scope !== "all" ||
@@ -241,8 +250,8 @@ Deno.serve(async (req) => {
         cfg.registration_rollout_scope === "all" ||
         (cfg.registration_rollout_scope === "staging" && !IS_PRODUCTION);
       if (
-        !cfg.registration_enabled || !cfg.immediate_registration_enabled ||
-        !scopeAllowed
+        !cryptoReady() || !cfg.registration_enabled ||
+        !cfg.immediate_registration_enabled || !scopeAllowed
       ) {
         return out(req, {
           error: "registration_unavailable",
@@ -812,15 +821,72 @@ Deno.serve(async (req) => {
     if (action.startsWith("admin_")) {
       const a = await adminUser(req, action !== "admin_list");
       if (!a) return out(req, { error: "forbidden" }, 403);
+      if (action === "admin_create_invite") {
+        const groupCode = txt(body.group_code, 80),
+          label = txt(body.label, 120),
+          maxUses = Number(body.max_uses ?? 1),
+          expiresInHours = Number(body.expires_in_hours ?? 72);
+        if (
+          label.length < 3 || label.length > 120 ||
+          !Number.isInteger(maxUses) || maxUses < 1 || maxUses > 25 ||
+          !Number.isInteger(expiresInHours) ||
+          expiresInHours < 1 || expiresInHours > 168 ||
+          !groupCode
+        ) {
+          throw new IdentityInputError(
+            "invalid_invitation",
+            "حدد مجموعة نشطة واسمًا للدعوة وصلاحية بين ساعة و7 أيام.",
+          );
+        }
+        const [group] =
+          await sql`select group_code from public.student_groups where group_code=${groupCode} and is_active=true`;
+        if (!group) {
+          throw new IdentityInputError(
+            "invalid_invitation_group",
+            "المجموعة غير موجودة أو غير نشطة.",
+          );
+        }
+        const token = `yr-${crypto.randomUUID()}-${
+          b64(crypto.getRandomValues(new Uint8Array(24)))
+            .replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "")
+        }`;
+        const tokenHash = await hmac(`registration-invite:${token}`);
+        const [invite] = await sql.begin(async (tx) => {
+          const [created] =
+            await tx`insert into private.student_registration_invites(token_hmac,label,allowed_group_code,max_uses,expires_at)
+              values(${tokenHash},${label},${groupCode},${maxUses},now() + ${expiresInHours} * interval '1 hour')
+              returning id,allowed_group_code,max_uses,expires_at`;
+          await tx`insert into private.student_identity_audit_events(actor_user_id,event_type,metadata)
+              values(${a.user.id}::uuid,'registration_invite_created',${
+                tx.json({ invite_id: created.id, group_code: groupCode, max_uses: maxUses })
+              })`;
+          return [created];
+        });
+        return out(req, {
+          ok: true,
+          invite_id: invite.id,
+          invite_token: token,
+          registration_url: `https://youssefrezk441-oss.github.io/YR-Physics-Practice/student-register.html?invite=${encodeURIComponent(token)}`,
+          expires_at: invite.expires_at,
+          group_code: groupCode,
+          max_uses: maxUses,
+        }, 201);
+      }
       if (action === "admin_list") {
         const rows =
           await sql`select r.public_ref,r.status request_status,r.provisioning_status,r.full_name,r.national_id_last4,r.identity_review_required,r.grade_level,r.education_system,r.attendance_location,r.residence_area,r.student_phone_e164,r.guardian_phone_e164,r.requested_group_code,r.assigned_group_code,r.assigned_student_code,r.duplicate_review,r.created_at,r.updated_at,r.decision_reason,ar.status account_status,ar.access_scope,ar.review_started_at,ar.review_deadline_at,ar.decided_at,ar.decision_reason account_decision_reason from private.student_registration_requests r left join private.student_account_reviews ar on ar.request_id=r.id order by (ar.status='pending_review') desc,ar.review_deadline_at nulls last,r.created_at desc limit 500`;
         const recovery =
           await sql`select public_ref,status,contact_phone_e164,(subject_user_id is not null) account_matched,created_at,updated_at,decision_reason from private.student_account_recovery_requests order by (status='pending') desc,created_at desc limit 500`;
+        const activeGroups =
+          await sql`select group_code,grade_level,center_name from public.student_groups where is_active=true order by grade_level,group_code limit 200`;
+        const invites =
+          await sql`select id,label,allowed_group_code,max_uses,used_count,expires_at,enabled from private.student_registration_invites order by created_at desc limit 80`;
         return out(req, {
           ok: true,
           requests: rows,
           recovery_requests: recovery,
+          groups: activeGroups,
+          invites,
           level: a.level,
         });
       }

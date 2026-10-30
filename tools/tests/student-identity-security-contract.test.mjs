@@ -13,3 +13,21 @@ test('activation and reset compatibility remains atomic',()=>{for(const marker o
 test('phone login and identity collection remain independently gated',()=>{assert.match(shell,/phone_login_enabled/);assert.match(shell,/normalizeEgyptianPhone/);assert.match(migration,/phone_login_enabled boolean not null default false/);assert.match(migration,/national_id_collection_enabled boolean not null default false/);assert.match(fn,/identity_collection_unavailable/)});
 test('cloud staging is allow-listed, synthetic, cleanup-owned and has no cloud failpoints',()=>{assert.match(staging,/E2E_ALLOWED_PROJECT_REFS/);assert.match(staging,/Production is forbidden/);assert.match(staging,/registration_request_id/);assert.match(cleanup,/__RUN_ID__/);assert.match(cleanup,/student_account_reviews/);assert.match(staging,/Cloud fault injection is forbidden/);for(const forbidden of['synthetic_admin_permissions','synthetic_student_attempts','synthetic_student_grades'])assert.doesNotMatch(staging+cleanup,new RegExp(forbidden))});
 test('flags restore and real student page with local GoTrue run in CI',()=>{assert.match(staging,/t\.after\(/);assert.match(staging,/immediate_registration_enabled:\s*original\.immediate_registration_enabled/);assert.match(workflow,/local-gotrue-e2e/);assert.match(workflow,/E2E_BROWSER/);assert.match(workflow,/run_student_identity_local_e2e\.sh/)});
+
+test('server-generated invitations require admin edit and never persist plaintext tokens',()=>{
+  assert.match(fn,/if \(action\.startsWith\("admin_"\)\)/);
+  assert.match(fn,/adminUser\(req, action !== "admin_list"\)/);
+  assert.match(fn,/if \(action === "admin_create_invite"\)/);
+  assert.match(fn,/crypto\.getRandomValues\(new Uint8Array\(24\)\)/);
+  assert.match(fn,/await hmac\(`registration-invite:\$\{token\}`\)/);
+  assert.match(fn,/insert into private\.student_registration_invites\(token_hmac,label,allowed_group_code,max_uses,expires_at\)/);
+  assert.match(fn,/event_type,metadata/);
+  assert.match(staging,/admin_create_invite/);
+  assert.match(staging,/JWT admin metadata alone cannot approve without DB permission/);
+});
+test('live config is fail-closed when critical identity secrets are missing or invalid',()=>{
+  assert.match(fn,/function cryptoReady\(\): boolean/);
+  assert.match(fn,/service_ready: cryptoReady\(\)/);
+  assert.match(fn,/registration_enabled: cryptoReady\(\) && cfg\.registration_enabled/);
+  assert.match(fn,/!cryptoReady\(\) \|\| !cfg\.registration_enabled/);
+});

@@ -457,16 +457,25 @@ test("immediate registration and 48-hour review journey", async (t) => {
       );
       assert.equal(denied.status, 400);
       assert.equal(denied.body.error, "registration_invite_invalid");
-      const token = `invite-${run}`,
-        digest = createHmac(
-          "sha256",
-          Buffer.from("fedcba9876543210fedcba9876543210"),
-        )
-          .update(`registration-invite:${token}`)
-          .digest("base64");
-      sql(
-        `insert into private.student_registration_invites(token_hmac,label,allowed_group_code,max_uses,expires_at)values('${digest}','e2e:${run}','${group}',1,now()+interval '1 hour')`,
+      const created = await invoke(
+        "admin_create_invite",
+        { label: `e2e:${run}`, group_code: group, max_uses: 1, expires_in_hours: 1 },
+        adminToken,
       );
+      assert.equal(created.status, 201, JSON.stringify(created.body));
+      const token = created.body.invite_token;
+      assert.match(token, /^yr-[a-z0-9_-]+$/i);
+      assert.ok(created.body.registration_url.includes(encodeURIComponent(token)));
+      assert.equal(created.body.group_code, group);
+      assert.equal(
+        sql(`select used_count from private.student_registration_invites where id='${created.body.invite_id}'`),
+        "0",
+      );
+      const adminOverview = await invoke("admin_list", {}, adminToken);
+      assert.equal(adminOverview.status, 200);
+      assert.ok(adminOverview.body.invites.some((i) => i.id === created.body.invite_id));
+      assert.equal(JSON.stringify(adminOverview.body).includes(token), false,
+        "issued token must never be re-exposed through admin_list");
       const body = form("+201012345590");
       body.registration_invite = token;
       assert.equal(
@@ -539,9 +548,11 @@ test("immediate registration and 48-hour review journey", async (t) => {
       `select public_ref from private.student_registration_requests where assigned_student_code='${code}'`,
     );
     for (const credential of [undefined, token]) {
-      for (const action of ["admin_list", "admin_decide"]) {
+      for (const action of ["admin_list", "admin_decide", "admin_create_invite"]) {
         const payload = action === "admin_decide"
           ? { reference, decision: "approved", reason: "unprivileged synthetic attempt" }
+          : action === "admin_create_invite"
+          ? { label: "unauthorized test", group_code: group, max_uses: 1 }
           : {};
         const result = await invoke(action, payload, credential);
         assert.equal(result.status, 403, `denial expected for ${action}`);
@@ -570,6 +581,13 @@ test("immediate registration and 48-hour review journey", async (t) => {
     );
     assert.equal(denied.status, 403);
     assert.equal(denied.body.error, "forbidden");
+    const deniedInvite = await invoke(
+      "admin_create_invite",
+      { label: "metadata-only attempt", group_code: group },
+      impostor.body.access_token,
+    );
+    assert.equal(deniedInvite.status, 403);
+    assert.equal(deniedInvite.body.error, "forbidden");
     assert.equal(
       sql(`select status from private.student_account_reviews where request_id=(select id from private.student_registration_requests where public_ref='${reference}')`),
       "pending_review",
