@@ -5,7 +5,7 @@ import http from "node:http";
 import path from "node:path";
 import {chromium} from "playwright";
 const dir=path.resolve(process.cwd(),"_site_identity");
-const mockSupabase=String.raw\`export function createClient(){return{
+const mockSupabase=String.raw`export function createClient(){return{
  auth:{getSession:async()=>({data:{session:{user:{id:'visual-demo',app_metadata:{role:'student'}}}}}),signOut:async()=>({error:null})},
  functions:{invoke:async(name,{body}={})=>{
   if(name==='student-identity'&&body?.action==='config')return{data:{ok:true,registration_enabled:true,profile_enforcement_enabled:true,profile_update_enabled:true}};
@@ -15,7 +15,7 @@ const mockSupabase=String.raw\`export function createClient(){return{
   if(name==='student-practice'&&body?.action==='history')return{data:{attempts:[]}};
   return{data:{ok:true}};
  }}
-}}\`;
+}}`;
 function serve(){
  return http.createServer((req,res)=>{
   const file=path.resolve(dir,decodeURIComponent(new URL(req.url,"http://127.0.0.1").pathname).slice(1)||"student.html");
