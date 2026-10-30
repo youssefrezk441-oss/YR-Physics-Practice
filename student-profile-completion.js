@@ -23,16 +23,28 @@ function locationMatch(g,place){
   return true;
 }
 function refreshGroups(desired){
- const select=get("group_code"),grade=get("grade_level").value,where=get("attendance_location").value;
+ const select=get("group_code"),grade=get("grade_level").value,where=get("attendance_location").value,
+  system=get("education_system").value;
  const choice=desired??select.value;
+ const isSecond=grade==="الصف الثاني الثانوي";
+ const regular=where==="ناهيا"||where==="كفر حكيم";
+ const mapped=isSecond&&regular&&["أزهري","بكالوريا","عام"].includes(system)
+   ? `${where==="ناهيا"?"N":"K"}2-${system==="أزهري"?"B":"A"}` : "";
  select.replaceChildren(new Option("اختر المجموعة",""));
- const filtered=groups.filter(g=>gradeMatch(g,grade)&&locationMatch(g,where));
+ const compatible=groups.filter(g=>gradeMatch(g,grade)&&locationMatch(g,where));
+ const filtered=isSecond&&regular&&!system ? []
+  : mapped ? compatible.filter(g=>g.group_code===mapped) : compatible;
  for(const g of filtered)select.add(new Option(g.group_code+(g.center_name?" — "+g.center_name:""),g.group_code));
  const currentGroup=clean(me?.profile?.group_code);
- if(currentGroup&&!filtered.some(g=>g.group_code===currentGroup))select.add(new Option(currentGroup+" — مجموعتك الحالية",currentGroup));
- if(choice&&[...select.options].some(o=>o.value===choice))select.value=choice;
+ if(!mapped && !(isSecond&&regular) && currentGroup&&!filtered.some(g=>g.group_code===currentGroup))
+   select.add(new Option(currentGroup+" — مجموعتك الحالية",currentGroup));
+ if(mapped&&filtered.length===1)select.value=mapped;
+ else if(choice&&[...select.options].some(o=>o.value===choice))select.value=choice;
  select.disabled=!grade||select.options.length===1;
- $("groupHint").textContent="تغيير الصف أو المجموعة يحتاج مراجعة الإدارة، ومش هيغيّر مجموعتك الحالية تلقائيًا.";
+ $("groupHint").textContent=isSecond&&regular&&!system
+  ? "اختر النظام التعليمي ليتم تحديد المجموعة تلقائيًا."
+  : mapped ? "تم تحديد المجموعة تلقائيًا. إذا كانت مختلفة عن مجموعتك الحالية، سيُرسل طلب تعديل للإدارة."
+  : "تغيير الصف أو المجموعة يحتاج مراجعة الإدارة، ومش هيغيّر مجموعتك الحالية تلقائيًا.";
 }
 function review(){
  const list=[
@@ -93,7 +105,7 @@ function prefill(result){
  $("profileLoading").classList.add("hidden");$("wizard").classList.remove("hidden");enabled=true;controls();
  if(result.pending_change)notice("فيه طلب تعديل بيانات قيد مراجعة الإدارة. تقدر تحدّث أرقام تواصلك حاليًا.");
 }
-for(const name of ["grade_level","attendance_location"]){get(name).addEventListener("change",()=>refreshGroups())}
+for(const name of ["grade_level","attendance_location","education_system"]){get(name).addEventListener("change",()=>refreshGroups())}
 for(const input of form.querySelectorAll("input,select"))input.addEventListener("input",()=>input.setCustomValidity?.(""));
 $("changePassword").addEventListener("change",()=>{const yes=$("changePassword").checked;
  $("passwordChangeFields").classList.toggle("hidden",!yes);
