@@ -145,11 +145,28 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 .studentReviewImageGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.studentReviewImage{border:1px solid #e4e7ec;border-radius:12px;overflow:hidden;background:#fff}.studentReviewImage img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff}.studentReviewImageMeta{padding:7px 9px;font-size:10px;color:#667085}.studentReviewImage a{display:block}@media(max-width:650px){.studentReviewImageGrid{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="student-internal-identity-v1.css">
+<link rel="stylesheet" href="student-workspace-navigation-v1.css">
 </head>
 <body class="yrStudentApp"><div class="wrap">
 <div class="top yrInternalTop"><div class="brand yrInternalBrand">
 <img src="assets/yr-mastery-mark.svg" alt="شعار YR Physics Practice" width="48" height="48" decoding="async">
 <div class="yrInternalBrandCopy"><h1>YR Physics Practice</h1><p>من الفهم إلى الإتقان · مستر يوسف رزق</p></div></div><div class="topActions"><button id="themeBtn" class="btn secondary themeBtn" type="button" title="تغيير المظهر">🌓 تلقائي</button><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div></div>
+<div class="yrWorkspaceLayout" id="yrWorkspaceLayout">
+<aside class="yrWorkspaceSidebar" aria-label="التنقل الأساسي">
+  <div class="yrNavGroupLabel">مساحة التعلّم</div>
+  <nav class="yrWorkspaceLinks" aria-label="القائمة الرئيسية">
+    <button type="button" data-yr-go="home" aria-current="page"><span class="yrNavIcon">⌂</span><span>مساحتي</span></button>
+    <button type="button" data-yr-go="learning"><span class="yrNavIcon">▤</span><span>التعلّم</span></button>
+    <button type="button" data-yr-go="review"><span class="yrNavIcon">◎</span><span>مراجعتي</span></button>
+    <button type="button" data-yr-go="achievements"><span class="yrNavIcon">☆</span><span>الإنجازات</span></button>
+  </nav>
+  <div class="yrNavGroupLabel yrNavAccountLabel">إعدادات الحساب</div>
+  <nav class="yrWorkspaceLinks" aria-label="الحساب">
+    <button type="button" data-yr-go="account"><span class="yrNavIcon">♙</span><span>حسابي</span></button>
+  </nav>
+  <div class="yrSidebarFoot"><strong>YR Physics Practice</strong><span>من الفهم إلى الإتقان</span></div>
+</aside>
+<main id="yrWorkspaceContent" class="yrWorkspaceContent">
 <div id="msg"></div>
 <section id="loginView" class="loginStage hidden">
 <div class="loginBrandBar"><span class="platform">منصة <strong>الفيزياء</strong></span><span class="divider"></span><span class="teacher">مستر يوسف رزق</span></div>
@@ -257,6 +274,58 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 </section>
 <section id="resultView" class="hidden"><div class="card"><div id="resultPercent" class="resultNum">0%</div><div id="resultCaption" class="resultCaption"></div><div id="resultDetails" style="margin-top:18px"></div><button id="backDashboardBtn" class="btn primary full" style="margin-top:14px">العودة للتدريبات</button></div></section>
 <section id="reviewView" class="hidden"><div class="card"><div class="toolbar" style="justify-content:space-between"><div><h2 id="reviewTitle" style="margin:0;font-size:20px">تصحيح المحاولة</h2><div id="reviewSummary" class="small muted" style="margin-top:5px"></div></div><button id="backReviewBtn" class="btn secondary">العودة</button></div><div id="reviewDetails" style="margin-top:16px"></div></div></section>
+
+<section id="yrLearnView" class="hidden yrWorkspacePage">
+ <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">منهجك منظّم على فصول</span><h2>التعلّم</h2><p>اختار الفصل، وبعدها الورشة أو التدريب المتاح لحسابك.</p></div>
+ <div class="yrChapterTabs" role="tablist" aria-label="اختر الفصل للتعلّم">
+   <button type="button" role="tab" data-yr-chapter="1" data-yr-panel="learning" aria-selected="true">الفصل الأول</button>
+   <button type="button" role="tab" data-yr-chapter="2" data-yr-panel="learning" aria-selected="false">الفصل الثاني</button>
+ </div>
+ <div id="yrLearningContent" class="yrWorkspaceItems" aria-live="polite"></div>
+ <div class="yrWorkspaceBottom"><button type="button" class="btn secondary" data-yr-go="home">العودة لمساحتي</button></div>
+</section>
+<section id="yrReviewView" class="hidden yrWorkspacePage">
+ <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">من الغلطة للإتقان</span><h2>مراجعتي</h2><p>أخطاء كل فصل في مكان مستقل؛ المحتوى يظهر فقط لما يكون متاحًا لحسابك.</p></div>
+ <div class="yrChapterTabs" role="tablist" aria-label="اختر الفصل للمراجعة">
+   <button type="button" role="tab" data-yr-chapter="1" data-yr-panel="review" aria-selected="true">الفصل الأول</button>
+   <button type="button" role="tab" data-yr-chapter="2" data-yr-panel="review" aria-selected="false">الفصل الثاني</button>
+ </div>
+ <div id="yrReviewContent" class="yrWorkspaceItems" aria-live="polite"></div>
+ <div class="yrWorkspaceBottom"><button type="button" class="btn secondary" data-yr-go="home">العودة لمساحتي</button></div>
+</section>
+<section id="yrAchievementsView" class="hidden yrWorkspacePage">
+ <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">رحلة التميّز</span><h2>الإنجازات</h2><p>اللوحة الحالية متاحة كما هي؛ إصدار لوحة الشرف الخاص بكل فصل يُنشر بصورة مستقلة.</p></div>
+ <div id="yrAchievementCurrent" class="yrWorkspaceItems"></div>
+ <div class="yrArchiveHeading">إصدارات الفصول</div>
+ <div class="yrArchiveGrid">
+   <div class="yrArchiveItem"><strong>الفصل الأول</strong><span>نسخة الفصل الخاصة به لم تُربط هنا بعد.</span></div>
+   <div class="yrArchiveItem"><strong>الفصل الثاني</strong><span>تُعرض لوحته بعد اعتمادها ونشرها.</span></div>
+ </div>
+</section>
+<section id="yrAccountView" class="hidden yrWorkspacePage">
+ <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">بياناتك وإعداداتك</span><h2>حسابي</h2><p>راجع بياناتك وحدث كلمة المرور من الصفحة الرسمية لحسابك.</p></div>
+ <div class="yrWorkspaceItems">
+  <a class="yrWorkspaceItem" href="student-complete-profile.html"><span class="yrWorkspaceItemIcon">✎</span><span><strong>تحديث بياناتي وكلمة المرور</strong><small>البيانات والموافقة الإدارية تظل خاضعة لنظام المنصة الحالي.</small></span><span aria-hidden="true">‹</span></a>
+  <button type="button" class="yrWorkspaceItem" data-yr-action="theme"><span class="yrWorkspaceItemIcon">◐</span><span><strong>تغيير المظهر</strong><small>فاتح أو داكن أو تلقائي.</small></span><span aria-hidden="true">‹</span></button>
+  <button type="button" class="yrWorkspaceItem" data-yr-action="logout"><span class="yrWorkspaceItemIcon">↪</span><span><strong>تسجيل الخروج</strong><small>إنهاء جلستك على هذا الجهاز.</small></span><span aria-hidden="true">‹</span></button>
+ </div>
+</section>
+</main>
+</div>
+<nav class="yrMobileNav" aria-label="التنقل السريع">
+ <button type="button" data-yr-go="home" aria-current="page"><span>⌂</span><small>مساحتي</small></button>
+ <button type="button" data-yr-go="learning"><span>▤</span><small>التعلّم</small></button>
+ <button type="button" data-yr-go="review"><span>◎</span><small>مراجعتي</small></button>
+ <button type="button" data-yr-go="more" aria-expanded="false"><span>☰</span><small>المزيد</small></button>
+</nav>
+<div id="yrMobileMore" class="yrMobileMore hidden">
+ <div class="yrMoreBackdrop" data-yr-action="close-more"></div>
+ <div class="yrMoreSheet" role="dialog" aria-modal="true" aria-label="المزيد">
+  <div class="yrMoreHead"><b>المزيد</b><button type="button" data-yr-action="close-more" aria-label="إغلاق القائمة">×</button></div>
+  <button type="button" data-yr-go="achievements">☆ الإنجازات</button>
+  <button type="button" data-yr-go="account">♙ حسابي</button>
+ </div>
+</div>
 <footer class="yrInternalFooter" aria-label="تذييل المنصة"><span>YR Physics Practice · رحلة منظّمة من الفهم إلى الإتقان</span><b>مستر يوسف رزق</b></footer>
 </div>
 <script type="module">
@@ -288,7 +357,7 @@ function findFractionRanges(raw){const ranges=[];for(let i=0;i<raw.length;i++){i
 function fractionMarkup(text){const raw=String(text??''),ranges=findFractionRanges(raw);if(!ranges.length)return null;let out='',last=0;for(const f of ranges){out+=esc(raw.slice(last,f.start));const numHtml=fractionMarkup(f.num)??esc(f.num),denHtml=fractionMarkup(f.den)??esc(f.den);out+='<span class="stackedFraction" aria-label="'+esc(f.num+' على '+f.den)+'"><span class="fracNum">'+numHtml+'</span><span class="fracDen">'+denHtml+'</span></span>';last=f.end}out+=esc(raw.slice(last));return out}
 function upgradeFractions(root=document){const nodes=[];if(root&&root.nodeType===1&&root.matches&&root.matches('.formula-inline,.formula-long'))nodes.push(root);if(root&&root.querySelectorAll)nodes.push(...root.querySelectorAll('.formula-inline,.formula-long'));for(const el of nodes){if(el.dataset.fractionsDone==='1'||!el.textContent.includes('/'))continue;const html=fractionMarkup(el.textContent);el.dataset.fractionsDone='1';if(html!==null)el.innerHTML=html}}
 const fractionObserver=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)upgradeFractions(n)});fractionObserver.observe($('questionBox'),{childList:true,subtree:true});fractionObserver.observe($('resultDetails'),{childList:true,subtree:true});queueMicrotask(()=>upgradeFractions(document));
-function emailForCode(c){return c.trim().toLowerCase().replace(/\s+/g,'')+'@students.yrphysicspractice.com'}function showMsg(t,type='err'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(t)+'</div>'}function clearMsg(){$('msg').innerHTML=''}const STUDENT_VIEWS=['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','assessmentCycleView','honorView','comingSoonView','practiceView','resultView','reviewView'];function showOnly(id){STUDENT_VIEWS.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'smooth'})}
+function emailForCode(c){return c.trim().toLowerCase().replace(/\s+/g,'')+'@students.yrphysicspractice.com'}function showMsg(t,type='err'){$('msg').innerHTML='<div class="msg '+type+'">'+esc(t)+'</div>'}function clearMsg(){$('msg').innerHTML=''}const STUDENT_VIEWS=['loginView','dashboardView','trainingMenuView','indicatorsMenuView','availableTrainingsView','completedTrainingsView','platformIndicatorsView','commitmentView','classTestsView','assessmentCycleView','honorView','comingSoonView','practiceView','resultView','reviewView'];function showOnly(id){STUDENT_VIEWS.forEach(x=>$(x).classList.toggle('hidden',x!==id));document.dispatchEvent(new CustomEvent('yr:student-view',{detail:{id}}));window.scrollTo({top:0,behavior:'smooth'})}STUDENT_VIEWS.push('yrLearnView','yrReviewView','yrAchievementsView','yrAccountView');window.yrWorkspaceShowOnly=showOnly;
 async function fn(body){const{data,error}=await sb.functions.invoke('student-practice',{body});if(error){let message=error.message||'تعذر الاتصال';try{if(error.context&&typeof error.context.json==='function'){const payload=await error.context.json();message=payload?.message||payload?.error||message}}catch{}throw new Error(message)}if(data?.error)throw new Error(data.message||data.error);return data}
 async function commitmentFn(){const{data,error}=await sb.functions.invoke('student-commitment',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل مؤشر الالتزام');if(data?.error)throw new Error(data.message||data.error);return data}
 async function classTestsFn(){const{data,error}=await sb.functions.invoke('student-class-tests',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل اختبارات الحصص');if(data?.error)throw new Error(data.message||data.error);return data}
@@ -476,4 +545,4 @@ async function checkProfileOnReturn(){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkProfileOnReturn()});
 window.addEventListener('focus',()=>void checkProfileOnReturn());
 window.addEventListener('pageshow',e=>{if(e.persisted)void checkProfileOnReturn()});
-</script><script type="module" src="./student-account-shell.js"></script></body></html>
+</script><script type="module" src="./student-account-shell.js"></script><script type="module" src="./student-workspace-navigation-v1.js"></script></body></html>
