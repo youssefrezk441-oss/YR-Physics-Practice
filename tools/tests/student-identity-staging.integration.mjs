@@ -499,6 +499,17 @@ test("immediate registration and 48-hour review journey", async (t) => {
       );
     },
   );
+  flags({ registration_rollout_scope: "all" });
+  await t.test("general public signup remains unavailable without genuine Turnstile keys", async () => {
+    const config = await invoke("config");
+    assert.equal(config.status, 200);
+    assert.equal(config.body.captcha_required, true);
+    assert.equal(config.body.captcha_ready, false);
+    assert.equal(config.body.registration_enabled, false);
+    const denied = await invoke("submit_registration", form("+201012345598"), undefined, "198.51.73.98");
+    assert.equal(denied.status, 503);
+    assert.equal(denied.body.error, "registration_unavailable");
+  });
   flags({ registration_rollout_scope: "staging" });
   await t.test("registration rate limiting returns 429 on the sixth same-IP attempt", async () => {
     const parts = crypto.getRandomValues(new Uint8Array(2));
