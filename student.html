@@ -12,7 +12,7 @@
 (async()=>{
   // Guests start at the shared login/register portal; authenticated students keep the existing learning app.
   // If the auth library is unavailable, fall back to the existing legacy login instead of blocking access.
-  if(new URLSearchParams(location.search).get('legacy_login')!=='1'){
+  if(typeof location!=='undefined' && !/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'')){
     try{
       const {sb}=await import('./student-identity-api.js');
       const {data:{session}}=await sb.auth.getSession();
