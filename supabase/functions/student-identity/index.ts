@@ -913,7 +913,7 @@ Deno.serve(async (req) => {
       return out(req, { ok: true, message: "تم تغيير كلمة المرور." });
     }
     if (action.startsWith("admin_")) {
-      const a = await adminUser(req, action !== "admin_list");
+      const a = await adminUser(req, !["admin_list", "admin_profile_changes"].includes(action));
       if (!a) return out(req, { error: "forbidden" }, 403);
       if (action === "admin_create_invite") {
         const groupCode = txt(body.group_code, 80),
