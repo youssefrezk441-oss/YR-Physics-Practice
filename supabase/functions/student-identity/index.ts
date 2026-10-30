@@ -91,6 +91,14 @@ async function hmac(value: string) {
   );
   return b64(await crypto.subtle.sign("HMAC", k, enc.encode(value)));
 }
+function cryptoReady(): boolean {
+  try {
+    return HMAC !== ENC && unb64(HMAC).byteLength === 32 &&
+      unb64(ENC).byteLength === 32;
+  } catch {
+    return false;
+  }
+}
 async function encrypt(value: string) {
   if (!ENC) throw new Error("identity_keys_unavailable");
   const iv = crypto.getRandomValues(new Uint8Array(12)),
@@ -217,7 +225,8 @@ Deno.serve(async (req) => {
           : [];
       return out(req, {
         ok: true,
-        registration_enabled: cfg.registration_enabled &&
+        service_ready: cryptoReady(),
+        registration_enabled: cryptoReady() && cfg.registration_enabled &&
           cfg.immediate_registration_enabled &&
           scopeAllowed &&
           (cfg.registration_rollout_scope !== "all" ||
@@ -241,8 +250,8 @@ Deno.serve(async (req) => {
         cfg.registration_rollout_scope === "all" ||
         (cfg.registration_rollout_scope === "staging" && !IS_PRODUCTION);
       if (
-        !cfg.registration_enabled || !cfg.immediate_registration_enabled ||
-        !scopeAllowed
+        !cryptoReady() || !cfg.registration_enabled ||
+        !cfg.immediate_registration_enabled || !scopeAllowed
       ) {
         return out(req, {
           error: "registration_unavailable",
