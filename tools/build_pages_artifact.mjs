@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
 import { dirname, relative, resolve, sep } from 'node:path';
 
 const root = resolve(process.cwd());
@@ -69,4 +70,30 @@ if (readdirSync(output).some((name) => name.startsWith('STUDENT_IDENTITY_'))) {
   throw new Error('Internal student identity documentation must not be present in the Pages artifact.');
 }
 
-console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.`);
+// Build the complete student dashboard at publish time instead of assembling it via
+// a second HTTP fetch at login. Rendering uses an isolated mock document and never
+// contacts Supabase or reads real student data.
+const loaderSource = readFileSync(resolve(root, 'student.html'), 'utf8');
+const studentBase = readFileSync(resolve(root, 'student-base.html'), 'utf8');
+const loaderScript = loaderSource.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
+if (!loaderScript) throw new Error('Student page loader is missing');
+let renderedStudentHtml = '';
+const mockBoot = { set outerHTML(value) { throw new Error('Student page rendering failed: ' + String(value)); } };
+await runInNewContext(loaderScript, {
+  fetch: async () => ({ text: async () => studentBase }),
+  document: {
+    open() { renderedStudentHtml = ''; },
+    write(value) { renderedStudentHtml += String(value); },
+    close() {},
+    getElementById(id) { if (id !== 'boot') throw new Error('Unexpected boot lookup: ' + id); return mockBoot; },
+  },
+}, { timeout: 10000 });
+if (!renderedStudentHtml.includes('id="dashboardView"') ||
+    !renderedStudentHtml.includes('id="loginView" class="loginStage hidden"') ||
+    renderedStudentHtml.includes('yrStudentBoot') ||
+    renderedStudentHtml.includes('جاري فتح المنصة')) {
+  throw new Error('Compiled student page does not satisfy the no-splash contract');
+}
+writeFileSync(resolve(output, 'student.html'), renderedStudentHtml, 'utf8');
+
+console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.; compiled student dashboard rendered directly.`);
