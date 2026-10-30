@@ -512,8 +512,12 @@ function historyStatusLabel(s){return s==='graded'?'تم التصحيح':s==='su
 let selectedHistoryChapter='1';
 function renderHistory(){
  const groups=splitHistoryByChapter(history,sets);
- const keys=historyChapterOptions(groups);
- if(!keys.includes(selectedHistoryChapter))selectedHistoryChapter='1';
+ const secondGrade=gradeLabel(profile?.grade_level)==='الصف الثاني الثانوي';
+ // Grade-2 activities have no approved chapter mapping yet. Do not offer
+ // misleading chapter-one/chapter-two tabs or imply that unknown means missing data.
+ const keys=secondGrade?['all',...(groups.has('foundation')?['foundation']:[]),
+  ...(groups.has('unknown')?['unknown']:[])]:historyChapterOptions(groups);
+ if(!keys.includes(selectedHistoryChapter))selectedHistoryChapter=secondGrade?'all':'1';
  const list=$('historyList');
  let selector=$('yrHistoryChapterFilter');
  if(!selector){
@@ -533,7 +537,8 @@ function renderHistory(){
  }));
  let note=$('yrHistoryLimitNote');
  if(!note){note=document.createElement('p');note.id='yrHistoryLimitNote';note.className='small muted';selector.after(note)}
- note.textContent='هذا السجل يعرض أحدث 100 محاولة يرجعها النظام على الأكثر؛ المحاولات الأقدم قد لا تظهر هنا.';
+ note.textContent=(secondGrade?'تدريبات الصف الثاني غير مرتبطة بفصول حاليًا؛ تظهر ضمن «كل المحاولات» أو «غير مصنف». ':'')+
+  'هذا السجل يعرض أحدث 100 محاولة يرجعها النظام على الأكثر؛ المحاولات الأقدم قد لا تظهر هنا.';
  const completed=selectedHistoryChapter==='all'
   ?history.filter(h=>h.status!=='in_progress')
   :(groups.get(selectedHistoryChapter)||[]);
