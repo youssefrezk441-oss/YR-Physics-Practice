@@ -23,7 +23,7 @@ function server() {
       "Content-Type",
       file.endsWith(".html")
         ? "text/html; charset=utf-8"
-        : file.endsWith(".js")
+        : (file.endsWith(".js") || file.endsWith(".mjs"))
           ? "text/javascript; charset=utf-8"
           : file.endsWith(".css")
             ? "text/css"
