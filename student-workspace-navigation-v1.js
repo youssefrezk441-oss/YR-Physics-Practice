@@ -8,7 +8,7 @@ const availableSources=[
  "openFirstTermWorkshops","openSecondTermWorkshops",
  "openLecture3Workshop","openLecture4Workshop","openLecture5Workshop","openLecture6Workshop",
  "openUnifiedL1Workshop","openLecture1Homework","openChapterMistakes","openCh2Mistakes",
- "openB2Lesson1Workshop","openB2Lesson2Workshop","openChapterTrainings",
+ "openB2Lesson1Workshop","openB2Lesson2Workshop","openB2Lesson1Trainings","openChapterTrainings",
  "openFoundationTrainings","openCompleted","openHonor","openIndicators","openReferences"
 ];
 let lastArea="home",moreOpen=false,refreshQueued=false;
@@ -67,8 +67,29 @@ function displayChapterTabs(area){
 function refreshLearning(){
  const box=$("yrLearningContent");if(!box)return;
  box.replaceChildren();
+ const second=canSecondGrade(),third=canThirdGrade();
+ $("yrLearnView")?.querySelector(".yrChapterTabs")?.classList.toggle("hidden",second);
+ const heading=$("yrLearnView")?.querySelector(".yrWorkspacePageHead p");
+ if(heading)heading.textContent=second
+  ?"أنشطة الصف الثاني الثانوي المتاحة لك؛ تصنيفها إلى فصول مؤجل حاليًا."
+  :"اختار الفصل، وبعدها الورشة أو التدريب المتاح لحسابك.";
  const ch=chapters.learning;
  let found=0;
+ if(second){
+  found+=collect(box,"ورش ودروس الصف الثاني",[
+   ["openB2Lesson1Workshop",null,null,"▤"],
+   ["openB2Lesson2Workshop",null,null,"▤"],
+   ["openB2Lesson1Trainings","تدريبات الدرس الأول",null,"▤"]
+  ]);
+  found+=collect(box,"مراجع الشرح",[
+   ["openReferences","مراجع شرح الحصص","المراجع المتاحة لهذا الحساب.","📖"]
+  ]);
+  if(!found)box.append(empty("لا توجد أنشطة منشورة ومتاحة لحسابك حاليًا."));
+ }else if(!third){
+  box.append(empty("جاري تحديد الصف الدراسي والأنشطة المتاحة لحسابك."));
+  return;
+ }
+ if(!second){
  if(ch==="1"){
   if(canThirdGrade()){
    found+=collect(box,"ورش الفصل الأول",[
@@ -84,12 +105,10 @@ function refreshLearning(){
     ["openChapterTrainings",null,null,"▤"]
    ]);
   }
- }else{
+ }else if(third){
   found+=collect(box,"ورش الفصل الثاني",[
    ["openUnifiedL1Workshop",null,null,"⚡"],
-   ["openLecture1Homework",null,null,"▤"],
-   ["openB2Lesson1Workshop",null,null,"▤"],
-   ["openB2Lesson2Workshop",null,null,"▤"]
+   ["openLecture1Homework",null,null,"▤"]
   ]);
   if(!found && source("openSecondTermWorkshops")){
    found+=collect(box,"الفصل الثاني",[
@@ -97,7 +116,7 @@ function refreshLearning(){
    ]);
   }
  }
- if((ch==="1"&&canThirdGrade())||(ch==="2"&&canSecondGrade())){
+ if(ch==="1"&&third){
   found+=collect(box,"مرجع الشرح",[
    ["openReferences","مراجع شرح الحصص","افتح المرجع المتاح لصفك من المصادر المنشورة بالفعل.","📖"]
   ]);
@@ -109,12 +128,13 @@ function refreshLearning(){
   note.textContent="تدريبات الكورس التأسيسي موجودة داخل قائمة تدريبات المنصة، وليست ضمن الفصل الأول.";
   box.append(note);
  }
+ } // Grade-2 activities deliberately remain separate from grade-3 chapter assignments.
  const all=document.createElement("div");all.className="yrWorkspaceCommon";
  const openMenu=document.createElement("button");openMenu.type="button";openMenu.className="btn secondary";
  openMenu.textContent="تدريبات المنصة الأخرى";openMenu.addEventListener("click",()=>source("openTrainings")?.click());
  const history=document.createElement("button");history.type="button";history.className="btn secondary";
- history.textContent="محاولاتي المكتملة — "+(chapters.learning==="1"?"الفصل الأول":chapters.learning==="2"?"الفصل الثاني":"الفصل "+chapters.learning);history.addEventListener("click",()=>{
-  document.dispatchEvent(new CustomEvent("yr:history-chapter",{detail:{chapter:chapters.learning}}));
+ history.textContent=second?"محاولاتي المكتملة — كل الأنشطة":"محاولاتي المكتملة — "+(chapters.learning==="1"?"الفصل الأول":chapters.learning==="2"?"الفصل الثاني":"الفصل "+chapters.learning);history.addEventListener("click",()=>{
+  document.dispatchEvent(new CustomEvent("yr:history-chapter",{detail:{chapter:second?"all":chapters.learning}}));
   source("openCompleted")?.click();
  });
  all.append(openMenu,history);box.append(all);
@@ -123,6 +143,12 @@ function refreshLearning(){
 function refreshReview(){
  const box=$("yrReviewContent");if(!box)return;
  box.replaceChildren();
+ const second=canSecondGrade();
+ $("yrReviewView")?.querySelector(".yrChapterTabs")?.classList.toggle("hidden",second);
+ if(second){
+  box.append(empty("مراجعة أخطاء الصف الثاني بحسب الفصل غير مفعّلة حاليًا. سجلاتك الأصلية محفوظة، ويمكنك الرجوع للتدريبات من قسم التعلّم."));
+  return;
+ }
  const which=chapters.review==="1"?"openChapterMistakes":"openCh2Mistakes";
  const where=chapters.review==="1"?"الأول":"الثاني";
  const n=collect(box,"مراجعة أخطاء الفصل "+where,[
