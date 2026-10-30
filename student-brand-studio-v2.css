@@ -1,0 +1,106 @@
+/* YR Physics Practice — Studio identity v2.
+   Matches the approved journey visual direction while retaining all auth form logic. */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap');
+:root{--studio-green:#075643;--studio-dark:#133c32;--studio-teal:#087659;--studio-gold:#da9d3a;--studio-paper:#f9f8f2;--studio-ink:#132d29;--studio-muted:#687870;--studio-line:#dbe5db;--deep:#075643;--blue:#21425b;--teal:#168a68;--gold:#d49a3a;--ink:#203530;--muted:#667973;--line:#dce7df;--light:#f8f7f2}
+body{font-family:"Tajawal",Tahoma,Arial,sans-serif;font-size:15px;color:var(--studio-ink);background:#edf0e9}
+.authPage{min-height:100dvh;padding:28px;display:grid;place-items:center}
+.authShell{width:min(1260px,100%);min-height:790px;display:grid;grid-template-columns:1.05fr .95fr;direction:rtl;background:#fff;border:1px solid #e2e8e1;border-radius:26px;overflow:hidden;box-shadow:0 30px 90px #102b1f26}
+.contentPanel{background:#fff;min-width:0;display:flex;flex-direction:column;order:1}
+.journeyVisual{order:2;min-width:0;overflow:hidden;position:relative;isolation:isolate;display:flex;flex-direction:column;background:linear-gradient(155deg,#f9f8f2 0%,#ecefe4 60%,#d6e8dd 100%);padding:34px 35px 28px;border-right:1px solid #e5e9e2;color:var(--studio-dark)}
+.journeyVisual:before{position:absolute;z-index:-1;content:"";inset:0;background:radial-gradient(ellipse at 14% 49%,#ffffffb8 0%,transparent 56%),linear-gradient(110deg,#fff0 0%,#badac367 95%)}
+.journeyVisual:after{position:absolute;content:"";height:300px;width:300px;right:-140px;bottom:150px;border:1px solid #296b5830;border-radius:50%;box-shadow:0 0 0 55px #22705a10,0 0 0 106px #1b665b0b;pointer-events:none}
+.journeyTop{display:flex;justify-content:space-between;align-items:center;gap:8px;position:relative;z-index:3}
+.journeyLogo{display:flex;gap:8px;align-items:center;direction:ltr}
+.logoIcon{position:relative;color:var(--studio-green);font:900 35px Arial,sans-serif;letter-spacing:-4px}
+.arrowTip{position:absolute;font-size:25px;right:-10px;top:-15px;color:var(--studio-gold)}
+.journeyLogo strong{font:900 15px Arial,sans-serif;letter-spacing:1.3px;color:#133a30}
+.journeyLogo strong span{color:var(--studio-teal)}
+.journeyLogo small{display:block;font:700 10px Arial,sans-serif;letter-spacing:3.5px;color:#7d8a80;margin-top:5px}
+.teacherMini{border:1px solid #b5d4c5;border-radius:40px;color:#145544;background:#fff9;font-size:11px;font-weight:800;padding:9px 11px}
+.heroContent{margin-top:68px;z-index:2;position:relative;max-width:510px}
+.scienceEyebrow{color:#12634f;font-size:14px;font-weight:800}
+.eyebrowDash{display:inline-block;width:22px;height:3px;background:var(--studio-gold);vertical-align:middle;margin-left:7px}
+.heroContent h1{font-size:clamp(34px,3.15vw,47px);line-height:1.45;letter-spacing:-1.8px;margin:14px 0;font-weight:900;color:#133c32}
+.heroContent h1 em{font-style:normal;color:#087659;white-space:nowrap}
+.heroContent p{font-size:15px;max-width:360px;line-height:1.9;margin:0;color:#536a5f;font-weight:600}
+.photoStage{position:relative;height:315px;flex:1;min-height:235px;margin-top:-16px;display:flex;align-items:flex-end;justify-content:flex-end;isolation:isolate}
+.photoHalo{position:absolute;width:340px;height:340px;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#bbd5c777,#86ae9b33);right:-10px;bottom:-35px;filter:blur(.2px);z-index:-1}
+.photoStage img{object-fit:cover;object-position:center top;width:285px;height:325px;border-radius:47% 47% 0 0;mix-blend-mode:multiply;mask-image:linear-gradient(to bottom,#000 80%,transparent);position:relative;right:35px;filter:drop-shadow(0 15px 25px #142a2633)}
+.teacherNameBadge{position:absolute;left:22px;bottom:26px;display:grid;gap:4px;background:#fffefbf5;border:1px solid #e5e7dd;border-right:4px solid var(--studio-gold);box-shadow:0 12px 36px #0a3d2a23;border-radius:12px;padding:12px 19px;z-index:3}
+.teacherNameBadge span{font-size:12px;color:#687b6e}
+.teacherNameBadge strong{font-size:20px;color:#0d5a45;font-weight:900}
+.glowBadge{position:absolute;right:12px;top:40px;background:#0b6850;color:#fff;font-size:11px;border-radius:40px;padding:9px 14px;box-shadow:0 8px 30px #0b685035}
+.scienceSketch{position:absolute;z-index:0;top:45%;left:0;width:340px;opacity:.2;pointer-events:none}
+.progressSection{position:relative;z-index:2;background:#fffdf7c9;backdrop-filter:blur(8px);padding:18px 17px 13px;border:1px solid #d8e3d4;border-radius:15px;margin-top:13px}
+.journeyProgressText{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:#1b5441}
+.journeyProgressText span:last-child{font-weight:600;color:#879486}
+.progressPath{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:11px}
+.progressDot{text-align:center;display:grid;justify-items:center;gap:5px}
+.progressDot b{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#e9f2e9;border:1px solid #cadccd;color:#1a7860;font:700 11px Arial,sans-serif}
+.progressDot.gold b{background:#e8b553;color:#573d14;border-color:#dca946}
+.progressDot span{font-weight:800;color:#375f51;font-size:12px}
+.progressConnector{height:2px;background:#afcaba;flex:1;margin-top:-18px}
+.contentTop{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:36px 47px 0}
+.brandSmall{color:#105d48;font:900 14px Arial,sans-serif;letter-spacing:1px}
+.brandSmall span{color:#c58e3b}
+.secureIndicator{font-weight:700;font-size:12px;color:#6c8578}
+.secureIndicator:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#15a57d;margin-left:8px;box-shadow:none}
+.contentBody{padding:62px 63px 38px;max-width:600px;width:100%;margin:auto;flex:1}
+.stepHeader{font-size:12px;color:#138165;font-weight:900}
+.stepNumber{display:inline-grid;width:26px;height:26px;place-items:center;border-radius:7px;background:#e7f5ef;margin-left:7px;font:700 12px Arial,sans-serif}
+.welcomeIntro h2{margin:17px 0 3px;font-size:35px;line-height:1.45;color:#17382e;font-weight:900}
+.smile{color:#e9b34f;font-size:22px}
+.welcomeIntro>p{color:#71817b;font-size:14px;line-height:1.8;margin:0 0 29px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#f5f7f4;border:1px solid #e4eae4;padding:5px;border-radius:12px;margin:0 0 29px;gap:5px}
+.tab{border:0;background:transparent;color:#718077;border-radius:9px;padding:13px 7px;font-size:15px;font-weight:800;min-height:44px}
+.tab[aria-selected=true]{background:#fff;color:#0d7055;box-shadow:0 2px 11px #0d50351c}
+.view{padding:0;flex:initial}
+.formEyebrow{display:none}
+.formTitle{font-size:20px;font-weight:900;color:#185b46;margin:0 0 4px}
+.formDescription{color:#71817b;font-size:13px;line-height:1.75;margin:0 0 23px}
+.formRow{display:grid;gap:9px;margin:0 0 20px}
+.formRow label,.accountField label{font-size:14px;color:#285141;font-weight:800}
+.formRow input,.accountField input:not([type=checkbox]),.accountField select{min-height:51px;background:#fff;border:1px solid #d8e2db;border-radius:11px;color:#244135;font-size:14px;padding:12px 15px}
+.formRow input:focus,.accountField input:focus,.accountField select:focus{border-color:#128568;box-shadow:0 0 0 3px #12926d15;outline:none}
+.formRow input::placeholder,.accountField input::placeholder{color:#a5b1a7}
+.formRow input[dir=ltr]{text-align:right}
+.formRow input[dir=ltr]:focus{text-align:left}
+.passwordLine{gap:8px}
+.passwordLine input{min-width:0;flex:1}
+.primaryButton,.accountBtn:not(.secondary){background:linear-gradient(110deg,#0c634e,#088263);color:white;border:1px solid #08745b;border-radius:11px;font-size:15px;font-weight:900;min-height:53px}
+.primaryButton{width:100%;box-shadow:0 8px 21px #07846123}
+.primaryButton:hover,.accountBtn:not(.secondary):not(:disabled):hover{background:#07543f;border-color:#07543f}
+.accountBtn.secondary,.toggle{border:1px solid #d8e2db;background:#f7faf7;color:#2b634e}
+.loginHelp{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#8b998e;margin:0 0 24px}
+.loginHelp a,.formFooter a,.helpBar a,.privacyLabel a{color:#087858;font-weight:800}
+.formFooter{text-align:center;font-size:13px;color:#77867b;margin:24px 0 29px}
+.formSeparator{display:flex;gap:12px;align-items:center;justify-content:center;font-size:12px;color:#9aa69c;margin-bottom:18px}
+.formSeparator span{height:1px;background:#e3eae5;flex:1}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.features>div{background:#f7faf7;border:1px solid #e8eee8;border-radius:12px;padding:15px 6px;display:grid;justify-items:center;gap:7px;text-align:center}
+.featureIcon{font-size:23px;color:#17846b}
+.features strong{font-size:12px;color:#315548}
+.features small{font-size:11px;color:#8a9b8d}
+.contentFooter{padding:17px 24px;border-top:1px solid #eef1eb;text-align:center;color:#8b988f;font-size:11px}
+.contentFooter span{color:#d2a64c;margin:0 4px}
+.accountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.panelTitle{font-size:21px;color:#0d6049}
+.panelIntro{font-size:13px}
+.stepItem.active .stepCircle{background:#0e7056;border-color:#0e7056}
+.stepItem.done .stepCircle{background:#e4f5eb;color:#13694e;border-color:#c9e5d4}
+.accountField input[type=checkbox]{accent-color:#087858}
+.receipt h2{color:#0d7055}
+.receipt .successCode{background:#f4faf4;border-color:#dae9dc;color:#0d7055}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e3b761;outline-offset:3px}
+@media(max-width:1050px){.authShell{grid-template-columns:1fr 1fr}.journeyVisual{padding:26px 22px}.heroContent{margin-top:55px}.heroContent h1{font-size:33px}.heroContent p{font-size:13px}.photoStage img{width:244px;height:290px;right:10px}.contentBody{padding:50px 31px 30px}.contentTop{padding:27px 28px 0}}
+@media(max-width:730px){
+body{background:#fff}.authPage{padding:0;display:block}.authShell{display:flex;flex-direction:column;min-height:100dvh;border:0;border-radius:0;box-shadow:none}
+.journeyVisual{order:0;min-height:255px;padding:16px 18px 15px;display:block;border-right:0;border-bottom:1px solid #dce7de}
+.journeyTop{height:40px}.journeyLogo .logoIcon{font-size:27px}.journeyLogo strong{font-size:11px}.journeyLogo small{font-size:7px}.teacherMini{font-size:9px;padding:7px}
+.heroContent{margin-top:21px;margin-left:114px;max-width:none}.scienceEyebrow{font-size:10px}.heroContent h1{font-size:clamp(21px,5.2vw,27px);line-height:1.27;letter-spacing:-.7px;margin:8px 0}.heroContent h1 em{white-space:normal}.heroContent p{font-size:10px;line-height:1.6;max-width:260px}
+.photoStage{height:135px;min-height:0;margin:0;position:absolute;top:78px;left:11px;right:auto;width:114px;display:block}.photoHalo{height:125px;width:108px;right:5px;bottom:0}.photoStage img{width:110px;height:142px;right:0;border-radius:48% 48% 9px 9px}.teacherNameBadge,.glowBadge{display:none}.scienceSketch{display:none}.journeyVisual:after{display:none}
+.progressSection{margin-top:18px;padding:9px 12px 8px}.journeyProgressText{font-size:9px}.progressPath{margin-top:7px}.progressDot b{width:22px;height:22px;font-size:8px}.progressDot span{font-size:10px}.progressConnector{margin-top:-14px}
+.contentPanel{order:1}.contentTop{padding:17px 20px 0}.contentBody{padding:31px 23px 26px;max-width:510px}.welcomeIntro h2{font-size:28px}.welcomeIntro>p{font-size:13px;margin-bottom:20px}.tabs{margin-bottom:22px}.features>div{padding:11px 4px}.features strong{font-size:10px}.features small{font-size:9px}.accountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){.journeyVisual{padding:15px 15px 12px}.heroContent{margin-left:99px}.photoStage{left:9px;width:102px}.photoStage img{width:99px;height:132px}.teacherMini{font-size:9px}.heroContent h1{font-size:21px}.heroContent p{font-size:9.5px}.contentBody{padding:30px 19px}.accountGrid,.reviewGrid{grid-template-columns:1fr}.formRow input{min-width:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
