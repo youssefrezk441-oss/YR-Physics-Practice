@@ -69,7 +69,7 @@ function render(){
 function choose(row,decision){
  pending={row,decision};$("dialogTitle").textContent=decision==="approved"?"الموافقة وتفعيل الحساب":"رفض طلب التسجيل";
  $("dialogStudent").textContent=String(row.full_name||"")+" — "+String(row.assigned_student_code||"");
- $("reason").value=decision==="approved"?"تمت مراجعة بيانات الطالب، وموافقة ولي الأمر، واعتماد الحساب.":"";
+ $("reason").value=decision==="approved"?"تمت مراجعة بيانات الطالب والتحقق من استيفاء متطلبات الاعتماد.":"";
  $("guardianConfirm").checked=false;$("guardianLabel").classList.toggle("hidden",decision!=="approved");
  $("dialogMsg").textContent="";$("confirm").textContent=decision==="approved"?"تفعيل الحساب":"تأكيد الرفض";
  $("decisionDialog").showModal();
