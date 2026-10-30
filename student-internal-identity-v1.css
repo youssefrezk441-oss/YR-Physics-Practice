@@ -1,0 +1,209 @@
+/* YR Physics Practice | Internal identity v1
+   Extends approved editorial login identity into the student's real dashboard.
+   No authentication, data, progress, questions or navigation semantics changed. */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap');
+
+body.yrStudentApp{
+  --yr-forest:#0E5948;--yr-deep:#133D33;--yr-ink:#18382F;
+  --yr-muted:#64766D;--yr-paper:#F6F8F3;--yr-surface:#FFFFFF;
+  --yr-line:#DCE6DD;--yr-gold:#D6A149;--yr-gold-light:#F7E7C8;
+  --yr-soft:#EBF3EC;--yr-focus:#19846B;
+  font-family:"Tajawal",Tahoma,Arial,sans-serif;
+  background:linear-gradient(180deg,#F0F5EC 0,#F7F8F3 310px,#F6F8F3 100%);
+  color:var(--yr-ink);
+}
+.yrStudentApp .wrap{max-width:1160px;padding:26px 28px 64px}
+.yrStudentApp .yrInternalTop{
+  display:flex;flex-direction:row;align-items:center;justify-content:space-between;
+  margin:0 0 24px;padding:12px 18px 12px 20px;
+  background:rgba(255,255,255,.94);border:1px solid var(--yr-line);
+  box-shadow:0 6px 24px rgba(17,69,49,.045);border-radius:20px;
+}
+.yrStudentApp .yrInternalBrand{display:flex;align-items:center;gap:12px;min-width:0;direction:ltr;text-align:left}
+.yrStudentApp .yrInternalBrand img{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.yrStudentApp .yrInternalBrandCopy{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.yrStudentApp .yrInternalBrand h1{font:900 20px/1.05 "Tajawal",Tahoma,Arial,sans-serif!important;letter-spacing:.1px!important;color:var(--yr-forest)!important;margin:0!important}
+.yrStudentApp .yrInternalBrand h1::after{display:none!important;content:none!important}
+.yrStudentApp .yrInternalBrand p{font-size:11px;letter-spacing:.25px;font-weight:700;color:var(--yr-muted);margin:5px 0 0}
+.yrStudentApp .topActions{justify-content:flex-end;gap:10px}
+.yrStudentApp #userBar{align-items:center;gap:10px}
+.yrStudentApp #studentName{color:var(--yr-deep);font-size:12px;font-weight:800}
+.yrStudentApp .btn{border-radius:12px;padding:11px 16px;transition:transform .16s ease,background .16s ease,border-color .16s ease}
+.yrStudentApp .btn.primary,.yrStudentApp .primary{background:var(--yr-forest);color:#fff}
+.yrStudentApp .btn.secondary,.yrStudentApp .secondary{
+  background:var(--yr-soft);color:var(--yr-forest);border:1px solid #D4E4D8
+}
+.yrStudentApp .btn:hover:not(:disabled){filter:brightness(.97)}
+.yrStudentApp .btn:focus-visible,.yrStudentApp .studentNavCard:focus-visible{
+  outline:3px solid var(--yr-focus);outline-offset:3px
+}
+.yrStudentApp .card{
+  background:var(--yr-surface);border:1px solid var(--yr-line);
+  border-radius:20px;box-shadow:0 8px 28px rgba(17,69,49,.045);
+}
+.yrStudentApp .yrDashboardHero{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);
+  gap:26px;align-items:center;
+  padding:36px 40px;border:1px solid #D6E5D8;
+  min-height:296px;margin-bottom:24px;
+  background:linear-gradient(112deg,#F4F7EC 0%,#E7F1E7 62%,#D7E9DE 100%);
+  color:var(--yr-deep);box-shadow:0 14px 44px rgba(14,89,72,.07);
+}
+.yrStudentApp .yrDashboardHero::before{
+  content:"";position:absolute;inset:auto -115px -150px auto;
+  width:420px;height:420px;border:1px solid rgba(14,89,72,.13);border-radius:50%;z-index:-1
+}
+.yrStudentApp .yrDashboardHero::after{
+  content:"";position:absolute;inset:-240px auto auto -170px;
+  width:470px;height:470px;background:radial-gradient(circle,#FFFFFF99 0%,transparent 68%);
+  pointer-events:none;z-index:-1
+}
+.yrStudentApp .yrDashboardCopy{min-width:0}
+.yrStudentApp .yrInternalEyebrow{display:inline-flex;align-items:center;gap:8px;
+  color:#245948;font-size:12px;font-weight:900;letter-spacing:.1px;
+  background:#FFFFFFAD;border:1px solid #DAE6D9;border-radius:99px;padding:7px 12px;margin-bottom:17px
+}
+.yrStudentApp .yrInternalEyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--yr-gold)}
+.yrStudentApp .yrDashboardHero #welcomeTitle{
+  margin:0 0 9px;font-size:clamp(26px,3.2vw,39px);
+  line-height:1.4;letter-spacing:-.3px;font-weight:900;color:var(--yr-deep)
+}
+.yrStudentApp .yrDashboardHero p{margin:0;color:#456357;opacity:1;font-size:15px;line-height:1.85}
+.yrStudentApp .yrDashboardHero .profilePills{margin:18px 0 0;gap:7px}
+.yrStudentApp .yrDashboardHero .profilePills span{
+  color:#345C4D;background:#FFFFFFCF;border:1px solid #D7E5D7;
+  padding:6px 12px;font-size:12px;font-weight:800;
+}
+.yrStudentApp .yrDashboardHero a.btn.secondary{
+  display:inline-flex!important;margin-top:14px!important;
+  background:#fff;color:var(--yr-forest);border:1px solid #CADDD0;
+  font-size:12px;text-decoration:none;align-items:center;
+}
+.yrStudentApp .yrLearningPath{position:relative;border:1px solid #CADECF;
+  border-radius:23px;padding:27px 23px 24px;background:#FFFFFFA8;
+  box-shadow:0 15px 35px rgba(19,61,51,.035);display:grid;gap:18px;
+}
+.yrStudentApp .yrLearningPathTitle{color:var(--yr-deep);font-size:14px;font-weight:900}
+.yrStudentApp .yrLearningPath p{font-size:11px;line-height:1.7;color:#64786B}
+.yrStudentApp .yrLearningSteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;direction:rtl}
+.yrStudentApp .yrLearningStep{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0}
+.yrStudentApp .yrLearningStep:not(:last-child)::after{
+ content:"";position:absolute;top:12px;right:calc(50% + 15px);width:calc(100% - 25px);
+ height:1px;background:#B8D2C0;transform:translateX(-100%);pointer-events:none
+}
+.yrStudentApp .yrLearningDot{width:28px;height:28px;border-radius:50%;
+ background:#E1EEE4;border:1px solid #A9CCB4;display:grid;place-items:center;
+ color:var(--yr-forest);font:bold 12px/1 Arial,sans-serif
+}
+.yrStudentApp .yrLearningStep:last-child .yrLearningDot{
+ background:var(--yr-gold-light);border-color:#E3C78D;color:#936515
+}
+.yrStudentApp .yrLearningStep span:last-child{font-weight:900;color:var(--yr-deep);font-size:12px}
+.yrStudentApp .yrSectionLead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:14px 1px 17px}
+.yrStudentApp .yrSectionLead h2{font-size:22px;margin:0;color:var(--yr-deep);font-weight:900}
+.yrStudentApp .yrSectionLead p{font-size:13px;margin:5px 0 0;color:var(--yr-muted)}
+.yrStudentApp .yrSectionTag{color:#718275;font-size:11px;font-weight:800}
+.yrStudentApp .studentHomeGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:0}
+.yrStudentApp .studentNavCard{
+  min-height:230px;align-items:flex-start;text-align:right;justify-content:flex-start;
+  padding:25px!important;gap:0;overflow:hidden;
+  border:1px solid var(--yr-line);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease
+}
+.yrStudentApp .studentNavCard::after{content:"";position:absolute;left:24px;bottom:26px;width:23px;height:23px;
+  border-radius:50%;background:#EFF6F0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='23' height='23' viewBox='0 0 24 24' fill='none' stroke='%230E5948' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m14 7-5 5 5 5'/%3E%3C/svg%3E") center/16px no-repeat
+}
+.yrStudentApp .studentNavCard:hover{transform:translateY(-4px);border-color:#A6CDB4;box-shadow:0 16px 32px rgba(24,76,53,.11)}
+.yrStudentApp .studentNavCard .studentNavIcon{
+  width:57px;height:57px;display:grid;place-items:center;flex-shrink:0;
+  background:#EAF3ED;color:var(--yr-forest);border:1px solid #D5E7DA;
+  border-radius:17px;margin:0 0 20px;font-size:0;
+}
+.yrStudentApp .studentNavIcon svg{width:27px;height:27px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.yrStudentApp .studentNavCard:nth-child(2) .studentNavIcon{background:#EDF4EF}
+.yrStudentApp .studentNavCard:nth-child(3) .studentNavIcon{background:#FBF4E6;color:#A87927;border-color:#F0DFB9}
+.yrStudentApp .studentNavCard h3{font-size:20px;font-weight:900;color:var(--yr-deep);margin:0 0 8px}
+.yrStudentApp .studentNavCard p{max-width:unset;font-size:13px;line-height:1.8;color:var(--yr-muted);padding-left:16px}
+.yrStudentApp .studentSubHead{padding:15px 0 18px;border-bottom:1px solid var(--yr-line);margin:0 0 20px}
+.yrStudentApp .studentSubHead h2{color:var(--yr-deep);font-size:23px;font-weight:900}
+.yrStudentApp .sectionIntro{color:var(--yr-muted)}
+.yrStudentApp .studentSubGrid{gap:15px}
+.yrStudentApp .studentSubGrid .studentNavCard{min-height:186px}
+.yrStudentApp .stat{background:#F9FBF8;border-color:var(--yr-line)}
+.yrStudentApp .pill{background:#EEF4EE;color:#345E4B}
+.yrStudentApp .progress{background:#DFEAE0}
+.yrStudentApp .choice:focus-within{border-color:var(--yr-focus);box-shadow:0 0 0 3px #19846B18}
+.yrStudentApp .choice.selected{border-color:#2F8C6D;background:#EFF7F1}
+.yrStudentApp .studentBack{white-space:nowrap}
+.yrStudentApp .yrInternalFooter{margin:44px 0 0;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;color:#718678;font-size:11px;
+  border-top:1px solid var(--yr-line);padding:18px 3px 0;
+}
+.yrStudentApp .yrInternalFooter b{color:var(--yr-forest);font-size:12px}
+.yrStudentApp #logoutBtn{color:#576E61;border-color:#DAE4DC;background:#FAFBF8}
+@media(max-width:860px){
+ .yrStudentApp .wrap{padding:16px 16px 48px}
+ .yrStudentApp .yrDashboardHero{grid-template-columns:1fr;padding:30px 25px;gap:19px}
+ .yrStudentApp .yrLearningPath{padding:19px}
+ .yrStudentApp .yrInternalTop{padding:12px 14px}
+ .yrStudentApp .studentHomeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .yrStudentApp .wrap{padding:12px 11px 34px}
+ .yrStudentApp .yrInternalTop{flex-direction:column;align-items:stretch;border-radius:16px;gap:10px}
+ .yrStudentApp .yrInternalBrand img{width:42px;height:42px}
+ .yrStudentApp .yrInternalBrand h1{font-size:19px!important}
+ .yrStudentApp .yrInternalTop .topActions{width:100%;justify-content:space-between}
+ .yrStudentApp #studentName{max-width:165px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .yrStudentApp .yrDashboardHero{padding:26px 21px;border-radius:18px;min-height:0}
+ .yrStudentApp .yrDashboardHero #welcomeTitle{font-size:29px}
+ .yrStudentApp .yrLearningPath{border-radius:16px}
+ .yrStudentApp .yrLearningStep span:last-child{font-size:11px}
+ .yrStudentApp .yrSectionLead{flex-direction:column;align-items:flex-start;gap:4px}
+ .yrStudentApp .studentHomeGrid,.yrStudentApp .studentSubGrid,.yrStudentApp .studentSubGrid.two{grid-template-columns:1fr}
+ .yrStudentApp .studentNavCard{min-height:170px;padding:21px!important}
+ .yrStudentApp .studentNavCard .studentNavIcon{width:49px;height:49px;margin-bottom:13px;border-radius:14px}
+ .yrStudentApp .studentNavCard h3{font-size:19px}
+ .yrStudentApp .yrInternalFooter{flex-direction:column;text-align:center;gap:3px}
+}
+@media(prefers-reduced-motion:reduce){
+ .yrStudentApp .btn,.yrStudentApp .studentNavCard{transition:none}
+ .yrStudentApp .studentNavCard:hover{transform:none}
+}
+/* The old student page already has dark-mode behavior; retain it with matching brand variables. */
+html[data-theme="dark"] body.yrStudentApp{
+ --yr-forest:#79BCA3;--yr-deep:#E7F4E9;--yr-ink:#E9F2E9;--yr-muted:#A6BDB0;
+ --yr-paper:#0D1916;--yr-surface:#172823;--yr-line:#315146;
+ --yr-soft:#203D32;--yr-focus:#C6EED5;
+ background:linear-gradient(180deg,#10231D,#0C1B17 380px,#0C1915);
+ color:var(--yr-ink)
+}
+html[data-theme="dark"] .yrStudentApp .yrInternalTop{background:#172823;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .yrInternalBrand h1{color:#BDE5CC!important}
+html[data-theme="dark"] .yrStudentApp .card{background:#172823;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero{
+ background:linear-gradient(115deg,#183D30,#215342 70%,#1B3D33);
+ color:#ECF6ED;border-color:#346B54
+}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero #welcomeTitle,
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero .yrLearningPathTitle,
+html[data-theme="dark"] .yrStudentApp .yrLearningStep span:last-child{color:#F1F8F0}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero p{color:#D6EADB}
+html[data-theme="dark"] .yrStudentApp .yrInternalEyebrow{background:#245440;color:#E1F1E5;border-color:#3D6D57}
+html[data-theme="dark"] .yrStudentApp .yrLearningPath{background:#1D4335;border-color:#41785D}
+html[data-theme="dark"] .yrStudentApp .yrLearningDot{background:#24563D;color:#CFE9D6;border-color:#468D68}
+html[data-theme="dark"] .yrStudentApp .yrLearningStep:last-child .yrLearningDot{background:#7D5B27;color:#FFEDC9;border-color:#C39446}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero .profilePills span{background:#265440;color:#E0F0E4;border-color:#477A59}
+html[data-theme="dark"] .yrStudentApp .yrDashboardHero a.btn.secondary{background:#1E3D2F;border-color:#417054;color:#E5F4E9}
+html[data-theme="dark"] .yrStudentApp .studentNavCard{background:#172823;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .studentNavCard h3{color:#EAF7EB}
+html[data-theme="dark"] .yrStudentApp .studentNavCard p{color:#B0C5B8}
+html[data-theme="dark"] .yrStudentApp .studentNavCard .studentNavIcon{background:#254535;border-color:#3C6751}
+html[data-theme="dark"] .yrStudentApp .studentNavCard:nth-child(3) .studentNavIcon{background:#513F22;color:#F4D693;border-color:#765C2E}
+html[data-theme="dark"] .yrStudentApp .yrSectionLead h2,html[data-theme="dark"] .yrStudentApp .studentSubHead h2{color:#EAF7EB}
+html[data-theme="dark"] .yrStudentApp #studentName{color:#DBEBDD}
+html[data-theme="dark"] .yrStudentApp .btn.secondary{background:#234435;color:#DBEDDD;border-color:#3F6950}
+html[data-theme="dark"] .yrStudentApp #logoutBtn{background:#283D34;border-color:#3A5546;color:#D3E4D6}
+html[data-theme="dark"] .yrStudentApp .stat{background:#162720;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .pill{background:#244034;color:#D2E4D5}
+html[data-theme="dark"] .yrStudentApp .choice.selected{background:#183D30;border-color:#579A72}
