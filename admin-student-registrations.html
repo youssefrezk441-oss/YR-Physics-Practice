@@ -139,6 +139,17 @@
           <button type="button" id="cancelRecovery" class="accountBtn secondary">إلغاء</button>
         </form>
       </section>
+      <section id="recoveryTokenReceipt" class="accountCard hidden" role="status" aria-live="polite">
+        <h2>رمز إعادة تعيين كلمة المرور</h2>
+        <p>الرمز يظهر مرة واحدة في هذه الصفحة بعد الموافقة وصالح لمدة ساعتين. سلّمه سرًا للطالب الذي تحققت من هويته، ولا ترسله في مجموعات أو منشورات.</p>
+        <input id="recoveryTokenValue" readonly type="password" dir="ltr" autocomplete="off" style="width:100%" aria-label="رمز إعادة تعيين كلمة المرور">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button id="showRecoveryToken" type="button" class="accountBtn secondary">إظهار الرمز</button>
+          <button id="copyRecoveryToken" type="button" class="accountBtn">نسخ الرمز</button>
+          <button id="dismissRecoveryToken" type="button" class="accountBtn secondary">إخفاء وإنهاء</button>
+        </div>
+        <p class="accountMuted">يُستخدم الرمز في <a href="student-recovery.html" target="_blank" rel="noopener noreferrer">صفحة استعادة الحساب</a> ضمن «لديّ رمز إعادة التعيين». إذا ضاع، سيحتاج الطالب طلبًا جديدًا.</p>
+      </section>
     </main>
     <script type="module">
       import { identity, sb, $, esc, message } from "./student-identity-api.js";
