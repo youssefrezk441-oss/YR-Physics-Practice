@@ -34,7 +34,7 @@ function server() {
 }
 const mockModule = `export function createClient(){return{auth:{getSession:async()=>({data:{session:null}}),signInWithPassword:async p=>{window.__loginPayload=p;return{error:{message:'mock stop'}}},signOut:async()=>({})},functions:{invoke:async(name,{body}={})=>name==='student-identity'&&body?.action==='config'?{data:{ok:true,registration_enabled:true,phone_login_enabled:false,profile_update_enabled:false,profile_enforcement_enabled:false}}:{data:{},error:null}}}}`;
 const profileMockModule = `export function createClient(){return{auth:{getSession:async()=>({data:{session:{user:{id:'synthetic',app_metadata:{role:'student'}}}}})},functions:{invoke:async(name,{body}={})=>{if(body?.action==='me')return{data:{ok:true,national_id_collection_enabled:false,privacy_notice_version:'draft-v1',profile:{full_name:'طالب تجريبي كامل',student_code:'N2-001',grade_level:'الصف الثاني الثانوي',group_code:'N2-A',student_phone:'+201012345678',guardian_phone:'+201112345678',birth_date:'2008-01-02',national_id_last4:'1234'}}};if(body?.action==='complete_profile'){window.__profilePayload=body;return{data:{ok:true,message:'saved'}}}return{data:{ok:true}}}}}}`;
-const registrationMockModule = `export function createClient(){return{auth:{getSession:async()=>({data:{session:null}})},functions:{invoke:async(name,{body}={})=>{if(body?.action==='config')return{data:{ok:true,registration_enabled:true,privacy_notice_version:'draft-v1',groups:[{group_code:'N2-A',grade_level:'الصف الثاني الثانوي',center_name:'مركز تجريبي'}]}};if(body?.action==='submit_registration'){window.__registrationPayload=body;return{data:{ok:true,student_code:'N2-777',status:'pending_review',review_deadline_at:'2030-01-03T00:00:00Z',message:'تم إنشاء حسابك بنجاح.'}}}return{data:{ok:true}}}}}}`;
+const registrationMockModule = `export function createClient(){return{auth:{getSession:async()=>({data:{session:null}})},functions:{invoke:async(name,{body}={})=>{if(body?.action==='config')return{data:{ok:true,registration_enabled:true,privacy_notice_version:'v1-2026-10-30',groups:[{group_code:'N2-A',grade_level:'الصف الثاني الثانوي',center_name:'ذا فرست - ناهيا'}]}};if(body?.action==='submit_registration'){window.__registrationPayload=body;return{data:{ok:true,student_code:'N2-777',status:'pending_review',review_deadline_at:'2030-01-03T00:00:00Z',message:'تم إنشاء حسابك بنجاح.'}}}return{data:{ok:true}}}}}}`;
 const adminMockModule = `export function createClient(){return{auth:{getSession:async()=>({data:{session:{user:{id:'admin',app_metadata:{role:'admin'}}}}})},functions:{invoke:async(name,{body}={})=>{if(body?.action==='admin_list')return{data:{ok:true,requests:[{public_ref:'11111111-1111-1111-1111-111111111111',assigned_student_code:'N2-777',full_name:'طالب تجريبي كامل',grade_level:'الصف الثاني الثانوي',education_system:'عام',requested_group_code:'N2-A',assigned_group_code:'N2-A',student_phone_e164:'+201012345678',created_at:'2030-01-01T00:00:00Z',account_status:'pending_review',review_deadline_at:'2030-01-03T00:00:00Z',duplicate_review:{}}],recovery_requests:[]}};if(body?.action==='admin_decide'){window.__decisionPayload=body;return{data:{ok:true,status:body.decision}}}return{data:{ok:true}}}}}}`;
 test(
   "student bootstrap renders legacy dashboard and resilient account UI",
@@ -140,14 +140,25 @@ test(
       await p.goto(
         `http://127.0.0.1:${s.address().port}/student-register.html`,
       );
+      await p.waitForSelector('#next:not([disabled])');
+      assert.equal(await p.locator('[name="national_id"]').count(), 0);
+      await p.fill('[name="first_name"]', "طالب");
+      await p.fill('[name="second_name"]', "تجريبي");
+      await p.fill('[name="third_name"]', "كامل");
+      await p.fill('[name="fourth_name"]', "جديد");
+      await p.click("#next");
+      await p.selectOption('[name="grade_level"]', "الصف الثاني الثانوي");
+      await p.selectOption('[name="education_system"]', "عام");
+      await p.selectOption('[name="attendance_location"]', "ناهيا");
       await p.waitForSelector('option[value="N2-A"]', { state: "attached" });
-      await p.fill('[name="full_name"]', "طالب تجريبي كامل جديد");
       await p.selectOption('[name="group_code"]', "N2-A");
       await p.fill('[name="residence_area"]', "منطقة تجريبية");
+      await p.click("#next");
       await p.fill('[name="student_phone"]', "01012345678");
       await p.fill('[name="guardian_phone"]', "01112345678");
       await p.fill('[name="password"]', "StudentPass2026!");
       await p.fill('[name="password_confirm"]', "StudentPass2026!");
+      await p.click("#next");
       await p.check('[name="privacy"]');
       await p.click('button[type="submit"]');
       await p.waitForSelector("#receipt:not(.hidden)");
