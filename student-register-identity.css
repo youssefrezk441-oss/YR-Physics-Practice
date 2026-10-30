@@ -145,3 +145,14 @@ a{color:inherit}
 }
 @media(max-width:440px){.accountGrid,.reviewGrid{grid-template-columns:1fr}.stepItem{font-size:8.5px}.visualHeading{font-size:20px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Privacy notice shares the same identity as the enrollment experience */
+.privacyPage{max-width:950px;margin:0 auto;padding:28px 18px 70px}
+.privacyTop{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:24px}
+.privacyCard{background:#fff;border-radius:22px;border:1px solid #dfe6f0;box-shadow:0 18px 56px #1127420c;padding:35px clamp(20px,5vw,55px)}
+.privacyCard h1{font-size:clamp(24px,4vw,34px);line-height:1.6;color:#142c4a;margin:0 0 16px}
+.privacyCard h2{font-size:18px;color:#173456;margin:25px 0 7px;border-right:3px solid #3a69ca;padding-right:13px;line-height:1.7}
+.privacyCard p{font-size:14px;color:#53647b;line-height:2.1;margin:10px 0}
+.privacyCard p b,.privacyCard p strong{color:#173456}
+.privacyVersion{font-size:12px!important;color:#31568a!important;background:#f0f6fe;border:1px solid #dfeafa;border-radius:11px;padding:10px 14px}
+@media(max-width:720px){.privacyPage{padding:16px 12px 35px}.privacyCard{padding:20px 18px}.privacyCard h2{font-size:16px}}
