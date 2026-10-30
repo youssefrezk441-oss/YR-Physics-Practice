@@ -40,7 +40,7 @@ body{background:#ecefe8;font-family:"Tajawal",Tahoma,Arial,sans-serif;color:var(
 .journeyHeroText h1{font-size:clamp(33px,3.1vw,44px);line-height:1.36;letter-spacing:-1px;font-weight:900;margin:9px 0}
 .journeyHeroText h1 em{font-style:normal;color:#f4c778}
 .journeyHeroText p{font-size:15px;line-height:1.95;max-width:410px;color:#dceae2;margin:9px 0 0;font-weight:500}
-.journeyPortrait{position:relative;flex:1;display:flex;align-items:end;justify-content:center;min-height:245px;margin-top:8px;max-height:390px}
+.journeyWave{display:block;width:165px;height:35px;margin:4px 0 -15px auto;opacity:.82}.journeyPortrait{position:relative;flex:1;display:flex;align-items:end;justify-content:center;min-height:245px;margin-top:8px;max-height:390px}
 .journeyPhotoBack{position:absolute;inset:9% 8% 0;background:linear-gradient(155deg,#f9f6e7,#e6ebe5);border-radius:48% 48% 19px 19px;box-shadow:0 20px 55px #001c1761,0 0 0 1px #fff3}
 .journeyPortrait img{
   position:relative;display:block;width:auto;height:min(100%,358px);
@@ -116,6 +116,7 @@ body{background:#ecefe8;font-family:"Tajawal",Tahoma,Arial,sans-serif;color:var(
   .journeyPhotoBack{inset:0 0 0 0;border-radius:40px 40px 8px 8px}
   .journeyPortrait img{height:136px;max-width:100%;width:95px;object-position:center top;border-radius:40px 40px 9px 9px}
   .journeyPortraitName{display:none}
+  .journeyWave{display:none}
   .journeySteps{margin-top:12px;padding:9px 12px}
   .journeySteps strong{font-size:11px}
   .journeySteps .journeyNumber{font-size:8px}
