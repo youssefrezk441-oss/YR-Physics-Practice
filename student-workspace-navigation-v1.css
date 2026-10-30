@@ -32,7 +32,8 @@
 .yrStudentApp .yrSidebarFoot{margin:auto 11px 0;border-top:1px solid var(--yr-line);padding-top:18px;display:grid;gap:5px}
 .yrStudentApp .yrSidebarFoot strong{font-size:12px;color:var(--yr-deep)}
 .yrStudentApp .yrSidebarFoot span{font-size:11px;color:var(--yr-muted)}
-.yrStudentApp.yrWorkspaceReady #dashboardView>.studentHomeGrid{display:none!important}
+.yrStudentApp.yrWorkspaceReady #dashboardView>.studentHomeGrid,
+.yrStudentApp.yrWorkspaceReady #dashboardView>.yrSectionLead{display:none!important}
 .yrStudentApp .yrWorkspacePage{width:100%;min-width:0}
 .yrStudentApp .yrWorkspacePageHead{margin:3px 0 23px}
 .yrStudentApp .yrWorkspacePageHead h2{font-size:30px;line-height:1.35;margin:7px 0 6px;color:var(--yr-deep);font-weight:900}
