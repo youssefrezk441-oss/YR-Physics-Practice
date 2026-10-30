@@ -20,6 +20,17 @@
         location.replace('./student-register.html?tab=login');
         return;
       }
+      if(session.user.app_metadata?.role!=='admin'){
+        try{
+          const {identity}=await import('./student-identity-api.js');
+          const status=await identity('me');
+          if(status.enforcement && status.profile?.is_active &&
+             Number(status.profile.profile_schema_version||0)<Number(status.required_profile_schema_version||1)){
+            location.replace('./student-complete-profile.html');
+            return;
+          }
+        }catch(error){console.warn('Cannot verify profile completion; existing student access preserved while service is checked.',error)}
+      }
     }catch(error){console.warn('Student login portal unavailable; using legacy entry.',error)}
   }
   let html=await (await fetch('./student-base.html?v=20260822-2',{cache:'no-store'})).text();
