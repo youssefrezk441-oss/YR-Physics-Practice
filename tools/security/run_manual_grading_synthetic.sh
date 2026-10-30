@@ -14,8 +14,12 @@ if [[ "$ready" != true ]]; then echo "Disposable Postgres not available" >&2; ex
 psql=(docker exec -i "$name" psql -X -v ON_ERROR_STOP=1 -U postgres -d grade_fixture)
 "${psql[@]}" < "$root/tools/security/manual_grading_fixture_setup.sql"
 "${psql[@]}" < "$root/tools/security/manual_grading_fixture_production_triggers.sql"
+# Mirror the current overly broad grants, then apply the candidate on this local DB only.
+"${psql[@]}" -c 'GRANT ALL ON public.attempts,public.responses TO anon,authenticated' >/dev/null
+"${psql[@]}" < "$root/tools/security/candidate_attempt_response_write_lockdown.sql"
 "${psql[@]}" < "$root/tools/security/candidate_secure_manual_review.sql"
 "${psql[@]}" < "$root/tools/security/manual_grading_fixture_verify.sql"
+"${psql[@]}" < "$root/tools/security/grade_acl_fixture_verify.sql"
 # Two concurrent replays with identical values should serialize without deadlock,
 # leave one additional audit entry, and end in an exactly-once grade change.
 review_sql="SET ROLE authenticated; SELECT set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000011',false); SELECT public.review_short_text_response('20000000-0000-4000-8000-000000000001',5,'synthetic concurrent retry');"
