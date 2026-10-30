@@ -144,9 +144,12 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 
 .studentReviewImageGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.studentReviewImage{border:1px solid #e4e7ec;border-radius:12px;overflow:hidden;background:#fff}.studentReviewImage img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff}.studentReviewImageMeta{padding:7px 9px;font-size:10px;color:#667085}.studentReviewImage a{display:block}@media(max-width:650px){.studentReviewImageGrid{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="student-internal-identity-v1.css">
 </head>
-<body><div class="wrap">
-<div class="top"><div class="brand"><h1>منصة تدريبات الفيزياء</h1><p>مستر يوسف رزق</p></div><div class="topActions"><button id="themeBtn" class="btn secondary themeBtn" type="button" title="تغيير المظهر">🌓 تلقائي</button><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div></div>
+<body class="yrStudentApp"><div class="wrap">
+<div class="top yrInternalTop"><div class="brand yrInternalBrand">
+<img src="assets/yr-mastery-mark.svg" alt="شعار YR Physics Practice" width="48" height="48" decoding="async">
+<div class="yrInternalBrandCopy"><h1>YR Physics Practice</h1><p>من الفهم إلى الإتقان · مستر يوسف رزق</p></div></div><div class="topActions"><button id="themeBtn" class="btn secondary themeBtn" type="button" title="تغيير المظهر">🌓 تلقائي</button><div id="userBar" class="toolbar hidden"><span id="studentName" class="muted small"></span><button id="logoutBtn" class="btn secondary">خروج</button></div></div></div>
 <div id="msg"></div>
 <section id="loginView" class="loginStage hidden">
 <div class="loginBrandBar"><span class="platform">منصة <strong>الفيزياء</strong></span><span class="divider"></span><span class="teacher">مستر يوسف رزق</span></div>
@@ -166,11 +169,28 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 </div>
 </section>
 <section id="dashboardView" class="hidden">
-<div class="hero card"><h2 id="welcomeTitle">أهلاً بك</h2><p>كل ما يخص تدريباتك ومؤشراتك في مكان واحد.</p><div id="studentProfileMeta" class="profilePills"></div></div>
+<div class="hero card yrDashboardHero">
+  <div class="yrDashboardCopy">
+    <span class="yrInternalEyebrow">مساحتك للتدريب والتقدم</span>
+    <h2 id="welcomeTitle">أهلاً بك</h2>
+    <p>كل فكرة تفهمها، وكل سؤال تتدرب عليه، بيقرّبك خطوة من الإتقان.</p>
+    <div id="studentProfileMeta" class="profilePills"></div>
+  </div>
+  <div class="yrLearningPath" aria-label="مراحل رحلة التعلم الأربع">
+    <div><div class="yrLearningPathTitle">رحلتك من الفهم إلى الإتقان</div><p>مسار تعليمي ثابت يوضح طريقة التعلم، وليس تقييمًا لحسابك.</p></div>
+    <div class="yrLearningSteps">
+      <div class="yrLearningStep"><span class="yrLearningDot">1</span><span>افهم</span></div>
+      <div class="yrLearningStep"><span class="yrLearningDot">2</span><span>طبّق</span></div>
+      <div class="yrLearningStep"><span class="yrLearningDot">3</span><span>تدرّب</span></div>
+      <div class="yrLearningStep"><span class="yrLearningDot">4</span><span>أتقن</span></div>
+    </div>
+  </div>
+</div>
+<div class="yrSectionLead"><div><h2>إيه خطوتك النهارده؟</h2><p>اختار المكان اللي محتاجه، وكمل رحلتك.</p></div><span class="yrSectionTag">YOUR LEARNING SPACE</span></div>
 <div class="studentHomeGrid">
-<button id="openTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon">📝</div><h3>التدريبات</h3><p>التدريبات المتاحة وما أنجزته من تدريبات المنصة.</p></button>
-<button id="openIndicators" class="card studentNavCard" type="button"><div class="studentNavIcon">📊</div><h3>مؤشراتي</h3><p>متابعة مؤشرات الالتزام والاختبارات وتدريبات المنصة.</p></button>
-<button id="openHonor" class="card studentNavCard" type="button"><div class="studentNavIcon">🏆</div><h3>لوحة الشرف</h3><p>بطولة التميز: الصدارة، الصعود، أبطال الفئات وتحدي ناهيا وكفر حكيم.</p></button>
+<button id="openTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg></div><h3>التدريبات</h3><p>التدريبات المتاحة وما أنجزته من تدريبات المنصة.</p></button>
+<button id="openIndicators" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><rect x="6.5" y="12" width="3" height="6" rx=".6"/><rect x="11.5" y="8" width="3" height="10" rx=".6"/><rect x="16.5" y="5" width="3" height="13" rx=".6"/></svg></div><h3>مؤشراتي</h3><p>متابعة مؤشرات الالتزام والاختبارات وتدريبات المنصة.</p></button>
+<button id="openHonor" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/></svg></div><h3>لوحة الشرف</h3><p>بطولة التميز: الصدارة، الصعود، أبطال الفئات وتحدي ناهيا وكفر حكيم.</p></button>
 </div>
 </section>
 <section id="honorView" class="hidden">
@@ -237,6 +257,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 </section>
 <section id="resultView" class="hidden"><div class="card"><div id="resultPercent" class="resultNum">0%</div><div id="resultCaption" class="resultCaption"></div><div id="resultDetails" style="margin-top:18px"></div><button id="backDashboardBtn" class="btn primary full" style="margin-top:14px">العودة للتدريبات</button></div></section>
 <section id="reviewView" class="hidden"><div class="card"><div class="toolbar" style="justify-content:space-between"><div><h2 id="reviewTitle" style="margin:0;font-size:20px">تصحيح المحاولة</h2><div id="reviewSummary" class="small muted" style="margin-top:5px"></div></div><button id="backReviewBtn" class="btn secondary">العودة</button></div><div id="reviewDetails" style="margin-top:16px"></div></div></section>
+<footer class="yrInternalFooter" aria-label="تذييل المنصة"><span>YR Physics Practice · رحلة منظّمة من الفهم إلى الإتقان</span><b>مستر يوسف رزق</b></footer>
 </div>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
