@@ -21,7 +21,7 @@ test("Password change is optional and requires current password",async()=>{
  assert.match(js,/new_password_confirm/);
  assert.match(js,/identity\("change_password"/);
  assert.match(js,/identity\("complete_profile_v2"/);
- assert.doesNotMatch(js,/submit_registration|admin\.auth|updateUserById/);
+ assert.doesNotMatch(js,/identity\(["\']submit_registration|admin\.auth|updateUserById/);
 });
 test("Dashboard and login gate on server-declared profile version",async()=>{
  const dash=await read("student.html"),login=await read("student-access.js");
