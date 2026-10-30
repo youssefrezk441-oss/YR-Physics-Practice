@@ -51,3 +51,16 @@ test("shared internal identity sheet includes approved brand tokens and avoids m
  const login=await read("student-register.html");
  assert.doesNotMatch(login,/student-internal-identity-v1.css/);
 });
+
+test("critical student links remain reachable after replacing the legacy home cards",async()=>{
+ const controller=await read("student-workspace-navigation-v1.js");
+ const html=await read("student-base.html");
+ for(const id of ["openIndicators","openCompleted","openReferences","openChapterMistakes","openCh2Mistakes"]){
+  assert.match(controller,new RegExp('["\\']'+id+'["\\']'),id+" cannot disappear from the navigation adapter");
+ }
+ assert.match(controller,/function canSecondGrade\(/,"grade-2 references must not be shown as grade-3 content");
+ assert.match(controller,/function canThirdGrade\(/);
+ assert.match(controller,/progress\.id="yrHomeProgress"/);
+ assert.match(controller,/تصفية حسب الفصل غير متاحة بعد/);
+ assert.match(html,/student-workspace-navigation-v1\.js/);
+});
