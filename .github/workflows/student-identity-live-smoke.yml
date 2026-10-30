@@ -35,6 +35,8 @@ jobs:
           grep -q 'إنشاء حساب جديد' /tmp/yr-register.html
           fetch admin-student-registrations.html /tmp/yr-admin.html
           grep -q 'طلبات تسجيل الطلاب' /tmp/yr-admin.html
+          grep -q 'invitePanel' /tmp/yr-admin.html
+          grep -q 'إنشاء رابط دعوة آمن' /tmp/yr-admin.html
           fetch student-recovery.html /tmp/yr-recovery.html
           fetch student-privacy.html /tmp/yr-privacy.html
           grep -q 'إشعار خصوصية حساب الطالب' /tmp/yr-privacy.html
