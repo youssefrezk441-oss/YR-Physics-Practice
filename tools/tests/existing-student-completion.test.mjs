@@ -56,5 +56,5 @@ test("Admin access uses server-side permission checks",async()=>{
  assert.match(h,/admin_profile_changes/);
  assert.match(h,/admin_profile_change_decide/);
  assert.match(adminHome,/admin-student-profile-changes\.html/);
- assert.match(server,/adminUser\(req, action !== "admin_list"\)/);
+ assert.match(server,/adminUser\(req, !\["admin_list", "admin_profile_changes"\]\.includes\(action\)\)/);
 });
