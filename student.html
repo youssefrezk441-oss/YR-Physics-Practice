@@ -285,6 +285,10 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace('</style>',
     '.errorsHomeCard{border:1px solid #a7c2e3!important;background:linear-gradient(180deg,#eff6ff,#fff)!important}.errorsHomeCard .studentNavIcon{background:#dbeafe!important}.errorsHomeCard h3{color:#16324f}.errorsHomeCard p{line-height:1.9}html[data-theme="dark"] .errorsHomeCard{background:linear-gradient(180deg,#172a48,#111827)!important;border-color:#37689b!important}html[data-theme="dark"] .errorsHomeCard h3{color:#dbeafe}'+'</style>');
 
+  const updateProfileAnchor='<div id="studentProfileMeta" class="profilePills"></div>';
+  if(html.includes(updateProfileAnchor)){
+    html=html.replace(updateProfileAnchor, updateProfileAnchor+'<a href="student-complete-profile.html" class="btn secondary" style="display:inline-block;text-decoration:none;margin-top:14px">تحديث بياناتي أو تغيير كلمة المرور</a>');
+  }
   document.open();
   document.write(html);
   document.close();
