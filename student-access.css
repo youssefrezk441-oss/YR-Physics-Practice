@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+:root{color-scheme:light;--deep:#071a30;--blue:#173f75;--teal:#10c1b2;--gold:#dfb86d;--ink:#192b40;--muted:#718197;--line:#dae3ed;--light:#f3f7fb;--warn:#b23b4a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:#eaf0f6;font-family:'Cairo',Tahoma,Arial,sans-serif;color:var(--ink);font-size:13px}
+button,input,select{font:inherit}button{cursor:pointer}
+[hidden],.hidden{display:none!important}
+a{color:inherit}
+.authPage{min-height:100vh;min-height:100dvh;padding:25px}
+.authShell{width:min(1270px,100%);min-height:calc(100dvh - 50px);display:grid;grid-template-columns:minmax(375px,.85fr) minmax(0,1.15fr);margin:auto;border:1px solid #dae4ee;border-radius:26px;overflow:hidden;background:#fff;box-shadow:0 30px 100px #09213e18}
+.visualPanel{position:relative;display:flex;flex-direction:column;padding:42px clamp(28px,3.7vw,54px) 30px;color:white;min-height:680px;overflow:hidden;isolation:isolate;background:linear-gradient(165deg,#0b2746 0%,#061a31 68%,#091c30 100%)}
+.visualPanel::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 10% 18%,#206a8680,transparent 42%),radial-gradient(ellipse at 96% 90%,#11636b66,transparent 55%);z-index:-1}
+.visualPanel::after{content:"";position:absolute;width:570px;height:570px;border:1px solid #b6f9f023;border-radius:50%;bottom:-340px;right:-310px;box-shadow:0 0 0 75px #8af7e60a,0 0 0 160px #6dfff306;z-index:-1}
+.brandRow{display:flex;align-items:center;gap:13px}
+.brandMark{width:60px;height:60px;flex-shrink:0;display:grid;place-items:center;border:1px solid #69e3da7c;border-radius:17px;background:#ffffff12;box-shadow:inset 0 1px 0 #ffffff3b;font:900 23px Arial,sans-serif;letter-spacing:-3px;direction:ltr;color:white;position:relative}
+.brandMark::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--teal);top:9px;left:8px;box-shadow:0 0 14px var(--teal)}
+.brandEnglish{font:800 16px Arial,sans-serif;letter-spacing:2.4px;direction:ltr;text-align:right;color:#f7fcff}
+.brandCaption{color:#9bc7d6;font-size:11px;letter-spacing:1px;margin-top:5px;font-family:Arial,sans-serif;direction:ltr;text-align:right}
+.teacherLabel{font-size:11px;letter-spacing:.4px;font-weight:700;color:#77ded7;margin:58px 0 13px}
+.teacherName{font-size:clamp(38px,4.15vw,56px);font-weight:900;line-height:1.5;margin:0;color:#fff;letter-spacing:-1.3px}
+.teacherName strong{color:#71e6da;font-weight:900}
+.heroLine{width:62px;height:4px;background:var(--gold);border-radius:4px;margin:23px 0 22px}
+.heroCopy{margin:0;color:#bacddb;font-size:15px;font-weight:500;line-height:2.1;max-width:410px}
+.physicsIllustration{display:block;width:100%;height:auto;max-width:445px;max-height:320px;margin:auto;overflow:visible;filter:drop-shadow(0 12px 27px #00142b6b)}
+.physicsIllustration .trace{stroke:#638fac;stroke-width:1.9;fill:none}
+.physicsIllustration .electric{stroke:#5ee1d5;stroke-width:2.6;fill:none}
+.physicsIllustration .node{fill:#7ce8e0}
+.physicsIllustration .caption{font:15px Arial,sans-serif;fill:#a5d8e3}
+.visualBottom{border-top:1px solid #b4dde22e;padding-top:19px;display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:11px;color:#a0b8cb}
+.visualBottom .signature{font-weight:800;color:#dceff2;font-size:13px}
+.visualBadge{border:1px solid #5ccdc638;border-radius:40px;padding:7px 12px;color:#87e3d7;white-space:nowrap}
+.contentPanel{background:#fff;min-width:0;display:flex;flex-direction:column}
+.contentTop{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:30px clamp(24px,4.3vw,66px) 0}
+.contentHeading{font-weight:800;font-size:14px;color:#182e49}
+.secureIndicator{display:inline-flex;align-items:center;gap:7px;color:#65839b;font-size:11px;font-weight:700;white-space:nowrap}
+.secureIndicator::before{content:"";height:7px;width:7px;border-radius:50%;background:#13a998;box-shadow:0 0 0 4px #12bfa41e}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f1f5fa;border:1px solid #e4ebf3;border-radius:14px;padding:5px;margin:31px clamp(24px,4.3vw,66px) 26px}
+.tab{border:0;background:transparent;color:#69809b;font-weight:800;font-size:14px;padding:12px 5px;border-radius:10px;transition:.18s}
+.tab[aria-selected=true]{background:#fff;color:#103b68;box-shadow:0 3px 15px #10284713}
+.tab:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #5acfc5;outline-offset:3px}
+.view{padding:0 clamp(24px,4.3vw,66px) 38px;flex:1}
+.formEyebrow{color:#128d8c;font-size:11px;font-weight:900;margin:0 0 6px;letter-spacing:.3px}
+.formTitle{font-size:clamp(23px,2.5vw,29px);margin:0 0 3px;line-height:1.65;color:#102e4e;font-weight:900}
+.formDescription{color:#79879a;font-size:12.5px;line-height:2;margin:0 0 23px}
+.formRow{display:grid;gap:9px;margin:0 0 20px}
+.formRow label{font-weight:800;color:#203b56;font-size:12.5px}
+.formRow input,.accountField input:not([type=checkbox]),.accountField select{border:1px solid #d3dfeb;background:#fff;color:var(--ink);padding:12px 15px;border-radius:12px;min-height:51px;width:100%;outline:0;transition:border-color .18s,box-shadow .18s}
+.formRow input:focus,.accountField input:focus,.accountField select:focus{border-color:#41afa9;box-shadow:0 0 0 4px #43c6b521}
+.formRow input::placeholder,.accountField input::placeholder{color:#9baabb}
+.formRow input:disabled,.accountField select:disabled{background:#f3f6f9}
+.passwordLine{display:flex;gap:8px;align-items:stretch}
+.passwordLine input{min-width:0;flex:1}
+.toggle,.accountBtn.secondary{background:#f6f9fc;border:1px solid #d9e4ee;color:#315476}
+.toggle{padding:8px 13px;border-radius:12px;font-weight:800;font-size:12px;flex-shrink:0}
+.primaryButton,.accountBtn{background:#123f71;border:1px solid #123f71;color:#fff;border-radius:12px;padding:13px 20px;font-weight:800;min-height:51px;transition:background .18s}
+.primaryButton:hover,.accountBtn:not(:disabled):hover{background:#0b2e58}
+.primaryButton:disabled,.accountBtn:disabled{opacity:.55;cursor:not-allowed}
+.formFooter{text-align:center;font-size:12px;color:#79899c;margin:26px 0}
+.formFooter a,.helpBar a{color:#126e88;font-weight:800;text-decoration:none}
+.formFooter a:hover,.helpBar a:hover{text-decoration:underline}
+.loginHelp{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 20px;color:#7e8b9b;font-size:12px}
+.loginHelp a{color:#205c88;text-decoration:none;font-weight:800}
+.loginMessage{border-radius:11px;padding:13px 15px;margin:0 0 16px;font-size:12.5px;line-height:1.8;background:#fff0f1;color:#a12e48;border:1px solid #f6c8d1}
+.loginMessage.success{background:#e9f8f3;color:#13745a;border-color:#bde7d3}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:37px}
+.chips span{display:inline-block;border:1px solid #dfe9ee;color:#6b8194;border-radius:50px;padding:7px 12px;font-size:11px}
+.stepper{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 22px}
+.stepItem{font-size:10px;line-height:1.6;color:#8c9aab;text-align:center;font-weight:800}
+.stepCircle{display:grid;place-items:center;border:1px solid #dce4ec;color:#778ba1;background:#f6f8fa;height:33px;width:33px;border-radius:10px;margin:0 auto 7px;font:700 12px Arial,sans-serif}
+.stepItem.active{color:#175d88}
+.stepItem.active .stepCircle{background:#153f70;color:white;border-color:#153f70}
+.stepItem.done .stepCircle{background:#e4f8f2;border-color:#b9eadc;color:#0b846e}
+.step-panel[hidden]{display:none!important}
+.panelIndex{font:800 10px Arial,sans-serif;letter-spacing:1px;direction:ltr;text-align:right;color:#0ca699;margin:0 0 6px}
+.panelTitle{font-size:20px;color:#153653;margin:0 0 4px;line-height:1.6}
+.panelIntro{font-size:12px;color:#7b8c9f;line-height:1.9;margin:0 0 18px}
+.accountGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.accountField{display:grid;align-content:start;gap:7px;min-width:0}
+.accountField.full,.full{grid-column:1/-1}
+.accountField label{font-size:12px;color:#29435b;font-weight:800;line-height:1.7}
+.accountField input:not([type=checkbox]),.accountField select{min-height:46px;font-size:12px;padding:9px 12px}
+.accountField input[type=checkbox]{accent-color:#146b8f;width:18px;height:18px;flex-shrink:0;margin-top:5px}
+.optional{font-size:11px;font-weight:400;color:#9aa9bb}
+.hint{font-size:11.5px;color:#75869a;line-height:1.85;margin:0}
+.hint.full{padding-top:5px}
+.passwordWrap{display:flex;gap:8px;align-items:stretch}
+.passwordWrap input{flex:1;min-width:0}
+.passwordWrap .accountBtn{padding:8px 11px;min-height:45px;font-size:11px;white-space:nowrap}
+.reviewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.reviewRow{background:#f8fafc;border:1px solid #e1e9f1;border-radius:11px;padding:11px;min-width:0}
+.reviewRow small{display:block;font-size:10px;color:#8a9aab;margin:0 0 4px}
+.reviewRow strong{font-size:12px;color:#1e3c56;overflow-wrap:anywhere}
+.subtleBox{padding:13px;border:1px solid #dbe7ef;border-radius:11px;background:#f5f9fc;color:#5f768b;line-height:1.8;font-size:11.5px;margin:14px 0}
+.privacyLabel{display:flex;align-items:start;gap:10px;line-height:1.95;color:#50667c;font-size:12px}
+.privacyLabel a{color:#155b91;font-weight:800}
+.captchaPanel{border:1px solid #dce8ef;padding:12px;border-radius:12px;margin-top:17px}
+.captchaPanel strong{font-size:12px}
+.actions{display:flex;justify-content:space-between;gap:10px;margin:25px 0 0}
+.actions .accountBtn{font-size:12px;min-height:46px}
+.actions #next,.actions #submitBtn{margin-inline-start:auto}
+.accountBtn.secondary{color:#315476;border-color:#d8e5ed}
+#message{margin:0 0 15px}
+.accountMsg{padding:11px;border-radius:10px;font-size:12px;line-height:1.85}
+.accountMsg.err{background:#fff0f2;color:#a72847;border:1px solid #f6d3db}
+.accountMsg.ok{background:#eaf8f0;color:#187157;border:1px solid #bbe8cd}
+.helpBar{font-size:11.5px;color:#8694a6;line-height:1.9;padding-top:15px;text-align:center}
+.receipt{text-align:center;padding:18px 0 20px;max-width:520px;margin:auto}
+.receipt h2{font-size:26px;color:#176f62}
+.receipt .successCode{direction:ltr;font:bold 32px Arial,sans-serif;letter-spacing:2px;background:#edf5ff;border:1px solid #dbe7f4;padding:22px;border-radius:13px;color:#174c84}
+.receipt .statusPill{display:inline-block;background:#fff4df;color:#90621c;padding:8px 15px;border-radius:35px;font-size:12px;font-weight:800;margin:15px 0}
+.receipt .note{font-size:12px;color:#687b8c;line-height:2;background:#f6f9fc;border-radius:12px;padding:15px}
+.receipt .accountBtn{display:inline-block;text-decoration:none}
+@media(max-width:1000px){.authPage{padding:14px}.authShell{min-height:calc(100dvh - 28px);grid-template-columns:minmax(300px,.73fr) minmax(0,1.27fr)}.visualPanel{padding:30px 26px}.teacherName{font-size:39px}.teacherLabel{margin-top:40px}.contentTop{padding:23px 26px 0}.tabs{margin:26px 26px 24px}.view{padding:0 26px 30px}.physicsIllustration{max-width:350px}}
+@media(max-width:730px){body{background:#fff}.authPage{padding:0}.authShell{display:flex;flex-direction:column-reverse;border:0;border-radius:0;box-shadow:none;min-height:100dvh}.visualPanel{min-height:0;padding:22px 22px 21px}.brandMark{width:47px;height:47px;font-size:19px;border-radius:12px}.brandEnglish{font-size:12px;letter-spacing:1px}.brandCaption{font-size:9px}.teacherLabel{margin:23px 0 4px}.teacherName{font-size:29px;line-height:1.5}.heroLine{margin:8px 0 9px;width:39px;height:3px}.heroCopy{font-size:12px;line-height:1.85}.physicsIllustration,.visualBottom{display:none}.contentTop{padding:18px 20px 0}.tabs{margin:20px 20px 22px}.view{padding:0 20px 30px}.formTitle{font-size:24px}.chips{margin-top:25px}}
+@media(max-width:420px){.accountGrid,.reviewGrid{grid-template-columns:1fr}.stepItem{font-size:9px}.stepCircle{height:30px;width:30px}.teacherName{font-size:27px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}

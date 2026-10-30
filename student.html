@@ -10,6 +10,18 @@
 <div id="boot" class="boot">جاري فتح المنصة...</div>
 <script>
 (async()=>{
+  // Guests start at the shared login/register portal; authenticated students keep the existing learning app.
+  // If the auth library is unavailable, fall back to the existing legacy login instead of blocking access.
+  if(new URLSearchParams(location.search).get('legacy_login')!=='1'){
+    try{
+      const {sb}=await import('./student-identity-api.js');
+      const {data:{session}}=await sb.auth.getSession();
+      if(!session?.user){
+        location.replace('./student-register.html?tab=login');
+        return;
+      }
+    }catch(error){console.warn('Student login portal unavailable; using legacy entry.',error)}
+  }
   let html=await (await fetch('./student-base.html?v=20260822-2',{cache:'no-store'})).text();
   const replaceOnce=(oldText,newText,label)=>{if(!html.includes(oldText))throw new Error('تعذر تجهيز '+label);html=html.replace(oldText,newText)};
 
