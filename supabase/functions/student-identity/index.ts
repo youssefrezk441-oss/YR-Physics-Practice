@@ -1017,7 +1017,12 @@ Deno.serve(async (req) => {
         const rows =
           await sql`select r.public_ref,r.status request_status,r.provisioning_status,r.full_name,r.national_id_last4,r.identity_review_required,r.grade_level,r.education_system,r.attendance_location,r.residence_area,r.student_phone_e164,r.guardian_phone_e164,r.requested_group_code,r.assigned_group_code,r.assigned_student_code,r.duplicate_review,r.created_at,r.updated_at,r.decision_reason,ar.status account_status,ar.access_scope,ar.review_started_at,ar.review_deadline_at,ar.decided_at,ar.decision_reason account_decision_reason from private.student_registration_requests r left join private.student_account_reviews ar on ar.request_id=r.id order by (ar.status='pending_review') desc,ar.review_deadline_at nulls last,r.created_at desc limit 500`;
         const recovery =
-          await sql`select public_ref,status,contact_phone_e164,(subject_user_id is not null) account_matched,created_at,updated_at,decision_reason from private.student_account_recovery_requests order by (status='pending') desc,created_at desc limit 500`;
+          await sql`select r.public_ref,r.status,r.contact_phone_e164,(r.subject_user_id is not null) account_matched,
+                   r.created_at,r.updated_at,r.decision_reason,
+                   p.full_name student_name,p.student_code,p.group_code,p.is_active student_active
+                   from private.student_account_recovery_requests r
+                   left join public.student_profiles p on p.user_id=r.subject_user_id
+                   order by (r.status='pending') desc,r.created_at desc limit 500`;
         const activeGroups =
           await sql`select group_code,grade_level,center_name from public.student_groups where is_active=true order by grade_level,group_code limit 200`;
         const invites =
@@ -1043,9 +1048,20 @@ Deno.serve(async (req) => {
             "قرار الاستعادة غير صالح.",
           );
         }
-        if (decision === "rejected" || !r.subject_user_id) {
+        if (reason.length < 8) {
+          throw new IdentityInputError("recovery_reason_required","اكتب سببًا واضحًا من 8 أحرف على الأقل.");
+        }
+        if (decision === "rejected") {
           await sql`update private.student_account_recovery_requests set status='rejected',decision_reason=${reason},decided_at=now(),decided_by=${a.user.id}::uuid,updated_at=now() where id=${r.id}::uuid`;
           return out(req, { ok: true });
+        }
+        // Matching an identifier does not establish the claimant's identity.
+        // Only a privileged administrator can approve after explicitly documenting verification.
+        const method = txt(body.verification_method, 40);
+        if (!r.subject_user_id || body.identity_verified !== true ||
+            !new Set(["in_person","registered_phone"]).has(method)) {
+          throw new IdentityInputError("recovery_verification_required",
+            "لا يمكن اعتماد الاستعادة قبل التحقق من هوية الطالب وتحديد طريقة التحقق.");
         }
         const token = b64(crypto.getRandomValues(new Uint8Array(32))),
           th = await hashToken(token);
@@ -1053,7 +1069,9 @@ Deno.serve(async (req) => {
           await tx`update private.student_password_reset_tokens set expires_at=least(expires_at,now()) where recovery_request_id=${r.id}::uuid and used_at is null`;
           await tx`insert into private.student_password_reset_tokens(recovery_request_id,user_id,token_hash,expires_at,issued_by) values(${r.id}::uuid,${r.subject_user_id}::uuid,${th},now()+interval '2 hours',${a.user.id}::uuid)`;
           await tx`update private.student_account_recovery_requests set status='approved',decision_reason=${reason},decided_at=now(),decided_by=${a.user.id}::uuid,updated_at=now() where id=${r.id}::uuid`;
-          await tx`insert into private.student_identity_audit_events(actor_user_id,subject_user_id,event_type,reason) values(${a.user.id}::uuid,${r.subject_user_id}::uuid,'password_recovery_approved',${reason})`;
+          await tx`insert into private.student_identity_audit_events(actor_user_id,subject_user_id,event_type,reason,metadata)
+                    values(${a.user.id}::uuid,${r.subject_user_id}::uuid,'password_recovery_approved',${reason},
+                    ${tx.json({verification_method:method,verified_by_admin:true})})`;
         });
         return out(req, { ok: true, reset_token: token, expires_in_hours: 2 });
       }
