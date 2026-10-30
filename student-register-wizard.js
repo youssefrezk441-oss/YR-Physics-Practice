@@ -19,16 +19,6 @@ const asLatinDigits = (input) => String(input || "")
   .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
 const phoneDigits = (input) => asLatinDigits(input).replace(/[\s\-()]/g, "");
 const validPhone = (input) => /^(?:01[0125]\d{8}|201[0125]\d{8}|\+201[0125]\d{8})$/.test(phoneDigits(input));
-function checkNationalId(input) {
-  const value = asLatinDigits(input).replace(/\s/g, "");
-  if (!/^[23]\d{13}$/.test(value)) return {valid:false,message:"اكتب الرقم القومي كاملًا: 14 رقمًا تبدأ بـ 2 أو 3."};
-  const year = (value[0] === "2" ? 1900 : 2000) + Number(value.slice(1,3));
-  const month = Number(value.slice(3,5)), day = Number(value.slice(5,7));
-  const date = new Date(Date.UTC(year,month-1,day));
-  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month-1 || date.getUTCDate() !== day || date > new Date())
-    return {valid:false,message:"تاريخ الميلاد داخل الرقم القومي غير صحيح."};
-  return {valid:true,value,year,month,day};
-}
 const nameValue = () => ["first_name", "second_name", "third_name", "fourth_name"]
   .map((key) => String(get(key).value || "").normalize("NFKC").trim().replace(/\s+/g, " "))
   .join(" ");
@@ -52,7 +42,6 @@ async function registrationCall(action, payload = {}) {
 function fillReview() {
   const values = [
     ["الاسم الرباعي", nameValue()],
-    ["الرقم القومي", "•••• •••• ••" + asLatinDigits(get("national_id").value).slice(-4)],
     ["الصف الدراسي", get("grade_level").value],
     ["النظام التعليمي", get("education_system").value],
     ["مكان الحضور", get("attendance_location").value],
@@ -102,15 +91,15 @@ function refreshGroups() {
   }
   const byGrade = (config.groups || []).filter((g) => gradeCompatible(g, grade));
   const byCenter = center ? byGrade.filter((g) => centerCompatible(g, center)) : byGrade;
-  const filtered = center && center !== "غير ذلك" ? byCenter : byGrade;
+  const filtered = center && center !== "غير ذلك" && center !== "خصوصي" ? byCenter : byGrade;
   for (const group of filtered) {
     select.add(new Option(String(group.group_code) + (group.center_name ? " — " + group.center_name : ""), String(group.group_code)));
   }
   if (previous && filtered.some((g) => String(g.group_code) === previous)) select.value = previous;
   select.disabled = !filtered.length;
   hint.textContent = !filtered.length ? "لا توجد مجموعة متاحة للصف ومكان الحضور المحددين حاليًا. تواصل مع الإدارة لتحديد مجموعتك."
-    : center === "غير ذلك"
-      ? "اختر مجموعتك الفعلية، وستراجع الإدارة مكان الحضور."
+    : center === "غير ذلك" || center === "خصوصي"
+      ? "اختر المجموعة التي تتبع لها. ستراجع الإدارة طلب الحضور الخاص أو غير المحدد قبل الاعتماد."
       : "المجموعات المعروضة توافق الصف ومكان الحضور. ستراجع الإدارة بياناتك قبل الاعتماد.";
 }
 function updateControls() {
@@ -145,12 +134,6 @@ function enterStep(index) {
 function validateStep(index) {
   const panel = panels[index];
   if (index === 0) {
-    const id = get("national_id");
-    const parsed = checkNationalId(id.value);
-    id.setCustomValidity(parsed.valid ? "" : parsed.message);
-    const idStatus = $("idStatus");
-    idStatus.textContent = parsed.valid ? "صيغة الرقم وتاريخ الميلاد صحيحان. لا تُثبت هذه الخطوة ملكية الرقم." : parsed.message;
-    idStatus.className = parsed.valid ? "hint valid" : "hint invalid";
     const name = nameValue();
     const parts = ["first_name","second_name","third_name","fourth_name"].map((key) => get(key));
     for (const input of parts) {
@@ -234,14 +217,6 @@ document.querySelectorAll(".toggle").forEach((button) => {
   });
 });
 form.addEventListener("input", resetFieldError);
-get("national_id").addEventListener("input", () => {
-  const el = get("national_id");
-  const newValue = asLatinDigits(el.value).replace(/[^0-9]/g,"").slice(0,14);
-  if (el.value !== newValue) el.value = newValue;
-  const parsed = checkNationalId(newValue);
-  $("idStatus").textContent = parsed.valid ? "صيغة الرقم وتاريخ الميلاد صحيحان." : "يجب إدخال 14 رقمًا صحيحًا تتضمن تاريخ الميلاد.";
-  $("idStatus").className = parsed.valid ? "hint valid" : "hint";
-});
 for (const name of ["grade_level", "attendance_location", "education_system"]) {
   get(name).addEventListener("change", refreshGroups);
 }
@@ -260,10 +235,6 @@ form.addEventListener("submit", async (event) => {
     if (!validateStep(i)) return;
   }
   if (currentStep !== 3) enterStep(3);
-  if (!config.national_id_collection_enabled) {
-    showError("جمع الرقم القومي غير مفعّل على الخادم حاليًا. لن نستقبل البيانات قبل اكتمال متطلبات الخصوصية.");
-    return;
-  }
   if (config.captcha_required && !captchaToken) {
     showError("أكمل التحقق الأمني قبل إنشاء الحساب.");
     return;
@@ -271,14 +242,12 @@ form.addEventListener("submit", async (event) => {
   const fields = Object.fromEntries(new FormData(form));
   const payload = {
     ...fields,
-    national_id: checkNationalId(fields.national_id).value,
-    identity_consent_accepted: fields.identity_consent === "on",
     full_name: nameValue(),
     privacy_accepted: fields.privacy === "on",
     privacy_notice_version: config.privacy_notice_version,
     request_idempotency_key: requestKey
   };
-  for (const key of ["first_name", "second_name", "third_name", "fourth_name", "privacy", "identity_consent"]) delete payload[key];
+  for (const key of ["first_name", "second_name", "third_name", "fourth_name", "privacy"]) delete payload[key];
   if (invite) payload.registration_invite = invite;
   if (config.captcha_required) payload.captcha_token = captchaToken;
   submitting = true;
@@ -315,8 +284,6 @@ updateControls();
 try {
   config = await registrationCall("config");
   if (!config.registration_enabled) throw new Error("التسجيل الجديد غير متاح حاليًا. تواصل مع الإدارة.");
-  if (!config.national_id_collection_enabled) throw new Error("جمع الرقم القومي متوقف مؤقتًا لحين استكمال متطلبات حماية البيانات وموافقة ولي الأمر.");
-  if (config.privacy_notice_version !== "v2-2026-10-30") throw new Error("إشعار خصوصية الرقم القومي لم يُعتمد في إعدادات الخادم بعد.");
   if (config.registration_invite_required && !invite) throw new Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل.");
   if (config.captcha_required && (!config.captcha_ready || !config.captcha_sitekey))
     throw new Error("التحقق الأمني غير جاهز حاليًا. التسجيل مغلق لحين الإصلاح.");

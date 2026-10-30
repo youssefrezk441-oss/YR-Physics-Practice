@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مراجعة طلبات الطلاب | YR Physics Practice</title>
+<link rel="stylesheet" href="student-register-identity.css">
+<style>
+.adminWrap{max-width:1120px;margin:auto;padding:24px 18px 60px}.adminHeader{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:25px}
+.adminCard{background:#fff;border:1px solid #dce4ef;border-radius:16px;padding:22px;box-shadow:0 14px 38px #1531530b}
+h1{font-size:24px;margin:0 0 7px;color:#142b4c}p.sub{color:#6b7d94;font-size:13px;line-height:1.9}
+#loginView{max-width:470px;margin:45px auto}#loginView input{display:block;width:100%;margin:12px 0;border:1px solid #d1dcea;padding:13px;border-radius:10px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:17px 0}.controls input,.controls select{padding:10px;border:1px solid #d3ddea;border-radius:10px;min-width:150px;flex:1}
+#list{display:grid;gap:13px}.request{border:1px solid #dce6f0;border-radius:13px;background:white;padding:17px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.head strong{font-size:16px}.status{background:#f6f8fc;color:#536b84;border:1px solid #dce5ef;padding:5px 12px;border-radius:18px;font-size:11px}
+.status.approved{background:#eaf9f0;color:#176849}.status.pending_review{background:#fff3df;color:#8c5a14}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:13px 0}.meta div{font-size:13px;color:#253d57;overflow-wrap:anywhere}.meta small{display:block;font-size:11px;color:#7f8fa1;margin:0 0 3px}
+.actions{padding:13px 0 0;display:flex;gap:8px;justify-content:flex-start;flex-wrap:wrap}.actions .accountBtn{font-size:12px}.warning{border-radius:10px;background:#fff5e6;color:#825b20;padding:10px;font-size:12px}
+dialog{border:0;border-radius:17px;padding:24px;max-width:min(530px,calc(100vw - 28px));width:100%;box-shadow:0 20px 65px #0b1d3855}dialog::backdrop{background:#0b1d38b7}
+dialog textarea{width:100%;min-height:90px;resize:vertical;border:1px solid #d1ddea;border-radius:9px;padding:10px;display:block;margin-top:9px}
+dialog .dialogActions{display:flex;gap:9px;margin-top:18px}.dialogActions button{flex:1}
+.checkLabel{display:flex;align-items:start;gap:9px;margin:13px 0;line-height:1.9;font-size:12px}.checkLabel input{margin-top:6px}
+@media(max-width:600px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body><main class="adminWrap">
+<header class="adminHeader"><a class="brand" href="student.html"><span class="brandIcon">YR</span><span><span class="brandTitle">YR PHYSICS PRACTICE</span><span class="brandSub">مراجعة تسجيل الطلاب</span></span></a><a class="backLink" href="admin-ch1-workshop-analytics.html">العودة للإدارة ↗</a></header>
+<section id="loginView" class="adminCard hidden"><h1>دخول الإدارة</h1><p class="sub">تسجيل الدخول بحساب الإدارة فقط.</p><input id="email" type="email" autocomplete="username" placeholder="البريد الإداري"><input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور"><button id="loginBtn" class="accountBtn">تسجيل الدخول</button><p id="loginMsg" class="sub" role="alert"></p></section>
+<section id="app" class="hidden"><h1>طلبات التسجيل الجديدة</h1><p class="sub">راجع البيانات والتكرار، وتأكد من موافقة ولي الأمر للقاصر قبل الموافقة النهائية.</p>
+<div class="controls"><input id="search" type="search" placeholder="بحث بالاسم أو الكود أو الهاتف" aria-label="بحث"><select id="filter"><option value="pending">في انتظار المراجعة</option><option value="all">كل الحالات</option><option value="approved">المعتمدة</option><option value="rejected">المرفوضة</option></select><button id="refresh" class="accountBtn secondary">تحديث</button><button id="logout" class="accountBtn secondary">خروج</button></div>
+<p id="state" class="sub" role="status"></p><div id="list"></div></section>
+<dialog id="decisionDialog"><h2 id="dialogTitle">مراجعة الطلب</h2><p id="dialogStudent" class="sub"></p><p class="warning">تأكد من صحة بيانات الطالب وعدم وجود حساب مكرر قبل اتخاذ القرار.</p>
+<label for="reason">سبب القرار</label><textarea id="reason" maxlength="1000" placeholder="اكتب نتيجة المراجعة بوضوح"></textarea>
+<label id="guardianLabel" class="checkLabel"><input type="checkbox" id="guardianConfirm"><span>راجعت بيانات الطالب وتأكدت من موافقة ولي الأمر عند الاقتضاء، وفحصت احتمالات التكرار.</span></label>
+<p id="dialogMsg" class="sub" role="alert"></p><div class="dialogActions"><button type="button" id="cancel" class="accountBtn secondary">إلغاء</button><button type="button" id="confirm" class="accountBtn">تأكيد القرار</button></div>
+</dialog>
+</main>
+<script type="module">
+import {sb} from "./student-identity-api.js";
+const $=id=>document.getElementById(id);
+let rows=[],pending=null,busy=false;
+function node(tag,text,cls){const el=document.createElement(tag);if(text!==null)el.textContent=String(text??"");if(cls)el.className=cls;return el}
+async function api(action,payload={}){
+ const {data,error}=await sb.functions.invoke("student-identity",{body:{action,...payload}});
+ if(error){let details;try{details=await error.context?.clone()?.json()}catch(e){}throw Error(details?.message||error.message||"تعذر الاتصال بالخادم")}
+ if(data?.error)throw Error(data.message||data.error);return data;
+}
+function statusOf(row){return row.account_status||row.request_status||"pending"}
+const labels={pending_review:"بانتظار المراجعة",suspended_pending_approval:"انتهت مهلة المراجعة",approved:"موافق عليه",rejected:"مرفوض",suspended_by_admin:"موقوف"};
+function item(parent,label,value){const box=node("div",null);box.append(node("small",label),node("strong",value||"—"));parent.append(box)}
+function render(){
+ const term=$("search").value.trim().toLowerCase(),filter=$("filter").value;
+ const visible=rows.filter(r=>{const status=statusOf(r);return (!term||[r.full_name,r.assigned_student_code,r.student_phone_e164,r.guardian_phone_e164,r.requested_group_code].some(v=>String(v||"").toLowerCase().includes(term)))&&(filter==="all"||(filter==="pending"&&["pending","pending_review","suspended_pending_approval"].includes(status))||filter===status)});
+ $("state").textContent="الطلبات المعروضة: "+visible.length.toLocaleString("ar-EG");
+ $("list").replaceChildren();
+ if(!visible.length){$("list").append(node("div","لا توجد طلبات مطابقة حاليًا.","adminCard"));return}
+ for(const r of visible){
+  const card=node("article",null,"request"),head=node("div",null,"head");
+  head.append(node("strong",r.full_name),node("span",labels[statusOf(r)]||statusOf(r),"status "+statusOf(r)));card.append(head);
+  const meta=node("div",null,"meta");
+  item(meta,"كود الطالب",r.assigned_student_code);item(meta,"المجموعة",r.assigned_group_code||r.requested_group_code);
+  item(meta,"هاتف الطالب",r.student_phone_e164);item(meta,"هاتف ولي الأمر",r.guardian_phone_e164);
+  item(meta,"الصف والنظام",String(r.grade_level||"")+" — "+String(r.education_system||""));
+  item(meta,"تاريخ الطلب",r.created_at?new Date(r.created_at).toLocaleString("ar-EG"):"—");card.append(meta);
+  if(r.duplicate_review&&Object.values(r.duplicate_review).some(v=>v===true||typeof v==="number"&&v>0))card.append(node("p","يوجد تشابه محتمل مع بيانات حسابات موجودة. يلزم مراجعة التكرار.","warning"));
+  if(["pending_review","suspended_pending_approval"].includes(statusOf(r))){
+   const bar=node("div",null,"actions"),ok=node("button","الموافقة وتفعيل الحساب","accountBtn"),bad=node("button","رفض الطلب","accountBtn secondary");
+   ok.type="button";bad.type="button";ok.onclick=()=>choose(r,"approved");bad.onclick=()=>choose(r,"rejected");bar.append(ok,bad);card.append(bar)
+  }
+  $("list").append(card);
+ }
+}
+function choose(row,decision){
+ pending={row,decision};$("dialogTitle").textContent=decision==="approved"?"الموافقة وتفعيل الحساب":"رفض طلب التسجيل";
+ $("dialogStudent").textContent=String(row.full_name||"")+" — "+String(row.assigned_student_code||"");
+ $("reason").value=decision==="approved"?"تمت مراجعة بيانات الطالب والتحقق من استيفاء متطلبات الاعتماد.":"";
+ $("guardianConfirm").checked=false;$("guardianLabel").classList.toggle("hidden",decision!=="approved");
+ $("dialogMsg").textContent="";$("confirm").textContent=decision==="approved"?"تفعيل الحساب":"تأكيد الرفض";
+ $("decisionDialog").showModal();
+}
+$("cancel").onclick=()=>$("decisionDialog").close();
+$("confirm").onclick=async()=>{
+ if(!pending||busy)return;
+ const reason=$("reason").value.trim();
+ if(reason.length<8){$("dialogMsg").textContent="اكتب سببًا واضحًا من 8 أحرف على الأقل.";return}
+ if(pending.decision==="approved"&&!$("guardianConfirm").checked){$("dialogMsg").textContent="أكد مراجعة موافقة ولي الأمر قبل تفعيل الحساب.";return}
+ busy=true;$("confirm").disabled=true;
+ try{await api("admin_decide",{reference:pending.row.public_ref,decision:pending.decision,reason});$("decisionDialog").close();await load()}
+ catch(err){$("dialogMsg").textContent=err.message||"تعذر حفظ القرار"}
+ finally{busy=false;$("confirm").disabled=false}
+};
+$("search").oninput=render;$("filter").onchange=render;$("refresh").onclick=()=>load();
+$("logout").onclick=async()=>{await sb.auth.signOut();$("app").classList.add("hidden");$("loginView").classList.remove("hidden")};
+async function load(){
+ $("state").textContent="جارٍ تحميل طلبات التسجيل…";
+ try{const result=await api("admin_list");rows=result.requests||[];render()}
+ catch(err){$("state").textContent=err.message||"تعذر تحميل الطلبات";$("list").replaceChildren()}
+}
+async function start(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session||session.user?.app_metadata?.role!=="admin"){$("loginView").classList.remove("hidden");return}
+ $("loginView").classList.add("hidden");$("app").classList.remove("hidden");await load();
+}
+$("loginBtn").onclick=async()=>{
+ $("loginBtn").disabled=true;
+ try{const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;if(data.user?.app_metadata?.role!=="admin")throw Error("حسابك غير مخوّل بالإدارة");await start()}
+ catch(err){$("loginMsg").textContent=err.message||"تعذر تسجيل الدخول"}
+ finally{$("loginBtn").disabled=false}
+};
+start();
+</script></body></html>

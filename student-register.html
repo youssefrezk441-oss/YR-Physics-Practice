@@ -6,68 +6,6 @@
   <meta name="color-scheme" content="light">
   <title>تسجيل طالب جديد | مستر يوسف رزق</title>
   <link rel="stylesheet" href="student-register-identity.css">
-  <style>
-    :root{--navy:#152852;--blue:#254db3;--ink:#16243c;--muted:#66758b;--edge:#dde5f0;--surface:#f4f7fc}
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(155deg,#e9f0ff 0%,#f7f9fd 42%,#f7f8fc 100%);color:var(--ink);min-height:100vh}
-    .accountPage{max-width:1030px;margin:0 auto;padding:30px 18px 60px}
-    .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:11px;font-size:17px;font-weight:900;color:var(--navy)}
-    .brandIcon{display:grid;place-items:center;background:var(--navy);color:#fff;border-radius:14px;width:44px;height:44px;font-size:15px;direction:ltr}
-    .backLink{color:var(--blue);font-weight:800;text-decoration:none;font-size:14px}
-    .intro{max-width:670px;margin:0 auto 22px;text-align:center}
-    .intro h1{font-size:clamp(25px,4vw,35px);line-height:1.4;margin:0 0 7px;color:var(--navy)}
-    .intro p{margin:0;color:var(--muted);font-size:15px;line-height:1.85}
-    .wizard{max-width:780px;margin:auto}
-    .stepper{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:18px 0}
-    .stepItem{text-align:center;color:#748198;font-weight:700;font-size:12px;line-height:1.6}
-    .stepCircle{display:grid;place-items:center;margin:0 auto 7px;width:38px;height:38px;border-radius:50%;background:#e7edf7;color:#556780;border:2px solid #e7edf7;font-size:15px}
-    .stepItem.active{color:var(--blue)} .stepItem.active .stepCircle{background:var(--blue);color:#fff;border-color:var(--blue)}
-    .stepItem.done .stepCircle{background:#e5f4eb;border-color:#a7dec0;color:#15724c}
-    .accountCard{border:1px solid var(--edge);box-shadow:0 18px 45px rgba(17,38,85,.08);border-radius:22px;padding:clamp(18px,3.6vw,34px);margin-bottom:14px}
-    .step-panel[hidden]{display:none!important}
-    .panelTitle{font-size:21px;color:var(--navy);margin:0 0 5px;line-height:1.5}
-    .panelIntro{margin:0 0 22px;color:var(--muted);font-size:13px;line-height:1.8}
-    .accountGrid{gap:15px}.accountGrid>.full{grid-column:1/-1}
-    .accountField label{color:#24344e;font-size:13px}
-    .accountField input,.accountField select{min-height:48px;border-color:#ccd7e7;border-radius:12px;background:#fff;color:var(--ink);font-size:15px}
-    .accountField input:focus,.accountField select:focus{outline:3px solid #bdd3ff;outline-offset:0;border-color:var(--blue)}
-    .accountField input:disabled,.accountField select:disabled{background:#f2f4f8}
-    .accountField input[type=checkbox]{width:19px;height:19px;min-height:auto;accent-color:var(--blue)}
-    .hint{color:var(--muted);font-size:12px;line-height:1.8;margin:2px 0}
-    .optional{color:#738196;font-weight:500;font-size:11px}
-    .actions{display:flex;gap:10px;margin-top:23px;align-items:center;justify-content:space-between}
-    .actions .accountBtn{min-height:47px;min-width:145px}
-    .accountBtn{background:var(--blue);border-radius:12px}
-    .accountBtn:disabled{opacity:.52;cursor:not-allowed}
-    .actions .secondary{background:#fff;border:1px solid #ccd7e7;color:#33445b}
-    .passwordWrap{display:flex;gap:7px}
-    .passwordWrap input{min-width:0;flex:1}
-    .passwordWrap .accountBtn{flex:0 0 auto;padding:10px;min-width:66px}
-    .subtleBox{padding:13px 14px;border-radius:13px;background:var(--surface);color:#52617b;font-size:13px;line-height:1.9}
-    .reviewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    .reviewRow{padding:13px;border:1px solid var(--edge);border-radius:11px;background:#fafbfd}
-    .reviewRow small{display:block;color:var(--muted);margin-bottom:3px}.reviewRow strong{font-size:14px;overflow-wrap:anywhere}
-    .privacyLabel{display:flex;align-items:start;gap:10px;font-weight:700;line-height:1.8}
-    .privacyLabel input{margin-top:6px;flex-shrink:0}
-    .privacyLabel a{color:var(--blue)}
-    .captchaPanel{margin-top:15px}
-    #message{max-width:780px;margin:0 auto 13px}
-    .successCode{font-size:clamp(27px,8vw,45px);font-weight:900;letter-spacing:2px;color:var(--blue);text-align:center;padding:18px;background:#eef3ff;border-radius:15px;direction:ltr}
-    .receipt{text-align:center;max-width:780px;margin:0 auto}
-    .receipt h2{color:#176349;margin:6px 0}
-    .receipt .note{background:#f0f6ff;border-radius:12px;padding:12px;color:#435678;line-height:1.8;margin:16px 0}
-    .statusPill{display:inline-block;border-radius:40px;background:#fff5dc;padding:7px 15px;color:#875b12;font-weight:800}
-    .helpBar{text-align:center;font-size:13px;color:#65768e;margin-top:18px;line-height:1.85}
-    .helpBar a{color:var(--blue);font-weight:800}
-    @media(max-width:680px){
-      .accountPage{padding:14px 12px 35px}.intro{text-align:right}.intro h1{font-size:26px}
-      .stepItem{font-size:10px}.stepCircle{width:32px;height:32px;font-size:12px}
-      .accountGrid,.reviewGrid{grid-template-columns:1fr}.accountCard{padding:18px}
-      .actions .accountBtn{min-width:0;flex:1}.actions{gap:9px}
-      .topline{margin-bottom:20px}.brand{font-size:14px}
-    }
-  </style>
 </head>
 <body>
 <main class="accountPage">
@@ -90,13 +28,13 @@
     <form id="form" novalidate autocomplete="on"><div class="panelBody">
       <section class="step-panel" data-step="0" aria-labelledby="stepTitle0">
         <p class="panelIndex">01 / 04</p><h2 id="stepTitle0" class="panelTitle">بيانات الطالب</h2>
-        <p class="panelIntro">اكتب اسمك الرباعي كما هو بمستنداتك، ثم الرقم القومي المكوّن من 14 رقمًا.</p>
+        <p class="panelIntro">اكتب اسمك الرباعي كما هو في المركز، علشان نقدر نربط حسابك بمجموعتك بسهولة.</p>
         <div class="accountGrid">
           <div class="accountField"><label for="firstName">الاسم الأول</label><input id="firstName" name="first_name" required maxlength="45" autocomplete="given-name" placeholder="مثال: أحمد"></div>
           <div class="accountField"><label for="secondName">الاسم الثاني</label><input id="secondName" name="second_name" required maxlength="45" placeholder="اسم الأب"></div>
           <div class="accountField"><label for="thirdName">الاسم الثالث</label><input id="thirdName" name="third_name" required maxlength="45" placeholder="اسم الجد"></div>
           <div class="accountField"><label for="fourthName">الاسم الرابع</label><input id="fourthName" name="fourth_name" required maxlength="45" autocomplete="family-name" placeholder="اسم العائلة"></div>
-          <div class="accountField full"><label for="nationalId">الرقم القومي (14 رقمًا)</label><input id="nationalId" name="national_id" required type="text" inputmode="numeric" autocomplete="off" minlength="14" maxlength="14" dir="ltr" placeholder="الرقم القومي بالبطاقة أو شهادة الميلاد" aria-describedby="idStatus"><p id="idStatus" class="hint" role="status">يُستخدم للتمييز بين الحسابات ومنع التكرار.</p></div><div class="identityBox full"><span>◈</span><span><strong>بيانات الهوية محمية.</strong> يخزّن الخادم الرقم مشفرًا، ولا يعرضه كاملًا في ملخص التسجيل. يلزم استيفاء موافقة ولي الأمر للقُصّر قبل جمع بياناتهم.</span></div>
+          <p class="hint full">هنراجع بياناتك عند طلب الموافقة، ومش محتاجين الرقم القومي للتسجيل.</p>
         </div>
       </section>
       <section class="step-panel" data-step="1" aria-labelledby="stepTitle1" hidden>
@@ -124,13 +62,13 @@
       </section>
       <section class="step-panel" data-step="3" aria-labelledby="stepTitle3" hidden>
         <p class="panelIndex">04 / 04</p><h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الإنشاء</h2>
-        <p class="panelIntro">راجع البيانات قبل الإرسال. الرقم القومي لا يظهر كاملًا في الملخص.</p>
+        <p class="panelIntro">راجع بياناتك قبل إرسال الطلب. هتحصل على كود الطالب بعد إنشاء الحساب.</p>
         <div id="review" class="reviewGrid" aria-live="polite"></div>
         <p class="subtleBox" style="margin-top:16px">رقم الهاتف غير موثق حاليًا، وإنشاء الحساب لا يعني اعتماده. الإدارة هتراجع البيانات خلال 48 ساعة.</p>
         <div class="accountField" style="margin-top:17px">
-          <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على معالجة بيانات التسجيل. إذا كنت دون 18 سنة، اطلع ولي أمرك على الإشعار.</span></label>
+          <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على معالجة بيانات التسجيل لغرض إنشاء الحساب والمتابعة التعليمية.</span></label>
         </div>
-        <div class="accountField" style="margin-top:13px"><label class="privacyLabel"><input type="checkbox" name="identity_consent" required><span>أوافق بصورة مستقلة على معالجة الرقم القومي بصورة آمنة لمنع تكرار الحسابات والتحقق من الهوية.</span></label></div><p class="hint">في حالة الطالب دون 18 سنة يلزم اعتماد موافقة ولي الأمر بصورة منفصلة، ولا يكفي تحديد مربع الموافقة هنا.</p><div id="captchaWrap" class="captchaPanel hidden">
+        <div id="captchaWrap" class="captchaPanel hidden">
           <strong>التحقق الأمني</strong>
           <div id="turnstileWidget" style="margin-top:9px"></div>
           <p id="captchaStatus" class="hint" role="status">جارٍ تجهيز التحقق الأمني…</p>
