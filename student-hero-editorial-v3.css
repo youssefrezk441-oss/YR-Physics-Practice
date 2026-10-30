@@ -75,7 +75,8 @@
  .yrPhotoEditorial{height:300px}
  .yrBrandDescriptor{display:none}
 }
-@media(max-width:730px){
+@media(max-width:820px){
+ .authPage{padding:0;display:block}
  .authShell{display:flex;flex-direction:column;min-height:100dvh}
  .journeyVisual{
    order:0;display:grid;grid-template-columns:minmax(0,1fr) 124px;
