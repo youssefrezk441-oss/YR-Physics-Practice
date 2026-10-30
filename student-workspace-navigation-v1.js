@@ -9,13 +9,17 @@ const availableSources=[
  "openLecture3Workshop","openLecture4Workshop","openLecture5Workshop","openLecture6Workshop",
  "openUnifiedL1Workshop","openLecture1Homework","openChapterMistakes","openCh2Mistakes",
  "openB2Lesson1Workshop","openB2Lesson2Workshop","openChapterTrainings",
- "openFoundationTrainings","openCompleted","openHonor"
+ "openFoundationTrainings","openCompleted","openHonor","openIndicators","openReferences"
 ];
 let lastArea="home",moreOpen=false,refreshQueued=false;
 function source(id){const el=$(id);return el&&!el.disabled&&!el.classList.contains("hidden")?el:null}
 function canThirdGrade(){
  const labels=[...document.querySelectorAll("#studentProfileMeta span")].map(x=>x.textContent||"").join(" ");
  return /الصف الثالث الثانوي|third.secondary|3_secondary/i.test(labels);
+}
+function canSecondGrade(){
+ const labels=[...document.querySelectorAll("#studentProfileMeta span")].map(x=>x.textContent||"").join(" ");
+ return /الصف الثاني الثانوي|second.secondary|2_secondary/i.test(labels);
 }
 function titleFrom(el,fallback){
  return el?.querySelector("h3")?.textContent?.trim()||fallback;
@@ -93,6 +97,11 @@ function refreshLearning(){
    ]);
   }
  }
+ if((ch==="1"&&canThirdGrade())||(ch==="2"&&canSecondGrade())){
+  found+=collect(box,"مرجع الشرح",[
+   ["openReferences","مراجع شرح الحصص","افتح المرجع المتاح لصفك من المصادر المنشورة بالفعل.","📖"]
+  ]);
+ }
  if(!found)box.append(empty("لا توجد ورش أو أنشطة منشورة ومتاحة لحسابك في هذا الفصل حاليًا."));
  if(ch==="1"){
   // Foundation is a separate course, not a mislabeled academic chapter.
@@ -155,6 +164,22 @@ function homeNext(){
  button.textContent=id?"فتح التدريب":"استعراض الفصول";
  button.addEventListener("click",()=>{if(id&&source(id))source(id).click();else go("learning")});
  region.replaceChildren(text,button);
+ // Keep existing indicator/history screens reachable after retiring the old home tiles.
+ let progress=$("yrHomeProgress");
+ if(!progress){
+  progress=document.createElement("section");progress.id="yrHomeProgress";
+  progress.className="yrWorkspaceItems";
+  region.insertAdjacentElement("afterend",progress);
+ }
+ const progressContent=document.createDocumentFragment();
+ progressContent.append(h3("أدائي وتقدّمي"));
+ const indicators=makeEntry("openIndicators","مؤشراتي وتطوّر أدائي",
+  "الحضور والواجب والكويزات وتدريبات المنصة من سجلاتك الفعلية.","📊");
+ if(indicators)progressContent.append(indicators);
+ const history=makeEntry("openCompleted","سجل المحاولات السابقة",
+  "السجل الحالي يجمع الفصول؛ التصفية حسب الفصل غير متاحة بعد.","✓");
+ if(history)progressContent.append(history);
+ progress.replaceChildren(progressContent);
 }
 function refresh(){
  refreshLearning();refreshReview();refreshAchievements();homeNext();
