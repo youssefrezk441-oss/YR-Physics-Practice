@@ -27,6 +27,7 @@ jobs:
         run: |
           node --check student-profile-completion.js
           node --check student-access.js
+          node --check supabase/functions/student-identity/index.ts
           node --check tools/tests/existing-student-completion.test.mjs
       - name: Profile onboarding contract tests
         run: node --test tools/tests/existing-student-completion.test.mjs
