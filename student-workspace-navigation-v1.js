@@ -175,7 +175,7 @@ function renderHonorEditionCards(){
   for(const c of all[key]||[]){
    const btn=document.createElement("button");btn.type="button";btn.className="yrArchiveItem yrEditionButton";
    const title=document.createElement("strong");title.textContent=c.title||c.code||"جولة تقييم";
-   const desc=document.createElement("span");desc.textContent=(labels[key]||"جولة تقييم")+" · "+(c.archived?"نسخة مؤرشفة وثابتة":"بيانات جولة غير مؤرشفة");
+   const desc=document.createElement("span");desc.textContent=(labels[key]||"جولة تقييم")+" · "+(c.archived?"نسخة مؤرشفة وثابتة":c.status==="pending_review"?"دورة قيد التجهيز — لا يوجد ترتيب معتمد":"جولة تقييم جارية");
    btn.append(title,desc);
    btn.addEventListener("click",()=>window.yrWorkspaceOpenHonorCycle?.(key,c.id));
    box.append(btn);count++;
