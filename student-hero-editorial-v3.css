@@ -1,0 +1,126 @@
+/* YR Physics Practice | Editorial Hero v3. Scope: presentation only; no auth JS touched. */
+/* Desktop: a planned editorial composition, never a floating portrait card. */
+.authShell{grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr)}
+.journeyVisual{
+  padding:29px 32px 25px;display:flex;flex-direction:column;gap:0;
+  background:linear-gradient(155deg,#F8F8F1 0%,#F0F5EC 54%,#E4EFE6 100%);
+  position:relative;overflow:visible;isolation:isolate;min-height:760px;
+}
+.journeyVisual::before{
+  position:absolute;inset:0;content:"";z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 5% 37%,#FFFFFF9C,transparent 62%);
+}
+.journeyVisual::after{display:none}
+.yrHeroTop{display:flex;align-items:center;justify-content:space-between;gap:13px;min-height:54px}
+.yrBrandLockup{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.yrMonogram{display:block;width:52px;height:48px;flex-shrink:0}
+.yrBrandWordmark{display:grid;gap:3px;text-align:left}
+.yrBrandWordmark strong{color:#0E5948;font:900 16px/1.05 Arial,sans-serif;letter-spacing:1.1px;white-space:nowrap}
+.yrBrandWordmark strong span{color:#1B846A}
+.yrBrandWordmark small{font:700 10px/1.2 Arial,sans-serif;letter-spacing:3.3px;color:#6E8378}
+.yrBrandDescriptor{font-size:11px;font-weight:800;color:#416454;background:#FFFFFF95;border:1px solid #D1E0D5;border-radius:999px;padding:8px 11px;white-space:nowrap}
+.yrHeroStory{margin-top:43px;position:relative;z-index:1}
+.yrHeroEyebrow{color:#11765D;font-size:13px;font-weight:800;display:inline-flex;gap:9px;align-items:center}
+.yrEyebrowPoint{display:block;width:20px;height:3px;background:#D9A45A;border-radius:4px}
+.yrHeroStory h1{font-size:clamp(32px,3.05vw,44px);color:#123F33;line-height:1.33;letter-spacing:-.8px;font-weight:900;margin:12px 0}
+.yrHeroStory h1 em{display:inline-block;font-style:normal;color:#08795C;white-space:nowrap}
+.yrHeroStory p{max-width:420px;color:#506F61;line-height:1.85;font-size:14px;font-weight:600;margin:0}
+.yrPhotoEditorial{
+  position:relative;display:block;flex:none;min-height:0;height:clamp(280px,28vw,340px);
+  width:100%;margin:21px 0 0;
+  overflow:hidden;border-radius:22px;
+  background:#D7DCCE;box-shadow:0 17px 35px #1D51451B;
+}
+.journeyVisual .yrPhotoEditorial img{
+  display:block;position:absolute;inset:0;
+  width:100%;height:100%;max-width:none;
+  object-fit:cover;object-position:center 28%;
+  right:auto;top:0;left:0;
+  margin:0;transform:none;filter:none;mix-blend-mode:normal;mask-image:none;
+  border-radius:0;box-shadow:none;aspect-ratio:auto;
+}
+.yrPhotoEditorial::after{
+  content:"";position:absolute;z-index:1;inset:0;pointer-events:none;
+  background:linear-gradient(to top,#102C25C7 0%,#102C2536 18%,transparent 46%);
+}
+.yrPhotoCaption{
+  position:absolute;bottom:15px;right:18px;left:18px;z-index:2;
+  color:white;display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  text-shadow:0 1px 8px #0008;
+}
+.yrPhotoCaption strong{font-size:18px;font-weight:900}
+.yrPhotoCaption span{font-size:12px;font-weight:700;color:#F5E6C4}
+.yrProgressFooter{
+  margin-top:15px;padding:0 2px;display:grid;gap:11px;z-index:2;
+}
+.yrProgressHeading{display:flex;align-items:center;justify-content:space-between}
+.yrProgressHeading strong{font-size:12px;color:#255D4A}
+.yrProgressHeading small{font-size:11px;color:#6D8A79}
+.yrProgressSteps{direction:rtl;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0;margin:0}
+.yrProgressSteps li{flex:1;display:flex;align-items:center;gap:8px;min-width:0;position:relative;color:#345B4C;font-weight:800;font-size:13px}
+.yrProgressSteps li:not(:last-child)::after{
+  content:"";position:absolute;left:0;top:50%;width:23%;height:1px;transform:translateY(-50%);background:#9FC7B1
+}
+.yrStepNumber{font:700 10px Arial,sans-serif;letter-spacing:.3px;color:#096B53;
+  height:29px;width:29px;border-radius:50%;border:1px solid #B6D9C8;background:#E5F1E8;display:grid;place-items:center;flex-shrink:0
+}
+.yrProgressSteps li.is-mastered .yrStepNumber{background:#E9B766;border-color:#DCAB5A;color:#4B3A1C}
+.contentPanel{background:#FFFFFF}
+@media(max-width:1100px){
+ .authShell{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .journeyVisual{padding:26px 24px 23px}
+ .yrHeroStory{margin-top:29px}
+ .yrHeroStory h1{font-size:34px}
+ .yrHeroStory p{font-size:13px}
+ .yrPhotoEditorial{height:300px}
+ .yrBrandDescriptor{display:none}
+}
+@media(max-width:730px){
+ .authShell{display:flex;flex-direction:column;min-height:100dvh}
+ .journeyVisual{
+   order:0;display:grid;grid-template-columns:minmax(0,1fr) 124px;
+   grid-template-areas:"mast mast" "copy photo" "steps steps";
+   grid-template-rows:auto auto auto;gap:11px 12px;
+   padding:15px 18px 13px;min-height:0;border:0;border-bottom:1px solid #DBE8DA;
+   overflow:visible
+ }
+ .yrHeroTop{grid-area:mast;min-height:35px}
+ .yrMonogram{width:36px;height:34px}
+ .yrBrandWordmark strong{font-size:12px}
+ .yrBrandWordmark small{font-size:8px;letter-spacing:2.8px}
+ .yrBrandDescriptor{display:block;font-size:9px;padding:6px 8px}
+ .yrHeroStory{grid-area:copy;align-self:center;margin:0;min-width:0}
+ .yrHeroEyebrow{font-size:10px;gap:5px}
+ .yrEyebrowPoint{width:13px;height:2px}
+ .yrHeroStory h1{font-size:clamp(21px,5vw,27px);line-height:1.33;letter-spacing:0;margin:6px 0}
+ .yrHeroStory h1 em{display:inline;white-space:normal}
+ .yrHeroStory p{font-size:10.8px;line-height:1.55;margin:0}
+ .yrPhotoEditorial{
+   grid-area:photo;position:relative!important;display:block;align-self:stretch;justify-self:stretch;
+   top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+   width:100%;height:160px;min-height:0;margin:0;border-radius:15px;
+ }
+ .journeyVisual .yrPhotoEditorial img{
+   position:absolute;inset:0;width:100%;height:100%;right:auto;
+   object-position:50% 28%;border-radius:0;max-width:none
+ }
+ .yrPhotoCaption{bottom:7px;left:7px;right:7px;justify-content:center}
+ .yrPhotoCaption strong{font-size:10px;text-align:center}
+ .yrPhotoCaption span{display:none}
+ .yrProgressFooter{grid-area:steps;gap:5px;margin:0}
+ .yrProgressHeading{display:none}
+ .yrProgressSteps{gap:7px;justify-content:space-between}
+ .yrProgressSteps li{font-size:11px;gap:5px}
+ .yrProgressSteps li:not(:last-child)::after{display:none}
+ .yrStepNumber{width:21px;height:21px;font-size:8px}
+ .contentPanel{order:1}
+}
+@media(max-width:400px){
+ .journeyVisual{grid-template-columns:minmax(0,1fr) 104px;gap:8px 9px;padding:13px 14px}
+ .yrHeroStory h1{font-size:20px}
+ .yrHeroStory p{font-size:10px}
+ .yrPhotoEditorial{height:147px;border-radius:12px}
+ .yrBrandDescriptor{display:none}
+ .yrProgressSteps li{gap:4px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.journeyVisual *, .journeyVisual *::before,.journeyVisual *::after{transition:none!important;animation:none!important}}
