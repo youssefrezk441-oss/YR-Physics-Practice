@@ -44,10 +44,16 @@ test('public registration is blocked without real Turnstile configuration and va
 });
 test('public frontend renders real challenge and resets a used token after a failed request',async()=>{
   const page=await readFile(new URL('student-register.html',root),'utf8');
-  assert.match(page,/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit/);
-  assert.match(page,/action: "student_registration"/);
-  assert.match(page,/cfg\.captcha_required/);
-  assert.match(page,/b\.captcha_token = captchaToken/);
-  assert.match(page,/window\.turnstile\.reset\(turnstileId\)/);
-  assert.match(page,/submitButton\.disabled = true/);
+  const wizard=await readFile(new URL('student-register-wizard.js',root),'utf8');
+  assert.match(page,/src="student-register-wizard\.js"/);
+  assert.match(page,/id="turnstileWidget"/);
+  assert.match(wizard,/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit/);
+  assert.match(wizard,/action: "student_registration"/);
+  assert.match(wizard,/config\.captcha_required/);
+  assert.match(wizard,/payload\.captcha_token = captchaToken/);
+  assert.match(wizard,/window\.turnstile\.reset\(captchaId\)/);
+  assert.match(wizard,/submitting = true/);
+  assert.match(wizard,/request_idempotency_key: requestKey/);
+  assert.doesNotMatch(page,/name="national_id"/);
+  assert.doesNotMatch(wizard,/national_id\s*:/);
 });
