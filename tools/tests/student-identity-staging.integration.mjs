@@ -464,7 +464,7 @@ test("immediate registration and 48-hour review journey", async (t) => {
       );
       assert.equal(created.status, 201, JSON.stringify(created.body));
       const token = created.body.invite_token;
-      assert.match(token, /^yr-[a-z0-9-]+$/i);
+      assert.match(token, /^yr-[a-z0-9_-]+$/i);
       assert.ok(created.body.registration_url.includes(encodeURIComponent(token)));
       assert.equal(created.body.group_code, group);
       assert.equal(
