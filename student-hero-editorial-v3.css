@@ -127,3 +127,9 @@
 @media(prefers-reduced-motion:reduce){.journeyVisual *, .journeyVisual *::before,.journeyVisual *::after{transition:none!important;animation:none!important}}
 
 @media(min-width:821px){.yrPhotoEditorial{flex:1 1 340px;max-height:440px}}
+
+/* Approved concept C — independent four-stage YR identity in both headers. */
+.yrMonogram{width:54px;height:54px;object-fit:contain;display:block;flex-shrink:0}
+.yrBrandSmallLockup{direction:ltr;display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
+.yrBrandSmallLockup img{width:30px;height:30px;display:block;object-fit:contain;flex-shrink:0}
+@media(max-width:730px){.yrMonogram{width:40px;height:40px}.yrBrandSmallLockup img{width:26px;height:26px}}
