@@ -223,7 +223,8 @@ async function cleanup() {
       "utf8",
     )
       .replaceAll("__RUN_ID__", run)
-      .replaceAll("__GROUP_CODE__", group);
+      .replaceAll("__GROUP_CODE__", group)
+      .replaceAll("__SECOND_GROUP_CODE__", group.replace(/-A$/, "-B"));
   sql(script);
   cleanupLocalLimiter();
   for (const id of ids) {
@@ -277,12 +278,14 @@ async function verifyPendingStudentPage(code, password) {
         let body = readFileSync(file);
         if (
           file.endsWith("student-base.html") ||
-          file.endsWith("student-account-shell.js")
+          file.endsWith("student-account-shell.js") ||
+          file.endsWith("student-identity-api.js")
         )
           body = Buffer.from(
             body
               .toString()
-              .replaceAll("https://ltjdhconuiqblxfjzpzj.supabase.co", url),
+              .replaceAll("https://ltjdhconuiqblxfjzpzj.supabase.co", url)
+              .replaceAll("sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr","synthetic-anon"),
           );
         const type =
           extname(file) === ".html"
@@ -321,12 +324,11 @@ async function verifyPendingStudentPage(code, password) {
       if (response.status() >= 400)
         browserErrors.push(`response ${response.status()} ${response.url()}`);
     });
-    await page.goto("http://127.0.0.1:58001/student.html");
-    await page.waitForSelector("#studentCode");
-    await page.waitForSelector(".accountLinks");
-    await page.fill("#studentCode", code);
-    await page.fill("#studentPassword", password);
-    await page.click("#loginBtn");
+    await page.goto("http://127.0.0.1:58001/student-register.html?tab=login");
+    await page.waitForSelector("#accessStudentCode");
+    await page.fill("#accessStudentCode", code);
+    await page.fill("#accessPassword", password);
+    await page.click("#accessLoginBtn");
     try {
       await page.waitForSelector("#studentReviewGate", { timeout: 10000 });
     } catch {
@@ -369,6 +371,84 @@ async function verifyPendingStudentPage(code, password) {
   } finally {
     await browser.close();
     await new Promise((ok) => server.close(ok));
+  }
+}
+
+async function verifyProfileWizardInBrowser(studentCode,password,groupCode){
+  const {chromium}=await import("playwright");
+  const root=process.cwd();
+  const server=createServer((req,res)=>{
+    try{
+      const pathname=new URL(req.url,"http://local").pathname;
+      const file=resolve(root,pathname==="/"?"student.html":pathname.slice(1));
+      if(!file.startsWith(root)){res.writeHead(403).end();return}
+      let body=readFileSync(file);
+      if(file.endsWith("student-identity-api.js")){
+        body=Buffer.from(body.toString()
+          .replaceAll("https://ltjdhconuiqblxfjzpzj.supabase.co",url)
+          .replaceAll("sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr","synthetic-anon"));
+      }
+      const ext=extname(file), mime=ext===".html"?"text/html; charset=utf-8"
+        :ext===".js"?"text/javascript; charset=utf-8"
+        :ext===".css"?"text/css; charset=utf-8":"application/octet-stream";
+      res.writeHead(200,{"content-type":mime,"cache-control":"no-store"}).end(body);
+    }catch{res.writeHead(404).end()}
+  });
+  await new Promise((ok,fail)=>server.once("error",fail).listen(58001,"127.0.0.1",ok));
+  const browser=await chromium.launch({headless:true,
+    executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),
+    args:["--no-sandbox","--ignore-certificate-errors"]});
+  try{
+    const page=await browser.newPage({ignoreHTTPSErrors:true});
+    const errors=[];
+    page.on("pageerror",e=>errors.push(e.message));
+    page.on("console",entry=>{if(entry.type()==="error")errors.push(entry.text())});
+    await page.goto("http://127.0.0.1:58001/student-register.html?tab=login");
+    await page.locator("#accessStudentCode").fill(studentCode);
+    await page.locator("#accessPassword").fill(password);
+    await page.locator("#accessLoginBtn").click();
+    try{
+      await page.waitForURL(/student-complete-profile\.html/,{timeout:16000});
+      await page.locator("#wizard:not(.hidden)").waitFor({timeout:16000});
+    }catch(err){
+      const debug=await page.evaluate(()=>({
+        url:location.href,loginMessage:document.querySelector("#loginMessage")?.textContent,
+        profileMessage:document.querySelector("#profileLockedMessage")?.textContent,
+        body:document.body.innerText.slice(0,350)
+      }));
+      throw new Error("profile wizard redirect/prefill failure: "+JSON.stringify({debug,errors}));
+    }
+    assert.equal(await page.locator("#fixedStudentCode").inputValue(),studentCode);
+    assert.equal(await page.locator("#fixedStudentCode").isEditable(),false);
+    assert.equal(await page.locator("#firstName").inputValue(),"طالب");
+    assert.equal(await page.locator("#grade").inputValue(),"الصف الثاني الثانوي");
+    assert.equal(await page.locator("#changePassword").isChecked(),false);
+    await page.locator("#next").click();
+    await page.locator("#system").selectOption("عام");
+    await page.locator("#location").selectOption("غير ذلك");
+    await page.locator("#group").selectOption(groupCode);
+    await page.locator("#next").click();
+    await page.locator("#phone").fill("01012345589");
+    await page.locator("#guardian").fill("01112345677");
+    await page.locator("#next").click();
+    await page.locator('input[name="privacy"]').check();
+    await page.locator("#submitBtn").click();
+    try{await page.locator("#receipt:not(.hidden)").waitFor({timeout:16000})}
+    catch(err){
+      const debug=await page.evaluate(()=>({
+         message:document.querySelector("#message")?.textContent,
+         currentPanel:[...document.querySelectorAll(".step-panel")].findIndex(x=>!x.hidden),
+         active:document.activeElement?.id,
+         validation:document.activeElement?.validationMessage
+      }));
+      throw new Error("profile completion browser submit failed: "+JSON.stringify({debug,errors}));
+    }
+    assert.match(await page.locator("#receipt").innerText(),/تم حفظ بياناتك بنجاح/);
+    assert.equal(await page.locator("#fixedStudentCode").inputValue(),studentCode);
+    console.log("Browser E2E: real code/password login, automatic completion redirect, prefilled immutable code, four-step form and verified profile save PASS");
+  } finally {
+    await browser.close();
+    await new Promise(resolve=>server.close(resolve));
   }
 }
 
@@ -433,6 +513,97 @@ test("immediate registration and 48-hour review journey", async (t) => {
     );
   const academic = academicFingerprint();
   const adminToken = (await login(adminEmail, adminPassword)).body.access_token;
+
+  if (local) await t.test("existing student completion: authenticated save, password and admin review", async (t) => {
+    const code=group.replace(/-A$/,"-901"), mailAddr=code.toLowerCase()+"@students.yrphysicspractice.com",
+      oldPass="ProfileTest2026!", newPass="UpdatedProfile2026!";
+    const uid=await createAuth(mailAddr,oldPass,"student"), other=group.replace(/-A$/,"-B");
+    sql(`insert into public.student_groups(group_code,is_active,grade_level,center_name) values('${other}',true,'الصف الثاني الثانوي','Synthetic E2E B');
+       insert into public.student_profiles(user_id,student_code,full_name,grade_level,is_active,group_code,center_name,student_phone,guardian_phone)
+       values('${uid}','${code}','طالب اختباري قديم كامل','الصف الثاني الثانوي',true,'${group}','Synthetic E2E','+201012345589',null);
+       insert into public.student_group_memberships(group_id,user_id,joined_on)
+       select id,'${uid}',current_date from public.student_groups where group_code='${group}'`);
+    flags({profile_update_enabled:true});
+    const login1=await login(mailAddr,oldPass);assert.equal(login1.status,200,JSON.stringify(login1.body));
+    const token=login1.body.access_token;
+    const me0=await invoke("me",{},token);assert.equal(me0.status,200,JSON.stringify(me0.body));
+    assert.equal(me0.body.profile.student_code,code);assert.equal(me0.body.profile.profile_schema_version,0);
+    assert.ok(me0.body.groups.some(g=>g.group_code===other));
+    const payload={full_name:"طالب اختباري قديم كامل",grade_level:"الصف الثاني الثانوي",
+      education_system:"عام",attendance_location:"غير ذلك",group_code:group,
+      residence_area:"قرية تجريبية",student_phone:"01012345589",guardian_phone:"01112345677",
+      privacy_accepted:true,privacy_notice_version:"draft-v1"};
+    await t.test("anonymous and invalid-consent writes denied",async()=>{
+      assert.equal((await invoke("complete_profile_v2",{...payload,student_code:"FAKE-999"})).status,401);
+      assert.equal((await invoke("admin_profile_changes",{},token)).status,403);
+      const bad=await invoke("complete_profile_v2",{...payload,privacy_accepted:false},token);
+      assert.equal(bad.status,400,JSON.stringify(bad.body));
+    });
+    if(process.env.E2E_BROWSER_CURRENT==="1"){
+      await t.test("browser: actual login redirects to mandatory prefilled wizard and saves",async()=>{
+        sql(`update private.student_identity_settings set enforcement_coverage_approved_at=now(),
+          enforcement_coverage_approved_by='${adminId}'::uuid where singleton`);
+        flags({profile_enforcement_enabled:true});
+        try{await verifyProfileWizardInBrowser(code,oldPass,group)}
+        finally{
+          flags({profile_enforcement_enabled:false});
+          sql("update private.student_identity_settings set enforcement_coverage_approved_by=null,enforcement_coverage_approved_at=null where singleton");
+        }
+      });
+    }
+    await t.test("prefilled data updates durably while code remains immutable",async()=>{
+      const saved=await invoke("complete_profile_v2",{...payload,student_code:"FAKE-999"},token);
+      assert.equal(saved.status,200,JSON.stringify(saved.body));assert.equal(saved.body.pending_change,false);
+      const me=await invoke("me",{},token);assert.equal(me.status,200,JSON.stringify(me.body));
+      assert.equal(me.body.profile.student_code,code);
+      assert.equal(me.body.profile.student_phone,"+201012345589");
+      assert.equal(me.body.profile.guardian_phone,"+201112345677");
+      assert.equal(me.body.details.education_system,"عام");
+      assert.equal(me.body.details.residence_area,"قرية تجريبية");
+      assert.equal(me.body.profile.profile_schema_version,1);assert.ok(me.body.profile.completed_at);
+      assert.equal(sql(`select count(*) from private.student_profile_change_requests where user_id='${uid}'`),"0");
+    });
+    await t.test("current password required; new login preserves student identity",async()=>{
+      const bad=await invoke("change_password",{current_password:"Incorrect2026!",new_password:newPass},token);
+      assert.equal(bad.status,401,JSON.stringify(bad.body));
+      const good=await invoke("change_password",{current_password:oldPass,new_password:newPass},token);
+      assert.equal(good.status,200,JSON.stringify(good.body));
+      assert.notEqual((await login(mailAddr,oldPass)).status,200);
+      const session=await login(mailAddr,newPass);assert.equal(session.status,200,JSON.stringify(session.body));
+      assert.equal(session.body.user.id,uid);
+      assert.equal((await invoke("me",{},session.body.access_token)).body.profile.student_code,code);
+    });
+    await t.test("reviewed group/name change cannot change educational assignment before approval",async()=>{
+      const fresh=(await login(mailAddr,newPass)).body.access_token;
+      const requested=await invoke("complete_profile_v2",{...payload,group_code:other,full_name:"طالب اختباري متغير كامل"},fresh);
+      assert.equal(requested.status,200,JSON.stringify(requested.body));
+      assert.equal(requested.body.pending_change,true);
+      assert.equal(sql(`select group_code from public.student_profiles where user_id='${uid}'`),group);
+      const list=await invoke("admin_profile_changes",{},adminToken);
+      assert.equal(list.status,200,JSON.stringify(list.body));
+      const request=list.body.requests.find(r=>r.user_id===uid);assert.ok(request);
+      assert.equal(request.requested_profile.group_code,other);
+      assert.equal((await invoke("admin_profile_change_decide",{request_id:request.id,decision:"approved",reason:"اختبار مسار الموافقة الإدارية"},fresh)).status,403);
+      const approved=await invoke("admin_profile_change_decide",{request_id:request.id,decision:"approved",reason:"اختبار مسار الموافقة الإدارية"},adminToken);
+      assert.equal(approved.status,200,JSON.stringify(approved.body));
+      assert.equal(sql(`select group_code from public.student_profiles where user_id='${uid}'`),other);
+      assert.equal(sql(`select student_code from public.student_profiles where user_id='${uid}'`),code);
+      assert.equal(sql(`select full_name from public.student_profiles where user_id='${uid}'`),"طالب اختباري متغير كامل");
+      assert.equal(sql(`select count(*) from public.student_group_memberships m join public.student_groups g on m.group_id=g.id where m.user_id='${uid}' and m.left_on is null and g.group_code='${other}'`),"1");
+    });
+    await t.test("rejection retains original student record",async()=>{
+      const fresh=(await login(mailAddr,newPass)).body.access_token;
+      const requested=await invoke("complete_profile_v2",{...payload,group_code:other,full_name:"اسم جديد قيد المراجعة"},fresh);
+      assert.equal(requested.status,200,JSON.stringify(requested.body));assert.equal(requested.body.pending_change,true);
+      const row=(await invoke("admin_profile_changes",{},adminToken)).body.requests.find(r=>r.user_id===uid);
+      assert.ok(row);
+      const declined=await invoke("admin_profile_change_decide",{request_id:row.id,decision:"rejected",reason:"رفض اختبار للتأكد من عدم تعديل الاسم"},adminToken);
+      assert.equal(declined.status,200,JSON.stringify(declined.body));
+      assert.equal(sql(`select full_name from public.student_profiles where user_id='${uid}'`),"طالب اختباري متغير كامل");
+      assert.equal((await invoke("me",{},fresh)).body.pending_change,false);
+    });
+    flags({profile_update_enabled:false,profile_enforcement_enabled:false});
+  });
   await t.test("flags are fail-closed", async () => {
     const c = await invoke("config");
     assert.equal(c.body.registration_enabled, false);

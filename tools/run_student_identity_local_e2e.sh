@@ -67,6 +67,8 @@ docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgre
   < supabase/migrations/20261028190000_student_identity_registration_v1.sql >/dev/null
 docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   < supabase/migrations/20261028230000_immediate_registration_review.sql >/dev/null
+docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+  < supabase/migrations/20261030_student_profile_change_requests.sql >/dev/null
 docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   -c 'alter role postgres set search_path=auth,public' >/dev/null
 
