@@ -28,7 +28,7 @@ function serve(){
   const file=path.resolve(dir,decodeURIComponent(new URL(req.url,"http://127.0.0.1").pathname).slice(1)||"student.html");
   if(!file.startsWith(dir+path.sep)||!fs.existsSync(file)){res.writeHead(404).end();return}
   const ext=path.extname(file);
-  res.writeHead(200,{"content-type":ext===".html"?"text/html; charset=utf-8":ext===".css"?"text/css; charset=utf-8":ext===".js"?"text/javascript; charset=utf-8":ext===".svg"?"image/svg+xml":ext===".webp"?"image/webp":"application/octet-stream"});
+  res.writeHead(200,{"content-type":ext===".html"?"text/html; charset=utf-8":ext===".css"?"text/css; charset=utf-8":(ext===".js"||ext===".mjs")?"text/javascript; charset=utf-8":ext===".svg"?"image/svg+xml":ext===".webp"?"image/webp":"application/octet-stream"});
   res.end(fs.readFileSync(file));
  });
 }
