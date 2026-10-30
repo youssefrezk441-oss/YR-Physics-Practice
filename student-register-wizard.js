@@ -316,6 +316,7 @@ try {
   config = await registrationCall("config");
   if (!config.registration_enabled) throw new Error("التسجيل الجديد غير متاح حاليًا. تواصل مع الإدارة.");
   if (!config.national_id_collection_enabled) throw new Error("جمع الرقم القومي متوقف مؤقتًا لحين استكمال متطلبات حماية البيانات وموافقة ولي الأمر.");
+  if (config.privacy_notice_version !== "v2-2026-10-30") throw new Error("إشعار خصوصية الرقم القومي لم يُعتمد في إعدادات الخادم بعد.");
   if (config.registration_invite_required && !invite) throw new Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل.");
   if (config.captcha_required && (!config.captcha_ready || !config.captcha_sitekey))
     throw new Error("التحقق الأمني غير جاهز حاليًا. التسجيل مغلق لحين الإصلاح.");
