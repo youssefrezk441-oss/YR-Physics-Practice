@@ -24,6 +24,8 @@ jobs:
         run: bash tools/test_student_identity_migration.sh
       - name: Student authorization boundary synthetic regression
         run: bash tools/security/run_legacy_authz_synthetic.sh
+      - name: Protected admin manual grading synthetic regression
+        run: bash tools/security/run_manual_grading_synthetic.sh
       - name: Bootstrap browser test
         run: |
           npm install --no-save playwright@1.55.0
