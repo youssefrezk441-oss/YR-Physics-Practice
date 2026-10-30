@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>إنشاء حساب طالب | YR Physics Practice</title>
-  <link rel="stylesheet" href="student-account.css">
+  <title>تسجيل طالب جديد | مستر يوسف رزق</title>
+  <link rel="stylesheet" href="student-register-identity.css">
   <style>
     :root{--navy:#152852;--blue:#254db3;--ink:#16243c;--muted:#66758b;--edge:#dde5f0;--surface:#f4f7fc}
     *{box-sizing:border-box}
@@ -72,35 +72,35 @@
 <body>
 <main class="accountPage">
   <header class="topline">
-    <div class="brand"><span class="brandIcon">YR</span><span>YR Physics Practice<br><small>مستر يوسف رزق</small></span></div>
-    <a href="student.html" class="backLink">العودة لتسجيل الدخول ←</a>
+    <a class="brand" href="student.html"><span class="brandIcon">YR</span><span><span class="brandTitle">YR PHYSICS PRACTICE</span><span class="brandSub">منصة مستر يوسف رزق التعليمية</span></span></a>
+    <a href="student.html" class="backLink">لديك حساب؟ تسجيل الدخول ↗</a>
   </header>
-  <div class="intro">
-    <h1>ابدأ رحلتك في الفيزياء ⚡</h1>
-    <p>أنشئ حسابك في خطوات بسيطة واحصل على كود الطالب. ستراجع الإدارة بياناتك بعد التسجيل.</p>
+  <div class="enrollmentShell"><div class="enrollmentMain"><div class="formHeader"><div class="eyebrow">حساب طالب جديد</div>
+    <h1>سجّل بياناتك وابدأ رحلتك</h1>
+    <p>أربع خطوات منظمة لإنشاء حسابك. بعدها تحصل على كود خاص بك وتراجع الإدارة طلبك.</p>
   </div>
   <div id="message" class="hidden" role="alert" aria-live="polite"></div>
-  <div id="wizard" class="wizard">
+  <div id="wizard">
     <nav class="stepper" aria-label="مراحل التسجيل">
       <div class="stepItem active" data-step-marker="0"><div class="stepCircle">1</div>بيانات الطالب</div>
       <div class="stepItem" data-step-marker="1"><div class="stepCircle">2</div>الدراسة والمجموعة</div>
       <div class="stepItem" data-step-marker="2"><div class="stepCircle">3</div>التواصل والأمان</div>
       <div class="stepItem" data-step-marker="3"><div class="stepCircle">4</div>مراجعة وإنشاء</div>
     </nav>
-    <form id="form" class="accountCard" novalidate autocomplete="on">
+    <form id="form" novalidate autocomplete="on"><div class="panelBody">
       <section class="step-panel" data-step="0" aria-labelledby="stepTitle0">
-        <h2 id="stepTitle0" class="panelTitle">بيانات الطالب</h2>
-        <p class="panelIntro">اكتب اسمك الرباعي مثلما تستخدمه في المركز، ليسهل التعرف على حسابك.</p>
+        <p class="panelIndex">01 / 04</p><h2 id="stepTitle0" class="panelTitle">بيانات الطالب</h2>
+        <p class="panelIntro">اكتب اسمك الرباعي كما هو بمستنداتك، ثم الرقم القومي المكوّن من 14 رقمًا.</p>
         <div class="accountGrid">
           <div class="accountField"><label for="firstName">الاسم الأول</label><input id="firstName" name="first_name" required maxlength="45" autocomplete="given-name" placeholder="مثال: أحمد"></div>
           <div class="accountField"><label for="secondName">الاسم الثاني</label><input id="secondName" name="second_name" required maxlength="45" placeholder="اسم الأب"></div>
           <div class="accountField"><label for="thirdName">الاسم الثالث</label><input id="thirdName" name="third_name" required maxlength="45" placeholder="اسم الجد"></div>
           <div class="accountField"><label for="fourthName">الاسم الرابع</label><input id="fourthName" name="fourth_name" required maxlength="45" autocomplete="family-name" placeholder="اسم العائلة"></div>
-          <p class="hint full">يمكن كتابة الاسم العربي المركب في الحقل المناسب. لن نطلب الرقم القومي في التسجيل العادي.</p>
+          <div class="accountField full"><label for="nationalId">الرقم القومي (14 رقمًا)</label><input id="nationalId" name="national_id" required type="text" inputmode="numeric" autocomplete="off" minlength="14" maxlength="14" dir="ltr" placeholder="الرقم القومي بالبطاقة أو شهادة الميلاد" aria-describedby="idStatus"><p id="idStatus" class="hint" role="status">يُستخدم للتمييز بين الحسابات ومنع التكرار.</p></div><div class="identityBox full"><span>◈</span><span><strong>بيانات الهوية محمية.</strong> يخزّن الخادم الرقم مشفرًا، ولا يعرضه كاملًا في ملخص التسجيل. يلزم استيفاء موافقة ولي الأمر للقُصّر قبل جمع بياناتهم.</span></div>
         </div>
       </section>
       <section class="step-panel" data-step="1" aria-labelledby="stepTitle1" hidden>
-        <h2 id="stepTitle1" class="panelTitle">الدراسة والمجموعة</h2>
+        <p class="panelIndex">02 / 04</p><h2 id="stepTitle1" class="panelTitle">الدراسة والمجموعة</h2>
         <p class="panelIntro">اختار صفك ونظامك ومكان حضورك، وهتظهر المجموعات المناسبة المتاحة.</p>
         <div class="accountGrid">
           <div class="accountField"><label for="grade">الصف الدراسي</label><select id="grade" name="grade_level" required><option value="">اختر الصف</option><option>الصف الثاني الثانوي</option><option>الصف الثالث الثانوي</option></select></div>
@@ -111,7 +111,7 @@
         </div>
       </section>
       <section class="step-panel" data-step="2" aria-labelledby="stepTitle2" hidden>
-        <h2 id="stepTitle2" class="panelTitle">التواصل وتأمين الحساب</h2>
+        <p class="panelIndex">03 / 04</p><h2 id="stepTitle2" class="panelTitle">التواصل وتأمين الحساب</h2>
         <p class="panelIntro">اكتب أرقام تقدر الإدارة تتواصل معاك من خلالها، واختار كلمة مرور قوية.</p>
         <div class="accountGrid">
           <div class="accountField"><label for="phone">رقم موبايل الطالب</label><input id="phone" name="student_phone" type="tel" required inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="01xxxxxxxxx" maxlength="16"></div>
@@ -123,20 +123,20 @@
         </div>
       </section>
       <section class="step-panel" data-step="3" aria-labelledby="stepTitle3" hidden>
-        <h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الإنشاء</h2>
-        <p class="panelIntro">لو في معلومة غلط ارجع وعدّلها. بعد الإرسال هتحصل على كود الطالب.</p>
+        <p class="panelIndex">04 / 04</p><h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الإنشاء</h2>
+        <p class="panelIntro">راجع البيانات قبل الإرسال. الرقم القومي لا يظهر كاملًا في الملخص.</p>
         <div id="review" class="reviewGrid" aria-live="polite"></div>
         <p class="subtleBox" style="margin-top:16px">رقم الهاتف غير موثق حاليًا، وإنشاء الحساب لا يعني اعتماده. الإدارة هتراجع البيانات خلال 48 ساعة.</p>
         <div class="accountField" style="margin-top:17px">
           <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على معالجة بيانات التسجيل. إذا كنت دون 18 سنة، اطلع ولي أمرك على الإشعار.</span></label>
         </div>
-        <div id="captchaWrap" class="captchaPanel hidden">
+        <div class="accountField" style="margin-top:13px"><label class="privacyLabel"><input type="checkbox" name="identity_consent" required><span>أوافق بصورة مستقلة على معالجة الرقم القومي بصورة آمنة لمنع تكرار الحسابات والتحقق من الهوية.</span></label></div><p class="hint">في حالة الطالب دون 18 سنة يلزم اعتماد موافقة ولي الأمر بصورة منفصلة، ولا يكفي تحديد مربع الموافقة هنا.</p><div id="captchaWrap" class="captchaPanel hidden">
           <strong>التحقق الأمني</strong>
           <div id="turnstileWidget" style="margin-top:9px"></div>
           <p id="captchaStatus" class="hint" role="status">جارٍ تجهيز التحقق الأمني…</p>
         </div>
       </section>
-      <footer class="actions">
+      </div><footer class="actions">
         <button type="button" id="prev" class="accountBtn secondary" hidden>السابق</button>
         <button type="button" id="next" class="accountBtn">التالي</button>
         <button type="submit" id="submitBtn" class="accountBtn" hidden disabled>إنشاء الحساب والحصول على الكود</button>
@@ -144,8 +144,8 @@
     </form>
     <div class="helpBar">عندك حساب بالفعل؟ <a href="student.html">ادخل باستخدام كود الطالب</a> — لو فقدت بياناتك تواصل مع إدارة المركز، ولا تنشئ حسابًا جديدًا.</div>
   </div>
-  <section id="receipt" class="accountCard receipt hidden">
-    <h2>تم إنشاء حسابك بنجاح! 🎉</h2>
+  <section id="receipt" class="receipt hidden">
+    <h2>تم إنشاء حسابك بنجاح</h2>
     <p>كود الطالب الخاص بك</p>
     <div id="studentCode" class="successCode"></div>
     <button id="copyCode" type="button" class="accountBtn secondary" style="margin-top:10px">نسخ الكود</button>
@@ -153,7 +153,7 @@
     <p>موعد انتهاء مهلة المراجعة: <b id="deadline"></b></p>
     <div class="note">احتفظ بكود الطالب وكلمة المرور. إذا لم تتم الموافقة خلال المهلة، قد يتوقف الوصول مؤقتًا مع الاحتفاظ ببيانات الحساب.</div>
     <a class="accountBtn" style="display:inline-block;text-decoration:none" href="student.html">الذهاب إلى تسجيل الدخول</a>
-  </section>
+  </section></div><aside class="visualPanel"><div class="visualKicker">YR / PHYSICS LAB</div><h2 class="visualHeading">الفيزياء مش حفظ.<span>الفيزياء فهم.</span></h2><p class="visualCopy">فهم أعمق، تدريب أذكى، ومتابعة حقيقية لتطورك في كل فكرة من المنهج.</p><svg class="circuitArt" viewBox="0 0 340 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="دائرة كهربية مغلقة بها بطارية ومقاومتان على التوالي"><defs><pattern id="dots" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#6a8bb5" opacity=".3"/></pattern></defs><rect width="340" height="320" fill="url(#dots)"/><path d="M45 75H120M165 75H290V237H243M195 237H45V190M45 151V75" stroke="#5A82AD" stroke-width="2"/><path d="M120 75L126 66L134 84L142 66L150 84L158 66L165 75" stroke="#56D6D0" stroke-width="2"/><path d="M243 237L237 228L229 246L221 228L213 246L205 228L195 237" stroke="#56D6D0" stroke-width="2"/><path d="M32 150H58M37 164H53M45 134V150M45 164V190" stroke="#E9F5FF" stroke-width="2"/><circle cx="45" cy="75" r="5" fill="#75DED6"/><circle cx="290" cy="237" r="5" fill="#75DED6"/><path d="M77 75H106M100 69L108 75L100 81" stroke="#5DE3D6" stroke-width="2"/><g fill="#90E5DD" font-size="15" font-family="Arial"><text x="126" y="53">R1</text><text x="206" y="265">R2</text><text x="85" y="60">I</text></g><path d="M74 288H284" stroke="#57728C"/><path d="M83 284L117 271L149 278L192 260L224 267L269 245" stroke="#7BC6E4" stroke-width="2"/></svg><div class="visualFoot"><span class="mark">⌁</span><span><strong>YR Physics Practice</strong> — نتابع فهمك وتطورك، مش بس عدد الأسئلة اللي حليتها.</span></div></aside></div>
 </main>
 <script type="module" src="student-register-wizard.js"></script>
 </body>
