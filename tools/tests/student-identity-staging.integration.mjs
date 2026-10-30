@@ -223,7 +223,8 @@ async function cleanup() {
       "utf8",
     )
       .replaceAll("__RUN_ID__", run)
-      .replaceAll("__GROUP_CODE__", group);
+      .replaceAll("__GROUP_CODE__", group)
+      .replaceAll("__SECOND_GROUP_CODE__", group.replace(/-A$/, "-B"));
   sql(script);
   cleanupLocalLimiter();
   for (const id of ids) {
