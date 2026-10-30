@@ -153,6 +153,22 @@ Deno.serve(async (req: Request) => {
   const slug = text(body.workshop_slug, 120);
   try {
     if (action === "ping") return response(req, { ok: true, level: admin.level });
+    if (action === "term2_catalog") {
+      const rows = await sql`
+        select slug, title, grade_level, status,
+               (active_version_id is not null) as has_active_version
+        from private.workshop_definitions
+        where slug like '%-term-2-%'
+          and status = 'published'
+          and active_version_id is not null
+        order by grade_level, slug
+        limit 150`;
+      return response(req, {
+        ok: true,
+        workshops: rows.filter((row) => !String(row.slug).endsWith("-homework")),
+        homeworks: rows.filter((row) => String(row.slug).endsWith("-homework")),
+      });
+    }
     if (!slug) throw new WorkshopContractError(400, "missing_workshop", "معرف الورشة مطلوب.");
     const workshop = await workshopBySlug(slug);
     if (!workshop) throw new WorkshopContractError(404, "workshop_not_found", "الورشة غير موجودة.");
