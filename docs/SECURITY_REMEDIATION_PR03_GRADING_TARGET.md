@@ -18,6 +18,7 @@ compatible replacement is deployed first.
 - Performs score recomputation on the server. Writes a private `short_text_grade_audit` event containing actor, before and after, whenever the score, status, or feedback changes. Identical retries do not duplicate audit events.
 - `REVOKE EXECUTE` for `anon` and `PUBLIC`, `GRANT EXECUTE` only for `authenticated`. Internal authorization still requires admin edit privileges.
 - `tools/security/manual_grading_fixture_setup.sql`, `...verify.sql`, and `run_manual_grading_synthetic.sh` run on **local disposable PostgreSQL** with simulated student, view-only admin, edit admin and submitted/in-progress attempts.
+- `tools/security/manual_grading_fixture_production_triggers.sql` replicates the active `recompute_attempt_from_responses` and `sync_attempt_after_response_review` trigger logic in local fixtures. The runner issues two concurrent identical grading requests and asserts a single audit event for the pair plus a consistent final attempt score.
 
 ## Deployment requirements and guardrails
 
