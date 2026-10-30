@@ -10,7 +10,7 @@ test("registration and login share one branded student portal",async()=>{
  assert.match(html,/مستر يوسف رزق/);
  assert.match(html,/YR <span>PHYSICS<\/span>/);
  assert.ok(html.includes('class="journeyVisual"'));
- assert.match(html,/assets\/teacher-youssef-selected-20261030\.webp/);
+ assert.match(html,/assets\/teacher-youssef-studio-hq-1100\.webp/);
  assert.match(html,/من الفهم إلى الإتقان/);
  assert.match(html,/id="loginTab"/);
  assert.match(html,/id="registerTab"/);
