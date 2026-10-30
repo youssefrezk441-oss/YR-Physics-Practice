@@ -58,3 +58,36 @@ test("real compiled YR dashboard renders without horizontal overflow in light an
   }
  }finally{await browser.close();await new Promise(resolve=>s.close(resolve))}
 });
+
+test("student workspace routes separate chapter-specific learning and review with mobile focus mode",{skip:!fs.existsSync(dir)},async()=>{
+ const server=serve();await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:["--no-sandbox"]});
+ try{
+  const page=await browser.newPage({viewport:{width:390,height:844}});
+  await page.route("https://cdn.jsdelivr.net/**",route=>route.fulfill({status:200,contentType:"text/javascript",body:mockSupabase}));
+  await page.route("https://fonts.googleapis.com/**",route=>route.abort());
+  await page.goto("http://127.0.0.1:"+server.address().port+"/student.html",{waitUntil:"domcontentloaded"});
+  await page.locator("#dashboardView").waitFor({state:"visible",timeout:18000});
+  await page.waitForSelector(".yrWorkspaceReady");
+  assert.equal(await page.locator(".yrMobileNav").isVisible(),true);
+  await page.locator('.yrMobileNav [data-yr-go="learning"]').click();
+  assert.equal(await page.locator("#yrLearnView").isVisible(),true);
+  assert.equal(await page.locator('#yrLearnView [data-yr-chapter="1"]').getAttribute("aria-selected"),"true");
+  await page.locator('#yrLearnView [data-yr-chapter="2"]').click();
+  assert.equal(await page.locator('#yrLearnView [data-yr-chapter="2"]').getAttribute("aria-selected"),"true");
+  assert.equal(await page.locator("#yrLearnView #openChapterMistakes").count(),0,"mistake launchers never appear inside learning list");
+  await page.locator('.yrMobileNav [data-yr-go="review"]').click();
+  assert.equal(await page.locator("#yrReviewView").isVisible(),true);
+  assert.match(await page.locator("#yrReviewView").textContent(),/الفصل الأول/);
+  await page.locator('#yrReviewView [data-yr-chapter="2"]').click();
+  assert.match(await page.locator("#yrReviewView").textContent(),/الفصل الثاني/);
+  await page.locator('.yrMobileNav [data-yr-go="more"]').click();
+  assert.equal(await page.locator("#yrMobileMore").isVisible(),true);
+  await page.locator('#yrMobileMore [data-yr-go="achievements"]').click();
+  assert.equal(await page.locator("#yrAchievementsView").isVisible(),true);
+  assert.match(await page.locator("#yrAchievementsView").textContent(),/لم تُربط|لم تُنشر/);
+  await page.evaluate(()=>window.yrWorkspaceShowOnly("practiceView"));
+  assert.equal(await page.locator(".yrMobileNav").isVisible(),false,"question focus must hide mobile nav");
+  await page.close();
+ }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
+});
