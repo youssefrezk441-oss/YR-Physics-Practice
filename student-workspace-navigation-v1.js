@@ -113,7 +113,10 @@ function refreshLearning(){
  const openMenu=document.createElement("button");openMenu.type="button";openMenu.className="btn secondary";
  openMenu.textContent="تدريبات المنصة الأخرى";openMenu.addEventListener("click",()=>source("openTrainings")?.click());
  const history=document.createElement("button");history.type="button";history.className="btn secondary";
- history.textContent="محاولاتي المكتملة (كل الفصول)";history.addEventListener("click",()=>source("openCompleted")?.click());
+ history.textContent="محاولاتي المكتملة — "+(chapters.learning==="1"?"الفصل الأول":chapters.learning==="2"?"الفصل الثاني":"الفصل "+chapters.learning);history.addEventListener("click",()=>{
+  document.dispatchEvent(new CustomEvent("yr:history-chapter",{detail:{chapter:chapters.learning}}));
+  source("openCompleted")?.click();
+ });
  all.append(openMenu,history);box.append(all);
  displayChapterTabs("learning");
 }
@@ -177,7 +180,7 @@ function homeNext(){
   "الحضور والواجب والكويزات وتدريبات المنصة من سجلاتك الفعلية.","📊");
  if(indicators)progressContent.append(indicators);
  const history=makeEntry("openCompleted","سجل المحاولات السابقة",
-  "السجل الحالي يجمع الفصول؛ التصفية حسب الفصل غير متاحة بعد.","✓");
+  "تصفح المحاولات بحسب الفصل، أو افتح غير المصنف إذا كانت البيانات القديمة ناقصة.","✓");
  if(history)progressContent.append(history);
  progress.replaceChildren(progressContent);
 }
