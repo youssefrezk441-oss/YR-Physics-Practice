@@ -8,7 +8,10 @@ test("mastery brand uses genuine teacher portrait and readable responsive design
  const photo=await readFile(new URL("assets/teacher-youssef-selected-20261030.webp",root));
  assert.equal(photo.toString("ascii",0,4),"RIFF");assert.equal(photo.toString("ascii",8,12),"WEBP");
  assert.ok(photo.length>=4000&&photo.length<150000,"Web portrait must be optimized");
- assert.match(html,/class="photoStage"/);
+ assert.match(html,/class="photoStage yrPhotoEditorial"/);
+ assert.match(html,/class="yrBrandLockup"/);
+ assert.doesNotMatch(html,/class="arrowTip"/);
+ assert.match(html,/student-hero-editorial-v3\.css/);
  assert.match(html,/src="assets\/teacher-youssef-selected-20261030.webp"/);
  assert.match(html,/من الفهم إلى الإتقان/);
  for(const part of ["افهم","طبّق","تدرّب","أتقن"])assert.match(html,new RegExp(">"+part+"</span>"));
