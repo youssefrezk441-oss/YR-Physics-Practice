@@ -56,7 +56,7 @@ test("critical student links remain reachable after replacing the legacy home ca
  const controller=await read("student-workspace-navigation-v1.js");
  const html=await read("student-base.html");
  for(const id of ["openIndicators","openCompleted","openReferences","openChapterMistakes","openCh2Mistakes"]){
-  assert.match(controller,new RegExp('["\\']'+id+'["\\']'),id+" cannot disappear from the navigation adapter");
+  assert.ok(controller.includes('"'+id+'"'),id+" cannot disappear from the navigation adapter");
  }
  assert.match(controller,/function canSecondGrade\(/,"grade-2 references must not be shown as grade-3 content");
  assert.match(controller,/function canThirdGrade\(/);
