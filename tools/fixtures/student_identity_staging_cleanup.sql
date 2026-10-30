@@ -1,6 +1,11 @@
 -- Only the E2E runner substitutes __RUN_ID__. The run id is restricted to [A-Za-z0-9-].
 begin;
 delete from private.student_registration_invite_redemptions where invite_id in(select id from private.student_registration_invites where label='e2e:__RUN_ID__');
+-- Remove only invitation audit records proven to belong to this synthetic run.
+delete from private.student_identity_audit_events where event_type='registration_invite_created'
+  and metadata->>'invite_id' in (
+    select id::text from private.student_registration_invites where label='e2e:__RUN_ID__'
+  );
 delete from private.student_registration_invites where label='e2e:__RUN_ID__';
 create temporary table e2e_requests on commit drop as
   select id from private.student_registration_requests
