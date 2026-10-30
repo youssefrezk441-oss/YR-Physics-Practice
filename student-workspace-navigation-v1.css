@@ -154,3 +154,10 @@ html[data-theme="dark"] .yrStudentApp .yrDashboardHero a.btn.secondary{backgroun
  .yrStudentApp .yrDashboardHero #welcomeTitle{font-size:26px}
  .yrStudentApp .yrInternalEyebrow{margin-bottom:10px}
 }
+
+/* Read-only per-chapter attempt history; native buttons remain keyboard accessible. */
+.yrStudentApp .yrHistoryFilterTabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding-bottom:13px;border-bottom:1px solid var(--yr-line)}
+.yrStudentApp .yrHistoryFilterTabs button{background:var(--yr-surface);border:1px solid var(--yr-line);border-radius:999px;padding:9px 14px;color:var(--yr-ink);font:800 13px/1.45 "Tajawal",Tahoma,Arial,sans-serif;cursor:pointer}
+.yrStudentApp .yrHistoryFilterTabs button[aria-pressed="true"]{background:#0E5948;color:#fff;border-color:#0E5948}
+.yrStudentApp .yrHistoryFilterTabs button:focus-visible{outline:3px solid var(--yr-focus);outline-offset:2px}
+html[data-theme="dark"] .yrStudentApp .yrHistoryFilterTabs button[aria-pressed="true"]{background:#427C61;border-color:#579B75;color:#fff}
