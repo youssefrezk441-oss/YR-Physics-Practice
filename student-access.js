@@ -84,3 +84,23 @@ $("accessLoginForm").addEventListener("submit",async(event)=>{
 });
 const initial=new URLSearchParams(location.search).get("tab")==="login"?"login":"register";
 chooseTab(initial,{replaceUrl:false});
+// An already signed-in student opening the public portal must not be asked to log in again.
+async function routeExistingSession(){
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session?.user)return;
+    if(session.user.app_metadata?.role==="admin"){location.replace("admin-home.html");return}
+    const {identity}=await import("./student-identity-api.js");
+    const state=await identity("me");
+    if(state.review&&!state.review.legacy_account&&state.review.status!=="approved"){
+      location.replace("student.html");return
+    }
+    if(state.enforcement&&state.profile?.is_active&&
+       Number(state.profile.profile_schema_version||0)<Number(state.required_profile_schema_version||1)){
+      location.replace("student-complete-profile.html");return
+    }
+    location.replace("student.html");
+  }catch(error){console.warn("Existing session routing not available; login controls retained",error)}
+}
+void routeExistingSession();
+

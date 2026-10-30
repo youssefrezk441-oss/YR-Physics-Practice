@@ -89,8 +89,9 @@ jobs:
             const d=JSON.parse(process.env.CONFIG_JSON);
             if(d.ok!==true || d.service_ready!==true ||
                d.national_id_collection_enabled!==false ||
-               d.profile_enforcement_enabled!==false ||
+               typeof d.profile_enforcement_enabled!=="boolean" ||
                typeof d.profile_update_enabled!=="boolean" ||
+               (d.profile_enforcement_enabled && !d.profile_update_enabled) ||
                typeof d.registration_enabled!=="boolean" ||
                (d.registration_enabled && (!d.captcha_required || !d.captcha_ready)))
               throw Error("Production identity configuration violated safe baseline");
