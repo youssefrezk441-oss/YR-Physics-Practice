@@ -9,7 +9,7 @@ test("registration and login share one branded student portal",async()=>{
  const client=await read("student-access.js");
  assert.match(html,/مستر يوسف رزق/);
  assert.match(html,/YR <span>PHYSICS<\/span>/);
- assert.match(html,/class="journeyVisual"/);
+ assert.match(html,/class="[^"]*\\bjourneyVisual\\b[^"]*"/);
  assert.match(html,/assets\/teacher-youssef-rezk\.jpg/);
  assert.match(html,/من الفهم إلى الإتقان/);
  assert.match(html,/id="loginTab"/);
