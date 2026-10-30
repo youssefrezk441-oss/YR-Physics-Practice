@@ -219,7 +219,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 <p id="honorArenaLead" class="honorHeroLead">هذا ترتيب مبدئي للاستعداد. بعد اكتمال الشامل تتحول الجولة إلى 80% شامل + 20% استعداد.</p>
 <div id="honorFormula" class="honorFormula"><span><b>40%</b> كويزات</span><span><b>30%</b> منصة</span><span><b>20%</b> واجب</span><span><b>10%</b> حضور</span></div>
 <div class="honorGradeTabs"><button class="honorGradeTab" data-honor-grade="grade3">🎓 ٣ ثانوي</button><button class="honorGradeTab" data-honor-grade="grade2">📘 ٢ ث بكالوريا</button><button class="honorGradeTab" data-honor-grade="grade2_azhar">🕌 ٢ ث أزهر</button></div>
-<div id="honorChallenge" class="honorChallenge">كل نقطة تصنع فرقًا في سباق التميز.</div>
+<div id="honorCycleSelector" class="yrHonorCycleSelector" aria-label="إصدارات جولات التقييم"></div><div id="honorChallenge" class="honorChallenge">كل نقطة تصنع فرقًا في سباق التميز.</div>
 </div>
 <div id="honorLoading" class="card"><div class="empty">جاري تجهيز لوحة الشرف من البيانات الفعلية...</div></div>
 <div id="honorContent" class="hidden">
@@ -297,10 +297,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
  <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">رحلة التميّز</span><h2>الإنجازات</h2><p>اللوحة الحالية متاحة كما هي؛ إصدار لوحة الشرف الخاص بكل فصل يُنشر بصورة مستقلة.</p></div>
  <div id="yrAchievementCurrent" class="yrWorkspaceItems"></div>
  <div class="yrArchiveHeading">إصدارات الفصول</div>
- <div class="yrArchiveGrid">
-   <div class="yrArchiveItem"><strong>الفصل الأول</strong><span>نسخة الفصل الخاصة به لم تُربط هنا بعد.</span></div>
-   <div class="yrArchiveItem"><strong>الفصل الثاني</strong><span>تُعرض لوحته بعد اعتمادها ونشرها.</span></div>
- </div>
+ <div id="yrAchievementCycles" class="yrArchiveGrid" aria-live="polite"><div class="yrWorkspaceEmpty">تُعرض الجولات المسجلة والإصدارات المؤرشفة من محرك التقييم.</div></div>
 </section>
 <section id="yrAccountView" class="hidden yrWorkspacePage">
  <div class="yrWorkspacePageHead"><span class="yrWorkspaceKicker">بياناتك وإعداداتك</span><h2>حسابي</h2><p>راجع بياناتك وحدث كلمة المرور من الصفحة الرسمية لحسابك.</p></div>
@@ -425,8 +422,8 @@ const last=d.last5||[];$('testsTimeline').innerHTML=last.length?last.map(r=>{con
 const rows=d.tests||[];$('testsDetails').innerHTML=rows.length?'<div class="testsHead"><div>التاريخ</div><div>الاختبار</div><div>النوع</div><div>الدرجة</div><div>النسبة</div><div>الحالة</div></div>'+rows.map(r=>{const sm=testStatusMeta(r);return `<div class="testsRow"><div>${dateShort(r.session_date)}</div><div><b>${esc(r.test_name||'اختبار')}</b><div class="small muted">الحصة ${Number(r.session_number)}${r.session_title?' · '+esc(r.session_title):''}</div></div><div>${esc(r.test_type_label||r.test_type||'اختبار')}</div><div>${r.status==='scored'||r.status==='absent'?esc(Number(r.score||0)+' / '+Number(r.max_score)):'—'}</div><div>${r.status==='scored'||r.status==='absent'?pctText(r.percentage??0):'—'}</div><div><span class="testsPill ${sm.cls}">${esc(sm.label)}</span></div></div>`}).join(''):'<div class="empty">لا توجد اختبارات مسجلة لك حتى الآن.</div>';$('testsFootnote').textContent='الحصيلة الأكاديمية = مجموع الدرجات الفعلية ÷ مجموع نهايات الاختبارات المسجلة. غياب أي كويز أو امتحان = صفر ويدخل بكامل نهاية الاختبار في الحصيلة، ولا نأخذ متوسط النسب المنفصلة.'}
 async function openClassTestsView(){clearMsg();showOnly('classTestsView');$('classTestsLoading').innerHTML='<div class="empty">جاري تحميل نتائج الاختبارات...</div>';$('classTestsLoading').classList.remove('hidden');$('classTestsContent').classList.add('hidden');try{const d=await classTestsFn();renderClassTests(d);$('classTestsLoading').classList.add('hidden');$('classTestsContent').classList.remove('hidden')}catch(e){$('classTestsLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل اختبارات الحصص')+'</div>'}}
 
-let honorData=null,honorGrade=null;
-async function honorFn(){const{data,error}=await sb.functions.invoke('student-honor-board',{body:{action:'summary'}});if(error)throw new Error(error.message||'تعذر تحميل لوحة الشرف');if(data?.error)throw new Error(data.message||data.error);return data}
+let honorData=null,honorGrade=null,honorSelectedCycles={},honorCycleRequest=0;
+async function honorFn(cycles={}){const{data,error}=await sb.functions.invoke('student-honor-board',{body:{action:'summary',cycles}});if(error)throw new Error(error.message||'تعذر تحميل لوحة الشرف');if(data?.error)throw new Error(data.message||data.error);return data}
 function honorPct(v){return v==null?'—':Number(v).toFixed(Number(v)%1?1:0)+'%'}
 function honorPodiumSymbol(rank){return rank===1?'👑':rank===2?'★':'◆'}
 function honorBadges(list){return (list||[]).map(x=>x==='واجب كامل'?'إتقان الواجب':x).map(x=>`<span class="honorBadge">${esc(x)}</span>`).join('')}
@@ -443,8 +440,57 @@ function honorAwards(g){return honorAwardCard('📅','وسام الحضور ال
 function honorGroupCard(g,i,label){if(!g)return '';return `<div class="honorGroupCard ${i===0?'leading':''}">${i===0?'<div>👑</div>':''}<div class="honorGroupCode">${esc(g.group_code||'')}</div><div class="honorGroupAvg">${honorPct(g.average)} <small>متوسط ${esc(label)}</small></div><div class="small muted">${Number(g.eligible_count||0)} مؤهل من ${Number(g.total_count||0)} طالب</div>${g.leader?`<div class="small" style="margin-top:8px">متصدر السنتر: <b>${esc(g.leader.full_name)}</b> · ${honorPct(g.leader.overall)}</div>`:''}</div>`}
 function honorGroupsView(groups,label){const a=groups?.[0],b=groups?.[1];if(!a)return '<div class="honorEmpty" style="grid-column:1/-1">لا توجد بيانات سنترين كافية.</div>';if(!b)return honorGroupCard(a,0,label);return `${honorGroupCard(a,0,label)}<div class="honorVs">VS</div>${honorGroupCard(b,1,label)}`}
 function honorPersonalView(p,ownGrade,phase){if(!ownGrade)return '<div class="honorPersonal"><div class="honorRankOrb"><div><b>↔</b><span>صف آخر</span></div></div><div><h3>أنت تشاهد منافسة الصف الآخر</h3><p>يمكنك استكشاف اللوحة، لكن مركزك الشخصي يظهر فقط داخل صفك الدراسي.</p></div></div>';if(!p)return '';if(!p.eligible)return `<div class="honorPersonal"><div class="honorRankOrb"><div><b>${p.review_pending?'⏳':'—'}</b><span>${p.review_pending?'قيد المراجعة':'مركزك'}</span></div></div><div><h3>${p.review_pending?'ترتيبك قيد المراجعة':'مكانك في السباق'}</h3><p>${esc(p.message||'بانتظار اكتمال البيانات.')}</p><div class="honorPersonalMetrics"><div class="honorMiniMetric"><span>البيانات الناقصة</span><b>${esc((p.missing||[]).join(' + ')||'—')}</b></div><div class="honorMiniMetric"><span>الكويزات</span><b>${honorPct(p.quiz_score)}</b></div><div class="honorMiniMetric"><span>المنصة</span><b>${honorPct(p.platform_score)}</b></div></div></div></div>`;return `<div class="honorPersonal"><div class="honorRankOrb"><div><b>#${p.rank}</b><span>من ${p.total_eligible}</span></div></div><div><h3>🔥 مكانك في السباق</h3><p>${esc(p.message||'')}</p><div class="podiumBadges" style="justify-content:flex-start">${honorBadges(p.badges)}</div><div class="honorPersonalMetrics"><div class="honorMiniMetric"><span>${phase==='final'?'النتيجة النهائية':'مؤشر الاستعداد'}</span><b>${honorPct(p.overall)}</b></div><div class="honorMiniMetric"><span>الشامل</span><b>${honorPct(p.comprehensive_score)}</b></div><div class="honorMiniMetric"><span>الاستعداد</span><b>${honorPct(p.readiness_score)}</b></div><div class="honorMiniMetric"><span>المنصة</span><b>${honorPct(p.platform_score)}</b></div></div></div></div>`}
-function renderHonorGrade(key){if(!honorData)return;honorGrade=key;const g=honorData.grades?.[key];if(!g)return;const pm=honorPhaseMeta(g.phase);document.querySelectorAll('[data-honor-grade]').forEach(b=>b.classList.toggle('active',b.dataset.honorGrade===key));$('honorArenaTitle').textContent=pm.title;$('honorArenaLead').textContent=pm.lead;$('honorFormula').innerHTML=honorFormulaHtml(g.phase);$('honorChallenge').textContent='⚡ '+(g.challenge||'');$('honorGradeTitle').textContent='🏆 '+g.label;$('honorEligible').textContent=`${Number(g.stats?.eligible||0)} / ${Number(g.stats?.students||0)}`;$('honorHighestLabel').textContent='أعلى '+pm.score;$('honorHighest').textContent=honorPct(g.stats?.highest);$('honorRiseStat').textContent=Number(g.stats?.pending_review_students||0);$('honorLeadingGroup').textContent=g.stats?.leading_group||'—';$('honorGoldCommit').textContent=`${Number(g.stats?.comprehensive_recorded||0)} / ${Number(g.stats?.comprehensive_expected||0)}`;const p=g.podium||[];$('honorPodium').innerHTML=honorPodiumCard(p[1],2,pm.score)+honorPodiumCard(p[0],1,pm.score)+honorPodiumCard(p[2],3,pm.score);$('honorTop10').innerHTML=honorTopRows(g.top10||[],g.phase);$('honorRiserTitle').textContent=g.phase==='final'?'📈 تجاوز التوقع':'📈 نجوم الصعود';$('honorRiserDesc').textContent=g.phase==='final'?'طلاب جاءت نتيجة الشامل لديهم أعلى من مؤشر الاستعداد.':'يشترط أن يكون أحدث كويز 70% فأكثر وأعلى من متوسط كل الكويزات السابقة في نفس الدورة.';$('honorRisers').innerHTML=honorRiserCards(g.risers||[],g.phase);$('honorCategories').innerHTML=honorCategories(g);$('honorAwards').innerHTML=honorAwards(g);$('honorGroups').innerHTML=honorGroupsView(g.groups||[],pm.score);const own=honorData.profile?.grade_key===key;$('honorPersonalWrap').innerHTML=honorPersonalView(g.personal,own,g.phase);$('honorUpdated').textContent=honorData.generated_at?'آخر تحديث: '+new Date(honorData.generated_at).toLocaleString('ar-EG')+' — كل الحسابات من محرك دورة التقييم الموحد.':''}
-async function openHonorView(){clearMsg();showOnly('honorView');$('honorLoading').innerHTML='<div class="empty">جاري تجهيز لوحة الشرف من محرك التقييم الموحد...</div>';$('honorLoading').classList.remove('hidden');$('honorContent').classList.add('hidden');try{honorData=await honorFn();const own=honorData.profile?.grade_key||'grade3';renderHonorGrade(own);$('honorLoading').classList.add('hidden');$('honorContent').classList.remove('hidden')}catch(e){$('honorLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل لوحة الشرف')+'</div>'}}
+function renderHonorGrade(key){if(!honorData)return;honorGrade=key;const g=honorData.grades?.[key];if(!g)return;const pm=honorPhaseMeta(g.phase);document.querySelectorAll('[data-honor-grade]').forEach(b=>b.classList.toggle('active',b.dataset.honorGrade===key));$('honorArenaTitle').textContent=pm.title;$('honorArenaLead').textContent=pm.lead;$('honorFormula').innerHTML=honorFormulaHtml(g.phase);$('honorChallenge').textContent='⚡ '+(g.challenge||'');$('honorGradeTitle').textContent='🏆 '+g.label;$('honorEligible').textContent=`${Number(g.stats?.eligible||0)} / ${Number(g.stats?.students||0)}`;$('honorHighestLabel').textContent='أعلى '+pm.score;$('honorHighest').textContent=honorPct(g.stats?.highest);$('honorRiseStat').textContent=Number(g.stats?.pending_review_students||0);$('honorLeadingGroup').textContent=g.stats?.leading_group||'—';$('honorGoldCommit').textContent=`${Number(g.stats?.comprehensive_recorded||0)} / ${Number(g.stats?.comprehensive_expected||0)}`;const p=g.podium||[];$('honorPodium').innerHTML=honorPodiumCard(p[1],2,pm.score)+honorPodiumCard(p[0],1,pm.score)+honorPodiumCard(p[2],3,pm.score);$('honorTop10').innerHTML=honorTopRows(g.top10||[],g.phase);$('honorRiserTitle').textContent=g.phase==='final'?'📈 تجاوز التوقع':'📈 نجوم الصعود';$('honorRiserDesc').textContent=g.phase==='final'?'طلاب جاءت نتيجة الشامل لديهم أعلى من مؤشر الاستعداد.':'يشترط أن يكون أحدث كويز 70% فأكثر وأعلى من متوسط كل الكويزات السابقة في نفس الدورة.';$('honorRisers').innerHTML=honorRiserCards(g.risers||[],g.phase);$('honorCategories').innerHTML=honorCategories(g);$('honorAwards').innerHTML=honorAwards(g);$('honorGroups').innerHTML=honorGroupsView(g.groups||[],pm.score);const own=honorData.profile?.grade_key===key;$('honorPersonalWrap').innerHTML=honorPersonalView(g.personal,own,g.phase);$('honorUpdated').textContent=honorData.generated_at?'آخر تحديث: '+new Date(honorData.generated_at).toLocaleString('ar-EG')+' — كل الحسابات من محرك دورة التقييم الموحد.':'';renderHonorCycleSelector(key)}
+function renderHonorCycleSelector(key){
+ const panel=$('honorCycleSelector');if(!panel)return;
+ const cycles=honorData?.available_cycles?.[key]||[];
+ const current=honorData?.grades?.[key]?.cycle?.id;
+ panel.replaceChildren();
+ if(!cycles.length){panel.textContent='لا توجد جولات تقييم مسجلة لهذا الصف.';return}
+ const label=document.createElement('strong');label.textContent='جولات التقييم والإصدارات';panel.append(label);
+ for(const c of cycles){
+  const button=document.createElement('button');button.type='button';button.className='yrHonorCycleButton';
+  button.textContent=(c.title||c.code||'جولة تقييم')+(c.archived?' · نسخة مؤرشفة':' · غير مؤرشفة');
+  button.setAttribute('aria-pressed',String(c.id===current));button.dataset.cycleId=c.id;
+  button.onclick=()=>openHonorCycle(key,c.id);panel.append(button);
+ }
+}
+function publishHonorEditionCatalog(){
+ if(!honorData)return;
+ document.dispatchEvent(new CustomEvent('yr:honor-editions-ready',{detail:{
+  available_cycles:honorData.available_cycles||{},profile:honorData.profile||{}
+ }}));
+}
+async function openHonorCycle(key,id){
+ if(!honorData?.available_cycles?.[key]?.some(x=>x.id===id))return;
+ if(honorData.grades?.[key]?.cycle?.id===id)return;
+ const previous={...honorSelectedCycles};honorSelectedCycles={...previous,[key]:id};
+ const request=++honorCycleRequest;
+ $('honorLoading').innerHTML='<div class="empty">جاري تحميل إصدار الجولة المحددة...</div>';
+ $('honorLoading').classList.remove('hidden');$('honorContent').classList.add('hidden');
+ try{
+  const data=await honorFn(honorSelectedCycles);if(request!==honorCycleRequest)return;
+  honorData=data;renderHonorGrade(key);publishHonorEditionCatalog();
+  $('honorLoading').classList.add('hidden');$('honorContent').classList.remove('hidden');
+ }catch(e){
+  if(request!==honorCycleRequest)return;
+  honorSelectedCycles=previous;
+  $('honorLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر فتح إصدار الجولة')+'</div>';
+ }
+}
+let honorCatalogInFlight=null;
+window.yrWorkspaceLoadHonorCatalog=()=>{
+ if(honorData)return Promise.resolve({available_cycles:honorData.available_cycles||{},profile:honorData.profile||{}});
+ if(!honorCatalogInFlight)honorCatalogInFlight=honorFn(honorSelectedCycles).then(d=>({
+  available_cycles:d.available_cycles||{},profile:d.profile||{}
+ })).finally(()=>honorCatalogInFlight=null);
+ return honorCatalogInFlight;
+};
+window.yrWorkspaceOpenHonorCycle=(key,id)=>{
+ honorSelectedCycles={...honorSelectedCycles,[key]:id};
+ void openHonorView(key);
+};
+async function openHonorView(preferredGrade=null){clearMsg();const request=++honorCycleRequest;showOnly('honorView');$('honorLoading').innerHTML='<div class="empty">جاري تجهيز لوحة الشرف من محرك التقييم الموحد...</div>';$('honorLoading').classList.remove('hidden');$('honorContent').classList.add('hidden');try{const data=await honorFn(honorSelectedCycles);if(request!==honorCycleRequest)return;honorData=data;const own=preferredGrade||honorData.profile?.grade_key||'grade3';renderHonorGrade(own);publishHonorEditionCatalog();$('honorLoading').classList.add('hidden');$('honorContent').classList.remove('hidden')}catch(e){if(request!==honorCycleRequest)return;$('honorLoading').innerHTML='<div class="msg err">'+esc(e.message||'تعذر تحميل لوحة الشرف')+'</div>'}}
 
 function pctText(v){return v==null?'—':Number(v).toFixed(Number(v)%1?1:0)+'%'}
 function commitmentMeta(v){if(v==null)return{label:'لا توجد بيانات',title:'ابدأ تسجيل الحصص أولًا',text:'سيظهر المؤشر تلقائيًا عندما تتوفر بيانات حضور أو واجب.',color:'#64748b'};const n=Number(v);if(!Number.isFinite(n))return{label:'لا توجد بيانات',title:'ابدأ تسجيل الحصص أولًا',text:'سيظهر المؤشر تلقائيًا عندما تتوفر بيانات حضور أو واجب.',color:'#64748b'};if(n>=95)return{label:'ممتاز',title:'التزام ممتاز',text:'أنت في أعلى مستوى من الالتزام. حافظ على انتظامك في الحضور والواجب.',color:'#16a34a'};if(n>=85)return{label:'جيد جدًا',title:'التزام قوي',text:'أداؤك جيد جدًا، وأنت قريب من مستوى الالتزام الممتاز.',color:'#22c55e'};if(n>=70)return{label:'مقبول',title:'يمكنك رفع المؤشر بسهولة',text:'المؤشر مقبول، لكن تحسين الحضور أو الواجب سيصنع فرقًا واضحًا.',color:'#f59e0b'};return{label:'يحتاج تحسين',title:'الالتزام يحتاج تدخلًا',text:'راجع سبب الانخفاض بالأسفل وابدأ بأقرب نقطة قابلة للتحسين.',color:'#ef4444'}}
