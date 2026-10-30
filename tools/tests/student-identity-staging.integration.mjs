@@ -545,7 +545,10 @@ test("immediate registration and 48-hour review journey", async (t) => {
           enforcement_coverage_approved_by='${adminId}'::uuid where singleton`);
         flags({profile_enforcement_enabled:true});
         try{await verifyProfileWizardInBrowser(code,oldPass,group)}
-        finally{flags({profile_enforcement_enabled:false})}
+        finally{
+          flags({profile_enforcement_enabled:false});
+          sql("update private.student_identity_settings set enforcement_coverage_approved_by=null,enforcement_coverage_approved_at=null where singleton");
+        }
       });
     }
     await t.test("prefilled data updates durably while code remains immutable",async()=>{
