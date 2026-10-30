@@ -5,7 +5,7 @@ test('code, identity and Auth provisioning are durable and request-idempotent',(
 test('password goes directly to Auth and is never inserted in registration tables',()=>{assert.match(fn,/createUser\(\{[\s\S]*email,[\s\S]*password,/);assert.doesNotMatch(migration,/password\s+(?:text|varchar|bytea)/i);assert.doesNotMatch(fn,/console\.(?:log|error)\([^\n]*(?:body|password|national_id|activation_token|reset_token)/)});
 test('review state has exact 48-hour server deadline and request-time plus cron enforcement',()=>{for(const marker of['student_account_reviews','pending_review','suspended_pending_approval',"review_deadline_at = review_started_at \\+ interval '48 hours'",'student_account_access','suspend_expired_student_reviews'])assert.match(migration,new RegExp(marker));assert.match(fn,/student_account_access/);assert.match(shell,/studentReviewGate/)});
 test('legacy students are excluded from review deadlines',()=>{assert.match(migration,/if not found then[\s\S]*legacy_account/i);assert.match(staging,/legacy account has no deadline/)});
-test('admin review requires real students edit permission and is audited',()=>{assert.match(fn,/adminUser\(req, action !== "admin_list"\)/);for(const marker of['student_identity_audit_events','suspended_by_admin','reactivate'])assert.match(fn,new RegExp(marker))});
+test('admin review requires real students edit permission and is audited',()=>{assert.match(fn,/adminUser\(req, !\["admin_list", "admin_profile_changes"\]\.includes\(action\)\)/);for(const marker of['student_identity_audit_events','suspended_by_admin','reactivate'])assert.match(fn,new RegExp(marker))});
 test('pending student page checks review before legacy ping and preserves the Auth session',()=>{assert.match(studentBase,/reviewStateBeforeLegacyInit/);assert.match(studentBase,/state==='review_only'/);assert.match(studentBase,/registration_request_id/);assert.match(staging,/real student\.html keeps the GoTrue pending session/)});
 test('limited production rollout requires invitations and staging scope is forbidden on production',()=>{for(const marker of['student_registration_invites','student_registration_invite_redemptions','registration_invite_invalid','IS_PRODUCTION'])assert.match(migration+fn,new RegExp(marker));assert.match(fn,/registration_rollout_scope === "staging" && !IS_PRODUCTION/)});
 test('public registration requires CAPTCHA and rate limits use the trusted proxy edge',()=>{assert.match(migration,/captcha_required_for_public_registration boolean not null default true/);assert.match(fn,/STUDENT_REGISTRATION_TURNSTILE_SECRET/);assert.match(fn,/challenges\.cloudflare\.com\/turnstile/);assert.match(fn,/split\(","\)\.at\(-1\)/);assert.doesNotMatch(fn,/split\(","\)\[0\]/)});
@@ -16,7 +16,7 @@ test('flags restore and real student page with local GoTrue run in CI',()=>{asse
 
 test('server-generated invitations require admin edit and never persist plaintext tokens',()=>{
   assert.match(fn,/if \(action\.startsWith\("admin_"\)\)/);
-  assert.match(fn,/adminUser\(req, action !== "admin_list"\)/);
+  assert.match(fn,/adminUser\(req, !\["admin_list", "admin_profile_changes"\]\.includes\(action\)\)/);
   assert.match(fn,/if \(action === "admin_create_invite"\)/);
   assert.match(fn,/crypto\.getRandomValues\(new Uint8Array\(24\)\)/);
   assert.match(fn,/await hmac\(`registration-invite:\$\{token\}`\)/);
