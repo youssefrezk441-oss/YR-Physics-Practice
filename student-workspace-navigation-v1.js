@@ -1,6 +1,6 @@
 /* YR student workspace — navigation adapter for the real compiled student app.
  * Uses original eligible launcher buttons; never creates bypass URLs or changes grades.
- * Chapter 1/2 mistakes and workshops remain independent; Honor Arena is unversioned. */
+ * Chapter 1/2 mistakes and workshops remain independent; Honor editions use real server-owned assessment cycles and frozen snapshots. */
 const $=id=>document.getElementById(id);
 const areas={home:"dashboardView",learning:"yrLearnView",review:"yrReviewView",achievements:"yrAchievementsView",account:"yrAccountView"};
 const chapters={learning:"1",review:"1"};
