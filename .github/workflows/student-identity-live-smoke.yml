@@ -41,7 +41,10 @@ jobs:
           fetch student-account-shell.js /tmp/yr-shell.js
           grep -q 'studentReviewGate' /tmp/yr-shell.js
           fetch student.html /tmp/yr-student.html
-          grep -q 'studentCode' /tmp/yr-student.html
+          grep -q 'student-base.html' /tmp/yr-student.html
+          fetch student-base.html /tmp/yr-base.html
+          grep -q 'studentCode' /tmp/yr-base.html
+          grep -q 'reviewStateBeforeLegacyInit' /tmp/yr-base.html
           function_url='https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/student-identity'
           config="$(curl --fail --silent --show-error --max-time 25 \
             -H 'content-type: application/json' \
