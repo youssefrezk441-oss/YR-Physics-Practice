@@ -91,15 +91,15 @@ function refreshGroups() {
   }
   const byGrade = (config.groups || []).filter((g) => gradeCompatible(g, grade));
   const byCenter = center ? byGrade.filter((g) => centerCompatible(g, center)) : byGrade;
-  const filtered = center && center !== "غير ذلك" ? byCenter : byGrade;
+  const filtered = center && center !== "غير ذلك" && center !== "خصوصي" ? byCenter : byGrade;
   for (const group of filtered) {
     select.add(new Option(String(group.group_code) + (group.center_name ? " — " + group.center_name : ""), String(group.group_code)));
   }
   if (previous && filtered.some((g) => String(g.group_code) === previous)) select.value = previous;
   select.disabled = !filtered.length;
   hint.textContent = !filtered.length ? "لا توجد مجموعة متاحة للصف ومكان الحضور المحددين حاليًا. تواصل مع الإدارة لتحديد مجموعتك."
-    : center === "غير ذلك"
-      ? "اختر مجموعتك الفعلية، وستراجع الإدارة مكان الحضور."
+    : center === "غير ذلك" || center === "خصوصي"
+      ? "اختر المجموعة التي تتبع لها. ستراجع الإدارة طلب الحضور الخاص أو غير المحدد قبل الاعتماد."
       : "المجموعات المعروضة توافق الصف ومكان الحضور. ستراجع الإدارة بياناتك قبل الاعتماد.";
 }
 function updateControls() {
