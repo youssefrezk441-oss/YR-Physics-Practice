@@ -1,0 +1,17 @@
+/* Existing student onboarding uses the same approved YR identity as public registration. */
+.authShell{min-height:760px}
+.profileLoading{background:#f2f7f3;color:#184d3c;padding:18px;border:1px solid #d7e5da;border-radius:14px;line-height:1.8;font-weight:800}
+.studentCodeRow{display:grid;gap:7px;padding:13px 15px;margin:10px 0 20px;background:#eef5ef;border:1px solid #cbded1;border-radius:12px}
+.studentCodeRow label{font-weight:900;font-size:13px;color:#18523d}
+.studentCodeRow input{font:800 17px Arial,sans-serif;color:#174936;border:1px solid #c5d9c7;background:#fff;border-radius:8px;padding:12px 15px;letter-spacing:.5px}
+.studentCodeRow small{font-size:12px;color:#5a7464}
+.profileNotice{background:#fcf6e8;color:#6e4c14;border:1px solid #e7d1a2;border-radius:12px;padding:12px 16px;margin:14px 0;line-height:1.7}
+.profileNotice.error{background:#fff2f3;color:#a02536;border-color:#e8bcc3}
+.profilePasswordOpt{background:#f6f9f5;border:1px solid #dde8de;padding:14px;border-radius:12px}
+#passwordChangeFields{padding:12px 0 0}
+#passwordChangeFields.hidden{display:none!important}
+.profileLoading.hidden,#profileLockedMessage.hidden,#wizard.hidden{display:none!important}
+#fixedStudentCode{cursor:default}
+#message:not(.hidden){background:#fff3f2;border:1px solid #e6bfc1;color:#9d2634;padding:12px;border-radius:10px;margin:10px 0;font-size:13px;line-height:1.8}
+.accountField input[readonly]{opacity:1}
+@media(max-width:730px){.authShell{min-height:100dvh}.contentBody{padding-top:28px}.studentCodeRow{padding:12px}.studentCodeRow input{font-size:15px}}

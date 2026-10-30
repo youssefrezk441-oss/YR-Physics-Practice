@@ -309,6 +309,18 @@ Deno.serve(async (req) => {
           "جمع الرقم القومي غير متاح حاليًا.",
         );
       }
+      if (cfg.national_id_collection_enabled && !submittedNationalId) {
+        throw new IdentityInputError(
+          "national_id_required",
+          "الرقم القومي مطلوب لإنشاء حساب جديد.",
+        );
+      }
+      if (submittedNationalId && body.identity_consent_accepted !== true) {
+        throw new IdentityInputError(
+          "identity_consent_required",
+          "يجب الموافقة بصورة مستقلة على معالجة الرقم القومي.",
+        );
+      }
       let national: any = null,
         birth: string | null = null,
         encrypted: any = null,
@@ -720,9 +732,15 @@ Deno.serve(async (req) => {
           message: "الحساب غير نشط. راجع الإدارة.",
         }, 403);
       }
+      const [details] = await sql`select education_system,attendance_location,residence_area from private.student_profile_details where user_id=${u.id}::uuid`;
+      const [pending] = await sql`select id from private.student_profile_change_requests where user_id=${u.id}::uuid and status='pending' limit 1`;
+      const groups = await sql`select group_code,grade_level,center_name from public.student_groups where is_active=true order by grade_level,group_code`;
       return out(req, {
         ok: true,
         profile: p,
+        details: details ?? {},
+        pending_change: Boolean(pending),
+        groups,
         review: {
           status: access?.status ?? "approved",
           access_scope: access?.access_scope ?? "full",
@@ -808,6 +826,69 @@ Deno.serve(async (req) => {
           : "تم تحديث بيانات التواصل دون جمع رقم قومي.",
       });
     }
+
+    if (action === "complete_profile_v2") {
+      if (!u || u.app_metadata?.role !== "student") return out(req,{error:"unauthorized"},401);
+      if (!cfg.profile_update_enabled) return out(req,{error:"profile_update_unavailable",message:"تحديث البيانات غير متاح حاليًا."},503);
+      const notice = txt(body.privacy_notice_version,80);
+      if(body.privacy_accepted !== true || notice !== cfg.privacy_notice_version) {
+        throw new IdentityInputError("privacy_consent_required","يجب الموافقة على إشعار الخصوصية الحالي قبل الحفظ.");
+      }
+      const fullName = validateFullName(body.full_name);
+      const grade=txt(body.grade_level,80),system=txt(body.education_system,25),
+        location=txt(body.attendance_location,40),
+        group=normalizeStudentCode(body.group_code),residence=txt(body.residence_area,160),
+        studentPhone=normalizeEgyptianPhone(body.student_phone),
+        guardianPhone=normalizeEgyptianPhone(body.guardian_phone);
+      if(!["الصف الثاني الثانوي","الصف الثالث الثانوي"].includes(grade) ||
+        !["عام","أزهري","بكالوريا"].includes(system) ||
+        !["ناهيا","كفر حكيم","خصوصي","غير ذلك"].includes(location) ||
+        !group || !studentPhone || !guardianPhone) {
+        throw new IdentityInputError("invalid_profile_fields","راجع بيانات الصف والنظام والمجموعة وأرقام التواصل.");
+      }
+      const [requestedGroup] = await sql`select group_code,grade_level,center_name,is_active from public.student_groups where group_code=${group}`;
+      if(!requestedGroup || requestedGroup.grade_level !== grade)
+        throw new IdentityInputError("invalid_group","المجموعة المختارة لا تتوافق مع الصف الدراسي.");
+      const result = await sql.begin(async(tx)=>{
+        const [p]=await tx`select user_id,student_code,full_name,grade_level,group_code,center_name from public.student_profiles where user_id=${u.id}::uuid and is_active=true for update`;
+        if(!p)throw new IdentityInputError("inactive_account","الحساب غير نشط. راجع الإدارة.");
+        const [detail]=await tx`select education_system,attendance_location,residence_area from private.student_profile_details where user_id=${u.id}::uuid`;
+        const needsReview = fullName !== p.full_name ||
+          grade !== p.grade_level || group !== p.group_code ||
+          (!!detail?.education_system && system !== detail.education_system) ||
+          (!!detail?.attendance_location && location !== detail.attendance_location);
+        if(needsReview && !requestedGroup.is_active && group!==p.group_code)
+          throw new IdentityInputError("inactive_group","المجموعة الجديدة غير متاحة حاليًا.");
+        await tx`update public.student_profiles set student_phone=${studentPhone},guardian_phone=${guardianPhone},updated_at=now() where user_id=${u.id}::uuid`;
+        await tx`insert into private.student_profile_details(user_id,education_system,attendance_location,residence_area,updated_at)
+          values(${u.id}::uuid,${detail?.education_system || system},${detail?.attendance_location || location},${residence},now())
+          on conflict(user_id) do update set
+            education_system=coalesce(private.student_profile_details.education_system,excluded.education_system),
+            attendance_location=coalesce(private.student_profile_details.attendance_location,excluded.attendance_location),
+            residence_area=excluded.residence_area,updated_at=now()`;
+        let requestId=null;
+        if(needsReview){
+          const requested={full_name:fullName,grade_level:grade,education_system:system,attendance_location:location,group_code:group};
+          const previous={full_name:p.full_name,grade_level:p.grade_level,education_system:detail?.education_system??null,attendance_location:detail?.attendance_location??null,group_code:p.group_code};
+          const [existing]=await tx`select id from private.student_profile_change_requests where user_id=${u.id}::uuid and status='pending' for update`;
+          if(existing){
+            await tx`update private.student_profile_change_requests set requested_profile=${tx.json(requested)},previous_profile=${tx.json(previous)},requested_at=now() where id=${existing.id}::uuid`;
+            requestId=existing.id;
+          }else{
+            const [created]=await tx`insert into private.student_profile_change_requests(user_id,requested_profile,previous_profile)
+             values(${u.id}::uuid,${tx.json(requested)},${tx.json(previous)}) returning id`;
+            requestId=created.id;
+          }
+        }
+        await tx`insert into private.student_profile_status(user_id,profile_schema_version,completed_at,updated_at)
+          values(${u.id}::uuid,${cfg.required_profile_schema_version},now(),now())
+          on conflict(user_id) do update set profile_schema_version=excluded.profile_schema_version,completed_at=excluded.completed_at,updated_at=now()`;
+        await tx`insert into private.student_identity_audit_events(actor_user_id,subject_user_id,event_type,metadata)
+          values(${u.id}::uuid,${u.id}::uuid,'profile_completion_v2',${tx.json({privacy_notice_version:notice,privacy_accepted:true,change_requested:needsReview,request_id:requestId})})`;
+        return {pending_change:needsReview};
+      });
+      return out(req,{ok:true,pending_change:result.pending_change,message:result.pending_change?"تم حفظ بيانات التواصل وإرسال طلب تعديل بيانات الدراسة للمراجعة.":"تم حفظ بياناتك بنجاح."});
+    }
     if (action === "change_password") {
       if (!u || u.app_metadata?.role !== "student") {
         return out(req, { error: "unauthorized" }, 401);
@@ -832,7 +913,7 @@ Deno.serve(async (req) => {
       return out(req, { ok: true, message: "تم تغيير كلمة المرور." });
     }
     if (action.startsWith("admin_")) {
-      const a = await adminUser(req, action !== "admin_list");
+      const a = await adminUser(req, !["admin_list", "admin_profile_changes"].includes(action));
       if (!a) return out(req, { error: "forbidden" }, 403);
       if (action === "admin_create_invite") {
         const groupCode = txt(body.group_code, 80),
@@ -884,6 +965,53 @@ Deno.serve(async (req) => {
           group_code: groupCode,
           max_uses: maxUses,
         }, 201);
+      }
+
+      if(action === "admin_profile_changes"){
+        const requests=await sql`select cr.id,cr.user_id,cr.requested_profile,cr.previous_profile,cr.requested_at,
+          sp.student_code from private.student_profile_change_requests cr
+          join public.student_profiles sp on sp.user_id=cr.user_id
+          where cr.status='pending' order by cr.requested_at asc limit 300`;
+        return out(req,{ok:true,requests,level:a.level});
+      }
+      if(action === "admin_profile_change_decide"){
+        const id=txt(body.request_id,50),decision=txt(body.decision,12),reason=txt(body.reason,500);
+        if(!/^[0-9a-f-]{36}$/i.test(id) || !["approved","rejected"].includes(decision) || reason.length<8)
+          throw new IdentityInputError("invalid_decision","اختر قرارًا صالحًا واكتب سببًا واضحًا لا يقل عن 8 أحرف.");
+        const applied=await sql.begin(async(tx)=>{
+          const [reqRow]=await tx`select * from private.student_profile_change_requests where id=${id}::uuid and status='pending' for update`;
+          if(!reqRow)throw new IdentityInputError("request_not_found","الطلب غير موجود أو تمت مراجعته.");
+          const [p]=await tx`select user_id,full_name,grade_level,group_code from public.student_profiles where user_id=${reqRow.user_id}::uuid and is_active=true for update`;
+          if(!p)throw new IdentityInputError("inactive_account","حساب الطالب غير نشط.");
+          const [currentDetail]=await tx`select education_system,attendance_location from private.student_profile_details where user_id=${reqRow.user_id}::uuid`;
+          const was=reqRow.previous_profile,now=reqRow.requested_profile;
+          if(p.full_name!==was.full_name || p.grade_level!==was.grade_level || p.group_code!==was.group_code ||
+             (was.education_system && currentDetail?.education_system!==was.education_system) ||
+             (was.attendance_location && currentDetail?.attendance_location!==was.attendance_location))
+            throw new IdentityInputError("profile_changed_since_request","تم تغيير بيانات الطالب بعد الطلب. راجع بياناته قبل الاعتماد.");
+          if(decision==="approved"){
+            const [g]=await tx`select id,grade_level,center_name,is_active from public.student_groups where group_code=${now.group_code}`;
+            if(!g?.is_active || g.grade_level!==now.grade_level)
+              throw new IdentityInputError("invalid_group","مجموعة الطالب المطلوبة غير متاحة أو لا توافق الصف.");
+            await tx`update public.student_profiles set full_name=${now.full_name},grade_level=${now.grade_level},
+              group_code=${now.group_code},center_name=${g.center_name},updated_at=now() where user_id=${reqRow.user_id}::uuid`;
+            await tx`insert into private.student_profile_details(user_id,education_system,attendance_location,updated_at)
+              values(${reqRow.user_id}::uuid,${now.education_system},${now.attendance_location},now())
+              on conflict(user_id) do update set education_system=excluded.education_system,
+                attendance_location=excluded.attendance_location,updated_at=now()`;
+            if(p.group_code!==now.group_code){
+              await tx`update public.student_group_memberships set left_on=greatest(coalesce(joined_on,current_date),current_date),updated_at=now()
+                where user_id=${reqRow.user_id}::uuid and left_on is null and group_id<>${g.id}::uuid`;
+              const [membership]=await tx`select id from public.student_group_memberships where user_id=${reqRow.user_id}::uuid and group_id=${g.id}::uuid and left_on is null limit 1`;
+              if(!membership)await tx`insert into public.student_group_memberships(user_id,group_id,joined_on) values(${reqRow.user_id}::uuid,${g.id}::uuid,current_date)`;
+            }
+          }
+          await tx`update private.student_profile_change_requests set status=${decision},decided_at=now(),decided_by=${a.user.id}::uuid,decision_reason=${reason} where id=${id}::uuid`;
+          await tx`insert into private.student_identity_audit_events(actor_user_id,subject_user_id,event_type,reason,metadata)
+             values(${a.user.id}::uuid,${reqRow.user_id}::uuid,${"profile_change_"+decision},${reason},${tx.json({request_id:id,group_changed:p.group_code!==now.group_code})})`;
+          return {status:decision};
+        });
+        return out(req,{ok:true,...applied});
       }
       if (action === "admin_list") {
         const rows =

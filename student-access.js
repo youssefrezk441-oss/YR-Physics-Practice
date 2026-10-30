@@ -66,7 +66,15 @@ $("accessLoginForm").addEventListener("submit",async(event)=>{
       location.replace("admin-home.html");
       return;
     }
-    inform("تم تسجيل الدخول. جارٍ فتح منصتك…",true);
+    inform("تم تسجيل الدخول. جارٍ تجهيز حسابك…",true);
+    try{
+      const {identity}=await import("./student-identity-api.js");
+      const status=await identity("me");
+      if(status.enforcement && status.profile?.is_active &&
+         Number(status.profile.profile_schema_version||0)<Number(status.required_profile_schema_version||1)){
+        location.replace("student-complete-profile.html");return;
+      }
+    }catch(checkError){console.warn("Profile completion service unavailable",checkError)}
     location.replace("student.html");
   }catch(error){
     inform(error.message||"تعذر تسجيل الدخول. حاول مرة أخرى.");

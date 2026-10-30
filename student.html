@@ -12,13 +12,25 @@
 (async()=>{
   // Guests start at the shared login/register portal; authenticated students keep the existing learning app.
   // If the auth library is unavailable, fall back to the existing legacy login instead of blocking access.
-  if(typeof location!=='undefined' && !/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'')){
+  if(typeof location!=='undefined'){
     try{
       const {sb}=await import('./student-identity-api.js');
       const {data:{session}}=await sb.auth.getSession();
-      if(!session?.user){
+      const legacyRequested=/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'');
+      if(!session?.user && !legacyRequested){
         location.replace('./student-register.html?tab=login');
         return;
+      }
+      if(session?.user && session.user.app_metadata?.role!=='admin'){
+        try{
+          const {identity}=await import('./student-identity-api.js');
+          const status=await identity('me');
+          if(status.enforcement && status.profile?.is_active &&
+             Number(status.profile.profile_schema_version||0)<Number(status.required_profile_schema_version||1)){
+            location.replace('./student-complete-profile.html');
+            return;
+          }
+        }catch(error){console.warn('Cannot verify profile completion; existing student access preserved while service is checked.',error)}
       }
     }catch(error){console.warn('Student login portal unavailable; using legacy entry.',error)}
   }
@@ -273,6 +285,10 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace('</style>',
     '.errorsHomeCard{border:1px solid #a7c2e3!important;background:linear-gradient(180deg,#eff6ff,#fff)!important}.errorsHomeCard .studentNavIcon{background:#dbeafe!important}.errorsHomeCard h3{color:#16324f}.errorsHomeCard p{line-height:1.9}html[data-theme="dark"] .errorsHomeCard{background:linear-gradient(180deg,#172a48,#111827)!important;border-color:#37689b!important}html[data-theme="dark"] .errorsHomeCard h3{color:#dbeafe}'+'</style>');
 
+  const updateProfileAnchor='<div id="studentProfileMeta" class="profilePills"></div>';
+  if(html.includes(updateProfileAnchor)){
+    html=html.replace(updateProfileAnchor, updateProfileAnchor+'<a href="student-complete-profile.html" class="btn secondary" style="display:inline-block;text-decoration:none;margin-top:14px">تحديث بياناتي أو تغيير كلمة المرور</a>');
+  }
   document.open();
   document.write(html);
   document.close();

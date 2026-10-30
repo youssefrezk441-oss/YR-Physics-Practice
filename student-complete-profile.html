@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f4d3e">
+<meta name="description" content="منصة مستر يوسف رزق للفيزياء — تسجيل دخول الطلاب وإنشاء حساب جديد">
+<title>استكمال بيانات الطالب | YR Physics Practice</title>
+<link rel="stylesheet" href="student-access.css">
+<link rel="stylesheet" href="student-brand-studio-v2.css">
+<link rel="stylesheet" href="student-hero-editorial-v3.css">
+<link rel="stylesheet" href="student-profile-completion.css">
+</head><body>
+<main class="authPage">
+<div class="authShell">
+<aside class="journeyVisual" aria-label="منصة الفيزياء لمستر يوسف رزق">
+  <header class="yrHeroTop">
+    <div class="yrBrandLockup" dir="ltr" aria-label="YR Physics Practice">
+      <img class="yrMonogram" src="assets/yr-mastery-mark.svg" alt="شعار YR — رحلة من الفهم إلى الإتقان" width="72" height="72" decoding="async">
+      <div class="yrBrandWordmark"><strong>YR <span>PHYSICS</span></strong><small>PRACTICE</small></div>
+    </div>
+    <span class="yrBrandDescriptor">منصة مستر يوسف رزق</span>
+  </header>
+  <div class="yrHeroStory">
+    <span class="yrHeroEyebrow"><span class="yrEyebrowPoint" aria-hidden="true"></span> افهم الفيزياء على أصولها</span>
+    <h1>رحلتك في الفيزياء<br><em>من الفهم إلى الإتقان</em></h1>
+    <p>افهم الفكرة، وطبّقها، وتدرّب على أخطائك، وتابع تقدّمك خطوة بخطوة.</p>
+  </div>
+  <figure class="photoStage yrPhotoEditorial">
+    <img src="assets/teacher-youssef-studio-hq-1100.webp" alt="مستر يوسف رزق داخل استوديو الفيزياء" width="1100" height="1005" decoding="async" fetchpriority="high">
+    <figcaption class="yrPhotoCaption"><strong>مستر يوسف رزق</strong><span>معاك في كل خطوة</span></figcaption>
+  </figure>
+  <div class="yrProgressFooter" aria-label="مراحل رحلتك التعليمية">
+    <div class="yrProgressHeading"><strong>طريقك للإتقان</strong><small>كل خطوة بتفرق</small></div>
+    <ol class="yrProgressSteps">
+      <li><span class="yrStepNumber">01</span><span>افهم</span></li>
+      <li><span class="yrStepNumber">02</span><span>طبّق</span></li>
+      <li><span class="yrStepNumber">03</span><span>تدرّب</span></li>
+      <li class="is-mastered"><span class="yrStepNumber">04</span><span>أتقن</span></li>
+    </ol>
+  </div>
+</aside>
+<section class="contentPanel" aria-label="الدخول إلى المنصة">
+  <div class="contentTop"><span class="yrBrandSmallLockup" dir="ltr"><img src="assets/yr-mastery-mark.svg" width="30" height="30" alt="" aria-hidden="true"><span class="brandSmall">YR <span>PHYSICS</span></span></span><span class="secureIndicator">تحديث آمن للطلاب الحاليين</span></div>
+  <div class="contentBody">
+    <div class="welcomeIntro"><span class="stepHeader"><span class="stepNumber">01</span> بياناتك جزء من رحلتك</span><h2>كمّل بيانات حسابك <span class="smile" aria-hidden="true">✦</span></h2><p>بياناتك هتظهر من حسابك الحالي. راجعها وعدّل المطلوب، وبعد الحفظ هتكمّل للمنصة.</p></div>
+  <div id="signupPane" class="view" role="region" aria-label="استكمال بيانات الطالب">
+    <p class="formEyebrow">حسابك الحالي محفوظ</p>
+    <h2 class="formTitle">راجع بياناتك وكمّلها</h2>
+    <p class="formDescription">مش محتاج تعمل حساب جديد. الكود ثابت، وباقي البيانات قابلة للمراجعة والتعديل.</p>
+  <div id="message" class="hidden" role="alert" aria-live="polite"></div>
+  <div id="profileLoading" class="profileLoading" role="status">جارٍ تحميل بياناتك الحالية…</div>
+  <div id="profileLockedMessage" class="profileNotice hidden" role="status"></div>
+  <div id="wizard" class="hidden">
+    <nav class="stepper" aria-label="مراحل استكمال البيانات">
+      <div class="stepItem active" data-step-marker="0"><div class="stepCircle">1</div>بيانات الطالب</div>
+      <div class="stepItem" data-step-marker="1"><div class="stepCircle">2</div>الدراسة والمجموعة</div>
+      <div class="stepItem" data-step-marker="2"><div class="stepCircle">3</div>التواصل والأمان</div>
+      <div class="stepItem" data-step-marker="3"><div class="stepCircle">4</div>مراجعة وحفظ</div>
+    </nav>
+    <form id="form" novalidate autocomplete="on"><div class="panelBody">
+      <section class="step-panel" data-step="0" aria-labelledby="stepTitle0">
+        <p class="panelIndex">01 / 04</p><h2 id="stepTitle0" class="panelTitle">بيانات الطالب</h2>
+        <p class="panelIntro">دي بياناتك الحالية من المنصة. عدّل أي جزء محتاج تصحيح.</p><div class="studentCodeRow"><label for="fixedStudentCode">كود الطالب — ثابت ولا يمكن تغييره</label><input id="fixedStudentCode" type="text" dir="ltr" readonly tabindex="0" autocomplete="off" aria-readonly="true"><small>الكود مرتبط بتدريباتك ونتائجك، ومش هيتغيّر.</small></div>
+        <div class="accountGrid">
+          <div class="accountField"><label for="firstName">الاسم الأول</label><input id="firstName" name="first_name" required maxlength="45" autocomplete="given-name" placeholder="مثال: أحمد"></div>
+          <div class="accountField"><label for="secondName">الاسم الثاني</label><input id="secondName" name="second_name" required maxlength="45" placeholder="اسم الأب"></div>
+          <div class="accountField"><label for="thirdName">الاسم الثالث</label><input id="thirdName" name="third_name" required maxlength="45" placeholder="اسم الجد"></div>
+          <div class="accountField"><label for="fourthName">الاسم الرابع</label><input id="fourthName" name="fourth_name" required maxlength="45" autocomplete="family-name" placeholder="اسم العائلة"></div>
+
+        </div>
+      </section>
+      <section class="step-panel" data-step="1" aria-labelledby="stepTitle1" hidden>
+        <p class="panelIndex">02 / 04</p><h2 id="stepTitle1" class="panelTitle">الدراسة والمجموعة</h2>
+        <p class="panelIntro">راجع بيانات الدراسة والمجموعة. طلب تغيير الصف أو المجموعة هيحتاج موافقة الإدارة قبل نقل حسابك.</p>
+        <div class="accountGrid">
+          <div class="accountField"><label for="grade">الصف الدراسي</label><select id="grade" name="grade_level" required><option value="">اختر الصف</option><option>الصف الثاني الثانوي</option><option>الصف الثالث الثانوي</option></select></div>
+          <div class="accountField"><label for="system">النظام التعليمي</label><select id="system" name="education_system" required><option value="">اختر النظام</option><option>عام</option><option>أزهري</option><option>بكالوريا</option></select></div>
+          <div class="accountField"><label for="location">مكان الحضور</label><select id="location" name="attendance_location" required><option value="">اختر المكان</option><option>ناهيا</option><option>كفر حكيم</option><option>خصوصي</option><option>غير ذلك</option></select></div>
+          <div class="accountField"><label for="residence">منطقة السكن <span class="optional">(اختياري)</span></label><input id="residence" name="residence_area" maxlength="160" placeholder="المنطقة أو القرية"></div>
+          <div class="accountField full"><label for="group">المجموعة</label><select id="group" name="group_code" required disabled><option value="">اختر الصف ومكان الحضور أولًا</option></select><p id="groupHint" class="hint" role="status">سيتم تحميل المجموعات من المنصة.</p></div>
+        </div>
+      </section>
+      <section class="step-panel" data-step="2" aria-labelledby="stepTitle2" hidden>
+        <p class="panelIndex">03 / 04</p><h2 id="stepTitle2" class="panelTitle">التواصل وتأمين الحساب</h2>
+        <p class="panelIntro">تأكد من أرقام التواصل. تغيير كلمة السر اختياري تمامًا.</p>
+        <div class="accountGrid">
+          <div class="accountField"><label for="phone">رقم موبايل الطالب</label><input id="phone" name="student_phone" type="tel" required inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="01xxxxxxxxx" maxlength="16"></div>
+          <div class="accountField"><label for="guardian">رقم موبايل ولي الأمر</label><input id="guardian" name="guardian_phone" type="tel" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx" maxlength="16"></div>
+          <p class="hint full">اكتب أرقام تواصل صحيحة حتى تقدر الإدارة تتواصل معاك عند الحاجة.</p>
+          <div class="accountField full profilePasswordOpt"><label class="privacyLabel"><input type="checkbox" id="changePassword" name="change_password"><span>عاوز أغيّر كلمة المرور</span></label><p class="hint">سيبها من غير تحديد لو عاوز تحتفظ بكلمة المرور الحالية.</p></div>
+          <div id="passwordChangeFields" class="accountGrid full hidden" aria-live="polite">
+            <div class="accountField full"><label for="currentPassword">كلمة المرور الحالية</label><input id="currentPassword" name="current_password" type="password" autocomplete="current-password" minlength="1" maxlength="128"></div>
+            <div class="accountField"><label for="newPassword">كلمة المرور الجديدة</label><input id="newPassword" name="new_password" type="password" autocomplete="new-password" minlength="10" maxlength="128"></div>
+            <div class="accountField"><label for="newPasswordConfirm">تأكيد كلمة المرور الجديدة</label><input id="newPasswordConfirm" name="new_password_confirm" type="password" autocomplete="new-password" minlength="10" maxlength="128"></div>
+            <p class="hint full">10 أحرف على الأقل، تشمل حروفًا وأرقامًا. كلمة المرور مش بتظهر للإدارة.</p>
+          </div>
+        </div>
+      </section>
+      <section class="step-panel" data-step="3" aria-labelledby="stepTitle3" hidden>
+        <p class="panelIndex">04 / 04</p><h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الحفظ</h2>
+        <p class="panelIntro">راجع التعديلات قبل الحفظ. كود الطالب وكلمة المرور الحالية مش هيتغيروا إلا لو اخترت تعديل كلمة السر.</p>
+        <div id="review" class="reviewGrid" aria-live="polite"></div>
+        <p class="subtleBox" style="margin-top:16px">بيانات التواصل بتتحدث بعد الحفظ. أي طلب لتغيير الاسم أو الصف أو المجموعة هيراجعه المسؤول قبل اعتماده.</p>
+        <div class="accountField" style="margin-top:17px">
+          <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على تحديث بيانات حسابي لغرض المتابعة التعليمية.</span></label>
+        </div>
+        </section>
+      </div><footer class="actions">
+        <button type="button" id="prev" class="accountBtn secondary" hidden>السابق</button>
+        <button type="button" id="next" class="accountBtn">التالي</button>
+        <button type="submit" id="submitBtn" class="accountBtn" hidden disabled>حفظ البيانات والمتابعة</button>
+      </footer>
+    </form>
+    
+  </div>
+  <section id="receipt" class="receipt hidden" role="status"><h2>تم حفظ بياناتك بنجاح</h2><p id="profileSaveNotice">يمكنك متابعة تدريباتك الآن.</p><a class="accountBtn" href="student.html">الدخول إلى منصتي</a></section>
+  </div>
+  </div>
+  <footer class="contentFooter">YR Physics Practice <span>·</span> منصة مستر يوسف رزق</footer>
+</section>
+</div>
+</main>
+<script type="module" src="student-profile-completion.js"></script>
+</body></html>
