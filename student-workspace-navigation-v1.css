@@ -161,3 +161,14 @@ html[data-theme="dark"] .yrStudentApp .yrDashboardHero a.btn.secondary{backgroun
 .yrStudentApp .yrHistoryFilterTabs button[aria-pressed="true"]{background:#0E5948;color:#fff;border-color:#0E5948}
 .yrStudentApp .yrHistoryFilterTabs button:focus-visible{outline:3px solid var(--yr-focus);outline-offset:2px}
 html[data-theme="dark"] .yrStudentApp .yrHistoryFilterTabs button[aria-pressed="true"]{background:#427C61;border-color:#579B75;color:#fff}
+
+/* Cycle editions are server-owned; archived badges mean frozen DB snapshots only. */
+.yrStudentApp .yrEditionButton{appearance:none;width:100%;font-family:inherit;text-align:right;color:var(--yr-ink);cursor:pointer}
+.yrStudentApp .yrEditionButton:hover{border-style:solid;border-color:#98BBA4}
+.yrStudentApp .yrEditionButton:focus-visible{outline:3px solid var(--yr-focus);outline-offset:3px}
+.yrStudentApp .yrHonorCycleSelector{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:17px;padding:14px;border-radius:14px;border:1px solid #ffffff35;background:#ffffff12;color:#F8FBEF}
+.yrStudentApp .yrHonorCycleSelector>strong{flex-basis:100%;font-size:13px}
+.yrStudentApp .yrHonorCycleButton{border:1px solid #ffffff50;border-radius:999px;background:#ffffff13;color:#F7FBEF;font:800 12px/1.5 "Tajawal",Tahoma,Arial,sans-serif;padding:8px 13px;cursor:pointer;text-align:right}
+.yrStudentApp .yrHonorCycleButton[aria-pressed="true"]{background:#D6A149;border-color:#F4CA77;color:#23372E}
+.yrStudentApp .yrHonorCycleButton:focus-visible{outline:3px solid #FFF0B7;outline-offset:3px}
+@media(max-width:560px){.yrStudentApp .yrHonorCycleButton{width:100%}.yrStudentApp .yrHonorCycleSelector{padding:11px}}
