@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" role="img" aria-labelledby="yr-title yr-desc">
+  <title id="yr-title">YR — مسار الإتقان</title>
+  <desc id="yr-desc">حرفا Y وR بتكوين هندسي، وأسفلهما أربع نقاط تمثل الفهم والتطبيق والتدريب والإتقان</desc>
+  <path d="M7 7L23 29L39 7M23 29V50" stroke="#0E5948" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M45 50V7H54C69 7 69 28 54 28H45M54 28L66 50" stroke="#0E5948" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="11" cy="65" r="3.6" fill="#78AE9C"/>
+  <circle cx="26" cy="65" r="3.6" fill="#78AE9C"/>
+  <circle cx="41" cy="65" r="3.6" fill="#78AE9C"/>
+  <circle cx="56" cy="65" r="4.8" fill="#D6A149"/>
+</svg>
