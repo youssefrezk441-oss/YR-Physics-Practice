@@ -43,12 +43,13 @@ test("real compiled YR dashboard renders without horizontal overflow in light an
      viewport:document.documentElement.clientWidth,
      scroll:document.documentElement.scrollWidth,
      logo:document.querySelector(".yrInternalBrand img")?.getBoundingClientRect().width,
-     cards:[...document.querySelectorAll("#dashboardView .studentHomeGrid .studentNavCard")].map(x=>x.getBoundingClientRect().width),
+     navItems:document.querySelectorAll(".yrWorkspaceSidebar [data-yr-go]").length,
+     workspaceWidth:document.querySelector("#yrWorkspaceContent")?.getBoundingClientRect().width,
      hello:document.querySelector("#welcomeTitle")?.textContent
     }));
     assert.ok(dimensions.logo>30,"YR mark missing at "+width+"/"+theme);
-    assert.equal(dimensions.cards.length,3,"dashboard destinations missing");
-    assert.ok(dimensions.cards.every(x=>x>=170),"narrow cards at "+width+"/"+theme);
+    assert.equal(dimensions.navItems,5,"all approved workspace destinations must exist");
+    assert.ok(dimensions.workspaceWidth>240,"workspace text area too narrow at "+width+"/"+theme);
     assert.ok(dimensions.scroll<=dimensions.viewport+2,
       "horizontal overflow at "+width+"/"+theme+" "+JSON.stringify(dimensions));
     assert.match(dimensions.hello,/طالب تجريبي/);
