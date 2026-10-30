@@ -531,6 +531,9 @@ function renderHistory(){
   b.onclick=()=>{selectedHistoryChapter=key;renderHistory()};
   return b;
  }));
+ let note=$('yrHistoryLimitNote');
+ if(!note){note=document.createElement('p');note.id='yrHistoryLimitNote';note.className='small muted';selector.after(note)}
+ note.textContent='هذا السجل يعرض أحدث 100 محاولة يرجعها النظام على الأكثر؛ المحاولات الأقدم قد لا تظهر هنا.';
  const completed=selectedHistoryChapter==='all'
   ?history.filter(h=>h.status!=='in_progress')
   :(groups.get(selectedHistoryChapter)||[]);
