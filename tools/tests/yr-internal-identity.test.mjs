@@ -61,6 +61,6 @@ test("critical student links remain reachable after replacing the legacy home ca
  assert.match(controller,/function canSecondGrade\(/,"grade-2 references must not be shown as grade-3 content");
  assert.match(controller,/function canThirdGrade\(/);
  assert.match(controller,/progress\.id="yrHomeProgress"/);
- assert.match(controller,/تصفية حسب الفصل غير متاحة بعد/);
+ assert.match(controller,/تصفح المحاولات بحسب الفصل/);
  assert.match(html,/student-workspace-navigation-v1\.js/);
 });
