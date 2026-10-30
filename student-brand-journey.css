@@ -108,7 +108,7 @@ body{background:#ecefe8;font-family:"Tajawal",Tahoma,Arial,sans-serif;color:var(
   .journeyLogo strong{font-size:11px}
   .journeyLogo small{font-size:8px;margin-top:3px}
   .journeyTopCaption{display:inline-block;font-size:10px;padding:6px 9px}
-  .journeyHeroText{margin:15px 105px 4px 0;min-height:112px}
+  .journeyHeroText{margin:15px 0 4px 105px;min-height:112px}
   .journeyKicker{font-size:10px}
   .journeyHeroText h1{font-size:clamp(21px,5.2vw,29px);line-height:1.35;margin:8px 0}
   .journeyHeroText p{font-size:11px;line-height:1.6;margin:7px 0 0}
