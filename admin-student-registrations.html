@@ -290,17 +290,77 @@
           message(x.message);
         }
       };
+      let recoveryRequests = [];
+      let currentRecoveryToken = null;
+      function syncRecoveryVerification() {
+        const approved = $("recoveryChoice").value === "approved";
+        $("recoveryVerification").classList.toggle("hidden", !approved);
+        $("recoveryVerificationMethod").required = approved;
+        $("recoveryIdentityVerified").required = approved;
+        if (!approved) {
+          $("recoveryVerificationMethod").value = "";
+          $("recoveryIdentityVerified").checked = false;
+        }
+      }
+      $("recoveryChoice").onchange = syncRecoveryVerification;
+      $("cancelRecovery").onclick = () => $("recoveryDecision").classList.add("hidden");
+      function clearRecoveryToken() {
+        currentRecoveryToken = null;
+        $("recoveryTokenValue").value = "";
+        $("recoveryTokenValue").type = "password";
+        $("recoveryTokenReceipt").classList.add("hidden");
+        $("showRecoveryToken").textContent = "إظهار الرمز";
+      }
+      $("dismissRecoveryToken").onclick = clearRecoveryToken;
+      $("showRecoveryToken").onclick = () => {
+        if (!currentRecoveryToken) return;
+        const input = $("recoveryTokenValue");
+        input.type = input.type === "password" ? "text" : "password";
+        $("showRecoveryToken").textContent = input.type === "text" ? "إخفاء الرمز" : "إظهار الرمز";
+      };
+      $("copyRecoveryToken").onclick = async () => {
+        if (!currentRecoveryToken) return;
+        try {
+          await navigator.clipboard.writeText(currentRecoveryToken);
+          $("copyRecoveryToken").textContent = "تم النسخ";
+        } catch {
+          $("recoveryTokenValue").type = "text";
+          $("recoveryTokenValue").select();
+          message("تعذر النسخ التلقائي. يمكنك نسخ الرمز المعروض يدويًا.");
+        }
+      };
+      window.addEventListener("pagehide",clearRecoveryToken);
       $("recoveryForm").onsubmit = async (e) => {
         e.preventDefault();
+        if (!e.target.reportValidity()) return;
+        const approved = $("recoveryChoice").value === "approved";
+        if (approved && (!$("recoveryIdentityVerified").checked || !$("recoveryVerificationMethod").value)) {
+          message("لا يمكن الموافقة قبل إثبات الهوية وتسجيل طريقة التحقق.");
+          return;
+        }
+        const submit = e.target.querySelector('button[type="submit"]');
+        const payload = Object.fromEntries(new FormData(e.target));
+        payload.identity_verified = approved && $("recoveryIdentityVerified").checked;
         try {
-          await identity(
-            "admin_recovery_decide",
-            Object.fromEntries(new FormData(e.target)),
-          );
-          message("تم حفظ القرار.", true);
+          submit.disabled = true;
+          const result = await identity("admin_recovery_decide", payload);
+          $("recoveryDecision").classList.add("hidden");
+          clearRecoveryToken();
+          if (approved && result.reset_token) {
+            currentRecoveryToken = result.reset_token;
+            $("recoveryTokenValue").value = currentRecoveryToken;
+            $("copyRecoveryToken").textContent = "نسخ الرمز";
+            $("recoveryTokenReceipt").classList.remove("hidden");
+            $("recoveryTokenReceipt").scrollIntoView({block:"nearest",behavior:"smooth"});
+            message("تم اعتماد طلب الاستعادة؛ انسخ الرمز الآن لأنه لن يظهر مرة أخرى.", true);
+          } else {
+            message("تم تسجيل قرار الرفض.", true);
+          }
           await load();
         } catch (x) {
-          message(x.message);
+          message(x.message || "تعذر تسجيل قرار الاستعادة.");
+        } finally {
+          submit.disabled = false;
         }
       };
       $("reviewFilter").onchange = renderRequests;
