@@ -96,4 +96,4 @@ if (!renderedStudentHtml.includes('id="dashboardView"') ||
 }
 writeFileSync(resolve(output, 'student.html'), renderedStudentHtml, 'utf8');
 
-console.log(`Pages artifact ready: ${copied} tracked files copied; paused student content excluded.; compiled student dashboard rendered directly.`);
+console.log(`Pages artifact ready: ${copied} tracked files copied; compiled student dashboard rendered directly.`);
