@@ -2,6 +2,17 @@
 
 This is a **readiness record, not an approval to deploy**. All production identity flags must remain disabled unless a separately checked release proceeds.
 
+## 2026-10-30 — verified live pages, secure invitations, crypto-ready API
+
+**Production installation is complete; public/student registration remains deliberately CLOSED.** New release is `student-identity` Edge Function ACTIVE v2 (`verify_jwt=false` because public actions are allowed; admin actions verify Auth JWT and database permissions internally).
+
+- Verified actual live GitHub Pages files and production API through a no-write GitHub Actions run: [live smoke 40977607503](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40977607503), plus [post-invite release smoke 40978836270](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40978836270). [Pages deploy 40978836236](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40978836236) SUCCESS.
+- PR [#17](https://github.com/youssefrezk441-oss/YR-Physics-Practice/pull/17) merged as `7399ada6447f113bcf3f8a2f9b9c571b23b5e435`: added `admin_create_invite` action gated by verified administrator role AND `admin_access_level('students',user_id)='edit'`. Server-generated high-entropy invite tokens are disclosed once only; only HMAC digests, group, use count, expiry and audit events persist. Admin interface `admin-student-registrations.html` now supports selecting an active group, invite max uses, expiry and copying an invite link. Creating invitations does NOT open signup automatically.
+- Version 2 additionally exposes a safe boolean `service_ready` in public `config` and refuses registration if either of the two **distinct 32-byte encryption/HMAC secrets** is absent/malformed. The post-deploy production smoke confirmed `service_ready=true`, registration disabled, unauthorized registration HTTP 503, anonymous admin actions HTTP 403. Do not print/export secret values.
+- Synthetic Docker PostgreSQL + real GoTrue/Edge Function E2E: **25/25** first run; **24 passed, 1 intentional browser skip** second run, zero failures. Green PR checks [run 40978634391](https://github.com/youssefrezk441-oss/YR-Physics-Practice/actions/runs/40978634391). Synthetic-only cloud Staging remains skipped. Test cleanup now explicitly deletes run-owned invitation audit events; zero synthetic data seeded into production.
+- Post-release production database count check: 280 student profiles, 288 Auth users, 1,515 attempts, 764 class scores; zero identity registrations, zero reviews, zero invites. Flags: `registration_enabled=false`, `immediate_registration_enabled=false`, `registration_rollout_scope='disabled'`.
+- Remaining before **activating any real student signup**: an approved privacy notice/retention and contact pathway (current `draft-v1` is not approved), negative cloud integration and end-to-end testing against a synthetic-only Staging project (NOT the real-data restore copy), review legacy Edge Function access enforcement and security-advisor findings. General public rollout additionally needs CAPTCHA; national ID collection, SMS phone login and profile enforcement remain disabled. These blockers must not be bypassed by toggling flags silently.
+
 ## 2026-10-30 — production installation completed, activation still gated
 
 **Latest state (supersedes pre-deployment statements below):**
