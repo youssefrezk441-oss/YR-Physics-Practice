@@ -111,10 +111,10 @@ test(
        requestAnimationFrame(inspect);
      });
      await p.goto("http://127.0.0.1:"+s.address().port+"/student.html");
-     await p.waitForSelector("#yrStudentBoot:visible");
+     await p.waitForSelector("#loginView",{state:"attached",timeout:12000});
      assert.equal(await p.locator("#loginView").isVisible(),false);
+     assert.equal(await p.locator("#yrStudentBoot").count(),0,"No loading splash is allowed");
      await p.waitForSelector("#dashboardView:visible",{timeout:12000});
-     assert.equal(await p.locator("#yrStudentBoot").count(),0);
      assert.equal(await p.evaluate(()=>window.__oldSignInFlashed),false);
    }finally{await browser.close();s.close()}
  },
