@@ -51,7 +51,7 @@ jobs:
             -d '{"action":"config"}' "$function_url")"
           CONFIG_JSON="$config" node -e '
             const d=JSON.parse(process.env.CONFIG_JSON);
-            if(d.ok!==true || d.registration_enabled!==false ||
+            if(d.ok!==true || d.service_ready!==true || d.registration_enabled!==false ||
                d.registration_rollout_scope!=="disabled" ||
                d.phone_login_enabled!==false ||
                d.profile_enforcement_enabled!==false ||
@@ -69,3 +69,8 @@ jobs:
             -d '{"action":"admin_list"}' "$function_url")"
           test "$admin_status" = "403"
           echo 'ANONYMOUS ADMIN ACCESS DENIED: PASS'
+          create_invite_status="$(curl -sS --max-time 25 -o /dev/null \
+            -w '%{http_code}' -H 'content-type: application/json' \
+            -d '{"action":"admin_create_invite"}' "$function_url")"
+          test "$create_invite_status" = "403"
+          echo 'ANONYMOUS INVITE CREATION DENIED: PASS'
