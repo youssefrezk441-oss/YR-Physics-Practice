@@ -1,0 +1,68 @@
+name: Student identity live read-only smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/student-identity-live-smoke.yml'
+      - 'student-register.html'
+      - 'student-account-shell.js'
+      - 'student-recovery.html'
+      - 'admin-student-registrations.html'
+      - 'student-privacy.html'
+      - 'student-base.html'
+      - 'student-identity-api.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-public-pages-and-closed-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check deployed public pages and production closed gates (no credentials or writes)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://youssefrezk441-oss.github.io/YR-Physics-Practice'
+          fetch() {
+            local path="$1" file="$2"
+            curl --fail --silent --show-error --location --max-time 25 --retry 2 \
+              "$base/$path" -o "$file"
+            test -s "$file"
+            echo "LIVE PAGE PASS: $path"
+          }
+          fetch student-register.html /tmp/yr-register.html
+          grep -q 'إنشاء حساب جديد' /tmp/yr-register.html
+          fetch admin-student-registrations.html /tmp/yr-admin.html
+          grep -q 'طلبات تسجيل الطلاب' /tmp/yr-admin.html
+          fetch student-recovery.html /tmp/yr-recovery.html
+          fetch student-privacy.html /tmp/yr-privacy.html
+          grep -q 'إشعار خصوصية حساب الطالب' /tmp/yr-privacy.html
+          fetch student-account-shell.js /tmp/yr-shell.js
+          grep -q 'studentReviewGate' /tmp/yr-shell.js
+          fetch student.html /tmp/yr-student.html
+          grep -q 'studentCode' /tmp/yr-student.html
+          function_url='https://ltjdhconuiqblxfjzpzj.supabase.co/functions/v1/student-identity'
+          config="$(curl --fail --silent --show-error --max-time 25 \
+            -H 'content-type: application/json' \
+            -d '{"action":"config"}' "$function_url")"
+          CONFIG_JSON="$config" node -e '
+            const d=JSON.parse(process.env.CONFIG_JSON);
+            if(d.ok!==true || d.registration_enabled!==false ||
+               d.registration_rollout_scope!=="disabled" ||
+               d.phone_login_enabled!==false ||
+               d.profile_enforcement_enabled!==false ||
+               d.national_id_collection_enabled!==false)
+              throw Error("Unsafe production feature gate");
+            console.log("PRODUCTION FLAGS CLOSED: PASS");
+          '
+          registration_status="$(curl -sS --max-time 25 -o /dev/null \
+            -w '%{http_code}' -H 'content-type: application/json' \
+            -d '{"action":"submit_registration"}' "$function_url")"
+          test "$registration_status" = "503"
+          echo 'PRODUCTION REGISTRATION DENIED: PASS'
+          admin_status="$(curl -sS --max-time 25 -o /dev/null \
+            -w '%{http_code}' -H 'content-type: application/json' \
+            -d '{"action":"admin_list"}' "$function_url")"
+          test "$admin_status" = "403"
+          echo 'ANONYMOUS ADMIN ACCESS DENIED: PASS'
