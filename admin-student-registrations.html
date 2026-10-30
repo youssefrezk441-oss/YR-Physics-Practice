@@ -111,12 +111,32 @@
         </form>
       </section>
       <section id="recoveryDecision" class="accountCard hidden">
-        <form id="recoveryForm">
-          <input name="reference" type="hidden" /><select name="decision">
-            <option value="approved">موافقة</option>
-            <option value="rejected">رفض</option></select
-          ><textarea name="reason" required></textarea
-          ><button class="accountBtn">حفظ</button>
+        <h2>مراجعة طلب استعادة الحساب</h2>
+        <p id="recoverySubject" class="accountMuted"></p>
+        <form id="recoveryForm" class="accountGrid">
+          <input name="reference" type="hidden" />
+          <div class="accountField"><label for="recoveryChoice">القرار</label>
+            <select id="recoveryChoice" name="decision" required>
+              <option value="">اختر القرار</option>
+              <option value="rejected">رفض الطلب</option>
+              <option value="approved">موافقة بعد التحقق من الهوية</option>
+            </select>
+          </div>
+          <div class="accountField full hidden" id="recoveryVerification">
+            <p class="accountMuted">لا تستخدم رقم التواصل المدخل في الطلب نفسه كإثبات للهوية؛ راجع الطالب حضوريًا أو تواصل معه على رقمه المسجل مسبقًا.</p>
+            <label for="recoveryVerificationMethod">طريقة التحقق</label>
+            <select id="recoveryVerificationMethod" name="verification_method">
+              <option value="">اختر طريقة التحقق</option>
+              <option value="in_person">التحقق حضوريًا من الطالب</option>
+              <option value="registered_phone">التواصل عبر الرقم المسجل لدى المنصة</option>
+            </select>
+            <label style="display:block;margin-top:12px"><input id="recoveryIdentityVerified" type="checkbox" /> أؤكد أنني تحققت من هوية الطالب</label>
+          </div>
+          <div class="accountField full"><label for="recoveryReason">سبب القرار وتفاصيل التحقق</label>
+            <textarea id="recoveryReason" name="reason" minlength="8" required></textarea>
+          </div>
+          <button type="submit" class="accountBtn">تأكيد القرار</button>
+          <button type="button" id="cancelRecovery" class="accountBtn secondary">إلغاء</button>
         </form>
       </section>
     </main>
