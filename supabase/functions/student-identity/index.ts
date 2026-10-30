@@ -57,6 +57,19 @@ const origins = new Set([
   enc = new TextEncoder();
 const txt = (v: unknown, n = 300) =>
   String(v ?? "").normalize("NFKC").trim().slice(0, n);
+function assertSecondYearGroup(grade: string, system: string, location: string, group: string) {
+  if (grade !== "الصف الثاني الثانوي") return;
+  if (!["عام", "بكالوريا", "أزهري"].includes(system) ||
+      !["ناهيا", "كفر حكيم", "خصوصي", "غير ذلك"].includes(location)) {
+    throw new IdentityInputError("invalid_education_group_fields", "راجع النظام التعليمي ومكان الحضور.");
+  }
+  // Special attendance cases retain administrative review instead of forced routing.
+  if (location !== "ناهيا" && location !== "كفر حكيم") return;
+  const expected = `${location === "ناهيا" ? "N" : "K"}2-${system === "أزهري" ? "B" : "A"}`;
+  if (group !== expected) {
+    throw new IdentityInputError("education_group_mismatch", "المجموعة لا تطابق النظام التعليمي ومكان الحضور. راجع بياناتك.");
+  }
+}
 function headers(req: Request) {
   const o = req.headers.get("origin") ?? "";
   return {
@@ -345,6 +358,7 @@ Deno.serve(async (req) => {
           "يجب قراءة إشعار الخصوصية المعتمد والموافقة عليه.",
         );
       }
+      assertSecondYearGroup(grade, system, location, group);
       const requestHmac = await hmac(`registration-request:${requestKey}`),
         phoneHmac = await hmac(`registration-phone:${studentPhone}`),
         subjectHmac = await hmac(
@@ -846,6 +860,7 @@ Deno.serve(async (req) => {
         !group || !studentPhone || !guardianPhone) {
         throw new IdentityInputError("invalid_profile_fields","راجع بيانات الصف والنظام والمجموعة وأرقام التواصل.");
       }
+      assertSecondYearGroup(grade, system, location, group);
       const [requestedGroup] = await sql`select group_code,grade_level,center_name,is_active from public.student_groups where group_code=${group}`;
       if(!requestedGroup || requestedGroup.grade_level !== grade)
         throw new IdentityInputError("invalid_group","المجموعة المختارة لا تتوافق مع الصف الدراسي.");
@@ -990,6 +1005,7 @@ Deno.serve(async (req) => {
              (was.attendance_location && currentDetail?.attendance_location!==was.attendance_location))
             throw new IdentityInputError("profile_changed_since_request","تم تغيير بيانات الطالب بعد الطلب. راجع بياناته قبل الاعتماد.");
           if(decision==="approved"){
+            assertSecondYearGroup(now.grade_level, now.education_system, now.attendance_location, now.group_code);
             const [g]=await tx`select id,grade_level,center_name,is_active from public.student_groups where group_code=${now.group_code}`;
             if(!g?.is_active || g.grade_level!==now.grade_level)
               throw new IdentityInputError("invalid_group","مجموعة الطالب المطلوبة غير متاحة أو لا توافق الصف.");
@@ -1165,6 +1181,7 @@ Deno.serve(async (req) => {
               "الطلب غير مكتمل أو لم يعد معلقًا.",
             );
           }
+          assertSecondYearGroup(x.grade_level, x.education_system, x.attendance_location, group);
           const duplicate =
             !!x.duplicate_review?.national_id_already_registered ||
             Number(x.duplicate_review?.phone_request_count ?? 0) > 0;
@@ -1276,6 +1293,7 @@ Deno.serve(async (req) => {
                 "المجموعة غير موجودة أو غير نشطة.",
               );
             }
+            assertSecondYearGroup(r.grade_level, r.education_system, r.attendance_location, group);
             const compatible = (r.grade_level === "الصف الثاني الثانوي" &&
               (String(g.grade_level ?? "").includes("الثاني") ||
                 String(g.grade_level ?? "").startsWith("2"))) ||
