@@ -132,6 +132,11 @@
           التسجيل العادي لا يطلب الرقم القومي. جمع الهوية يظل مغلقًا حتى اعتماد
           متطلبات الخصوصية بصورة مستقلة.
         </div>
+        <div id="captchaWrap" class="accountField full hidden">
+          <label>التحقق الأمني قبل إنشاء الحساب</label>
+          <div id="turnstileWidget"></div>
+          <p class="accountMuted" id="captchaStatus" role="status">جارٍ تجهيز التحقق الآمن…</p>
+        </div>
         <div id="message" class="hidden full"></div>
         <button class="accountBtn full" type="submit">
           إنشاء الحساب والحصول على الكود
@@ -157,13 +162,45 @@
       const f = $("form"),
         requestKey = crypto.randomUUID(),
         registrationInvite = new URLSearchParams(location.search).get("invite") || "";
-      let cfg;
+      let cfg, turnstileId = null, captchaToken = "";
+      async function renderPublicCaptcha(sitekey) {
+        if (!sitekey) throw Error("التحقق الأمني غير مُجهز. تواصل مع الإدارة.");
+        $("captchaWrap").classList.remove("hidden");
+        if (!window.turnstile) {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = () => reject(Error("تعذر تحميل التحقق الأمني. تأكد من الاتصال بالإنترنت."));
+            document.head.append(script);
+          });
+        }
+        if (!window.turnstile) throw Error("تعذر تشغيل التحقق الأمني. أعد تحميل الصفحة.");
+        turnstileId = window.turnstile.render("#turnstileWidget", {
+          sitekey,
+          action: "student_registration",
+          callback: (token) => {
+            captchaToken = token;
+            $("captchaStatus").textContent = "تم التحقق. يمكنك إكمال التسجيل.";
+          },
+          "expired-callback": () => {
+            captchaToken = "";
+            $("captchaStatus").textContent = "انتهت صلاحية التحقق. أعد المحاولة.";
+          },
+          "error-callback": () => {
+            captchaToken = "";
+            $("captchaStatus").textContent = "تعذر التحقق. حاول مرة أخرى.";
+          }
+        });
+      }
       try {
         cfg = await identity("config");
         if (!cfg.registration_enabled)
           throw Error("التسجيل الجديد غير متاح حاليًا.");
         if (cfg.registration_invite_required && !registrationInvite)
-          throw Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل التجريبي.");
+          throw Error("يلزم فتح رابط الدعوة المخصص لإتمام التسجيل.");
+        if (cfg.captcha_required) await renderPublicCaptcha(cfg.captcha_sitekey);
         const render = () => {
           const grade = f.grade_level.value;
           f.group_code.innerHTML =
@@ -196,15 +233,21 @@
       );
       f.onsubmit = async (e) => {
         e.preventDefault();
+        const submitButton = f.querySelector('button[type="submit"]');
+        if (submitButton.disabled) return;
+        submitButton.disabled = true;
         const b = Object.fromEntries(new FormData(f));
         b.privacy_accepted = b.privacy === "on";
         b.privacy_notice_version = cfg.privacy_notice_version;
         b.request_idempotency_key = requestKey;
         if (registrationInvite) b.registration_invite = registrationInvite;
+        if (cfg?.captcha_required) b.captcha_token = captchaToken;
         delete b.privacy;
         try {
           if (b.password !== b.password_confirm)
             throw Error("كلمتا المرور غير متطابقتين.");
+          if (cfg.captcha_required && !captchaToken)
+            throw Error("أكمل التحقق الأمني قبل إنشاء الحساب.");
           const d = await identity("submit_registration", b);
           $("studentCode").textContent = d.student_code;
           $("deadline").textContent = new Date(
@@ -219,6 +262,12 @@
           message(d.message || "تم إنشاء الحساب.", true);
         } catch (x) {
           message(x.message);
+          if (cfg?.captcha_required && turnstileId !== null) {
+            captchaToken = "";
+            window.turnstile.reset(turnstileId);
+            $("captchaStatus").textContent = "أعد التحقق الأمني قبل المحاولة مرة أخرى.";
+          }
+          submitButton.disabled = false;
         }
       };
     </script>
