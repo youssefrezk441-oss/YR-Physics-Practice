@@ -91,16 +91,16 @@ function refreshGroups() {
   }
   const byGrade = (config.groups || []).filter((g) => gradeCompatible(g, grade));
   const byCenter = center ? byGrade.filter((g) => centerCompatible(g, center)) : byGrade;
-  const filtered = center && byCenter.length ? byCenter : byGrade;
+  const filtered = center && center !== "غير ذلك" ? byCenter : byGrade;
   for (const group of filtered) {
     select.add(new Option(String(group.group_code) + (group.center_name ? " — " + group.center_name : ""), String(group.group_code)));
   }
   if (previous && filtered.some((g) => String(g.group_code) === previous)) select.value = previous;
   select.disabled = !filtered.length;
-  hint.textContent = !filtered.length ? "لا توجد مجموعات متاحة لهذه المرحلة حاليًا. تواصل مع الإدارة."
-    : center && byCenter.length === 0
-      ? "لم نجد تصنيفًا واضحًا للمركز؛ ظهرت مجموعات الصف كلها. تأكد من المجموعة المناسبة قبل الإرسال."
-      : "المجموعات الظاهرة توافق الصف ومكان الحضور بقدر البيانات المتاحة؛ ستراجع الإدارة الطلب.";
+  hint.textContent = !filtered.length ? "لا توجد مجموعة متاحة للصف ومكان الحضور المحددين حاليًا. تواصل مع الإدارة لتحديد مجموعتك."
+    : center === "غير ذلك"
+      ? "اختر مجموعتك الفعلية، وستراجع الإدارة مكان الحضور."
+      : "المجموعات المعروضة توافق الصف ومكان الحضور. ستراجع الإدارة بياناتك قبل الاعتماد.";
 }
 function updateControls() {
   panels.forEach((panel, i) => { panel.hidden = i !== currentStep; });
@@ -145,6 +145,10 @@ function validateStep(index) {
       const first = parts.find((part) => !part.validationMessage) || parts[0];
       first.setCustomValidity("تأكد من كتابة الاسم الرباعي كاملًا.");
     }
+  }
+  if (index === 1 && (!get("group_code").value || get("group_code").disabled)) {
+    showError("لا توجد مجموعة مختارة. راجع الصف ومكان الحضور، أو تواصل مع الإدارة.");
+    return false;
   }
   if (index === 2) {
     for (const key of ["student_phone", "guardian_phone"]) {
