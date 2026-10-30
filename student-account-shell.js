@@ -102,8 +102,6 @@ function renderReviewGate(review) {
     "position:fixed;inset:0;z-index:2147483646;background:#f5f7fb;display:grid;place-items:center;padding:20px;font-family:system-ui,Tahoma,sans-serif;direction:rtl";
   box.innerHTML = `<div style="width:min(560px,100%);background:#fff;border:1px solid #d9e1ef;border-radius:22px;padding:28px;box-shadow:0 18px 60px #17345a22;text-align:center"><div style="font-size:44px">${pending ? "⏳" : "🔒"}</div><h1 style="color:#17345a">${reviewText[review.status] || "حالة الحساب قيد المراجعة"}</h1><p>${pending ? "تم إنشاء حسابك ويمكنك متابعة حالة المراجعة. الوظائف التعليمية ستتاح بعد اعتماد الإدارة." : "بياناتك محفوظة ولا تحتاج إلى إنشاء حساب جديد. سيتم تفعيل الحساب فور صدور القرار المناسب."}</p>${deadline ? `<p><b>${pending ? "تنتهي مهلة المراجعة" : "انتهت مهلة المراجعة"}:</b><br>${deadline.toLocaleString("ar-EG")}</p>` : ""}<p id="reviewCountdown" style="font-size:20px;font-weight:800;color:#8a5a00"></p><button id="reviewRefresh" style="padding:11px 20px;border:0;border-radius:12px;background:#17345a;color:white;cursor:pointer">تحديث الحالة</button> <button id="reviewLogout" style="padding:11px 20px;border:1px solid #17345a;border-radius:12px;background:white;color:#17345a;cursor:pointer">تسجيل الخروج</button></div>`;
   document.body.append(box);
-  // The review overlay replaces the neutral loading screen without exposing the old sign-in view.
-  window.__yrFinishStudentBoot?.();
   const update = () => {
     const el = document.getElementById("reviewCountdown");
     if (!el || !pending || !deadline) return;
