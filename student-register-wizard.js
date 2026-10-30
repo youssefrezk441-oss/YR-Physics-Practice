@@ -18,7 +18,7 @@ const asLatinDigits = (input) => String(input || "")
   .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
   .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
 const phoneDigits = (input) => asLatinDigits(input).replace(/[\s\-()]/g, "");
-const validPhone = (input) => /^(?:01[0125]\d{8}|20?1[0125]\d{8}|\+201[0125]\d{8})$/.test(phoneDigits(input));
+const validPhone = (input) => /^(?:01[0125]\d{8}|201[0125]\d{8}|\+201[0125]\d{8})$/.test(phoneDigits(input));
 const nameValue = () => ["first_name", "second_name", "third_name", "fourth_name"]
   .map((key) => String(get(key).value || "").normalize("NFKC").trim().replace(/\s+/g, " "))
   .join(" ");
