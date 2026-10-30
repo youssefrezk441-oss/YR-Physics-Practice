@@ -125,3 +125,27 @@ test("student workspace routes separate chapter-specific learning and review wit
   await page.close();
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 });
+
+test("grade-two learning stays available without a fabricated chapter assignment",{skip:!fs.existsSync(dir)},async()=>{
+ const server=serve();await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:["--no-sandbox"]});
+ try{
+  const b2Mock=mockSupabase.replace("student_code:'N3-TEST',grade_level:'الصف الثالث الثانوي',group_code:'N3-A'",
+  "student_code:'N2-TEST',grade_level:'الصف الثاني الثانوي',group_code:'N2-A'");
+  assert.notEqual(b2Mock,mockSupabase,"test setup must actually switch the student grade");
+  const page=await browser.newPage({viewport:{width:390,height:844}});
+  await page.route("https://cdn.jsdelivr.net/**",route=>route.fulfill({status:200,contentType:"text/javascript",body:b2Mock}));
+  await page.route("https://fonts.googleapis.com/**",route=>route.abort());
+  await page.goto("http://127.0.0.1:"+server.address().port+"/student.html",{waitUntil:"domcontentloaded"});
+  await page.locator("#dashboardView").waitFor({state:"visible",timeout:18000});
+  await page.locator('.yrMobileNav [data-yr-go="learning"]').click();
+  await page.waitForFunction(()=>document.querySelector("#yrLearnView .yrChapterTabs")?.classList.contains("hidden"));
+  assert.equal(await page.locator("#yrLearnView .yrChapterTabs").isVisible(),false);
+  assert.match(await page.locator("#yrLearnView").textContent(),/تصنيفها إلى فصول مؤجل/);
+  assert.doesNotMatch(await page.locator("#yrLearningContent").textContent(),/ورش الفصل الثاني/);
+  await page.locator('.yrMobileNav [data-yr-go="review"]').click();
+  assert.equal(await page.locator("#yrReviewView .yrChapterTabs").isVisible(),false);
+  assert.match(await page.locator("#yrReviewContent").textContent(),/غير مفعّلة حاليًا/);
+  await page.close();
+ }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
+});
