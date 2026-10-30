@@ -1,0 +1,32 @@
+name: Validate existing-student profile completion
+on:
+  push:
+    branches:
+      - "feature/existing-student-mandatory-profile-20261030"
+  pull_request:
+    paths:
+      - "student-complete-profile.html"
+      - "student-profile-completion.js"
+      - "student-profile-completion.css"
+      - "student.html"
+      - "student-access.js"
+      - "supabase/functions/student-identity/index.ts"
+      - "tools/tests/existing-student-completion.test.mjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  profile-onboarding-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Validate JS parsing
+        run: |
+          node --check student-profile-completion.js
+          node --check student-access.js
+          node --check tools/tests/existing-student-completion.test.mjs
+      - name: Profile onboarding contract tests
+        run: node --test tools/tests/existing-student-completion.test.mjs
