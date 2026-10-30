@@ -24,6 +24,8 @@ jobs:
         run: bash tools/test_student_identity_migration.sh
       - name: Student authorization boundary synthetic regression
         run: bash tools/security/run_legacy_authz_synthetic.sh
+      - name: Synthetic student profile write lockdown
+        run: bash tools/security/run_profile_lockdown_synthetic.sh
       - name: Bootstrap browser test
         run: |
           npm install --no-save playwright@1.55.0
@@ -47,6 +49,7 @@ jobs:
       - name: Isolated local GoTrue, PostgreSQL and Edge Function E2E (two clean runs)
         env:
           E2E_BROWSER: '1'
+          E2E_PROFILE_LOCKDOWN: '1'
         run: |
           export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
           bash tools/run_student_identity_local_e2e.sh
