@@ -12,15 +12,16 @@
 (async()=>{
   // Guests start at the shared login/register portal; authenticated students keep the existing learning app.
   // If the auth library is unavailable, fall back to the existing legacy login instead of blocking access.
-  if(typeof location!=='undefined' && !/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'')){
+  if(typeof location!=='undefined'){
     try{
       const {sb}=await import('./student-identity-api.js');
       const {data:{session}}=await sb.auth.getSession();
-      if(!session?.user){
+      const legacyRequested=/(?:\\?|&)legacy_login=1(?:&|$)/.test(location.search||'');
+      if(!session?.user && !legacyRequested){
         location.replace('./student-register.html?tab=login');
         return;
       }
-      if(session.user.app_metadata?.role!=='admin'){
+      if(session?.user && session.user.app_metadata?.role!=='admin'){
         try{
           const {identity}=await import('./student-identity-api.js');
           const status=await identity('me');
