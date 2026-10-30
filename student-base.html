@@ -330,6 +330,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 </div>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
+import{splitHistoryByChapter,historyChapterOptions,historyChapterLabel}from'./student-history-chapters.mjs';
 const URL='https://ltjdhconuiqblxfjzpzj.supabase.co',KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
 const sb=createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
@@ -462,7 +463,46 @@ function gradeLabel(v){const x=String(v||'').toLowerCase();if(x==='2'||x==='2_se
 async function loadDashboard(){const[a,b]=await Promise.all([fn({action:'list_sets'}),fn({action:'history'})]);sets=a.sets||[];history=b.attempts||[];renderSets();renderHistory();renderPlatformIndicators()}function renderPlatformIndicators(){const activeSlugs=new Set(sets.map(x=>String(x.slug||''))),activeHistory=history.filter(x=>activeSlugs.has(String(x.slug||''))),completed=activeHistory.filter(x=>x.status!=='in_progress'),graded=activeHistory.filter(x=>x.status==='graded'&&x.percentage!=null),completedSets=new Set(completed.map(x=>String(x.slug||x.title||x.id)));$('attemptsStat').textContent=completed.length;$('completedStat').textContent=completedSets.size;const ratio=sets.length?Math.min(100,Math.round(((completedSets.size/sets.length*100)+1e-9)*10)/10):0;$('completionStat').textContent=(Number.isInteger(ratio)?String(ratio):ratio.toFixed(1))+'%';const bestBySet=new Map;graded.forEach(x=>{const k=String(x.slug||x.title||x.id),v=Number(x.percentage),score=Number(x.score),max=Number(x.max_score);if(!Number.isFinite(v)||!Number.isFinite(score)||!Number.isFinite(max)||max<=0)return;const old=bestBySet.get(k);if(!old||score>old.score||(score===old.score&&v>old.percentage))bestBySet.set(k,{percentage:v,score,max})});const bestValues=[...bestBySet.values()],sumScore=bestValues.reduce((a,x)=>a+x.score,0),sumCompletedMax=bestValues.reduce((a,x)=>a+x.max,0),quality=sumCompletedMax?sumScore/sumCompletedMax*100:null,totalPossible=sets.reduce((a,x)=>{const m=Number(x.max_score);return a+(Number.isFinite(m)&&m>0?m:0)},0),platformScore=totalPossible?sumScore/totalPossible*100:null;$('averageStat').textContent=platformScore==null?'—':(Math.round((platformScore+1e-9)*10)/10).toFixed(1)+'%';$('bestStat').textContent=quality==null?'—':(Math.round((quality+1e-9)*10)/10).toFixed(1)+'%'}
 function renderSets(){const visibleSets=selectedTrainingCourse?sets.filter(s=>String(s.course_slug||'')===String(selectedTrainingCourse)):sets;if(!visibleSets.length){$('setsList').innerHTML='<div class="empty">لا توجد تدريبات نشطة في هذا الكورس حاليًا.</div>';return}$('setsList').innerHTML=visibleSets.map(s=>{const remain=s.remaining_attempts==null?'غير محدود':s.remaining_attempts,locked=!!s.is_locked,attemptsDone=s.remaining_attempts===0,disabled=locked||attemptsDone,buttonText=locked?'🔒 مقفول':attemptsDone?'انتهت المحاولات':'ابدأ التدريب',lockNote=locked?'<div class="small muted" style="margin-top:8px;line-height:1.7">🔒 '+esc(s.lock_reason||('يلزم الحصول على '+Number(s.unlock_threshold||80)+'% في التدريب السابق.'))+(s.prerequisite_best_percentage!=null?' أفضل نتيجة حالية: '+Number(s.prerequisite_best_percentage)+'%.':'')+'</div>':'';return '<div class="set"><h3>'+esc(s.title)+'</h3><div class="muted small">'+esc(s.description||'')+'</div><div class="meta"><span class="pill">'+s.question_count+' سؤال</span><span class="pill">'+Number(s.max_score||0)+' درجة</span><span class="pill">المحاولات المتبقية: '+remain+'</span>'+(s.best_percentage!=null?'<span class="pill">أفضل نتيجة: '+Number(s.best_percentage)+'%</span>':'')+(locked?'<span class="pill">الفتح عند '+Number(s.unlock_threshold||80)+'%</span>':'')+'</div>'+lockNote+'<button class="btn primary startSet" data-slug="'+esc(s.slug)+'" '+(disabled?'disabled':'')+' style="margin-top:10px">'+buttonText+'</button></div>'}).join('');document.querySelectorAll('.startSet:not(:disabled)').forEach(b=>b.onclick=()=>startSet(b.dataset.slug))}
 function historyStatusLabel(s){return s==='graded'?'تم التصحيح':s==='submitted'?'قيد مراجعة المقالي':s==='in_progress'?'غير مكتملة':s}
-function renderHistory(){const completed=history.filter(h=>h.status!=='in_progress');if(!completed.length){$('historyList').innerHTML='<div class="empty">لم تكمل أي تدريب بعد.</div>';return}$('historyList').innerHTML=completed.map(h=>'<div class="historyRow"><div><b>'+esc(h.title)+'</b><div class="small muted">'+new Date(h.started_at).toLocaleString('ar-EG')+'</div><button class="btn secondary historyReviewBtn" data-review-attempt="'+esc(h.id)+'">عرض التصحيح</button></div><div><span class="pill">'+esc(historyStatusLabel(h.status))+'</span></div><div><b>'+(h.percentage==null?'—':Number(h.percentage)+'%')+'</b><div class="small muted">'+(h.score==null?'':Number(h.score)+' / '+Number(h.max_score))+'</div></div></div>').join('');document.querySelectorAll('[data-review-attempt]').forEach(b=>b.onclick=()=>openAttemptReview(b.dataset.reviewAttempt))}
+let selectedHistoryChapter='1';
+function renderHistory(){
+ const groups=splitHistoryByChapter(history,sets);
+ const keys=historyChapterOptions(groups);
+ if(!keys.includes(selectedHistoryChapter))selectedHistoryChapter='1';
+ const list=$('historyList');
+ let selector=$('yrHistoryChapterFilter');
+ if(!selector){
+  selector=document.createElement('nav');
+  selector.id='yrHistoryChapterFilter';
+  selector.className='yrHistoryFilterTabs';
+  selector.setAttribute('aria-label','تصفية المحاولات حسب الفصل');
+  list.before(selector);
+ }
+ selector.replaceChildren(...keys.map(key=>{
+  const b=document.createElement('button');
+  b.type='button';b.dataset.historyChapter=key;
+  b.textContent=historyChapterLabel(key)+(key==='all'?'':' ('+(groups.get(key)?.length||0)+')');
+  b.setAttribute('aria-pressed',String(key===selectedHistoryChapter));
+  b.onclick=()=>{selectedHistoryChapter=key;renderHistory()};
+  return b;
+ }));
+ const completed=selectedHistoryChapter==='all'
+  ?history.filter(h=>h.status!=='in_progress')
+  :(groups.get(selectedHistoryChapter)||[]);
+ if(!completed.length){
+  const message=selectedHistoryChapter==='unknown'
+   ?'لا توجد محاولات غير مصنفة.'
+   :selectedHistoryChapter==='all'?'لم تكمل أي تدريب بعد.'
+   :'لا توجد محاولات مكتملة مرتبطة بهذا الفصل من البيانات المسجلة حاليًا.';
+  list.innerHTML='<div class="empty">'+message+'</div>';return;
+ }
+ list.innerHTML=completed.map(h=>'<div class="historyRow"><div><b>'+esc(h.title)+'</b><div class="small muted">'+new Date(h.started_at).toLocaleString('ar-EG')+'</div><button class="btn secondary historyReviewBtn" data-review-attempt="'+esc(h.id)+'">عرض التصحيح</button></div><div><span class="pill">'+esc(historyStatusLabel(h.status))+'</span></div><div><b>'+(h.percentage==null?'—':Number(h.percentage)+'%')+'</b><div class="small muted">'+(h.score==null?'':Number(h.score)+' / '+Number(h.max_score))+'</div></div></div>').join('');
+ list.querySelectorAll('[data-review-attempt]').forEach(b=>b.onclick=()=>openAttemptReview(b.dataset.reviewAttempt));
+}
+document.addEventListener('yr:history-chapter',e=>{
+ const chapter=String(e.detail?.chapter||'');
+ if(!historyChapterOptions(splitHistoryByChapter(history,sets)).includes(chapter))return;
+ selectedHistoryChapter=chapter;renderHistory();
+});
 function reviewText(v){return typeof formatMixedText==='function'?formatMixedText(v||''):esc(v||'')}
 function reviewAsset(q,type){return typeof assetHtml==='function'?assetHtml(q,type):''}
 function reviewStatusMeta(s){if(s==='correct')return{cls:'good',icon:'✅',label:'إجابة صحيحة'};if(s==='partial')return{cls:'partial',icon:'🟠',label:'درجة جزئية'};if(s==='review')return{cls:'review',icon:'🟡',label:'قيد المراجعة'};return{cls:'bad',icon:'❌',label:'إجابة غير صحيحة'}}
