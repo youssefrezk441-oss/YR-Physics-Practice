@@ -13,13 +13,20 @@ const mockSupabase=String.raw`export function createClient(){return{
   if(name==='student-practice'&&body?.action==='ping')return{data:{profile:{full_name:'طالب تجريبي',student_code:'N3-TEST',grade_level:'الصف الثالث الثانوي',group_code:'N3-A',center_name:'ناهيا'}}};
   if(name==='student-practice'&&body?.action==='list_sets')return{data:{sets:[]}};
   if(name==='student-practice'&&body?.action==='history')return{data:{attempts:[]}};
-  if(name==='student-honor-board')return{data:{
-   ok:true,profile:{role:'student',grade_key:'grade3'},
-   available_cycles:{grade3:[
-    {id:'g3-live',code:'CHAPTER1-2026-G3-01',title:'الفصل الأول — رحلة التقييم',archived:false},
-    {id:'g3-frozen',code:'FOUNDATION-2026-G3-01',title:'الدورة التأسيسية',archived:true}],
-    grade2:[{id:'g2-other',title:'جولة غير خاصة بحسابي',archived:true}],grade2_azhar:[]}
-  }};
+  if(name==='student-honor-board'){
+   const selected=body?.cycles?.grade3||'g3-live';
+   return{data:{
+    ok:true,profile:{role:'student',grade_key:'grade3'},generated_at:'2026-10-30T12:00:00Z',
+    available_cycles:{grade3:[
+     {id:'g3-live',code:'CHAPTER1-2026-G3-01',title:'الفصل الأول — رحلة التقييم',archived:false},
+     {id:'g3-frozen',code:'FOUNDATION-2026-G3-01',title:'الدورة التأسيسية',archived:true}],
+     grade2:[{id:'g2-other',title:'جولة غير خاصة بحسابي',archived:true}],grade2_azhar:[]},
+    grades:{grade3:{key:'grade3',label:'الصف الثالث الثانوي',phase:'readiness',
+      cycle:{id:selected,title:selected==='g3-frozen'?'الدورة التأسيسية':'الفصل الأول'},
+      stats:{students:0,eligible:0},challenge:'اختبار جولة تجريبية',
+      podium:[],top10:[],risers:[],leaders:{},awards:{},groups:[],personal:null}}
+   }};
+  }
   return{data:{ok:true}};
  }}
 }}`;
@@ -108,6 +115,11 @@ test("student workspace routes separate chapter-specific learning and review wit
   assert.equal(await page.locator("#yrAchievementCycles .yrEditionButton").count(),2,"show only the authenticated student's grade");
   assert.match(await page.locator("#yrAchievementCycles").textContent(),/نسخة مؤرشفة وثابتة/);
   assert.doesNotMatch(await page.locator("#yrAchievementCycles").textContent(),/جولة غير خاصة بحسابي/);
+  await page.locator('#yrAchievementCycles .yrEditionButton').filter({hasText:'الدورة التأسيسية'}).click();
+  await page.locator('#honorCycleSelector [data-cycle-id="g3-frozen"]').waitFor({state:'visible',timeout:10000});
+  assert.equal(await page.locator('#honorCycleSelector [data-cycle-id="g3-frozen"]').getAttribute("aria-pressed"),"true",
+   "frozen edition selector must match the backend cycle actually loaded");
+  assert.match(await page.locator("#honorCycleSelector").textContent(),/نسخة مؤرشفة/);
   await page.evaluate(()=>window.yrWorkspaceShowOnly("practiceView"));
   assert.equal(await page.locator(".yrMobileNav").isVisible(),false,"question focus must hide mobile nav");
   await page.close();
