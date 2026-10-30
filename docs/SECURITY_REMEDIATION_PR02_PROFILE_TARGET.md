@@ -26,6 +26,10 @@ Why this is important: the current student own-row UPDATE policy does not stop c
 
 The test is deliberately separate from real accounts. On the existing Supabase `YR Physics Restore Test` project the `public.student_profiles` table currently contains **280 records**, so **do not use it as a synthetic-only sandbox** until that data is securely segregated and ownership/backup status has been reviewed. No rows in that project were modified while preparing this PR.
 
+### Stronger integration check
+
+When `E2E_PROFILE_LOCKDOWN=1` is set (as it is in this PR's CI job), `tools/run_student_identity_local_e2e.sh` applies the candidate ACL **inside its disposable local PostgreSQL/GoTrue container** after all existing student identity migrations, then runs the real registration, legacy profile completion, 48-hour review, admin approval and login E2E scenarios in two clean passes. This is entirely separate from the cloud Restore Test project, and does not modify existing copied student data.
+
 ## Release gates (mandatory before promoting candidate)
 
 1. Establish a clean, disposable staging DB with **synthetic-only** student/admin accounts, or a transactionally isolated copy with no student data in the test namespace. Securely verify backup/restore and no production references.
