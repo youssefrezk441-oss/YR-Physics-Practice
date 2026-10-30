@@ -14,6 +14,6 @@ test("mastery brand uses genuine teacher portrait and readable responsive design
  for(const part of ["افهم","طبّق","تدرّب","أتقن"])assert.match(html,new RegExp(">"+part+"</span>"));
  assert.match(css,/@media\(max-width:730px\)/);
  assert.match(css,/\.photoStage img/);
- assert.match(css,/\.journeyHeroText\{margin:15px 0 4px 105px/);
+ assert.match(css,/\.heroContent/);
  for(const required of ['id="loginTab"','id="registerTab"','id="form"','id="accessLoginForm"','id="turnstileWidget"'])assert.ok(html.includes(required));
 });
