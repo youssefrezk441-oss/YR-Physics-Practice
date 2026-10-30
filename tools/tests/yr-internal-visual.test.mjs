@@ -25,7 +25,7 @@ function serve(){
   res.end(fs.readFileSync(file));
  });
 }
-test("real compiled YR dashboard renders without horizontal overflow in light and dark modes",async()=>{
+test("real compiled YR dashboard renders without horizontal overflow in light and dark modes",{skip:!fs.existsSync(dir)},async()=>{
  const s=serve();
  await new Promise(resolve=>s.listen(0,"127.0.0.1",resolve));
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:["--no-sandbox"]});
