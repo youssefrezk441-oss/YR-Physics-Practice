@@ -75,6 +75,51 @@ test(
     }
   },
 );
+const approvedStudentMockModule = `export function createClient(){return{
+ auth:{getSession:async()=>({data:{session:{user:{id:'synthetic-approved',app_metadata:{role:'student'}}}}}),signOut:async()=>({error:null})},
+ functions:{invoke:async(name,{body}={})=>{
+ if(name==='student-identity'&&body?.action==='config')return{data:{ok:true,registration_enabled:true,phone_login_enabled:false,profile_enforcement_enabled:false}};
+ if(name==='student-identity'&&body?.action==='me'){await new Promise(r=>setTimeout(r,700));return{data:{ok:true,review:{status:'approved',legacy_account:false},profile:{profile_schema_version:1},required_profile_schema_version:1,enforcement:false}}}
+ if(name==='student-practice'&&body?.action==='ping')return{data:{profile:{full_name:'طالب تجريبي',student_code:'N3-001',grade_level:'3',group_code:'N3-A',center_name:'ناهيا'}}};
+ if(name==='student-practice'&&body?.action==='list_sets')return{data:{sets:[]}};
+ if(name==='student-practice'&&body?.action==='history')return{data:{attempts:[]}};
+ return{data:{ok:true}};
+ }}
+}}`;
+test(
+ "approved student lands on dashboard without flashing the legacy login screen",
+ {skip:!chromium},
+ async()=>{
+   const s=server();
+   await new Promise(r=>s.listen(0,"127.0.0.1",r));
+   const browser=await chromium.launch({
+     headless:true,
+     executablePath:process.env.CHROMIUM_PATH||"/usr/bin/chromium",
+     args:["--no-sandbox"],
+   });
+   try{
+     const p=await browser.newPage();
+     await p.route("https://cdn.jsdelivr.net/**",r=>r.fulfill({status:200,contentType:"text/javascript",body:approvedStudentMockModule}));
+     await p.addInitScript(()=>{
+       window.__oldSignInFlashed=false;
+       const inspect=()=>{
+         const field=document.querySelector("#loginView");
+         if(field&&field.getClientRects().length&&getComputedStyle(field).visibility!=="hidden")
+           window.__oldSignInFlashed=true;
+         requestAnimationFrame(inspect);
+       };
+       requestAnimationFrame(inspect);
+     });
+     await p.goto("http://127.0.0.1:"+s.address().port+"/student.html");
+     await p.waitForSelector("#yrStudentBoot:visible");
+     assert.equal(await p.locator("#loginView").isVisible(),false);
+     await p.waitForSelector("#dashboardView:visible",{timeout:12000});
+     assert.equal(await p.locator("#yrStudentBoot").count(),0);
+     assert.equal(await p.evaluate(()=>window.__oldSignInFlashed),false);
+   }finally{await browser.close();s.close()}
+ },
+);
+
 test(
   "legacy profile shows server birth date and submits contact data without implicit identity consent",
   { skip: !chromium },
