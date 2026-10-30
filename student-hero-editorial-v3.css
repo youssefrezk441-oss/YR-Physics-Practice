@@ -125,3 +125,5 @@
  .yrProgressSteps li{gap:4px;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.journeyVisual *, .journeyVisual *::before,.journeyVisual *::after{transition:none!important;animation:none!important}}
+
+@media(min-width:821px){.yrPhotoEditorial{flex:1 1 340px;max-height:440px}}
