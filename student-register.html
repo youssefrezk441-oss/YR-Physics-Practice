@@ -1,22 +1,67 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>تسجيل طالب جديد | مستر يوسف رزق</title>
-  <link rel="stylesheet" href="student-register-identity.css">
-</head>
-<body>
-<main class="accountPage">
-  <header class="topline">
-    <a class="brand" href="student.html"><span class="brandIcon">YR</span><span><span class="brandTitle">YR PHYSICS PRACTICE</span><span class="brandSub">منصة مستر يوسف رزق التعليمية</span></span></a>
-    <a href="student.html" class="backLink">لديك حساب؟ تسجيل الدخول ↗</a>
-  </header>
-  <div class="enrollmentShell"><div class="enrollmentMain"><div class="formHeader"><div class="eyebrow">حساب طالب جديد</div>
-    <h1>سجّل بياناتك وابدأ رحلتك</h1>
-    <p>أربع خطوات منظمة لإنشاء حسابك. بعدها تحصل على كود خاص بك وتراجع الإدارة طلبك.</p>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071a30">
+<meta name="description" content="منصة مستر يوسف رزق للفيزياء — تسجيل دخول الطلاب وإنشاء حساب جديد">
+<title>منصة مستر يوسف رزق | تسجيل الدخول وإنشاء حساب</title>
+<link rel="stylesheet" href="student-access.css">
+</head><body>
+<main class="authPage">
+<div class="authShell">
+<aside class="visualPanel" aria-label="منصة مستر يوسف رزق لتعليم الفيزياء">
+  <div class="brandRow">
+    <div class="brandMark" aria-label="YR">YR</div>
+    <div><div class="brandEnglish">YR PHYSICS</div><div class="brandCaption">PRACTICE • ANALYZE • IMPROVE</div></div>
   </div>
+  <p class="teacherLabel">منصة الفيزياء | الصف الثاني والثالث الثانوي</p>
+  <h1 class="teacherName">مستر <strong>يوسف رزق</strong></h1>
+  <div class="heroLine"></div>
+  <p class="heroCopy">من أول فكرة تفهمها، لآخر سؤال تتقنه.<br>تدريب تفاعلي، تحليل حقيقي لأخطائك، ومتابعة تطورك خطوة بخطوة.</p>
+  <svg class="physicsIllustration" viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="دائرة كهربية توضح مقاومة وبطارية إلى جانب رسم بياني لإشارة متغيرة">
+    <defs><pattern id="physicsGrid" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#7da5c8" opacity=".24"/></pattern><linearGradient id="traceGrad" x1="20" y1="25" x2="465" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#5be2d6"/><stop offset="1" stop-color="#527de2"/></linearGradient></defs>
+    <rect width="480" height="350" rx="15" fill="url(#physicsGrid)"/>
+    <g class="trace" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M64 89H145M236 89H396V248H273M216 248H64V178M64 149V89"/>
+      <path d="M145 89L155 74L168 104L181 74L194 104L207 74L220 104L236 89" class="electric"/>
+      <path d="M273 248L262 233L252 263L241 233L230 263L216 248" class="electric"/>
+      <path d="M45 149H83M52 165H76M64 149V149M64 165V178" stroke="#e1f8fc" stroke-width="2.5"/>
+      <circle cx="396" cy="89" r="5" class="node"/><circle cx="396" cy="248" r="5" class="node"/><circle cx="64" cy="89" r="5" class="node"/>
+      <path d="M87 89H126" stroke="url(#traceGrad)" stroke-width="3"/><path d="M116 81L127 89L116 97" class="electric"/>
+    </g>
+    <g class="caption"><text x="167" y="61">R₁</text><text x="238" y="286">R₂</text><text x="35" y="170">E</text><text x="94" y="73">I</text></g>
+    <g opacity=".8"><path d="M102 318H400M102 290V332M400 290V332" stroke="#51789a" stroke-width="1.4"/><path d="M110 317Q142 286 173 317T236 317T299 317T362 317" stroke="#70dcd5" stroke-width="2.7" fill="none"/><text x="409" y="322" fill="#80adbf" font-family="Arial" font-size="13">t</text></g>
+  </svg>
+  <div class="visualBottom">
+    <span class="signature">العلم يبدأ بالفهم</span>
+    <span class="visualBadge">YR · PHYSICS PRACTICE</span>
+  </div>
+</aside>
+<section class="contentPanel" aria-label="الدخول إلى المنصة">
+  <div class="contentTop"><span class="contentHeading">بوابة الطلاب</span><span class="secureIndicator">حسابك التعليمي</span></div>
+  <div class="tabs" role="tablist" aria-label="تسجيل الدخول أو إنشاء حساب">
+    <button class="tab" id="loginTab" data-access-tab="login" role="tab" type="button" aria-controls="loginPane" aria-selected="false">تسجيل الدخول</button>
+    <button class="tab" id="registerTab" data-access-tab="register" role="tab" type="button" aria-controls="signupPane" aria-selected="true">إنشاء حساب جديد</button>
+  </div>
+  <div id="loginPane" class="view hidden" role="tabpanel" aria-labelledby="loginTab" hidden>
+    <p class="formEyebrow">أهلًا برجوعك</p>
+    <h2 class="formTitle">كمّل مشوارك مع الفيزياء</h2>
+    <p class="formDescription">استخدم كود الطالب وكلمة المرور للدخول إلى تدريباتك ومتابعة مستواك.</p>
+    <form id="accessLoginForm" autocomplete="on">
+      <div class="formRow"><label for="accessStudentCode">كود الطالب</label><input id="accessStudentCode" name="studentCode" autocomplete="username" required placeholder="مثال: YR12345" dir="ltr" spellcheck="false"></div>
+      <div class="formRow"><label for="accessPassword">كلمة المرور</label>
+        <div class="passwordLine"><input id="accessPassword" name="studentPassword" autocomplete="current-password" required type="password" placeholder="أدخل كلمة المرور"><button type="button" id="accessTogglePassword" class="toggle" aria-label="إظهار كلمة المرور">إظهار</button></div>
+      </div>
+      <div class="loginHelp"><span>دخول آمن بكود الطالب</span><a href="student-recovery.html">نسيت كلمة المرور؟</a></div>
+      <div id="loginMessage" class="loginMessage hidden" role="alert" aria-live="polite"></div>
+      <button class="primaryButton full" id="accessLoginBtn" type="submit">الدخول إلى منصتي <span aria-hidden="true">←</span></button>
+    </form>
+    <div class="formFooter">أول مرة على المنصة؟ <a href="student-register.html?tab=register" data-switch-to="register">أنشئ حسابك الآن</a></div>
+    <div class="chips" aria-label="مميزات المنصة"><span>تدريبات تفاعلية</span><span>تحليل الأخطاء</span><span>متابعة المستوى</span></div>
+  </div>
+  <div id="signupPane" class="view" role="tabpanel" aria-labelledby="registerTab">
+    <p class="formEyebrow">انضم إلى رحلة الفهم</p>
+    <h2 class="formTitle">ابدأ رحلتك مع مستر يوسف</h2>
+    <p class="formDescription">اكتب بياناتك بخطوات بسيطة، وبعد المراجعة هتبدأ تدريباتك على المنصة.</p>
   <div id="message" class="hidden" role="alert" aria-live="polite"></div>
   <div id="wizard">
     <nav class="stepper" aria-label="مراحل التسجيل">
@@ -34,7 +79,7 @@
           <div class="accountField"><label for="secondName">الاسم الثاني</label><input id="secondName" name="second_name" required maxlength="45" placeholder="اسم الأب"></div>
           <div class="accountField"><label for="thirdName">الاسم الثالث</label><input id="thirdName" name="third_name" required maxlength="45" placeholder="اسم الجد"></div>
           <div class="accountField"><label for="fourthName">الاسم الرابع</label><input id="fourthName" name="fourth_name" required maxlength="45" autocomplete="family-name" placeholder="اسم العائلة"></div>
-          <p class="hint full">هنراجع بياناتك عند طلب الموافقة، ومش محتاجين الرقم القومي للتسجيل.</p>
+
         </div>
       </section>
       <section class="step-panel" data-step="1" aria-labelledby="stepTitle1" hidden>
@@ -54,7 +99,7 @@
         <div class="accountGrid">
           <div class="accountField"><label for="phone">رقم موبايل الطالب</label><input id="phone" name="student_phone" type="tel" required inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="01xxxxxxxxx" maxlength="16"></div>
           <div class="accountField"><label for="guardian">رقم موبايل ولي الأمر</label><input id="guardian" name="guardian_phone" type="tel" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx" maxlength="16"></div>
-          <p class="hint full">هنراجع صيغة الأرقام فقط. مش هنبعت رسالة تحقق SMS أو واتساب حاليًا، والرقم لن يعتبر موثقًا.</p>
+          <p class="hint full">اكتب أرقام تواصل صحيحة حتى تقدر الإدارة تتواصل معاك عند الحاجة.</p>
           <div class="accountField"><label for="password">كلمة المرور</label><div class="passwordWrap"><input id="password" name="password" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><button type="button" class="accountBtn secondary toggle" aria-label="إظهار كلمة المرور">إظهار</button></div></div>
           <div class="accountField"><label for="passwordConfirm">تأكيد كلمة المرور</label><div class="passwordWrap"><input id="passwordConfirm" name="password_confirm" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><button type="button" class="accountBtn secondary toggle" aria-label="إظهار تأكيد كلمة المرور">إظهار</button></div></div>
           <p class="hint full">كلمة المرور لا تقل عن 10 أحرف، وبها حروف وأرقام. لن تظهر للإدارة.</p>
@@ -64,7 +109,7 @@
         <p class="panelIndex">04 / 04</p><h2 id="stepTitle3" class="panelTitle">راجع بياناتك قبل الإنشاء</h2>
         <p class="panelIntro">راجع بياناتك قبل إرسال الطلب. هتحصل على كود الطالب بعد إنشاء الحساب.</p>
         <div id="review" class="reviewGrid" aria-live="polite"></div>
-        <p class="subtleBox" style="margin-top:16px">رقم الهاتف غير موثق حاليًا، وإنشاء الحساب لا يعني اعتماده. الإدارة هتراجع البيانات خلال 48 ساعة.</p>
+        <p class="subtleBox" style="margin-top:16px">بعد إرسال طلبك ستحصل على كود الطالب. تستكمل الإدارة مراجعة بياناتك قبل تفعيل الحساب.</p>
         <div class="accountField" style="margin-top:17px">
           <label class="privacyLabel"><input type="checkbox" name="privacy" required><span>قرأت <a href="student-privacy.html" target="_blank" rel="noopener">إشعار الخصوصية</a> وأوافق على معالجة بيانات التسجيل لغرض إنشاء الحساب والمتابعة التعليمية.</span></label>
         </div>
@@ -80,7 +125,7 @@
         <button type="submit" id="submitBtn" class="accountBtn" hidden disabled>إنشاء الحساب والحصول على الكود</button>
       </footer>
     </form>
-    <div class="helpBar">عندك حساب بالفعل؟ <a href="student.html">ادخل باستخدام كود الطالب</a> — لو فقدت بياناتك تواصل مع إدارة المركز، ولا تنشئ حسابًا جديدًا.</div>
+    <div class="helpBar">عندك حساب؟ <a href="student-register.html?tab=login">سجّل دخولك من هنا</a> — لو فقدت بياناتك تواصل مع الإدارة بدل إنشاء حساب جديد.</div>
   </div>
   <section id="receipt" class="receipt hidden">
     <h2>تم إنشاء حسابك بنجاح</h2>
@@ -90,9 +135,12 @@
     <p class="statusPill" style="margin-top:18px">الحساب قيد مراجعة الإدارة</p>
     <p>موعد انتهاء مهلة المراجعة: <b id="deadline"></b></p>
     <div class="note">احتفظ بكود الطالب وكلمة المرور. إذا لم تتم الموافقة خلال المهلة، قد يتوقف الوصول مؤقتًا مع الاحتفاظ ببيانات الحساب.</div>
-    <a class="accountBtn" style="display:inline-block;text-decoration:none" href="student.html">الذهاب إلى تسجيل الدخول</a>
-  </section></div><aside class="visualPanel"><div class="visualKicker">YR / PHYSICS LAB</div><h2 class="visualHeading">الفيزياء مش حفظ.<span>الفيزياء فهم.</span></h2><p class="visualCopy">فهم أعمق، تدريب أذكى، ومتابعة حقيقية لتطورك في كل فكرة من المنهج.</p><svg class="circuitArt" viewBox="0 0 340 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="دائرة كهربية مغلقة بها بطارية ومقاومتان على التوالي"><defs><pattern id="dots" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#6a8bb5" opacity=".3"/></pattern></defs><rect width="340" height="320" fill="url(#dots)"/><path d="M45 75H120M165 75H290V237H243M195 237H45V190M45 151V75" stroke="#5A82AD" stroke-width="2"/><path d="M120 75L126 66L134 84L142 66L150 84L158 66L165 75" stroke="#56D6D0" stroke-width="2"/><path d="M243 237L237 228L229 246L221 228L213 246L205 228L195 237" stroke="#56D6D0" stroke-width="2"/><path d="M32 150H58M37 164H53M45 134V150M45 164V190" stroke="#E9F5FF" stroke-width="2"/><circle cx="45" cy="75" r="5" fill="#75DED6"/><circle cx="290" cy="237" r="5" fill="#75DED6"/><path d="M77 75H106M100 69L108 75L100 81" stroke="#5DE3D6" stroke-width="2"/><g fill="#90E5DD" font-size="15" font-family="Arial"><text x="126" y="53">R1</text><text x="206" y="265">R2</text><text x="85" y="60">I</text></g><path d="M74 288H284" stroke="#57728C"/><path d="M83 284L117 271L149 278L192 260L224 267L269 245" stroke="#7BC6E4" stroke-width="2"/></svg><div class="visualFoot"><span class="mark">⌁</span><span><strong>YR Physics Practice</strong> — نتابع فهمك وتطورك، مش بس عدد الأسئلة اللي حليتها.</span></div></aside></div>
+    <a class="accountBtn" style="display:inline-block;text-decoration:none" href="student-register.html?tab=login">الذهاب إلى تسجيل الدخول</a>
+  </section>
+  </div>
+</section>
+</div>
 </main>
 <script type="module" src="student-register-wizard.js"></script>
-</body>
-</html>
+<script type="module" src="student-access.js"></script>
+</body></html>
