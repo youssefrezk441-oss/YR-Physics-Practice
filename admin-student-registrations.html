@@ -221,19 +221,38 @@
           requests = d.requests;
           renderRequests();
           renderInviteControls(d);
-          $("recoveryRows").innerHTML = d.recovery_requests
-            .map(
-              (r) =>
-                `<tr><td>${esc(r.public_ref)}</td><td>${r.account_matched ? "مطابق" : "غير مطابق"}</td><td>${esc(r.status)}</td><td>${r.status === "pending" ? `<button data-recovery="${esc(r.public_ref)}">قرار</button>` : ""}</td></tr>`,
-            )
-            .join("");
-          document.querySelectorAll("[data-recovery]").forEach(
-            (b) =>
-              (b.onclick = () => {
-                $("recoveryDecision").classList.remove("hidden");
-                $("recoveryForm").reference.value = b.dataset.recovery;
-              }),
-          );
+          recoveryRequests = d.recovery_requests || [];
+          const canDecide = d.level === "edit";
+          $("recoveryRows").innerHTML = recoveryRequests.map((r) => {
+            const matched = !!r.account_matched;
+            const subject = matched && r.student_name
+              ? `<strong>${esc(r.student_name)}</strong><br><small>${esc(r.student_code || "—")} · ${esc(r.group_code || "بدون مجموعة")}</small>`
+              : "لا توجد بيانات طالب مرتبطة مؤكدة";
+            const status = {pending:"قيد الانتظار",approved:"موافق عليه",rejected:"مرفوض",completed:"اكتملت الاستعادة"}[r.status] || r.status;
+            const action = r.status === "pending" && canDecide
+              ? `<button type="button" data-recovery="${esc(r.public_ref)}">مراجعة</button>` : "—";
+            return `<tr>
+              <td dir="ltr" title="${esc(r.public_ref)}">#${esc(r.public_ref.slice(0,8))}</td>
+              <td>${subject}</td><td>${matched ? "حساب موجود — الهوية غير مثبتة" : "غير مطابق"}</td>
+              <td>${esc(status)}</td><td>${esc(new Date(r.created_at).toLocaleString("ar-EG"))}</td>
+              <td>${action}</td>
+            </tr>`;
+          }).join("") || '<tr><td colspan="6">لا توجد طلبات استعادة.</td></tr>';
+          document.querySelectorAll("[data-recovery]").forEach((button) => {
+            button.onclick = () => {
+              const row = recoveryRequests.find((r) => r.public_ref === button.dataset.recovery);
+              if (!row) return;
+              $("recoveryForm").reset();
+              $("recoveryForm").elements.namedItem("reference").value = row.public_ref;
+              $("recoverySubject").textContent = row.account_matched && row.student_name
+                ? row.student_name + " — " + (row.group_code || "بدون مجموعة")
+                : "لا يوجد حساب مرتبط؛ يتاح الرفض فقط.";
+              $("recoveryChoice").querySelector('option[value="approved"]').disabled = !row.account_matched;
+              syncRecoveryVerification();
+              $("recoveryDecision").classList.remove("hidden");
+              $("recoveryDecision").scrollIntoView({block:"nearest",behavior:"smooth"});
+            };
+          });
         } catch (e) {
           message(e.message);
         }
