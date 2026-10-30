@@ -273,6 +273,17 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace('</style>',
     '.errorsHomeCard{border:1px solid #a7c2e3!important;background:linear-gradient(180deg,#eff6ff,#fff)!important}.errorsHomeCard .studentNavIcon{background:#dbeafe!important}.errorsHomeCard h3{color:#16324f}.errorsHomeCard p{line-height:1.9}html[data-theme="dark"] .errorsHomeCard{background:linear-gradient(180deg,#172a48,#111827)!important;border-color:#37689b!important}html[data-theme="dark"] .errorsHomeCard h3{color:#dbeafe}'+'</style>');
 
+  // Keep the old credential form invisible until the authenticated learning view is ready.
+  // The student login/register portal remains the only public-facing authentication screen.
+  const preloadStyle = '.yr-student-loading .wrap{visibility:hidden!important}.yr-student-loading #yrStudentBoot{display:flex!important}#yrStudentBoot{position:fixed;inset:0;z-index:2147483644;display:none;align-items:center;justify-content:center;padding:24px;background:#081e38;color:#fff;font-family:Tahoma,Arial,sans-serif;direction:rtl;text-align:center}#yrStudentBoot .yrBootCard{width:min(410px,100%);padding:35px 22px;border:1px solid #39647a;border-radius:23px;background:linear-gradient(160deg,#122f50,#09213c);box-shadow:0 20px 70px #03101e77}#yrStudentBoot .yrBootMark{display:inline-grid;place-items:center;width:62px;height:62px;border-radius:18px;background:#ffffff12;color:#67ddd2;font:900 24px Arial,sans-serif;margin-bottom:18px}#yrStudentBoot .yrBootName{font-size:21px;font-weight:900;margin:0 0 8px}#yrStudentBoot .yrBootMessage{font-size:13px;line-height:1.9;color:#c0d4e1;margin:0}';
+  if(!html.includes('</style>')||!html.includes('<body><div class="wrap">'))throw new Error('تعذر تجهيز شاشة فتح منصة الطلاب');
+  html=html.replace('</style>',preloadStyle+'</style>');
+  html=html.replace('<body><div class="wrap">','<body class="yr-student-loading"><div id="yrStudentBoot" role="status" aria-live="polite"><div class="yrBootCard"><div class="yrBootMark" aria-hidden="true">YR</div><p class="yrBootName">منصة مستر يوسف رزق</p><p class="yrBootMessage" id="yrStudentBootMessage">بنجهّز منصتك ونتأكد من حالة حسابك…</p></div></div><div class="wrap">');
+  const bootAnchor="const{data:{session}}=await sb.auth.getSession();if(session){const state=await reviewStateBeforeLegacyInit(session);if(state==='review_only'){showOnly('loginView')}else{try{await initSession()}catch{await sb.auth.signOut();showOnly('loginView')}}}else showOnly('loginView');";
+  if(!html.includes(bootAnchor))throw new Error('تعذر تأمين شاشة بدء منصة الطلاب');
+  const bootReplacement="window.__yrFinishStudentBoot=()=>{document.body.classList.remove('yr-student-loading');document.getElementById('yrStudentBoot')?.remove()};let awaitingReview=false;try{const{data:{session}}=await sb.auth.getSession();if(session){const state=await reviewStateBeforeLegacyInit(session);if(state==='review_only'){awaitingReview=true;showOnly('loginView');const note=document.getElementById('yrStudentBootMessage');if(note)note.textContent='جاري عرض حالة مراجعة حسابك…'}else{try{await initSession()}catch(error){console.warn('تعذر تحميل بيانات الطالب',error);await sb.auth.signOut();showOnly('loginView')}}}else showOnly('loginView')}catch(error){console.warn('تعذر التحقق من جلسة الطالب',error);showOnly('loginView')}finally{if(!awaitingReview)window.__yrFinishStudentBoot()}";
+  html=html.replace(bootAnchor,bootReplacement);
+
   document.open();
   document.write(html);
   document.close();
