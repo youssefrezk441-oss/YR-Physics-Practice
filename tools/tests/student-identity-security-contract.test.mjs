@@ -31,3 +31,23 @@ test('live config is fail-closed when critical identity secrets are missing or i
   assert.match(fn,/registration_enabled: cryptoReady\(\) && cfg\.registration_enabled/);
   assert.match(fn,/!cryptoReady\(\) \|\| !cfg\.registration_enabled/);
 });
+
+test('public registration is blocked without real Turnstile configuration and validates host + action',()=>{
+  assert.match(fn,/function publicCaptchaReady\(\)/);
+  assert.match(fn,/CAPTCHA_SITEKEY/);
+  assert.match(fn,/captcha_sitekey: cfg\.registration_rollout_scope === "all"/);
+  assert.match(fn,/registration_enabled: cryptoReady\(\) && cfg\.registration_enabled/);
+  assert.match(fn,/cfg\.registration_rollout_scope === "all" && !publicCaptchaReady\(\)/);
+  assert.match(fn,/result\?\.hostname === "youssefrezk441-oss\.github\.io"/);
+  assert.match(fn,/result\?\.action === "student_registration"/);
+  assert.match(fn,/!await verifyCaptcha\(txt\(body\.captcha_token, 2048\), requestIp\)/);
+});
+test('public frontend renders real challenge and resets a used token after a failed request',async()=>{
+  const page=await readFile(new URL('student-register.html',root),'utf8');
+  assert.match(page,/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit/);
+  assert.match(page,/action: "student_registration"/);
+  assert.match(page,/cfg\.captcha_required/);
+  assert.match(page,/b\.captcha_token = captchaToken/);
+  assert.match(page,/window\.turnstile\.reset\(turnstileId\)/);
+  assert.match(page,/submitButton\.disabled = true/);
+});

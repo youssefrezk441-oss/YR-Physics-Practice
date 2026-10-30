@@ -22,7 +22,8 @@ const URL = Deno.env.get("SUPABASE_URL") ?? "",
   DB = Deno.env.get("SUPABASE_DB_URL") ?? "";
 const ENC = Deno.env.get("STUDENT_IDENTITY_ENCRYPTION_KEY_B64") ?? "",
   HMAC = Deno.env.get("STUDENT_IDENTITY_HMAC_KEY_B64") ?? "",
-  CAPTCHA_SECRET = Deno.env.get("STUDENT_REGISTRATION_TURNSTILE_SECRET") ?? "";
+  CAPTCHA_SECRET = Deno.env.get("STUDENT_REGISTRATION_TURNSTILE_SECRET") ?? "",
+  CAPTCHA_SITEKEY = Deno.env.get("STUDENT_REGISTRATION_TURNSTILE_SITE_KEY") ?? "";
 const PROJECT_HOST = (() => {
     try {
       return new globalThis.URL(URL).hostname;
@@ -168,8 +169,14 @@ function clientIp(req: Request) {
   );
   return value || "unknown";
 }
+function publicCaptchaReady() {
+  return CAPTCHA_SITEKEY.length >= 8 && CAPTCHA_SITEKEY.length <= 120 &&
+    CAPTCHA_SECRET.length >= 8 &&
+    !["1x00000000000000000000AA", "2x00000000000000000000AB", "3x00000000000000000000FF"].includes(CAPTCHA_SITEKEY) &&
+    !["1x0000000000000000000000000000000AA", "2x0000000000000000000000000000000AA", "3x0000000000000000000000000000000AA"].includes(CAPTCHA_SECRET);
+}
 async function verifyCaptcha(token: string, ip: string) {
-  if (!CAPTCHA_SECRET || !token) return false;
+  if (!publicCaptchaReady() || !token) return false;
   const form = new URLSearchParams({ secret: CAPTCHA_SECRET, response: token });
   if (ip !== "unknown") form.set("remoteip", ip);
   const response = await fetch(
@@ -177,7 +184,11 @@ async function verifyCaptcha(token: string, ip: string) {
     { method: "POST", body: form },
   );
   const result = await response.json().catch(() => ({}));
-  return response.ok && result?.success === true;
+  return response.ok && result?.success === true &&
+    (IS_PRODUCTION
+      ? result?.hostname === "youssefrezk441-oss.github.io" &&
+        result?.action === "student_registration"
+      : true);
 }
 const publicRequest = (r: any) => ({
   reference: r.public_ref,
@@ -226,16 +237,18 @@ Deno.serve(async (req) => {
       return out(req, {
         ok: true,
         service_ready: cryptoReady(),
+        captcha_ready: publicCaptchaReady(),
+        captcha_sitekey: cfg.registration_rollout_scope === "all" && publicCaptchaReady()
+          ? CAPTCHA_SITEKEY
+          : null,
         registration_enabled: cryptoReady() && cfg.registration_enabled &&
           cfg.immediate_registration_enabled &&
           scopeAllowed &&
-          (cfg.registration_rollout_scope !== "all" ||
-            !cfg.captcha_required_for_public_registration || !!CAPTCHA_SECRET),
+          (cfg.registration_rollout_scope !== "all" || publicCaptchaReady()),
         registration_rollout_scope: cfg.registration_rollout_scope,
         registration_invite_required:
           cfg.registration_rollout_scope === "limited",
-        captcha_required: cfg.registration_rollout_scope === "all" &&
-          cfg.captcha_required_for_public_registration,
+        captcha_required: cfg.registration_rollout_scope === "all",
         phone_login_enabled: cfg.phone_login_enabled && cfg.sms_provider_ready,
         profile_update_enabled: cfg.profile_update_enabled,
         profile_enforcement_enabled: cfg.profile_enforcement_enabled,
@@ -251,7 +264,8 @@ Deno.serve(async (req) => {
         (cfg.registration_rollout_scope === "staging" && !IS_PRODUCTION);
       if (
         !cryptoReady() || !cfg.registration_enabled ||
-        !cfg.immediate_registration_enabled || !scopeAllowed
+        !cfg.immediate_registration_enabled || !scopeAllowed ||
+        (cfg.registration_rollout_scope === "all" && !publicCaptchaReady())
       ) {
         return out(req, {
           error: "registration_unavailable",
@@ -262,7 +276,6 @@ Deno.serve(async (req) => {
       await limit("registration", requestIp, 5, 60);
       if (
         cfg.registration_rollout_scope === "all" &&
-        cfg.captcha_required_for_public_registration &&
         !await verifyCaptcha(txt(body.captcha_token, 2048), requestIp)
       ) {
         throw new IdentityInputError(
