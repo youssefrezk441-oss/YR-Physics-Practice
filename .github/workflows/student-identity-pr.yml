@@ -22,6 +22,8 @@ jobs:
           node tools/audit_student_profile_enforcement.mjs
       - name: Migration and real PostgreSQL concurrency
         run: bash tools/test_student_identity_migration.sh
+      - name: Student authorization boundary synthetic regression
+        run: bash tools/security/run_legacy_authz_synthetic.sh
       - name: Bootstrap browser test
         run: |
           npm install --no-save playwright@1.55.0
