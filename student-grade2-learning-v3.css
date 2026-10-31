@@ -1,0 +1,23 @@
+/* Grade-2 learning chapters. Scoped to grade-2 content only. */
+.yrStudentApp .yrG2Hero{padding:24px;border:1px solid var(--yr-line,#dce6dd);border-radius:19px;background:var(--yr-surface,#fff);margin-bottom:20px}
+.yrStudentApp .yrG2Kicker{display:block;font-size:12px;font-weight:900;color:#48836b;margin-bottom:8px}
+.yrStudentApp .yrG2Hero h3{font:900 23px/1.5 "Tajawal",Tahoma,sans-serif;color:var(--yr-deep,#143b30);margin:0 0 5px}
+.yrStudentApp .yrG2Hero p{margin:0;color:var(--yr-muted,#64766d);font-size:13px}
+.yrStudentApp .yrG2Topics{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.yrStudentApp .yrG2Topics span{font-size:12px;color:#315e4c;padding:6px 10px;background:#eaf3ed;border-radius:50px;font-weight:800}
+.yrStudentApp .yrG2Stage{display:grid;gap:12px;margin:0 0 22px}
+.yrStudentApp .yrG2StageHead{display:flex;align-items:flex-start;gap:14px}
+.yrStudentApp .yrG2Number{width:38px;height:38px;flex-shrink:0;border-radius:11px;display:grid;place-items:center;background:#dceee0;color:#16533b;font-weight:900}
+.yrStudentApp .yrG2StageTitle h3{font-size:18px;font-weight:900;color:var(--yr-deep,#143b30);margin:0 0 3px}
+.yrStudentApp .yrG2StageTitle p{margin:0;font-size:12px;line-height:1.7;color:var(--yr-muted,#64766d)}
+.yrStudentApp .yrG2StageBody{display:grid;gap:9px;padding-inline-start:52px}
+.yrStudentApp .yrG2Pending{display:flex;align-items:center;gap:12px;border:1px dashed #cbdccf;border-radius:14px;padding:17px;background:#f8fbf8;color:#526f5b;font-size:14px;font-weight:800}
+.yrStudentApp .yrG2Pending span:nth-child(2){flex:1}
+.yrStudentApp .yrG2Pending small{font-size:11px;color:#7e8d84;font-weight:700}
+.yrStudentApp .yrG2Subheading{font-size:13px;color:var(--yr-deep,#143b30);margin:10px 0 0}
+.yrStudentApp .yrG2Notice{font-size:12px;color:var(--yr-muted,#64766d);line-height:1.8;margin:0 0 14px}
+html[data-theme="dark"] .yrStudentApp .yrG2Hero{background:#172823;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .yrG2Hero h3,html[data-theme="dark"] .yrStudentApp .yrG2StageTitle h3{color:#eaf7eb}
+html[data-theme="dark"] .yrStudentApp .yrG2Pending{background:#172823;border-color:#315146;color:#c3dfc8}
+html[data-theme="dark"] .yrStudentApp .yrG2Topics span{background:#25503b;color:#c8e9ce}
+@media(max-width:560px){.yrStudentApp .yrG2StageBody{padding-inline-start:0}.yrStudentApp .yrG2Hero{padding:18px}.yrStudentApp .yrG2StageHead{gap:10px}.yrStudentApp .yrG2StageTitle h3{font-size:16px}.yrStudentApp .yrChapterTabs.yrG2Chapters button{padding:10px 5px;font-size:12px}}
