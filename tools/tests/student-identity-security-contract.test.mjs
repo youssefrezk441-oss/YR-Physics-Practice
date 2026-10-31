@@ -45,7 +45,7 @@ test('public registration is blocked without real Turnstile configuration and va
 test('public frontend renders real challenge and resets a used token after a failed request',async()=>{
   const page=await readFile(new URL('student-register.html',root),'utf8');
   const wizard=await readFile(new URL('student-register-wizard.js',root),'utf8');
-  assert.match(page,/src="student-register-wizard\.js"/);
+  assert.match(page,/src="student-register-wizard\.js(?:\?[^"]+)?"/);
   assert.match(page,/id="turnstileWidget"/);
   assert.match(wizard,/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit/);
   assert.match(wizard,/action: "student_registration"/);
