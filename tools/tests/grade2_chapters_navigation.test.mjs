@@ -46,3 +46,16 @@ test("new grade 2 links use dedicated service and no unpublished exam content",(
   for(const bad of ["SUPABASE_SERVICE_ROLE_KEY","private.g2_keys","ANSWER_KEYS_PRIVATE_DO_NOT_PUBLISH"])assert.equal(text.includes(bad),false);
  }
 });
+test("upcoming grade 2 workshops are visibly named but never open without a published server result",()=>{
+ const js=read("student-grade2-learning-v3.js");
+ const css=read("student-grade2-learning-v3.css");
+ assert.match(js,/function pending\(\{label,explain,count\}\)/);
+ assert.match(js,/slot=pending\(\{label,explain,count\}\)/);
+ assert.match(js,/!slugs\.has\(slug\)/);
+ assert.match(js,/slot\.replaceWith\(action/);
+ assert.match(js,/لم تُفتح بعد/);
+ for(const label of ["ورشة الفصل — تدريب مفتوح","تدريبات إتقان الفصل","اختبار إتقان الفصل","اختبار الفصول الثلاثة"])assert.ok(js.includes(label));
+ for(const count of [24,23,11,15,14,7])assert.match(js,new RegExp("\\b"+count+"\\b"));
+ assert.match(css,/\.yrG2Preview\{/);
+ assert.match(css,/cursor:default/);
+});
