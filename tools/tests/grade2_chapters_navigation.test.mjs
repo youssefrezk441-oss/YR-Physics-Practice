@@ -73,3 +73,20 @@ test("grade 2 photo importer is owner-only and validates original SHA256",()=>{
  assert.match(ui,/\/assets\/grade2\//);
  assert.ok(!ui.includes("SUPABASE_SERVICE_ROLE_KEY"));
 });
+
+test("owner pilot launch is explicit, cohort scoped, and requires complete source bank",()=>{
+ const src=read("supabase/functions/grade2-mastery/index.ts");
+ const ui=read("g2-import.js");
+ assert.match(src,/owner_group_catalog/);
+ assert.match(src,/owner_launch_pilot/);
+ assert.match(src,/confirm_provisional!==true/);
+ assert.match(src,/inventory\.total!==94\|\|assets\.ready!==94\|\|keys\.ready!==95\|\|keys\.manuals!==32/);
+ assert.match(src,/chosen\.some\(g=>!groups\.some/);
+ assert.match(src,/provisional_live_pilot=true/);
+ assert.match(src,/mode in \('learn','mastery'\)/);
+ assert.match(src,/createSignedUrl\(q\.image_path,21600\)/);
+ assert.match(ui,/g2-cohort/);
+ assert.match(ui,/confirm_provisional:true/);
+ const sql=read("supabase/migrations/20261031152721_g2_allow_explicit_provisional_learning_pilot_20261031.sql");
+ assert.match(sql,/provisional_live_pilot/);
+});

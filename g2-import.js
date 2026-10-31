@@ -37,7 +37,29 @@ $("upload").addEventListener("click",async()=>{
 });
 $("prepare").addEventListener("click",async()=>{
  $("prepare").disabled=true;
- try{const d=await call("owner_prepare_image_catalog");msg("تم تجهيز "+d.activities_prepared+" ورش و"+d.photos+" صورة و"+d.mcq_parts+" مفتاح اختيار. تظل أنشطة المسودات مغلقة إلى حين اكتمال الصلاحيات واختبارات التشغيل.");}
+ try{const d=await call("owner_prepare_image_catalog");prepared=true;$("launch").disabled=false;msg("تم تجهيز "+d.activities_prepared+" ورش و"+d.photos+" صورة و"+d.mcq_parts+" مفتاح اختيار. اختر مجموعات الطلاب ثم اضغط فتح الورش.");}
  catch(e){msg(e.message)}finally{$("prepare").disabled=false}
 });
 refresh().catch(e=>msg(e.message));
+let prepared=false;
+async function groups(){
+ const d=await call("owner_group_catalog"),region=$("groups");region.replaceChildren();
+ for(const group of d.groups||[]){
+  const label=document.createElement("label");label.className="choice";
+  const input=document.createElement("input");input.type="checkbox";input.value=group.code;input.name="g2-cohort";
+  label.append(input,document.createTextNode(group.code+(group.center?" — "+group.center:"")));
+  region.append(label);
+ }
+ if(!region.children.length)msg("لا توجد مجموعات صف ثانٍ يمكن السماح لها؛ لا تفتح الورشة قبل تعيين مجموعات صحيحة.");
+}
+$("launch").addEventListener("click",async()=>{
+ const selected=[...document.querySelectorAll('input[name="g2-cohort"]:checked')].map(x=>x.value);
+ if(!prepared||!selected.length){msg("أكمل تجهيز الأسئلة واختر مجموعة واحدة على الأقل");return}
+ if(!confirm("هل تريد فتح الورش الست للمجموعات المحددة كتجربة فعلية؟ التصحيح الآلي للاختيار فقط، والمقالي ينتظر مراجعتك."))return;
+ $("launch").disabled=true;
+ try{
+  const d=await call("owner_launch_pilot",{group_codes:selected,confirm_provisional:true});
+  msg("تم فتح "+d.published.length+" ورش للمجموعات المحددة. يمكن للطلاب الوصول الآن من التعلّم؛ اختبارات الإتقان الرسمية ما زالت مغلقة.");
+ }catch(e){msg(e.message);$("launch").disabled=false}
+});
+groups().catch(e=>msg(e.message));
