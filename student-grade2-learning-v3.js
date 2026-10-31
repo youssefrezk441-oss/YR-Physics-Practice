@@ -21,7 +21,18 @@ const existingInMotion=[
 let cache=null,inFlight=null;
 function el(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e}
 function section(n,title,desc){const s=el("section","yrG2Stage");const h=el("div","yrG2StageHead");h.append(el("span","yrG2Number",n),el("div","yrG2StageTitle"));h.lastChild.append(el("h3","",title),el("p","",desc));const body=el("div","yrG2StageBody");s.append(h,body);return{s,body}}
-function pending(label){const e=el("div","yrG2Pending");e.append(el("span","","⌛"),el("span","",label),el("small","",""));e.lastChild.textContent="قيد الإعداد";return e}
+function pending({label,explain,count}){
+ const e=el("div","yrWorkspaceItem yrG2Preview");
+ const icon=el("span","yrWorkspaceItemIcon","▤");
+ const main=el("span","");
+ main.append(el("strong","",label));
+ const detail=el("small","",explain+(count?" · "+count+" سؤالًا":""));
+ main.append(detail);
+ const state=el("span","yrG2Availability","لم تُفتح بعد");
+ e.append(icon,main,state);
+ e.setAttribute("aria-label",label+"، "+detail.textContent+"، لم تُفتح بعد");
+ return e;
+}
 function action(label,detail,click){const b=el("button","yrWorkspaceItem yrG2Action");b.type="button";b.append(el("span","yrWorkspaceItemIcon","▤"),el("span",""),el("span","","‹"));b.children[1].append(el("strong","",label),el("small","",detail));b.addEventListener("click",click);return b}
 async function published(){
  if(cache&&Date.now()-cache.at<45000)return cache.slugs;
@@ -38,8 +49,8 @@ async function published(){
  })();
  return inFlight;
 }
-function safeLiveButton({container,slug,label,explain,signal}){
- const slot=pending("سيتاح بعد النشر واعتماد التصحيح");
+function safeLiveButton({container,slug,label,explain,count,signal}){
+ const slot=pending({label,explain,count});
  container.append(slot);
  published().then(slugs=>{
   if(!slot.isConnected||signal.aborted||!slugs.has(slug))return;
@@ -60,7 +71,7 @@ export function renderGrade2Chapter({box,chapter,source}){
  const hero=el("header","yrG2Hero");hero.append(el("span","yrG2Kicker","رحلتك من الفهم إلى الإتقان"),el("h3","",c.name),el("p","","الفصل "+({"1":"الأول","2":"الثاني","3":"الثالث"}[chapter])));
  const topics=el("div","yrG2Topics");c.topics.forEach(t=>topics.append(el("span","",t)));hero.append(topics);box.append(hero);
  const a=section("01","ورشة التعلّم","تدريب مفتوح، تسجيل المحاولة الأولى، ثم تلميحات ومراجعة الأخطاء.");
- safeLiveButton({container:a.body,slug:sl.learn,label:"ورشة الفصل — تدريب مفتوح",explain:"ابدأ الورشة المنشورة لهذا الفصل",signal});
+ safeLiveButton({container:a.body,slug:sl.learn,label:"ورشة الفصل — تدريب مفتوح",explain:"تدريبات الفصل مع الاحتفاظ بالمحاولة الأولى",count:({"1":24,"2":23,"3":11})[chapter],signal});
  if(chapter==="2"){
   const ready=existingInMotion.filter(([id])=>!!source(id));
   if(ready.length){const heading=el("h4","yrG2Subheading","ورش الدروس المتاحة بالفعل");a.body.append(heading);
@@ -69,10 +80,10 @@ export function renderGrade2Chapter({box,chapter,source}){
  }
  box.append(a.s);
  const b=section("02","تدريبات الإتقان","تدرّب على المهارات المستهدفة مع قياس حلّك المستقل قبل أي مساعدة.");
- safeLiveButton({container:b.body,slug:sl.mastery,label:"تدريبات إتقان الفصل",explain:"أسئلة مخصصة لقياس المهارات",signal});box.append(b.s);
+ safeLiveButton({container:b.body,slug:sl.mastery,label:"تدريبات إتقان الفصل",explain:"أسئلة مستقلة لقياس المهارات دون تلميحات",count:({"1":15,"2":14,"3":7})[chapter],signal});box.append(b.s);
  const d=section("03","اختبار الإتقان","اختبار مستقل، لا تظهر أسئلته أو نتيجته النهائية قبل اعتماد التصحيح.");
- safeLiveButton({container:d.body,slug:sl.exam,label:"اختبار إتقان الفصل",explain:"محاولة رسمية عند فتح الاختبار",signal});box.append(d.s);
- if(chapter==="3"){const extra=section("★","اختبار الإتقان الشامل","تقييم تراكمي للفصول الثلاثة بعد اجتياز مراحل التعلّم.");safeLiveButton({container:extra.body,slug:sl.cumulative,label:"اختبار الفصول الثلاثة",explain:"اختبار تراكمي عند النشر",signal});box.append(extra.s)}
+ safeLiveButton({container:d.body,slug:sl.exam,label:"اختبار إتقان الفصل",explain:"اختبار منفصل عن التدريب — لم تُنشر أسئلته بعد",signal});box.append(d.s);
+ if(chapter==="3"){const extra=section("★","اختبار الإتقان الشامل","تقييم تراكمي للفصول الثلاثة بعد اجتياز مراحل التعلّم.");safeLiveButton({container:extra.body,slug:sl.cumulative,label:"اختبار الفصول الثلاثة",explain:"اختبار تراكمي شامل بعد إتمام الفصول",signal});box.append(extra.s)}
  if(chapter==="1"&&source("openReferences"))box.append(action("مراجع شرح الحصص","المراجع المتاحة لحسابك",()=>source("openReferences")?.click()));
- box.append(el("p","yrG2Notice","الأنشطة غير المنشورة لا يمكن فتحها، والدرجات ومفاتيح الإجابة لا تُخزن على هذه الصفحة."));
+ box.append(el("p","yrG2Notice","الورش والتدريبات موضحة لك حتى قبل فتحها. النشاط المكتوب عليه «لم تُفتح بعد» للعرض فقط؛ يبدأ الحل عندما يصبح متاحًا لحسابك، ولا تُحتسب درجات قبل اعتماد التصحيح."));
 }
