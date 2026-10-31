@@ -47,9 +47,9 @@ Deno.serve(async r=>{
    const examSlugs=["g2-azhar-ch01-exam","g2-azhar-ch02-exam","g2-azhar-ch03-exam","g2-azhar-chapters-1-3-exam"];
    const expected=[15,14,9,18],target=new Set(examSlugs);
    const stats=async()=>{
-    const [q]=await sql`select count(*)::int as n from private.g2_questions where activity_slug=any(${examSlugs})`;
-    const [k]=await sql`select count(*)::int as n,count(*) filter(where rubric is not null)::int as essay from private.g2_keys where key_status='approved' and activity_slug=any(${examSlugs})`;
-    const [img]=await sql`select count(*)::int as n from private.g2_questions q where q.activity_slug=any(${examSlugs}) and exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
+    const [q]=await sql`select count(*)::int as n from private.g2_questions where activity_slug=any(${sql.array(examSlugs)})`;
+    const [k]=await sql`select count(*)::int as n,count(*) filter(where rubric is not null)::int as essay from private.g2_keys where key_status='approved' and activity_slug=any(${sql.array(examSlugs)})`;
+    const [img]=await sql`select count(*)::int as n from private.g2_questions q where q.activity_slug=any(${sql.array(examSlugs)}) and exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
     return {questions:q.n,keys:k.n,essay_parts:k.essay,images:img.n};
    };
    if(op==="owner_exam_status")return send(r,{ok:true,...await stats()});
@@ -112,7 +112,7 @@ Deno.serve(async r=>{
    if(current.questions!==56||current.keys!==66||current.essay_parts!==19||current.images!==56)
     throw new E(409,"exam_assets_missing","الامتحانات تحتاج 56 صورة و66 مفتاحًا بينها 19 مقاليًا");
    if(op==="owner_prepare_exams"){
-    await sql`update private.g2_activities set content_verified=true,images_verified=true,keys_verified=true,status='validated' where slug=any(${examSlugs}) and status='draft'`;
+    await sql`update private.g2_activities set content_verified=true,images_verified=true,keys_verified=true,status='validated' where slug=any(${sql.array(examSlugs)}) and status='draft'`;
     return send(r,{ok:true,prepared:4,...current});
    }
    if(b.confirm_provisional!=="PUBLISH_EXAMS")throw new E(400,"confirmation_required","تأكيد نشر الامتحانات مطلوب");
@@ -121,7 +121,7 @@ Deno.serve(async r=>{
    if(!chosen.length||new Set(chosen).size!==chosen.length||chosen.some(x=>!allowedGroups.has(x)))throw new E(403,"wrong_track","المجموعات المحددة ليست أزهرية");
    const out=await sql.begin(async tx=>{
     await tx`select pg_advisory_xact_lock(hashtextextended('g2-exams-publish',0))`;
-    const records=await tx`update private.g2_activities set status='published',eligible_group_codes=array(select jsonb_array_elements_text(${tx.json(chosen)}::jsonb)),provisional_manual_grading=true,provisional_live_pilot=true,published_at=coalesce(published_at,now()) where slug=any(${examSlugs}) and status in ('validated','published') returning slug`;
+    const records=await tx`update private.g2_activities set status='published',eligible_group_codes=array(select jsonb_array_elements_text(${tx.json(chosen)}::jsonb)),provisional_manual_grading=true,provisional_live_pilot=true,published_at=coalesce(published_at,now()) where slug=any(${sql.array(examSlugs)}) and status in ('validated','published') returning slug`;
     if(records.length!==4)throw new E(409,"draft_exam","لم تجهز جميع الامتحانات");
     await tx`insert into private.g2_admin_events(actor_id,action,payload) values(${c.u.id}::uuid,'exams_publish',${tx.json({groups:chosen,exams:4,provisional:true})})`;
     return records;
