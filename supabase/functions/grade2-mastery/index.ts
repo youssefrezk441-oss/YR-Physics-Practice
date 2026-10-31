@@ -138,7 +138,7 @@ Deno.serve(async r=>{
     if(b.confirm_provisional!==true||!chosen.length||chosen.length>20||choices.size!==chosen.length||
        chosen.some(g=>!groups.some(real=>real.group_code===g)))
        throw new E(400,"bad_group_selection","اختر مجموعة أو أكثر من مجموعات الصف الثاني الصحيحة وأكد تشغيل التجربة");
-    const [inventory]=await sql`select count(*)::int as total from private.g2_questions`;
+    const [inventory]=await sql`select count(*)::int as total from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug where a.mode in ('learn','mastery')`;
     const [assets]=await sql`select count(*)::int as ready from private.g2_questions q
        where exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
     const [keys]=await sql`select count(*)::int as ready,count(*) filter(where rubric is not null)::int as manuals
