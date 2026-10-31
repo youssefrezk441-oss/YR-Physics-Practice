@@ -74,7 +74,7 @@ if [[ "${E2E_PROFILE_LOCKDOWN:-0}" == "1" ]]; then
   # did not enable it, so make that critical production prerequisite explicit
   # inside this disposable synthetic fixture before applying the exact SQL.
   docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
-    -c 'ALTER TABLE public.student_profiles ENABLE ROW LEVEL SECURITY' >/dev/null
+    -c "ALTER TABLE public.student_profiles ENABLE ROW LEVEL SECURITY; GRANT SELECT ON public.student_profiles TO authenticated; CREATE POLICY synthetic_student_own_profile_read ON public.student_profiles FOR SELECT TO authenticated USING (auth.uid()=user_id)" >/dev/null
   # Only disposable local GoTrue/PostgreSQL. Never this command on cloud or production.
   docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
     < tools/security/releases/release_profile_acl_production.sql >/dev/null
