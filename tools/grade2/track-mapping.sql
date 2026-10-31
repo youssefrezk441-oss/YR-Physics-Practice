@@ -1,0 +1,1 @@
+-- Grade 2 track mapping was applied to the connected Supabase project.\n-- Group A: baccalaureate; Group B: azhar.\n
