@@ -142,7 +142,7 @@ Deno.serve(async r=>{
     const [assets]=await sql`select count(*)::int as ready from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug
        where a.mode in ('learn','mastery') and exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
     const [keys]=await sql`select count(*)::int as ready,count(*) filter(where rubric is not null)::int as manuals
-       from private.g2_keys where key_status='approved'`;
+       from private.g2_keys k join private.g2_activities a on a.slug=k.activity_slug where a.mode in ('learn','mastery') and k.key_status='approved'`;
     if(inventory.total!==94||assets.ready!==94||keys.ready!==95||keys.manuals!==32)
        throw new E(409,"release_not_complete","يجب استكمال الصور الـ94 ومفاتيح الإجابة الـ95 ومعايير المقالي الـ32 أولًا");
     const rows=await sql.begin(async tx=>{
