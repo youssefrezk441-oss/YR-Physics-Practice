@@ -70,9 +70,14 @@ docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgre
 docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
   < supabase/migrations/20261030_student_profile_change_requests.sql >/dev/null
 if [[ "${E2E_PROFILE_LOCKDOWN:-0}" == "1" ]]; then
+  # The production profile table already uses RLS. The minimal local baseline
+  # did not enable it, so make that critical production prerequisite explicit
+  # inside this disposable synthetic fixture before applying the exact SQL.
+  docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
+    -c "ALTER TABLE public.student_profiles ENABLE ROW LEVEL SECURITY; GRANT SELECT ON public.student_profiles TO authenticated; CREATE POLICY synthetic_student_own_profile_read ON public.student_profiles FOR SELECT TO authenticated USING (auth.uid()=user_id)" >/dev/null
   # Only disposable local GoTrue/PostgreSQL. Never this command on cloud or production.
   docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
-    < tools/security/candidate_profile_write_lockdown.sql >/dev/null
+    < tools/security/releases/release_profile_acl_production.sql >/dev/null
   echo "Applied candidate student profile ACL to disposable local E2E database."
 fi
 docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
