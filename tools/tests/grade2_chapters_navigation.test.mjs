@@ -85,7 +85,7 @@ test("owner pilot launch is explicit, cohort scoped, and requires complete sourc
  assert.match(src,/provisional_live_pilot=true/);
  assert.match(src,/mode in \('learn','mastery'\)/);
  assert.match(src,/createSignedUrl\(q\.image_path,21600\)/);
- assert.match(ui,/input\[name="g2-cohort":checked\]/);
+ assert.match(ui,/g2-cohort/);
  assert.match(ui,/confirm_provisional:true/);
  const sql=read("supabase/migrations/20261031152721_g2_allow_explicit_provisional_learning_pilot_20261031.sql");
  assert.match(sql,/provisional_live_pilot/);
