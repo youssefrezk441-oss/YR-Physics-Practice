@@ -1,4 +1,4 @@
-import {syncGrade2Tabs,renderGrade2Chapter} from "./student-grade2-learning-v3.js";
+import {syncGrade2Tabs,renderGrade2Chapter,isSecondSecondaryBaccalaureate} from "./student-grade2-learning-v3.js";
 /* YR student workspace — navigation adapter for the real compiled student app.
  * Uses original eligible launcher buttons; never creates bypass URLs or changes grades.
  * Chapter 1/2 mistakes and workshops remain independent; Honor editions use real server-owned assessment cycles and frozen snapshots. */
@@ -14,7 +14,13 @@ const availableSources=[
  "openFoundationTrainings","openCompleted","openHonor","openIndicators","openReferences"
 ];
 let lastArea="home",moreOpen=false,refreshQueued=false;
-function source(id){const el=$(id);return el&&!el.disabled&&!el.classList.contains("hidden")?el:null}
+function source(id){
+ // Legacy baccalaureate launchers must never surface on the Azhar learning path.
+ if(["openB2Lesson1Workshop","openB2Lesson2Workshop","openB2Lesson1Trainings"].includes(id)
+    &&!isSecondSecondaryBaccalaureate())return null;
+ const el=$(id);
+ return el&&!el.disabled&&!el.classList.contains("hidden")?el:null;
+}
 function canThirdGrade(){
  const labels=[...document.querySelectorAll("#studentProfileMeta span")].map(x=>x.textContent||"").join(" ");
  return /الصف الثالث الثانوي|third.secondary|3_secondary/i.test(labels);

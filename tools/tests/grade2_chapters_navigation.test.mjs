@@ -90,3 +90,29 @@ test("owner pilot launch is explicit, cohort scoped, and requires complete sourc
  const sql=read("supabase/migrations/20261031152721_g2_allow_explicit_provisional_learning_pilot_20261031.sql");
  assert.match(sql,/provisional_live_pilot/);
 });
+
+test("baccalaureate-only lessons are absent from Azhar even when legacy buttons exist",()=>{
+ const module=read("student-grade2-learning-v3.js");
+ const nav=read("student-workspace-navigation-v1.js");
+ const builder=read("student.html");
+ assert.match(module,/BACCALAUREATE_GROUPS=new Set\(\["N2-A","K2-A"\]\)/);
+ assert.match(module,/chapter==="2"&&isSecondSecondaryBaccalaureate\(\)/);
+ assert.match(nav,/isSecondSecondaryBaccalaureate\(\)/);
+ for(const id of ["openB2Lesson1Workshop","openB2Lesson2Workshop","openB2Lesson1Trainings"]){
+   assert.ok(module.includes(id)&&nav.includes(id));
+ }
+ assert.match(builder,/isBaccalaureateStudent=gradeLabel/);
+ assert.match(builder,/if\(isBaccalaureateStudent\)sb\.functions\.invoke\('b2-lesson1-workshop'/);
+ assert.match(builder,/if\(isBaccalaureateStudent\)sb\.functions\.invoke\('b2-lesson2-workshop'/);
+ assert.match(builder,/gradeLabel\(profile\?\.grade_level\)==='الصف الثاني الثانوي'&&\['N2-A','K2-A'\]/);
+});
+test("grade2 image uploader supports signing in as owner and explains forbidden student session",()=>{
+ const html=read("g2-import.html"),js=read("g2-import.js");
+ assert.match(html,/ownerLoginForm/);
+ assert.match(html,/autocomplete="current-password"/);
+ assert.match(js,/sb\.auth\.signInWithPassword\(\{email,password\}\)/);
+ assert.match(js,/status===403/);
+ assert.match(js,/owner_only/);
+ assert.match(js,/\$\("ownerLogin"\)\.hidden=true/);
+ assert.match(js,/owner_image_manifest/);
+});

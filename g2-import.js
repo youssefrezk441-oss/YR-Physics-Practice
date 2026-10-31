@@ -1,16 +1,27 @@
 import {sb} from "./student-identity-api.js";
 const $=s=>document.getElementById(s),msg=s=>$("message").textContent=s;
 let missing=[],all=[];
-async function call(action,extra={}){const{data,error}=await sb.functions.invoke("grade2-mastery",{body:{action,...extra}});
- if(error||data?.error)throw Error(data?.message||error?.message||"تعذر الاتصال");return data;}
+async function call(action,extra={}){
+ const{data,error}=await sb.functions.invoke("grade2-mastery",{body:{action,...extra}});
+ if(error||data?.error){
+  let body=null;try{body=await error?.context?.json?.()}catch{}
+  const status=error?.context?.status;
+  if(status===403&&(body?.error==="owner_only"||body?.message?.includes("صاحب")))
+   throw Error("الحساب الحالي ليس حساب صاحب الإدارة (403). استخدم استمارة تسجيل دخول الإدارة الموجودة أعلى الصفحة.");
+  if(status===401)throw Error("الجلسة غير صالحة أو منتهية. سجل الدخول بحساب الإدارة مرة أخرى.");
+  throw Error(body?.message||data?.message||error?.message||"تعذر الاتصال بالخدمة");
+ }
+ return data;
+}
 async function refresh(){
  const {images}=await call("owner_image_manifest");all=images;missing=images.filter(x=>!x.uploaded);
+ $("ownerLogin").hidden=true;$("ownerLoginMessage").textContent="تم التأكد من صلاحية حساب الإدارة.";
  $("status").textContent="تم رفع "+(images.length-missing.length)+" من "+images.length+" صورة أصلية";
  $("progress").max=images.length;$("progress").value=images.length-missing.length;
  $("upload").disabled=!missing.length||!$("zip").files?.length;
  $("prepare").disabled=missing.length>0||images.length!==94;
 }
-$("refresh").addEventListener("click",()=>refresh().catch(e=>msg(e.message)));
+$("refresh").addEventListener("click",()=>refresh().catch(e=>{msg(e.message);$("ownerLogin").hidden=false}));
 $("zip").addEventListener("change",()=>{$("upload").disabled=!missing.length||!$("zip").files?.length});
 $("upload").addEventListener("click",async()=>{
  if(!window.JSZip){msg("تعذر تحميل قارئ ZIP، تأكد من الاتصال بالإنترنت");return}
@@ -40,7 +51,7 @@ $("prepare").addEventListener("click",async()=>{
  try{const d=await call("owner_prepare_image_catalog");prepared=true;$("launch").disabled=false;msg("تم تجهيز "+d.activities_prepared+" ورش و"+d.photos+" صورة و"+d.mcq_parts+" مفتاح اختيار. اختر مجموعات الطلاب ثم اضغط فتح الورش.");}
  catch(e){msg(e.message)}finally{$("prepare").disabled=false}
 });
-refresh().catch(e=>msg(e.message));
+refresh().catch(e=>{msg(e.message);$("ownerLogin").hidden=false;$("status").textContent="يجب الدخول بحساب الإدارة أولًا";});
 let prepared=false;
 async function groups(){
  const d=await call("owner_group_catalog"),region=$("groups");region.replaceChildren();
@@ -63,3 +74,20 @@ $("launch").addEventListener("click",async()=>{
  }catch(e){msg(e.message);$("launch").disabled=false}
 });
 groups().catch(e=>msg(e.message));
+
+$("ownerLoginForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const email=$("ownerEmail").value.trim(),password=$("ownerPassword").value;
+ if(!email||!password)return;
+ $("ownerSignIn").disabled=true;
+ $("ownerLoginMessage").textContent="جارٍ تسجيل الدخول والتحقق من صلاحية الإدارة...";
+ try{
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error)throw Error("تعذر تسجيل الدخول: "+error.message);
+  $("ownerPassword").value="";
+  await refresh();
+  await groups();
+  msg("تم الدخول بحساب الإدارة. اختر ملف ZIP وارفع الصور الناقصة.");
+ }catch(e){$("ownerLogin").hidden=false;$("ownerLoginMessage").textContent=e.message}
+ finally{$("ownerSignIn").disabled=false}
+});
