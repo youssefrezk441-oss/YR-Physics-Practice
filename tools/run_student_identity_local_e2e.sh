@@ -72,7 +72,7 @@ docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgre
 if [[ "${E2E_PROFILE_LOCKDOWN:-0}" == "1" ]]; then
   # Only disposable local GoTrue/PostgreSQL. Never this command on cloud or production.
   docker exec -i "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
-    < tools/security/candidate_profile_write_lockdown.sql >/dev/null
+    < tools/security/releases/release_profile_acl_production.sql >/dev/null
   echo "Applied candidate student profile ACL to disposable local E2E database."
 fi
 docker exec "$db_container" psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres \
