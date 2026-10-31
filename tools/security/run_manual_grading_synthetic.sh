@@ -17,7 +17,7 @@ psql=(docker exec -i "$name" psql -X -v ON_ERROR_STOP=1 -U postgres -d grade_fix
 # Mirror the current overly broad grants, then apply the candidate on this local DB only.
 "${psql[@]}" -c 'GRANT ALL ON public.attempts,public.responses TO anon,authenticated' >/dev/null
 "${psql[@]}" < "$root/tools/security/candidate_attempt_response_write_lockdown.sql"
-"${psql[@]}" < "$root/tools/security/candidate_secure_manual_review.sql"
+"${psql[@]}" < "$root/tools/security/releases/release_secure_manual_grading.sql"
 "${psql[@]}" < "$root/tools/security/manual_grading_fixture_verify.sql"
 "${psql[@]}" < "$root/tools/security/grade_acl_fixture_verify.sql"
 # Two concurrent replays with identical values should serialize without deadlock,
