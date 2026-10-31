@@ -21,3 +21,11 @@ html[data-theme="dark"] .yrStudentApp .yrG2Hero h3,html[data-theme="dark"] .yrSt
 html[data-theme="dark"] .yrStudentApp .yrG2Pending{background:#172823;border-color:#315146;color:#c3dfc8}
 html[data-theme="dark"] .yrStudentApp .yrG2Topics span{background:#25503b;color:#c8e9ce}
 @media(max-width:560px){.yrStudentApp .yrG2StageBody{padding-inline-start:0}.yrStudentApp .yrG2Hero{padding:18px}.yrStudentApp .yrG2StageHead{gap:10px}.yrStudentApp .yrG2StageTitle h3{font-size:16px}.yrStudentApp .yrChapterTabs.yrG2Chapters button{padding:10px 5px;font-size:12px}}
+
+/* Upcoming activities remain visible but cannot be mistaken for start buttons. */
+.yrStudentApp .yrG2Preview{cursor:default;border-style:dashed;background:#f7faf7;box-shadow:none}
+.yrStudentApp .yrG2Preview:hover{transform:none;border-color:var(--yr-line,#d9e4dd)}
+.yrStudentApp .yrG2Preview .yrG2Availability{font:800 12px/1.5 Tahoma,Arial,sans-serif;color:#68796c;background:#e8eee9;border-radius:999px;padding:7px 10px;white-space:nowrap}
+html[data-theme="dark"] .yrStudentApp .yrG2Preview{background:#172823;border-color:#315146}
+html[data-theme="dark"] .yrStudentApp .yrG2Preview .yrG2Availability{background:#284338;color:#c1d9c8}
+@media(max-width:470px){.yrStudentApp .yrG2Preview{flex-wrap:wrap}.yrStudentApp .yrG2Preview .yrG2Availability{margin-inline-start:49px}}
