@@ -21,7 +21,7 @@ async function who(r){
  const [p]=await sql`select sp.grade_level,sp.group_code,sp.is_active,sg.is_active as group_active from public.student_profiles sp left join public.student_groups sg on sg.group_code=sp.group_code where sp.user_id=${u.id}::uuid limit 1`;
  if(!p?.is_active||!p?.group_active)throw new E(403,"inactive","الحساب أو المجموعة غير نشط");return {u,admin:false,p};
 }
-const permitted=(a,p)=>Boolean(a?.status==="published"&&p?.is_active&&p?.group_active&&/الثاني|second|2_secondary|^2$/i.test(String(p.grade_level))&&Array.isArray(a.eligible_group_codes)&&a.eligible_group_codes.length&&a.eligible_group_codes.includes(p.group_code)&&["content_verified","images_verified","keys_verified","rubrics_verified","staging_verified"].every(k=>a[k]===true));
+const permitted=(a,p)=>Boolean(a?.status==="published"&&p?.is_active&&p?.group_active&&/الثاني|second|2_secondary|^2$/i.test(String(p.grade_level))&&Array.isArray(a.eligible_group_codes)&&a.eligible_group_codes.length&&a.eligible_group_codes.includes(p.group_code)&&["content_verified","images_verified","keys_verified"].every(k=>a[k]===true)&&(a.rubrics_verified===true||a.provisional_manual_grading===true)&&(a.staging_verified===true||a.provisional_live_pilot===true));
 const clean=(type,v)=>{
  if(type==="mcq"){const n=norm(v);if(!n)throw new E(400,"choice","اختيار غير صالح");return {choice:n}}
  if(!["text","numeric","symbolic"].includes(type))throw new E(400,"type","نوع السؤال غير مدعوم");
@@ -40,6 +40,44 @@ Deno.serve(async r=>{
   const raw=await r.text();if(raw.length>5600000)throw new E(413,"size","الطلب كبير");
   let b;try{b=JSON.parse(raw)}catch{throw new E(400,"json","طلب غير صالح")}if(!b||Array.isArray(b)||typeof b!=="object")throw new E(400,"json","طلب غير صالح");
   const op=str(b.action,40);
+
+  if(op==="owner_group_catalog"||op==="owner_launch_pilot"){
+    if(!c.admin)throw new E(403,"owner_only","تحديد مجموعات الورش متاح لصاحب المنصة فقط");
+    const groups=await sql`select group_code,center_name,grade_level from public.student_groups
+      where is_active=true and grade_level='الصف الثاني الثانوي' order by group_code`;
+    if(op==="owner_group_catalog")return send(r,{ok:true,groups:groups.map(g=>({code:g.group_code,center:g.center_name}))});
+    const chosen=Array.isArray(b.group_codes)?b.group_codes.map(g=>str(g,50)):[];
+    const choices=new Set(chosen);
+    if(b.confirm_provisional!==true||!chosen.length||chosen.length>20||choices.size!==chosen.length||
+       chosen.some(g=>!groups.some(real=>real.group_code===g)))
+       throw new E(400,"bad_group_selection","اختر مجموعة أو أكثر من مجموعات الصف الثاني الصحيحة وأكد تشغيل التجربة");
+    const [inventory]=await sql`select count(*)::int as total from private.g2_questions`;
+    const [assets]=await sql`select count(*)::int as ready from private.g2_questions q
+       where exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
+    const [keys]=await sql`select count(*)::int as ready,count(*) filter(where rubric is not null)::int as manuals
+       from private.g2_keys where key_status='approved'`;
+    if(inventory.total!==94||assets.ready!==94||keys.ready!==95||keys.manuals!==32)
+       throw new E(409,"release_not_complete","يجب استكمال الصور الـ94 ومفاتيح الإجابة الـ95 ومعايير المقالي الـ32 أولًا");
+    const rows=await sql.begin(async tx=>{
+      await tx`select pg_advisory_xact_lock(hashtextextended('grade2-owner-launch',0))`;
+      const current=await tx`select slug,status,content_verified,images_verified,keys_verified
+        from private.g2_activities where mode in ('learn','mastery') and slug like 'g2-azhar-ch%' order by slug for update`;
+      if(current.length!==6||current.some(a=>!['validated','published'].includes(a.status)||
+         !a.content_verified||!a.images_verified||!a.keys_verified))
+         throw new E(409,"not_validated","الورش الست غير جاهزة للنشر");
+      const launched=await tx`update private.g2_activities
+       set status='published',
+           eligible_group_codes=array(select jsonb_array_elements_text(${tx.json(chosen)}::jsonb)),
+           provisional_manual_grading=true,provisional_live_pilot=true,
+           published_at=coalesce(published_at,now())
+       where slug like 'g2-azhar-ch%' and mode in ('learn','mastery')
+       returning slug,status`;
+      await tx`insert into private.g2_admin_events(actor_id,action,payload)
+       values(${c.u.id}::uuid,'provisional_launch',${tx.json({group_codes:chosen,slug_count:launched.length,choice_keys:63,manual_essays:32})})`;
+      return launched;
+    });
+    return send(r,{ok:true,published:rows.map(v=>v.slug),groups:chosen,grade_policy:"mcq_auto_essay_teacher_review",provisional:true});
+  }
   if(op==="catalog"){
    if(!c.p)return send(r,{ok:true,activities:[]});
    const list=await sql`select * from private.g2_activities where status='published' order by chapter,mode`;
@@ -139,7 +177,7 @@ Deno.serve(async r=>{
   if(op==="load"){
    const rows=await sql`select bank_id,prompt,parts_public,image_path,skill_ref from private.g2_questions where activity_slug=${slug} order by sort_order`;
    const questions=[];for(const q of rows){
-    const {data,error}=await storage.from("g2-question-images").createSignedUrl(q.image_path,180);
+    const {data,error}=await storage.from("g2-question-images").createSignedUrl(q.image_path,21600);
     if(error||!data?.signedUrl)throw new E(503,"asset_missing","صورة غير متاحة");
     questions.push({id:q.bank_id,prompt:q.prompt,parts:q.parts_public,image_url:data.signedUrl,skill:q.skill_ref});
    }
