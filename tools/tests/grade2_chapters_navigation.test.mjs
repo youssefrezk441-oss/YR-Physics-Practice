@@ -59,3 +59,17 @@ test("upcoming grade 2 workshops are visibly named but never open without a publ
  assert.match(css,/\.yrG2Preview\{/);
  assert.match(css,/cursor:default/);
 });
+
+test("grade 2 photo importer is owner-only and validates original SHA256",()=>{
+ const src=read("supabase/functions/grade2-mastery/index.ts");
+ const ui=read("g2-import.js");
+ assert.match(src,/owner_upload_question_image/);
+ assert.match(src,/if\(!c\.admin\)throw new E\(403,"owner_only"/);
+ assert.match(src,/sha!==expected\.image_sha256/);
+ assert.match(src,/storage\.from\("g2-question-images"\)\.upload/);
+ assert.match(src,/upsert:false/);
+ assert.match(ui,/owner_image_manifest/);
+ assert.match(ui,/owner_prepare_image_catalog/);
+ assert.match(ui,/\/assets\/grade2\//);
+ assert.ok(!ui.includes("SUPABASE_SERVICE_ROLE_KEY"));
+});

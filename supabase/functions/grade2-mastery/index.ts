@@ -45,6 +45,59 @@ Deno.serve(async r=>{
    const list=await sql`select * from private.g2_activities where status='published' order by chapter,mode`;
    return send(r,{ok:true,activities:list.filter(a=>permitted(a,c.p)).map(a=>({slug:a.slug,title:a.title,chapter:a.chapter,mode:a.mode}))});
   }
+
+  if(["owner_image_manifest","owner_upload_question_image","owner_prepare_image_catalog"].includes(op)){
+   if(!c.admin)throw new E(403,"owner_only","رفع صور الأسئلة متاح لصاحب المنصة فقط");
+   const manifest=await sql`
+     select q.activity_slug,q.bank_id,q.image_path,q.image_sha256,
+     exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path) as uploaded
+     from private.g2_questions q
+     where q.activity_slug like 'g2-azhar-ch%'
+     order by q.activity_slug,q.sort_order`;
+   if(op==="owner_image_manifest")return send(r,{ok:true,images:manifest.map(q=>({slug:q.activity_slug,id:q.bank_id,sha256:q.image_sha256,uploaded:q.uploaded}))});
+   if(op==="owner_upload_question_image"){
+    const slug=str(b.workshop_slug,100),id=str(b.bank_id,40);
+    const expected=manifest.find(q=>q.activity_slug===slug&&q.bank_id===id);
+    if(!expected)throw new E(404,"unknown_question","السؤال غير موجود");
+    const encoded=b.image_base64,mime=str(b.mime_type,35);
+    if(typeof encoded!=="string"||encoded.length>5600000||!(/^[A-Za-z0-9+/]+={0,2}$/).test(encoded)||!["image/png","image/jpeg"].includes(mime))
+     throw new E(400,"invalid_image","صيغة ملف السؤال غير صالحة");
+    let binary;try{binary=atob(encoded)}catch{throw new E(400,"bad_encoding","بيانات الصورة غير صالحة")}
+    const bytes=Uint8Array.from(binary,x=>x.charCodeAt(0));
+    if(bytes.length<100||bytes.length>4000000)throw new E(413,"invalid_image_size","حجم الصورة خارج الحدود");
+    const isPng=bytes.slice(0,8).every((x,i)=>x===[137,80,78,71,13,10,26,10][i]);
+    const isJpeg=bytes[0]===255&&bytes[1]===216&&bytes.at(-2)===255&&bytes.at(-1)===217;
+    if(!(mime==="image/png"?isPng:isJpeg))throw new E(415,"invalid_image_header","امتداد الصورة لا يطابق محتواها");
+    const sha=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",bytes)),x=>x.toString(16).padStart(2,"0")).join("");
+    if(sha!==expected.image_sha256)throw new E(409,"image_checksum_mismatch","الصورة ليست النسخة الأصلية المعتمدة لهذا السؤال");
+    if(expected.uploaded)return send(r,{ok:true,id,already_uploaded:true});
+    const {error}=await storage.from("g2-question-images").upload(expected.image_path,bytes,{contentType:mime,cacheControl:"0",upsert:false});
+    if(error)throw new E(503,"question_upload_failed","تعذر رفع الصورة إلى التخزين الخاص");
+    return send(r,{ok:true,id,uploaded:true});
+   }
+   const by=new Map();
+   for(const q of manifest){
+    const g=by.get(q.activity_slug)||{total:0,uploaded:0};
+    g.total++;if(q.uploaded)g.uploaded++;
+    by.set(q.activity_slug,g);
+   }
+   if(manifest.length!==94||Array.from(by.values()).some(c=>c.total!==c.uploaded))
+    throw new E(409,"images_incomplete","لا يمكن تجهيز الورش قبل اكتمال الصور الـ94");
+   const verified=await sql`
+      select a.slug,count(distinct(k.id))::int as keys
+      from private.g2_activities a
+      join private.g2_questions q on q.activity_slug=a.slug
+      join lateral jsonb_array_elements(q.parts_public) part on part->>'input_type'='mcq'
+      left join private.g2_keys k on k.activity_slug=q.activity_slug and k.bank_id=q.bank_id
+         and k.part_key=part->>'key' and k.key_status='approved'
+      group by a.slug`;
+   const actual=verified.reduce((s,r)=>s+Number(r.keys),0);
+   if(actual!==63)throw new E(409,"keys_incomplete","مفاتيح الاختيار المعتمدة غير مكتملة");
+   await sql`update private.g2_activities
+     set content_verified=true,images_verified=true,keys_verified=true,status='validated'
+     where slug like 'g2-azhar-ch%' and status='draft'`;
+   return send(r,{ok:true,activities_prepared:by.size,photos:manifest.length,mcq_parts:actual,student_access:false});
+  }
   if(["review_queue","review_image","rubric","review"].includes(op)){
    if(!c.admin)throw new E(403,"owner_only","المراجعة لصاحب الإدارة فقط");
    if(op==="review_image"){
