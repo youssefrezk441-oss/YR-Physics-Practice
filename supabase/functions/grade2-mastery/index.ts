@@ -84,15 +84,15 @@ Deno.serve(async r=>{
    return send(r,{ok:true,activities:list.filter(a=>permitted(a,c.p)).map(a=>({slug:a.slug,title:a.title,chapter:a.chapter,mode:a.mode}))});
   }
 
-  if(["owner_image_manifest","owner_upload_question_image","owner_prepare_image_catalog"].includes(op)){
+  if(["owner_image_manifest","owner_upload_question_image","owner_prepare_image_catalog","owner_exam_manifest"].includes(op)){
    if(!c.admin)throw new E(403,"owner_only","رفع صور الأسئلة متاح لصاحب المنصة فقط");
    const manifest=await sql`
-     select q.activity_slug,q.bank_id,q.image_path,q.image_sha256,
+     select q.activity_slug,q.bank_id,q.image_path,q.image_sha256,a.mode,
      exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path) as uploaded
-     from private.g2_questions q
+     from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug
      where q.activity_slug like 'g2-azhar-ch%'
      order by q.activity_slug,q.sort_order`;
-   if(op==="owner_image_manifest")return send(r,{ok:true,images:manifest.map(q=>({slug:q.activity_slug,id:q.bank_id,sha256:q.image_sha256,uploaded:q.uploaded}))});
+   if(op==="owner_image_manifest"||op==="owner_exam_manifest")return send(r,{ok:true,images:manifest.filter(q=>op==="owner_image_manifest"?q.mode!=="exam":q.mode==="exam").map(q=>({slug:q.activity_slug,id:q.bank_id,sha256:q.image_sha256,uploaded:q.uploaded}))});
    if(op==="owner_upload_question_image"){
     const slug=str(b.workshop_slug,100),id=str(b.bank_id,40);
     const expected=manifest.find(q=>q.activity_slug===slug&&q.bank_id===id);
@@ -114,12 +114,12 @@ Deno.serve(async r=>{
     return send(r,{ok:true,id,uploaded:true});
    }
    const by=new Map();
-   for(const q of manifest){
+   for(const q of manifest.filter(q=>q.mode!=="exam")){
     const g=by.get(q.activity_slug)||{total:0,uploaded:0};
     g.total++;if(q.uploaded)g.uploaded++;
     by.set(q.activity_slug,g);
    }
-   if(manifest.length!==94||Array.from(by.values()).some(c=>c.total!==c.uploaded))
+   if(manifest.filter(q=>q.mode!=="exam").length!==94||Array.from(by.values()).some(c=>c.total!==c.uploaded))
     throw new E(409,"images_incomplete","لا يمكن تجهيز الورش قبل اكتمال الصور الـ94");
    const verified=await sql`
       select a.slug,count(distinct(k.id))::int as keys
@@ -128,7 +128,7 @@ Deno.serve(async r=>{
       join lateral jsonb_array_elements(q.parts_public) part on part->>'input_type'='mcq'
       left join private.g2_keys k on k.activity_slug=q.activity_slug and k.bank_id=q.bank_id
          and k.part_key=part->>'key' and k.key_status='approved'
-      group by a.slug`;
+      where a.mode in ('learn','mastery') group by a.slug`;
    const actual=verified.reduce((s,r)=>s+Number(r.keys),0);
    if(actual!==63)throw new E(409,"keys_incomplete","مفاتيح الاختيار المعتمدة غير مكتملة");
    await sql`update private.g2_activities
