@@ -1,0 +1,22 @@
+name: Grade 2 live read-only smoke
+on:
+  pull_request:
+    paths:
+      - 'g2-activity.*'
+      - 'g2-review.*'
+      - 'student-grade2-learning-v3.js'
+      - 'supabase/functions/grade2-mastery/**'
+      - 'tools/g2_live_readonly_smoke.mjs'
+      - '.github/workflows/g2-live-smoke.yml'
+  workflow_dispatch:
+jobs:
+  anonymous-deny:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tools/g2_live_readonly_smoke.mjs

@@ -30,9 +30,9 @@ async function published(){
   try{
    const{data:{session}}=await sb.auth.getSession();
    if(!session?.user)return new Set();
-   const{data,error}=await sb.functions.invoke("unified-workshop",{body:{action:"ping"}});
-   if(error||!data?.ok||!Array.isArray(data.workshops))return new Set();
-   const result=new Set(data.workshops.map(w=>String(w.slug||"")));
+   const{data,error}=await sb.functions.invoke("grade2-mastery",{body:{action:"catalog"}});
+   if(error||!data?.ok||!Array.isArray(data.activities))return new Set();
+   const result=new Set(data.activities.map(w=>String(w.slug||"")));
    cache={at:Date.now(),slugs:result};return result;
   }catch{return new Set()}finally{inFlight=null}
  })();
@@ -43,7 +43,7 @@ function safeLiveButton({container,slug,label,explain,signal}){
  container.append(slot);
  published().then(slugs=>{
   if(!slot.isConnected||signal.aborted||!slugs.has(slug))return;
-  slot.replaceWith(action(label,explain,()=>{window.location.href="./workshop.html?workshop="+encodeURIComponent(slug)}));
+  slot.replaceWith(action(label,explain,()=>{window.location.href="./g2-activity.html?workshop="+encodeURIComponent(slug)}));
  });
 }
 export function syncGrade2Tabs(tabs,second){
