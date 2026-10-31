@@ -291,6 +291,22 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   if(html.includes(updateProfileAnchor)){
     html=html.replace(updateProfileAnchor, updateProfileAnchor+'<a href="student-complete-profile.html" class="btn secondary" style="display:inline-block;text-decoration:none;margin-top:14px">تحديث بياناتي أو تغيير كلمة المرور</a>');
   }
+
+  /* Chapter 2 review workshop: show only when the authenticated server confirms eligibility. */
+  if(!html.includes('id="openLesson1Review35"')){
+    const menuAnchor='<div id="secondTermWorkshopsGrid" class="studentSubGrid">';
+    if(!html.includes(menuAnchor))throw new Error('Review card menu anchor missing');
+    html=html.replace(menuAnchor,menuAnchor+"<button id=\"openLesson1Review35\" class=\"card studentNavCard hidden\" type=\"button\"><div class=\"studentNavIcon\">🧲</div><h3>مراجعة الدرس الأول</h3><p>ورشة إتقان السلك المستقيم — 35 سؤالًا مع حلول بعد المحاولة، وتحويل الأخطاء إلى ورشة الإتقان.</p></button>");
+  }
+  const allowedAnchor='let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false;';
+  const visibleAnchor='!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed)';
+  const pingAnchor='renderSecondTermAccess()};if(unifiedL1WorkshopButton';
+  const linkAnchor="const unifiedL1=$('openUnifiedL1Workshop');";
+  if(!html.includes(allowedAnchor)||!html.includes(visibleAnchor)||!html.includes(pingAnchor)||!html.includes(linkAnchor))throw new Error('Review card authorization anchor missing');
+  html=html.replace(allowedAnchor,'let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false;');
+  html=html.replace(visibleAnchor,'!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed)');
+  html=html.replace(pingAnchor,"renderSecondTermAccess()};const review35=$('openLesson1Review35');if(review35){review35.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{review35Allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lesson-1-review-35');review35.classList.toggle('hidden',!review35Allowed);renderSecondTermAccess()}).catch(()=>{review35Allowed=false;review35.classList.add('hidden');renderSecondTermAccess()})};if(unifiedL1WorkshopButton");
+  html=html.replace(linkAnchor,"const review35Link=$('openLesson1Review35');if(review35Link)review35Link.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lesson-1-review-35'};"+linkAnchor);
   document.open();
   document.write(html);
   document.close();

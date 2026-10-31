@@ -193,11 +193,13 @@ async function loadWorkshop(account: NonNullable<Awaited<ReturnType<typeof requi
     select progress.track_id, progress.part_id, progress.revision, progress.attempts_count,
            progress.tried_answers, progress.first_attempt_correct, progress.independently_mastered,
            progress.assisted, progress.revealed, progress.last_answer,
-           case when progress.revealed or progress.assisted then revealed_key.display_answer else null end as display_answer
+           case when progress.independently_mastered then active_key.display_answer when progress.revealed or progress.assisted then revealed_key.display_answer else null end as display_answer,
+           case when progress.independently_mastered then active_key.explanation when progress.revealed or progress.assisted then revealed_key.explanation else null end as explanation
     from private.workshop_progress progress
     left join private.workshop_reveal_events reveal on reveal.cycle_id = progress.cycle_id
       and reveal.track_id = progress.track_id and reveal.part_id = progress.part_id
     left join private.workshop_part_key_versions revealed_key on revealed_key.id = reveal.key_version_id
+    left join private.current_workshop_part_keys active_key on active_key.part_id = progress.part_id
     where progress.cycle_id = ${cycle.id}::uuid and progress.track_id = ${track.id}::uuid`;
   const drafts = track.mode === "final_submit" ? await sql`
     select part_id, answer_json, revision, updated_at from private.workshop_drafts
