@@ -1,6 +1,8 @@
+import {syncGrade2Tabs,renderGrade2Chapter} from "./student-grade2-learning-v3.js";
 /* YR student workspace — navigation adapter for the real compiled student app.
  * Uses original eligible launcher buttons; never creates bypass URLs or changes grades.
  * Chapter 1/2 mistakes and workshops remain independent; Honor editions use real server-owned assessment cycles and frozen snapshots. */
+const g2Style=document.createElement("link");g2Style.rel="stylesheet";g2Style.href="./student-grade2-learning-v3.css";document.head.append(g2Style);
 const $=id=>document.getElementById(id);
 const areas={home:"dashboardView",learning:"yrLearnView",review:"yrReviewView",achievements:"yrAchievementsView",account:"yrAccountView"};
 const chapters={learning:"1",review:"1"};
@@ -68,23 +70,20 @@ function refreshLearning(){
  const box=$("yrLearningContent");if(!box)return;
  box.replaceChildren();
  const second=canSecondGrade(),third=canThirdGrade();
- $("yrLearnView")?.querySelector(".yrChapterTabs")?.classList.toggle("hidden",second);
+ syncGrade2Tabs($("yrLearnView")?.querySelector(".yrChapterTabs"),second);
  const heading=$("yrLearnView")?.querySelector(".yrWorkspacePageHead p");
  if(heading)heading.textContent=second
-  ?"أنشطة الصف الثاني الثانوي المتاحة لك؛ تصنيفها إلى فصول مؤجل حاليًا."
+  ?"اختار الفصل، وبعدها ورشة التعلّم وتدريبات الإتقان واختبار الإتقان المتاح لحسابك."
   :"اختار الفصل، وبعدها الورشة أو التدريب المتاح لحسابك.";
  const ch=chapters.learning;
  let found=0;
  if(second){
-  found+=collect(box,"ورش ودروس الصف الثاني",[
-   ["openB2Lesson1Workshop",null,null,"▤"],
-   ["openB2Lesson2Workshop",null,null,"▤"],
-   ["openB2Lesson1Trainings","تدريبات الدرس الأول",null,"▤"]
-  ]);
-  found+=collect(box,"مراجع الشرح",[
-   ["openReferences","مراجع شرح الحصص","المراجع المتاحة لهذا الحساب.","📖"]
-  ]);
-  if(!found)box.append(empty("لا توجد أنشطة منشورة ومتاحة لحسابك حاليًا."));
+  renderGrade2Chapter({box,chapter:ch,source});
+  const foot=document.createElement("div");foot.className="yrWorkspaceCommon";
+  const history=document.createElement("button");history.className="btn secondary";history.type="button";
+  history.textContent="سجل محاولاتي — جميع الأنشطة";
+  history.addEventListener("click",()=>{document.dispatchEvent(new CustomEvent("yr:history-chapter",{detail:{chapter:"all"}}));source("openCompleted")?.click()});
+  foot.append(history);box.append(foot);displayChapterTabs("learning");return;
  }else if(!third){
   box.append(empty("جاري تحديد الصف الدراسي والأنشطة المتاحة لحسابك."));
   return;
@@ -322,9 +321,11 @@ document.addEventListener("keydown",e=>{
  if(!active?.matches?.("[data-yr-chapter][data-yr-panel]"))return;
  if(!["ArrowLeft","ArrowRight","Home","End"].includes(e.key))return;
  e.preventDefault();
- const which=e.key==="Home"?"1":e.key==="End"?"2":e.key==="ArrowLeft"?"2":"1";
- const peer=document.querySelector('[data-yr-panel="'+active.dataset.yrPanel+'"][data-yr-chapter="'+which+'"]');
- if(peer){peer.click();peer.focus()}
+ const tabs=[...document.querySelectorAll('[data-yr-panel="'+active.dataset.yrPanel+'"][data-yr-chapter]')].filter(el=>!el.hidden&&!el.classList.contains("hidden"));
+ if(!tabs.length)return;
+ const current=Math.max(0,tabs.indexOf(active));
+ const target=e.key==="Home"?0:e.key==="End"?tabs.length-1:(current+(e.key==="ArrowLeft"?1:-1)+tabs.length)%tabs.length;
+ const peer=tabs[target];if(peer){peer.click();peer.focus()}
 });
 document.addEventListener("yr:student-view",e=>{
  updateActive(e.detail?.id||"dashboardView");
