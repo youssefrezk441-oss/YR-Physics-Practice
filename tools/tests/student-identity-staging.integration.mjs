@@ -196,7 +196,9 @@ const form = (
     full_name: `طالب تجريبي كامل ${suffix}`,
     grade_level: "الصف الثاني الثانوي",
     education_system: "عام",
-    attendance_location: "ناهيا",
+    // Synthetic groups have unique non-production codes, so use the supported
+    // 'other' attendance path instead of falsely claiming a Nahya N2-A group.
+    attendance_location: "غير ذلك",
     residence_area: `e2e:${run}`,
     student_phone: phone,
     guardian_phone: "+201112345678",
