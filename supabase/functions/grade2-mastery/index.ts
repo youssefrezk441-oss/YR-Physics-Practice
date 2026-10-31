@@ -18,10 +18,10 @@ async function who(r){
  const u=data.user;
  if(u.app_metadata?.role==="admin"){const [a]=await sql`select is_active,is_owner from public.admin_profiles where user_id=${u.id}::uuid limit 1`;return {u,admin:!!a?.is_active&&!!a?.is_owner,p:null}}
  if(u.app_metadata?.role!=="student")throw new E(403,"role","الحساب غير مصرح له");
- const [p]=await sql`select sp.grade_level,sp.group_code,sp.is_active,sg.is_active as group_active from public.student_profiles sp left join public.student_groups sg on sg.group_code=sp.group_code where sp.user_id=${u.id}::uuid limit 1`;
+ const [p]=await sql`select sp.grade_level,sp.group_code,sp.is_active,sg.is_active as group_active,sg.education_track from public.student_profiles sp left join public.student_groups sg on sg.group_code=sp.group_code where sp.user_id=${u.id}::uuid limit 1`;
  if(!p?.is_active||!p?.group_active)throw new E(403,"inactive","الحساب أو المجموعة غير نشط");return {u,admin:false,p};
 }
-const permitted=(a,p)=>Boolean(a?.status==="published"&&p?.is_active&&p?.group_active&&/الثاني|second|2_secondary|^2$/i.test(String(p.grade_level))&&Array.isArray(a.eligible_group_codes)&&a.eligible_group_codes.length&&a.eligible_group_codes.includes(p.group_code)&&["content_verified","images_verified","keys_verified"].every(k=>a[k]===true)&&(a.rubrics_verified===true||a.provisional_manual_grading===true)&&(a.staging_verified===true||a.provisional_live_pilot===true));
+const permitted=(a,p)=>Boolean(a?.status==="published"&&p?.education_track==="azhar"&&p?.is_active&&p?.group_active&&/الثاني|second|2_secondary|^2$/i.test(String(p.grade_level))&&Array.isArray(a.eligible_group_codes)&&a.eligible_group_codes.length&&a.eligible_group_codes.includes(p.group_code)&&["content_verified","images_verified","keys_verified"].every(k=>a[k]===true)&&(a.rubrics_verified===true||a.provisional_manual_grading===true)&&(a.staging_verified===true||a.provisional_live_pilot===true));
 const clean=(type,v)=>{
  if(type==="mcq"){const n=norm(v);if(!n)throw new E(400,"choice","اختيار غير صالح");return {choice:n}}
  if(!["text","numeric","symbolic"].includes(type))throw new E(400,"type","نوع السؤال غير مدعوم");
@@ -44,7 +44,7 @@ Deno.serve(async r=>{
   if(op==="owner_group_catalog"||op==="owner_launch_pilot"){
     if(!c.admin)throw new E(403,"owner_only","تحديد مجموعات الورش متاح لصاحب المنصة فقط");
     const groups=await sql`select group_code,center_name,grade_level from public.student_groups
-      where is_active=true and grade_level='الصف الثاني الثانوي' order by group_code`;
+      where is_active=true and grade_level='الصف الثاني الثانوي' and education_track='azhar' order by group_code`;
     if(op==="owner_group_catalog")return send(r,{ok:true,groups:groups.map(g=>({code:g.group_code,center:g.center_name}))});
     const chosen=Array.isArray(b.group_codes)?b.group_codes.map(g=>str(g,50)):[];
     const choices=new Set(chosen);
