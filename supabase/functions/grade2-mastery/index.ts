@@ -41,6 +41,93 @@ Deno.serve(async r=>{
   let b;try{b=JSON.parse(raw)}catch{throw new E(400,"json","طلب غير صالح")}if(!b||Array.isArray(b)||typeof b!=="object")throw new E(400,"json","طلب غير صالح");
   const op=str(b.action,40);
 
+
+  if(["owner_exam_status","owner_import_exam_bank","owner_prepare_exams","owner_publish_exams"].includes(op)){
+   if(!c.admin)throw new E(403,"owner_only","استيراد الامتحانات لصاحب الإدارة فقط");
+   const examSlugs=["g2-azhar-ch01-exam","g2-azhar-ch02-exam","g2-azhar-ch03-exam","g2-azhar-chapters-1-3-exam"];
+   const expected=[15,14,9,18],target=new Set(examSlugs);
+   const stats=async()=>{
+    const [q]=await sql`select count(*)::int as n from private.g2_questions where activity_slug=any(${sql.array(examSlugs)})`;
+    const [k]=await sql`select count(*)::int as n,count(*) filter(where rubric is not null)::int as essay from private.g2_keys where key_status='approved' and activity_slug=any(${sql.array(examSlugs)})`;
+    const [img]=await sql`select count(*)::int as n from private.g2_questions q where q.activity_slug=any(${sql.array(examSlugs)}) and exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
+    return {questions:q.n,keys:k.n,essay_parts:k.essay,images:img.n};
+   };
+   if(op==="owner_exam_status")return send(r,{ok:true,...await stats()});
+   if(op==="owner_import_exam_bank"){
+    if(b.confirm_source_keys!=="PROVISIONAL_EXAMS"||!Array.isArray(b.questions)||!Array.isArray(b.keys)||b.questions.length!==56||b.keys.length!==66)
+      throw new E(400,"invalid_exam_package","حزمة الامتحانات أو تأكيد المفاتيح غير صحيح");
+    const reserved=await sql`select activity_slug,bank_id from private.g2_exam_reservations`;
+    if(reserved.length!==56)throw new E(409,"exam_blueprint_missing","حجز أسئلة الامتحانات غير مكتمل");
+    const allowed=new Set(reserved.map(x=>x.activity_slug+":"+x.bank_id)),count=[0,0,0,0],parts=new Map(),qs=[],ks=[];
+    for(const q of b.questions){
+     const slug=str(q.workshop_slug,100),id=str(q.id,35),ix=examSlugs.indexOf(slug);
+     if(ix<0||!allowed.has(slug+":"+id)||!/^F[1-5]-(H|E)-\d\d$/.test(id)||!Array.isArray(q.parts)||!q.parts.length||
+        !/^[a-f0-9]{64}$/.test(String(q.image_sha256))||
+        q.image_path!==`assets/grade2/${slug}/${id}.png`)throw new E(400,"bad_exam_question","سؤال أو بصمة غير صالحة");
+     count[ix]++;
+     for(const p of q.parts){
+      if(!["mcq","text"].includes(p.input_type)||!str(p.key,90))throw new E(400,"part_type","جزء سؤال غير صالح");
+      const key=slug+":"+id+":"+p.key;
+      if(parts.has(key))throw new E(400,"duplicate_part","تكرار جزء سؤال");
+      parts.set(key,p.input_type);
+     }
+     qs.push({activity_slug:slug,bank_id:id,prompt:null,parts_public:q.parts,image_path:q.image_path,image_sha256:q.image_sha256,skill_ref:str(q.skill,150)||"unclassified",sort_order:count[ix]});
+    }
+    if(count.some((n,i)=>n!==expected[i])||parts.size!==66)throw new E(400,"exam_distribution","توزيع الامتحانات غير مطابق");
+    const seen=new Set();
+    for(const k of b.keys){
+     const tag=str(k.workshop_slug,100)+":"+str(k.question_id,35)+":"+str(k.part_key,90),kind=parts.get(tag);
+     const n=Number(k.max_points);
+     if(!kind||seen.has(tag)||!Number.isFinite(n)||n<=0||n>30)throw new E(400,"exam_key","مفتاح غير صالح");
+     seen.add(tag);let spec={},rubric=null;
+     if(kind==="mcq"){
+      if(!["أ","ب","ج","د"].includes(k.choice)||n!==1)throw new E(400,"mcq_key","اختيار خاطئ في الحزمة");
+      spec={option:k.choice,provisional_source:true};
+     }else{
+      const criteria=k.rubric?.criteria;
+      if(!Array.isArray(criteria)||!criteria.length||criteria.some(x=>!str(x.criterion_id,90)||!(Number(x.points)>0))||
+         Math.abs(criteria.reduce((v,x)=>v+Number(x.points),0)-n)>0.001)throw new E(400,"essay_rubric","معيار المقالي غير صالح");
+      rubric={criteria,provisional:true};spec={mode:"teacher_manual",provisional:true};
+     }
+     ks.push({activity_slug:k.workshop_slug,bank_id:k.question_id,part_key:k.part_key,answer_spec:spec,rubric,max_points:n});
+    }
+    if(seen.size!==66)throw new E(400,"missing_exam_keys","مفاتيح الامتحان ناقصة");
+    await sql.begin(async tx=>{
+     await tx`select pg_advisory_xact_lock(hashtextextended('g2-exams-import',0))`;
+     await tx`insert into private.g2_questions(activity_slug,bank_id,prompt,parts_public,image_path,image_sha256,skill_ref,sort_order)
+       select activity_slug,bank_id,prompt,parts_public,image_path,image_sha256,skill_ref,sort_order
+       from jsonb_to_recordset(${tx.json(qs)}::jsonb) as x(activity_slug text,bank_id text,prompt text,parts_public jsonb,image_path text,image_sha256 text,skill_ref text,sort_order integer)
+       on conflict(activity_slug,bank_id) do nothing`;
+     await tx`insert into private.g2_keys(activity_slug,bank_id,part_key,version_no,key_status,answer_spec,rubric,max_points,approved_by,approved_at)
+       select activity_slug,bank_id,part_key,1,'approved',answer_spec,rubric,max_points,${c.u.id}::uuid,now()
+       from jsonb_to_recordset(${tx.json(ks)}::jsonb) as x(activity_slug text,bank_id text,part_key text,answer_spec jsonb,rubric jsonb,max_points numeric)
+       on conflict(activity_slug,bank_id,part_key,version_no) do nothing`;
+     await tx`insert into private.g2_admin_events(actor_id,action,payload) values(${c.u.id}::uuid,'exam_import',${tx.json({questions:56,parts:66,provisional:true})})`;
+    });
+    const results=await stats();
+    if(results.questions!==56||results.keys!==66||results.essay_parts!==19)throw new E(409,"exam_incomplete","فحص الاستيراد لم ينجح");
+    return send(r,{ok:true,...results});
+   }
+   const current=await stats();
+   if(current.questions!==56||current.keys!==66||current.essay_parts!==19||current.images!==56)
+    throw new E(409,"exam_assets_missing","الامتحانات تحتاج 56 صورة و66 مفتاحًا بينها 19 مقاليًا");
+   if(op==="owner_prepare_exams"){
+    await sql`update private.g2_activities set content_verified=true,images_verified=true,keys_verified=true,status='validated' where slug=any(${sql.array(examSlugs)}) and status='draft'`;
+    return send(r,{ok:true,prepared:4,...current});
+   }
+   if(b.confirm_provisional!=="PUBLISH_EXAMS")throw new E(400,"confirmation_required","تأكيد نشر الامتحانات مطلوب");
+   const groups=await sql`select group_code from public.student_groups where education_track='azhar' and grade_level='الصف الثاني الثانوي' and is_active=true`;
+   const allowedGroups=new Set(groups.map(g=>g.group_code)),chosen=Array.isArray(b.group_codes)?b.group_codes.map(x=>str(x,50)):[];
+   if(!chosen.length||new Set(chosen).size!==chosen.length||chosen.some(x=>!allowedGroups.has(x)))throw new E(403,"wrong_track","المجموعات المحددة ليست أزهرية");
+   const out=await sql.begin(async tx=>{
+    await tx`select pg_advisory_xact_lock(hashtextextended('g2-exams-publish',0))`;
+    const records=await tx`update private.g2_activities set status='published',eligible_group_codes=array(select jsonb_array_elements_text(${tx.json(chosen)}::jsonb)),provisional_manual_grading=true,provisional_live_pilot=true,published_at=coalesce(published_at,now()) where slug=any(${sql.array(examSlugs)}) and status in ('validated','published') returning slug`;
+    if(records.length!==4)throw new E(409,"draft_exam","لم تجهز جميع الامتحانات");
+    await tx`insert into private.g2_admin_events(actor_id,action,payload) values(${c.u.id}::uuid,'exams_publish',${tx.json({groups:chosen,exams:4,provisional:true})})`;
+    return records;
+   });
+   return send(r,{ok:true,published:out.map(x=>x.slug),provisional:true,essay_policy:"manual_review"});
+  }
   if(op==="owner_group_catalog"||op==="owner_launch_pilot"){
     if(!c.admin)throw new E(403,"owner_only","تحديد مجموعات الورش متاح لصاحب المنصة فقط");
     const groups=await sql`select group_code,center_name,grade_level from public.student_groups
@@ -51,11 +138,11 @@ Deno.serve(async r=>{
     if(b.confirm_provisional!==true||!chosen.length||chosen.length>20||choices.size!==chosen.length||
        chosen.some(g=>!groups.some(real=>real.group_code===g)))
        throw new E(400,"bad_group_selection","اختر مجموعة أو أكثر من مجموعات الصف الثاني الصحيحة وأكد تشغيل التجربة");
-    const [inventory]=await sql`select count(*)::int as total from private.g2_questions`;
-    const [assets]=await sql`select count(*)::int as ready from private.g2_questions q
-       where exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
+    const [inventory]=await sql`select count(*)::int as total from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug where a.mode in ('learn','mastery')`;
+    const [assets]=await sql`select count(*)::int as ready from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug
+       where a.mode in ('learn','mastery') and exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path)`;
     const [keys]=await sql`select count(*)::int as ready,count(*) filter(where rubric is not null)::int as manuals
-       from private.g2_keys where key_status='approved'`;
+       from private.g2_keys k join private.g2_activities a on a.slug=k.activity_slug where a.mode in ('learn','mastery') and k.key_status='approved'`;
     if(inventory.total!==94||assets.ready!==94||keys.ready!==95||keys.manuals!==32)
        throw new E(409,"release_not_complete","يجب استكمال الصور الـ94 ومفاتيح الإجابة الـ95 ومعايير المقالي الـ32 أولًا");
     const rows=await sql.begin(async tx=>{
@@ -84,15 +171,15 @@ Deno.serve(async r=>{
    return send(r,{ok:true,activities:list.filter(a=>permitted(a,c.p)).map(a=>({slug:a.slug,title:a.title,chapter:a.chapter,mode:a.mode}))});
   }
 
-  if(["owner_image_manifest","owner_upload_question_image","owner_prepare_image_catalog"].includes(op)){
+  if(["owner_image_manifest","owner_upload_question_image","owner_prepare_image_catalog","owner_exam_manifest"].includes(op)){
    if(!c.admin)throw new E(403,"owner_only","رفع صور الأسئلة متاح لصاحب المنصة فقط");
    const manifest=await sql`
-     select q.activity_slug,q.bank_id,q.image_path,q.image_sha256,
+     select q.activity_slug,q.bank_id,q.image_path,q.image_sha256,a.mode,
      exists(select 1 from storage.objects o where o.bucket_id='g2-question-images' and o.name=q.image_path) as uploaded
-     from private.g2_questions q
+     from private.g2_questions q join private.g2_activities a on a.slug=q.activity_slug
      where q.activity_slug like 'g2-azhar-ch%'
      order by q.activity_slug,q.sort_order`;
-   if(op==="owner_image_manifest")return send(r,{ok:true,images:manifest.map(q=>({slug:q.activity_slug,id:q.bank_id,sha256:q.image_sha256,uploaded:q.uploaded}))});
+   if(op==="owner_image_manifest"||op==="owner_exam_manifest")return send(r,{ok:true,images:manifest.filter(q=>op==="owner_image_manifest"?q.mode!=="exam":q.mode==="exam").map(q=>({slug:q.activity_slug,id:q.bank_id,sha256:q.image_sha256,uploaded:q.uploaded}))});
    if(op==="owner_upload_question_image"){
     const slug=str(b.workshop_slug,100),id=str(b.bank_id,40);
     const expected=manifest.find(q=>q.activity_slug===slug&&q.bank_id===id);
@@ -114,12 +201,12 @@ Deno.serve(async r=>{
     return send(r,{ok:true,id,uploaded:true});
    }
    const by=new Map();
-   for(const q of manifest){
+   for(const q of manifest.filter(q=>q.mode!=="exam")){
     const g=by.get(q.activity_slug)||{total:0,uploaded:0};
     g.total++;if(q.uploaded)g.uploaded++;
     by.set(q.activity_slug,g);
    }
-   if(manifest.length!==94||Array.from(by.values()).some(c=>c.total!==c.uploaded))
+   if(manifest.filter(q=>q.mode!=="exam").length!==94||Array.from(by.values()).some(c=>c.total!==c.uploaded))
     throw new E(409,"images_incomplete","لا يمكن تجهيز الورش قبل اكتمال الصور الـ94");
    const verified=await sql`
       select a.slug,count(distinct(k.id))::int as keys
@@ -128,7 +215,7 @@ Deno.serve(async r=>{
       join lateral jsonb_array_elements(q.parts_public) part on part->>'input_type'='mcq'
       left join private.g2_keys k on k.activity_slug=q.activity_slug and k.bank_id=q.bank_id
          and k.part_key=part->>'key' and k.key_status='approved'
-      group by a.slug`;
+      where a.mode in ('learn','mastery') group by a.slug`;
    const actual=verified.reduce((s,r)=>s+Number(r.keys),0);
    if(actual!==63)throw new E(409,"keys_incomplete","مفاتيح الاختيار المعتمدة غير مكتملة");
    await sql`update private.g2_activities
