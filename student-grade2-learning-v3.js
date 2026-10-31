@@ -1,6 +1,6 @@
 /* Grade 2 chapter-based learning & mastery — secure discovery adapter.
  * No scores, answer keys or student data are stored here.
- * New activities are linked only after the authenticated unified-workshop ping
+ * New activities are linked only after the authenticated grade2-mastery catalog
  * confirms they are published and eligible for this student. */
 import { sb } from "./student-identity-api.js";
 const CHAPTERS={
@@ -13,6 +13,14 @@ const SLUGS={
  "2":{learn:"g2-azhar-ch02-learn",mastery:"g2-azhar-ch02-mastery",exam:"g2-azhar-ch02-exam"},
  "3":{learn:"g2-azhar-ch03-learn",mastery:"g2-azhar-ch03-mastery",exam:"g2-azhar-ch03-exam",cumulative:"g2-azhar-chapters-1-3-exam"}
 };
+// Curriculum split: Baccalaureate workshops only belong to the cohort allowlist
+// already enforced server-side by b2-lesson1-workshop and b2-lesson2-workshop.
+const BACCALAUREATE_GROUPS=new Set(["N2-A","K2-A"]);
+export function isSecondSecondaryBaccalaureate(){
+ const fields=[...document.querySelectorAll("#studentProfileMeta span")].map(x=>(x.textContent||"").trim());
+ return /الصف الثاني الثانوي|second.secondary|2_secondary/i.test(fields[1]||"")
+   && BACCALAUREATE_GROUPS.has(String(fields[2]||"").toUpperCase());
+}
 const existingInMotion=[
  ["openB2Lesson1Workshop","ورشة الدرس الأول — السرعة النسبية","ورشة الدرس المنشورة لحسابك"],
  ["openB2Lesson2Workshop","ورشة الدرس الثاني — المقذوفات الأفقية","ورشة الدرس المنشورة لحسابك"],
@@ -72,7 +80,7 @@ export function renderGrade2Chapter({box,chapter,source}){
  const topics=el("div","yrG2Topics");c.topics.forEach(t=>topics.append(el("span","",t)));hero.append(topics);box.append(hero);
  const a=section("01","ورشة التعلّم","تدريب مفتوح، تسجيل المحاولة الأولى، ثم تلميحات ومراجعة الأخطاء.");
  safeLiveButton({container:a.body,slug:sl.learn,label:"ورشة الفصل — تدريب مفتوح",explain:"تدريبات الفصل مع الاحتفاظ بالمحاولة الأولى",count:({"1":24,"2":23,"3":11})[chapter],signal});
- if(chapter==="2"){
+ if(chapter==="2"&&isSecondSecondaryBaccalaureate()){
   const ready=existingInMotion.filter(([id])=>!!source(id));
   if(ready.length){const heading=el("h4","yrG2Subheading","ورش الدروس المتاحة بالفعل");a.body.append(heading);
    for(const[id,title,desc]of ready)a.body.append(action(title,desc,()=>source(id)?.click()));
