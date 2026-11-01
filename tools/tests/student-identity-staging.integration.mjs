@@ -712,7 +712,7 @@ test("immediate registration and 48-hour review journey", async (t) => {
   await t.test("omitted optional residence is stored as an explicit safe placeholder", () => {
     assert.equal(first.response.status, 201, JSON.stringify(first.response.body));
     assert.equal(
-      sql(`select residence_area from private.student_registration_requests where public_ref='${first.response.body.reference}'`),
+      sql("select residence_area from private.student_registration_requests where student_phone_e164='+201012345601'"),
       "غير محددة",
     );
   });
