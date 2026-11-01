@@ -253,8 +253,9 @@ function academicFingerprint() {
   assert.ok(Object.keys(out).length >= 2);
   return out;
 }
-async function register(phone, name, password = "StudentPass2026!", failpoint) {
+async function register(phone, name, password = "StudentPass2026!", failpoint, residenceOverride) {
   const body = form(phone, crypto.randomUUID(), password);
+  if (residenceOverride !== undefined) body.residence_area = residenceOverride;
   if (failpoint) body.test_failpoint = failpoint;
   const ip = `198.51.${parseInt(body.request_idempotency_key.slice(0, 2), 16)}.${parseInt(body.request_idempotency_key.slice(2, 4), 16)}`;
   return {
@@ -699,7 +700,22 @@ test("immediate registration and 48-hour review journey", async (t) => {
     assert.equal(c.body.registration_enabled, true, JSON.stringify(c.body));
     assert.equal(c.body.registration_rollout_scope, "staging");
   });
-  const first = await register("+201012345601", "first", "StudentPass2026!");
+  await t.test("one-character optional residence is rejected with a clear validation error", async () => {
+    const body = form("+201012345599");
+    body.residence_area = "م";
+    const rejected = await invoke("submit_registration", body, undefined, "198.51.99.3");
+    assert.equal(rejected.status, 400, JSON.stringify(rejected.body));
+    assert.equal(rejected.body.error, "invalid_residence_area");
+    assert.match(rejected.body.message, /منطقة السكن/);
+  });
+  const first = await register("+201012345601", "first", "StudentPass2026!", undefined, "");
+  await t.test("omitted optional residence is stored as an explicit safe placeholder", () => {
+    assert.equal(first.response.status, 201, JSON.stringify(first.response.body));
+    assert.equal(
+      sql(`select residence_area from private.student_registration_requests where public_ref='${first.response.body.reference}'`),
+      "غير محددة",
+    );
+  });
   await t.test(
     "student chooses password and receives immediate unique code",
     () => {
