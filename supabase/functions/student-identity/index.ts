@@ -347,7 +347,8 @@ Deno.serve(async (req) => {
       const grade = txt(body.grade_level, 60),
         system = txt(body.education_system, 30),
         location = txt(body.attendance_location, 40),
-        residence = txt(body.residence_area, 160),
+        residenceInput = txt(body.residence_area, 160),
+        residence = residenceInput || "غير محددة",
         privacy = txt(body.privacy_notice_version, 80),
         group = txt(body.group_code, 80);
       if (
@@ -359,6 +360,12 @@ Deno.serve(async (req) => {
         );
       }
       assertSecondYearGroup(grade, system, location, group);
+      if (residenceInput && [...residenceInput].length < 2) {
+        throw new IdentityInputError(
+          "invalid_residence_area",
+          "منطقة السكن اختيارية، لكن إذا كتبتها لازم تكون حرفين على الأقل.",
+        );
+      }
       const requestHmac = await hmac(`registration-request:${requestKey}`),
         phoneHmac = await hmac(`registration-phone:${studentPhone}`),
         subjectHmac = await hmac(
