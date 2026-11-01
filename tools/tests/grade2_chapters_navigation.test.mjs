@@ -116,3 +116,16 @@ test("grade2 image uploader supports signing in as owner and explains forbidden 
  assert.match(js,/\$\("ownerLogin"\)\.hidden=true/);
  assert.match(js,/owner_image_manifest/);
 });
+
+
+test("relative velocity lesson reference is not exposed to Azhar students",()=>{
+ const builder=read("student.html");
+ const nav=read("student-grade2-learning-v3.js");
+ assert.match(builder,/id="openReferences" class="card studentNavCard referenceHomeCard hidden"/);
+ assert.match(builder,/id="refB2Lesson1" class="card studentNavCard referenceLessonCard hidden"/);
+ assert.match(builder,/متجهات السرعة والسرعة النسبية — الصف الثاني بكالوريا فقط/);
+ assert.match(builder,/const referencesButton=\$\('openReferences'\);if\(referencesButton\)referencesButton\.classList\.toggle\('hidden',!\(isBaccalaureateStudent\|\|isThirdSecondary\)\)/);
+ assert.match(builder,/isSecond=grade==='الصف الثاني الثانوي'&&\['N2-A','K2-A'\]\.includes/);
+ assert.match(builder,/\$\('refB2Lesson1'\)\.onclick=\(\)=>\{if\(gradeLabel/);
+ assert.match(nav,/if\(chapter==="1"&&source\("openReferences"\)\)/);
+});
