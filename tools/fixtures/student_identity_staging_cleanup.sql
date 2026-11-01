@@ -8,8 +8,17 @@ delete from private.student_identity_audit_events where event_type='registration
   );
 delete from private.student_registration_invites where label='e2e:__RUN_ID__';
 create temporary table e2e_requests on commit drop as
-  select id from private.student_registration_requests
-  where residence_area = 'e2e:__RUN_ID__';
+  select r.id from private.student_registration_requests r
+  where r.residence_area = 'e2e:__RUN_ID__'
+     or r.auth_user_id in (
+       select u.id from auth.users u
+       where u.raw_app_meta_data->>'synthetic_run'='__RUN_ID__'
+     )
+     or exists (
+       select 1 from auth.users u
+       where u.raw_app_meta_data->>'registration_request_id'=r.public_ref::text
+         and u.raw_app_meta_data->>'synthetic_run'='__RUN_ID__'
+     );
 create temporary table e2e_users on commit drop as
   select id from auth.users where raw_app_meta_data->>'synthetic_run'='__RUN_ID__'
   union select r.auth_user_id from private.student_registration_requests r

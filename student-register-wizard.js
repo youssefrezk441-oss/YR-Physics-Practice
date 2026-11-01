@@ -34,9 +34,18 @@ async function registrationCall(action, payload = {}) {
       if (error.context?.clone) detail = await error.context.clone().json();
       else if (error.context?.json) detail = await error.context.json();
     } catch (_) { /* relay/network errors have no JSON body */ }
-    throw new Error(detail?.message || error.message || "تعذر الاتصال بالخدمة");
+    const safeMessage = detail?.error === "server_error"
+      ? "واجهت خدمة التسجيل عطلًا مؤقتًا. بياناتك ما زالت في الصفحة؛ أعد المحاولة من نفس الصفحة بعد تحديث التحقق الأمني. إذا استمرت المشكلة تواصل مع الإدارة."
+      : detail?.error === "rate_limited"
+      ? "تم إرسال محاولات كثيرة مؤخرًا. انتظر قبل المحاولة مرة أخرى، أو تواصل مع الإدارة."
+      : detail?.message || error.message || "تعذر الاتصال بالخدمة";
+    throw new Error(safeMessage);
   }
-  if (data?.error) throw new Error(data.message || "تعذر إكمال التسجيل");
+  if (data?.error) throw new Error(
+    data.error === "server_error"
+      ? "تعذر إنشاء الحساب بسبب مشكلة في الخدمة. أعد المحاولة من نفس الصفحة، وإذا استمرت تواصل مع الإدارة."
+      : data.message || "تعذر إكمال التسجيل"
+  );
   return data;
 }
 function fillReview() {
@@ -160,6 +169,13 @@ function validateStep(index) {
     showError("لا توجد مجموعة مختارة. راجع الصف ومكان الحضور، أو تواصل مع الإدارة.");
     return false;
   }
+  if (index === 1) {
+    const residence = get("residence_area");
+    residence.setCustomValidity("");
+    if ([...residence.value.trim()].length === 1) {
+      residence.setCustomValidity("منطقة السكن اختيارية، لكن إذا كتبتها لازم تكون حرفين على الأقل.");
+    }
+  }
   if (index === 2) {
     for (const key of ["student_phone", "guardian_phone"]) {
       const input = get(key);
@@ -253,6 +269,9 @@ form.addEventListener("submit", async (event) => {
   const payload = {
     ...fields,
     full_name: nameValue(),
+    // This field is optional in the UI, but the legacy request table needs
+    // a non-empty value. Match the already displayed review placeholder.
+    residence_area: String(fields.residence_area || "").trim() || "غير محددة",
     privacy_accepted: fields.privacy === "on",
     privacy_notice_version: config.privacy_notice_version,
     request_idempotency_key: requestKey
