@@ -128,7 +128,7 @@ function buildView(){
     const avg=finals.length?finals.reduce((v,p)=>v+p.finalPercent,0)/finals.length:null;
     const pend=sum.reduce((x,p)=>x+p.essayPending,0);
     return {s,att,avg,pend,submitted:att.filter(a=>a.state==="submitted").length};
-   }).sort((a,b)=>b.submitted-a.submitted||b.att.length-a.att.length||a.s.full_name.localeCompare(b.s.full_name,"ar")).map(o=>
+   }).sort((a,b)=>b.submitted-a.submitted||b.att.length-a.att.length||String(a.s.full_name||"").localeCompare(String(b.s.full_name||""),"ar")).map(o=>
     '<tr class="clickable" tabindex="0" data-student="'+escapeHtml(o.s.user_id)+'"><td class="wrap">'+escapeHtml(o.s.full_name)+'</td><td>'+escapeHtml(o.s.student_code||"—")+'</td><td>'+escapeHtml(o.s.group_code)+'</td><td>'+badge(o.s.student_active?"نشط":"موقوف",o.s.student_active?"ok":"off")+'</td><td>'+fmt(o.att.length)+'</td><td>'+fmt(o.submitted)+'</td><td>'+fmt(o.pend)+'</td><td>'+pct(o.avg)+'</td></tr>');
    wrap.innerHTML='<h2>سجل الطلاب</h2><p class="sub">اضغط على الطالب لعرض تفاصيل كل نشاط وحالة إجاباته. متوسط النتيجة يعرض الأنشطة المسلَّمة المكتملة التصحيح فقط.</p>'+table(["اسم الطالب","كود","المجموعة","الحساب","بدأ","سلّم","مقالي معلق","متوسط النهائي"],rows);
    for(const tr of wrap.querySelectorAll("[data-student]")){
@@ -195,6 +195,11 @@ async function load(){
  $("refresh").disabled=true;setMessage("جارٍ تحميل التحليلات الحقيقية من الخادم…");
  try{
   const {data,error}=await sb.functions.invoke("admin-grade2-azhar-analytics",{body:{action:"snapshot"}});
+  const httpStatus=error?.context?.status;
+  if(httpStatus===401||httpStatus===403||data?.error==="owner_only"){
+    $("dashboard").hidden=true;$("access").hidden=false;
+    throw Error("يجب تسجيل الدخول بحساب صاحب إدارة المنصة للوصول للتحليلات.");
+  }
   if(error||!data?.ok)throw Error(data?.message||error?.message||"تعذر تحميل الإحصاءات");
   if(!["students","activities","parts","attempts","answers"].every(k=>Array.isArray(data[k])))throw Error("استجابة غير مكتملة من الخادم");
   raw=data;
