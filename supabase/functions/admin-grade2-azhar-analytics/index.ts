@@ -16,7 +16,7 @@ async function requireOwner(req){
  const {data,error}=await auth.auth.getUser(token.slice(7));
  const user=data?.user;
  if(error||!user||user.app_metadata?.role!=="admin")return false;
- const [profile]=await db\`select is_owner,is_active from public.admin_profiles where user_id=\${user.id}::uuid limit 1\`;
+ const [profile]=await db`select is_owner,is_active from public.admin_profiles where user_id=${user.id}::uuid limit 1`;
  return profile?.is_owner===true&&profile?.is_active===true;
 }
 Deno.serve(async req=>{
@@ -27,32 +27,32 @@ Deno.serve(async req=>{
   const body=await req.json().catch(()=>({}));
   if(body?.action!=="snapshot")return reply(req,{error:"unsupported_action"},400);
   const [students,activities,parts,attempts,answers]=await Promise.all([
-   db\`select sp.user_id::text as user_id,sp.student_code,sp.full_name,
+   db`select sp.user_id::text as user_id,sp.student_code,sp.full_name,
       sp.group_code,sp.is_active as student_active,sg.is_active as group_active,
       sg.center_name
       from public.student_profiles sp join public.student_groups sg on sg.group_code=sp.group_code
       where sg.education_track='azhar' and sg.grade_level='الصف الثاني الثانوي'
-      order by sp.group_code,sp.full_name,sp.user_id\`,
-   db\`select slug,title,chapter,mode,status,published_at
+      order by sp.group_code,sp.full_name,sp.user_id`,
+   db`select slug,title,chapter,mode,status,published_at
       from private.g2_activities where slug like 'g2-azhar-%' and status='published'
-      order by chapter,mode,slug\`,
-   db\`select distinct on(k.activity_slug,k.bank_id,k.part_key)
+      order by chapter,mode,slug`,
+   db`select distinct on(k.activity_slug,k.bank_id,k.part_key)
       k.activity_slug,k.bank_id,k.part_key,k.max_points::float8 as max_points,
       (k.rubric is not null) as essay,q.skill_ref,q.sort_order
       from private.g2_keys k join private.g2_questions q
        on q.activity_slug=k.activity_slug and q.bank_id=k.bank_id
       join private.g2_activities a on a.slug=k.activity_slug
       where k.key_status='approved' and a.status='published' and a.slug like 'g2-azhar-%'
-      order by k.activity_slug,k.bank_id,k.part_key,k.version_no desc\`,
-   db\`select a.id::text as id,a.user_id::text as user_id,a.activity_slug,a.state,
+      order by k.activity_slug,k.bank_id,k.part_key,k.version_no desc`,
+   db`select a.id::text as id,a.user_id::text as user_id,a.activity_slug,a.state,
       a.started_at,a.submitted_at
       from private.g2_attempts a join public.student_profiles sp on sp.user_id=a.user_id
       join public.student_groups sg on sg.group_code=sp.group_code
       join private.g2_activities act on act.slug=a.activity_slug
       where sg.education_track='azhar' and sg.grade_level='الصف الثاني الثانوي'
        and act.status='published' and act.slug like 'g2-azhar-%'
-      order by a.started_at desc\`,
-   db\`with latest as (
+      order by a.started_at desc`,
+   db`with latest as (
        select distinct on (e.attempt_id,e.bank_id,e.part_key)
         e.id,e.attempt_id,e.bank_id,e.part_key,e.revision,e.submitted_at
        from private.g2_answer_events e
@@ -70,7 +70,7 @@ Deno.serve(async req=>{
       from latest e left join lateral (
        select d.awarded_points,d.max_points,d.method from private.g2_grading_decisions d
        where d.answer_event_id=e.id order by d.created_at desc,d.id desc limit 1
-      ) d on true\`
+      ) d on true`
   ]);
   return reply(req,{ok:true,generated_at:new Date().toISOString(),scope:"grade2_azhar",
     privacy:"owner_only_no_raw_answers",students,activities,parts,attempts,answers});
