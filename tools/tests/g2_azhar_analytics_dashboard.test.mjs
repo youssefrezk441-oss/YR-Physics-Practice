@@ -29,7 +29,7 @@ test("Admin UI has real dataset filters and does not mix pending essay with fina
  assert.match(ui,/a\.state==="submitted"&&pending===0/);
  assert.match(ui,/e\.awarded_points===null\|\|e\.awarded_points===undefined/);
  assert.match(ui,/function matchParts\(a\)/);
- assert.match(ui,/CSV/);
+ assert.match(ui,/YR-G2-Azhar-Analytics\\.csv/);
  assert.match(home,/id="azharAnalyticsCard"/);
  assert.match(home,/\$\('azharAnalyticsCard'\)\.classList\.toggle\('hidden',!ctx\.isOwner\)/);
 });
