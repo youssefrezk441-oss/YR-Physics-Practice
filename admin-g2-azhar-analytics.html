@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>لوحة التحليل الشامل — ثانية أزهر | YR Physics</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#17233b;background:#f5f7fb;--navy:#182d55;--muted:#65738c;--line:#e3e9f2;--wine:#7f3152;--green:#17775e}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+header{background:#14294e;color:white;border-bottom:4px solid #395f9d;padding:20px max(18px,calc((100vw - 1320px)/2));display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+header h1{font-size:24px;margin:5px 0}header p{margin:0;color:#c9d6ec;line-height:1.8;font-size:13px}
+.back{display:inline-flex;align-items:center;gap:7px;border:1px solid #839ac2;border-radius:10px;padding:10px 14px;color:white;font-size:13px}
+main{max-width:1320px;margin:auto;padding:22px 18px 60px}
+h2{font-size:18px;margin:0 0 13px}h3{font-size:16px;margin:0 0 10px}.sub{font-size:13px;color:var(--muted);line-height:1.9;margin:0 0 12px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;margin-bottom:15px;box-shadow:0 4px 16px #101d3308}
+.filterGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end}
+label{display:block;font-size:12px;font-weight:bold;color:#485b7b;margin-bottom:6px}
+select,input{width:100%;height:43px;background:white;border:1px solid #cdd7e6;border-radius:9px;padding:8px;color:#17233b}
+select:focus,input:focus{outline:2px solid #90b4f5;outline-offset:1px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:10px;padding:11px 17px;font-weight:bold;background:#20467b;color:white;min-height:42px}.btn.outline{background:white;border:1px solid #aebdd3;color:#25477e}.btn:disabled{opacity:.5}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);padding:19px;border-radius:15px;min-height:107px}.stat strong{display:block;font-size:29px;direction:ltr;text-align:right;color:#193b70}.stat span{font-size:12px;color:var(--muted);line-height:1.7}.stat small{font-size:11px;color:#64748b}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}.tab{background:#edf2f8;color:#344b70;border:1px solid #d8e1ed;padding:12px 15px;border-radius:10px;font-weight:bold}.tab[aria-selected=true]{background:#1d3a69;color:white;border-color:#1d3a69}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}.rowline{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding:10px 0}.rowline:last-child{border:0}.rowlabel{flex:1;min-width:0;line-height:1.65;font-size:13px}.rowlabel small{color:var(--muted);display:block}.bar{height:10px;border-radius:15px;background:#e8edf6;min-width:80px;overflow:hidden;width:32%}.bar>i{display:block;background:#3976b5;height:100%;border-radius:15px}.bar>i.warn{background:#a26079}.pct{width:52px;text-align:left;font-size:13px;font-weight:bold;direction:ltr}
+.scroll{overflow:auto;max-width:100%}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:right;background:#edf3fa;color:#355073;font-size:12px;position:sticky;top:0}td,th{padding:12px 11px;border-bottom:1px solid #e5eaf2;white-space:nowrap}td.wrap{white-space:normal;min-width:190px}tbody tr:hover{background:#f8fbff}tr.clickable{cursor:pointer}tr.clickable:focus-visible{outline:2px solid #3c81ca}
+.mini{border-radius:50px;font-size:11px;font-weight:bold;padding:4px 8px;display:inline-block;white-space:nowrap}.ok{background:#e6f5ee;color:#136045}.pending{background:#fff2d8;color:#875400}.off{background:#edf1f6;color:#617187}.error{background:#fce9ec;color:#972f48}
+.note{background:#f0f5fc;color:#355172;border-right:3px solid #5178ab;padding:12px 15px;border-radius:8px;font-size:12px;line-height:1.9;margin-bottom:15px}
+.empty{padding:28px;text-align:center;color:#697993;font-size:14px}.status{font-size:13px;color:#42618b;line-height:1.8;margin:10px 0}
+#detail[hidden],#access[hidden],#dashboard[hidden],.tabPanel[hidden]{display:none!important}
+#access{max-width:520px;margin:42px auto}.foot{color:#7c8da4;text-align:center;font-size:12px;margin-top:35px}
+@media(max-width:950px){.stats{grid-template-columns:repeat(3,1fr)}.filterGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){header{padding:18px 13px}header h1{font-size:19px}main{padding:15px 10px}.panel{padding:14px}.stats{grid-template-columns:repeat(2,1fr);gap:8px}.stat{padding:12px;min-height:94px}.stat strong{font-size:23px}.filterGrid,.two{grid-template-columns:1fr 1fr}.tabs{display:grid;grid-template-columns:repeat(2,1fr)}.tab{font-size:12px}.rowline{gap:8px}.bar{width:24%;min-width:45px}}
+</style>
+</head>
+<body>
+<header><div><p>YR PHYSICS PRACTICE | منطقة الإدارة</p><h1>لوحة التحليل الشامل — الصف الثاني الأزهري</h1><p>الفصول الثلاثة · ورش التعلّم · تدريبات الإتقان · الامتحانات</p></div><a class="back" href="./admin-home.html">العودة للإدارة</a></header>
+<main>
+<section id="access" class="panel" hidden>
+<h2>الدخول لصاحب إدارة المنصة</h2><p class="sub">هذه البيانات خاصة بالطلاب؛ لا تُعرض إلا بعد التحقق من حساب مالك الإدارة.</p>
+<form id="loginForm"><label for="email">البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required>
+<label for="password" style="margin-top:12px">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required>
+<button class="btn" type="submit" style="margin-top:14px">تسجيل الدخول</button></form>
+</section>
+<p id="message" class="status" role="status">جارٍ التحقق من صلاحية الإدارة…</p>
+<div id="dashboard" hidden>
+<section class="panel"><h2>تصفية النتائج</h2><div class="filterGrid">
+<div><label for="group">المجموعة</label><select id="group"><option value="all">جميع مجموعات الأزهر</option></select></div>
+<div><label for="chapter">الفصل الدراسي</label><select id="chapter"><option value="all">كل الفصول</option><option value="1">الأول — القياس</option><option value="2">الثاني — الحركة</option><option value="3">الثالث — القوة</option></select></div>
+<div><label for="kind">نوع النشاط</label><select id="kind"><option value="all">الورش والتدريبات والامتحانات</option><option value="learn">ورش التعلّم</option><option value="mastery">تدريبات الإتقان</option><option value="exam">الامتحانات</option></select></div>
+<div><label for="activity">النشاط</label><select id="activity"><option value="all">كل الأنشطة</option></select></div>
+<div><label for="search">بحث عن طالب</label><input id="search" placeholder="الاسم أو كود الطالب"></div>
+</div><div class="actions"><button id="refresh" class="btn" type="button">تحديث البيانات</button><button id="csv" class="btn outline" type="button">تصدير الطلاب CSV</button><a class="btn outline" href="./g2-review.html">تصحيح المقالي</a></div>
+</section>
+<div id="stats" class="stats"></div>
+<div class="note">نسبة المشاركة تُحسب من الطلاب النشطين في المجموعة المختارة. «بدأ» تختلف عن «سلّم». الإجابات المقالية التي تنتظر المراجعة لا تُعامل كإجابات خاطئة؛ ولا تُعرض درجة نهائية للنشاط ما دامت هناك إجابة تحتاج تصحيحًا. يُعرض أحدث تعديل محفوظ وأحدث قرار تصحيح دون تكرار المحاولات.</div>
+<div class="tabs" role="tablist" aria-label="أقسام التحليل">
+<button class="tab" role="tab" data-tab="overview" aria-selected="true">نظرة عامة</button>
+<button class="tab" role="tab" data-tab="students" aria-selected="false">الطلاب</button>
+<button class="tab" role="tab" data-tab="questions" aria-selected="false">الأسئلة</button>
+<button class="tab" role="tab" data-tab="skills" aria-selected="false">المهارات</button>
+<button class="tab" role="tab" data-tab="groups" aria-selected="false">المجموعات</button></div>
+<section id="detail" class="panel" hidden aria-live="polite"></section>
+<section id="mainContent" class="panel" aria-live="polite"><div class="empty">جارٍ تحميل التحليل…</div></section>
+<p class="foot">بيانات مباشرة من Supabase الإنتاجي · للمالك فقط · لا تعرض مفاتيح الإجابات أو إجابات الطلاب الخام</p>
+</div>
+</main>
+<script type="module" src="./admin-g2-azhar-analytics.js?v=20261102-1"></script>
+</body></html>
