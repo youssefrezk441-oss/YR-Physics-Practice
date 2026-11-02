@@ -42,7 +42,7 @@ function filters(){
    byAttempt.get(e.attempt_id).push(e);
  }
 }
-function matchParts(a){return scopedParts.filter(p=>p.activity_slug===a.slug)}
+function matchParts(a){return scopedParts.filter(p=>p.activity_slug===(a.activity_slug||a.slug))}
 function progress(a){
  const all=matchParts(a),current=byAttempt.get(a.id)||[],lookup=new Map(current.map(x=>[x.bank_id+"|"+x.part_key,x]));
  let earned=0,max=0,pending=0,essayPending=0,mcqAward=0,mcqPossible=0,first=0,answered=0;
