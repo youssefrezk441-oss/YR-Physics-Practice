@@ -1,0 +1,2345 @@
+{
+  "schema_version": 1,
+  "delivery_contract": "paper_homework_capture_v1",
+  "workshop": {
+    "slug": "third-secondary-term-2-lesson-1-book-remaining",
+    "title": "استكمال أسئلة الدرس الأول — كتاب الامتحان",
+    "subtitle": "المجال المغناطيسي للسلك المستقيم — الأسئلة المتبقية",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 1,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "home",
+      "title": "استكمال أسئلة كتاب الامتحان",
+      "mode": "final_submit",
+      "order": 1,
+      "policy": {
+        "allow_unanswered": true,
+        "one_submission": true,
+        "essay_self_review": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "HW-MAG-009",
+      "name": "مجالات سلكين متوازيين والمحصلات",
+      "order": 1
+    },
+    {
+      "id": "HW-MAG-010",
+      "name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "order": 2
+    },
+    {
+      "id": "HW-MAG-011",
+      "name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "order": 3
+    },
+    {
+      "id": "HW-MAG-012",
+      "name": "نقطة التعادل ومسائلها المقالية",
+      "order": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "EXAM-L01-REM-Q035",
+      "track": "home",
+      "order": 1,
+      "source_number": 35,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 35 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q035.jpg",
+      "image_sha256": "fe9e88318ee8a791b1a389853745ab95706782cdfac8e9bb7431d81f1389a839",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q036",
+      "track": "home",
+      "order": 2,
+      "source_number": 36,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 36 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q036.jpg",
+      "image_sha256": "939e38425024dcd54be7d420fb99c561e3f3e22e82e04324a1886772b51affe3",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q037",
+      "track": "home",
+      "order": 3,
+      "source_number": 37,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 37 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q037.jpg",
+      "image_sha256": "99de1c1b44bbdc15bdb66c9fd1228f561208186f0e4e571159220a5b4e53467c",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q038",
+      "track": "home",
+      "order": 4,
+      "source_number": 38,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 38 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q038.jpg",
+      "image_sha256": "2a848419c2093e175355d9b98455da1fa5b2d5f3af813b9978c3d837c8c914a3",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "المطلوب (3)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_4",
+          "label": "المطلوب (4)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q039",
+      "track": "home",
+      "order": 5,
+      "source_number": 39,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 39 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q039.jpg",
+      "image_sha256": "9361d8b17b2f1c294192f6f3efe428902b16fc18770bd5f6e04ba28eb366f95a",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q040",
+      "track": "home",
+      "order": 6,
+      "source_number": 40,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 40 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q040.jpg",
+      "image_sha256": "4f63793a4126c8e5ab66c58d6f934cd17fb1799f2c5a3eba65af471d4a2b5483",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q041",
+      "track": "home",
+      "order": 7,
+      "source_number": 41,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 41 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q041.jpg",
+      "image_sha256": "a9c0c17f3230304265b84f4db07595642c026e4f4a05f693e721b2ca4a58bce5",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q042",
+      "track": "home",
+      "order": 8,
+      "source_number": 42,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 42 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q042.jpg",
+      "image_sha256": "3f20715575a6d2a421a5c9b1fdcf54015b60a50b262421a22ca3d9c6399b9fb5",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q043",
+      "track": "home",
+      "order": 9,
+      "source_number": 43,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 43 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q043.jpg",
+      "image_sha256": "0b458cea3e03a64686ec7dcc4a97c625060c3d5d5815d8ff01503cdcc433dfde",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q044",
+      "track": "home",
+      "order": 10,
+      "source_number": 44,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 44 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q044.jpg",
+      "image_sha256": "a743f59649c69c99f3aff00a27a7c2a5e97d8376163f743dd4c2769ab984675f",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q045",
+      "track": "home",
+      "order": 11,
+      "source_number": 45,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 45 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q045.jpg",
+      "image_sha256": "13f91f5a2a8481eb460d31fd026f039619deabe629e9c3b0ad65ee01037ded7f",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q046",
+      "track": "home",
+      "order": 12,
+      "source_number": 46,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 46 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q046.jpg",
+      "image_sha256": "a27a05c2e0675b7ece0eafd74401515d9ee66867508ffb8c319d05865ad86a27",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q047",
+      "track": "home",
+      "order": 13,
+      "source_number": 47,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 47 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q047.jpg",
+      "image_sha256": "e7b1f61e8cac76009a18bb40ab5ecaeeea9d0e40534c48cbab3c5edc553a046b",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q048",
+      "track": "home",
+      "order": 14,
+      "source_number": 48,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 48 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q048.jpg",
+      "image_sha256": "0d03dcc016c0c08249a9763c0fdf67b51724cbef816c961cc69659891c071560",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q049",
+      "track": "home",
+      "order": 15,
+      "source_number": 49,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 49 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q049.jpg",
+      "image_sha256": "32d4d3a2934c859911d8d47631539885d1ef4fc846a730c20649d0eccbc98764",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q050",
+      "track": "home",
+      "order": 16,
+      "source_number": 50,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 50 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q050.jpg",
+      "image_sha256": "c4461feaaa1414a7439a1cc9cbb9c927e31a2c2d7ed14519a1670ddb20dbc472",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q051",
+      "track": "home",
+      "order": 17,
+      "source_number": 51,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 51 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q051.jpg",
+      "image_sha256": "633735820ce15f78562e9de8e16378529d8df28e6aed9f8d718080f46dacf195",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q052",
+      "track": "home",
+      "order": 18,
+      "source_number": 52,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 52 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q052.jpg",
+      "image_sha256": "6b21c1d5d2c21fbe4574b49314ca156b8b03e53ee0120a1cd188a87795c1b9ba",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q053",
+      "track": "home",
+      "order": 19,
+      "source_number": 53,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 53 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q053.jpg",
+      "image_sha256": "bf18c472156e2e8f0cc5a6d515ef7f01b005de2db184abb127f6efd0d02274c3",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q054",
+      "track": "home",
+      "order": 20,
+      "source_number": 54,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 54 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q054.jpg",
+      "image_sha256": "c497440350ac30632f82d6e99cb14ec92e2a24da9aecd9f3256aba6099d3ca75",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q055",
+      "track": "home",
+      "order": 21,
+      "source_number": 55,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 55 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q055.jpg",
+      "image_sha256": "3134e310d0332edc36a165a5c8036af29316747538492d60947b0078eb465658",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q056",
+      "track": "home",
+      "order": 22,
+      "source_number": 56,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 56 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q056.jpg",
+      "image_sha256": "d63e5f1beaf44ad9ea7ad2b1ff5c0fe0e0cdcab1514187b4bd43e0a2f3033def",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q057",
+      "track": "home",
+      "order": 23,
+      "source_number": 57,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 57 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q057.jpg",
+      "image_sha256": "4a3daf1adef040549df766ee08f4a520d1e06b94206e25008bea64c6bb8cc4cd",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q058",
+      "track": "home",
+      "order": 24,
+      "source_number": 58,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 58 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q058.jpg",
+      "image_sha256": "e89304c30bb03d05286853e0af46364792077339bde0c89ac12fed282cfe38cd",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q059",
+      "track": "home",
+      "order": 25,
+      "source_number": 59,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 59 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q059.jpg",
+      "image_sha256": "07e12e42e5df9e84d83396a088a8faa162691e037aada290855b23b8c0d71c03",
+      "skill": "HW-MAG-009",
+      "skill_name": "مجالات سلكين متوازيين والمحصلات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q060",
+      "track": "home",
+      "order": 26,
+      "source_number": 60,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 60 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q060.jpg",
+      "image_sha256": "e14b6665a08f55bcc68abcffc5c507cde0d0cc136c2ecea618aad9a1e7ed5bf7",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q061",
+      "track": "home",
+      "order": 27,
+      "source_number": 61,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 61 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q061.jpg",
+      "image_sha256": "33c49746e35749f2fa3e773f0d09494a2bdf00e9de28663c2f3ef0ecb663e216",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q062",
+      "track": "home",
+      "order": 28,
+      "source_number": 62,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 62 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q062.jpg",
+      "image_sha256": "cb35420b4ac3bf2157a61d4ff2c3eca5bce5758c21c5b88767e05fbb83b6a02b",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q063",
+      "track": "home",
+      "order": 29,
+      "source_number": 63,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 63 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q063.jpg",
+      "image_sha256": "27ea8fd8bcc0ffe1ffb3777bfe2febcfd96d84f5fe6083b9f2cb20c5a4ae3e92",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q064",
+      "track": "home",
+      "order": 30,
+      "source_number": 64,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 64 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q064.jpg",
+      "image_sha256": "e79b13437a947aee2d6a1b10fc1f1f91116247e699d39e58f84ff3cbb7a048b5",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q065",
+      "track": "home",
+      "order": 31,
+      "source_number": 65,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 65 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q065.jpg",
+      "image_sha256": "5ee171c9bb6de10de1bbedcf1382c6155918804ad0c02022c7c94628f1395800",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q066",
+      "track": "home",
+      "order": 32,
+      "source_number": 66,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 66 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q066.jpg",
+      "image_sha256": "b9a8948350d165a016c1ead97715128d802be8ddc038e59be2ddeb99beb14353",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q067",
+      "track": "home",
+      "order": 33,
+      "source_number": 67,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 67 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q067.jpg",
+      "image_sha256": "fb7f3f63f863a92b6ef8cff9ec05d40552043827d0b97859b1e5b03978864cc7",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q068",
+      "track": "home",
+      "order": 34,
+      "source_number": 68,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 68 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q068.jpg",
+      "image_sha256": "c6d840213060ec8eaa3d7956d62a849c41ff0ff1975851d0d1e3b2e6f77956f4",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q069",
+      "track": "home",
+      "order": 35,
+      "source_number": 69,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 69 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q069.jpg",
+      "image_sha256": "e2b943c83ef93a8a577d27a0e6b7cb403c0b3df588fc7a388b53cde23b0c38f4",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q070",
+      "track": "home",
+      "order": 36,
+      "source_number": 70,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 70 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q070.jpg",
+      "image_sha256": "1af2d633538e48dd413f64d7eb489d2a3dbe46714697346263e43456fca9f7b3",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q071",
+      "track": "home",
+      "order": 37,
+      "source_number": 71,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 71 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q071.jpg",
+      "image_sha256": "bc55a710a5c902890435c82e8cce42bec7b1586ba2e9d394e5e6a3ed0d284a7b",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q072",
+      "track": "home",
+      "order": 38,
+      "source_number": 72,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 72 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q072.jpg",
+      "image_sha256": "8f8dbf0abe19a2045455149c3cc3dae44cbbf91ac8f14bbda21cf7436a749174",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q073",
+      "track": "home",
+      "order": 39,
+      "source_number": 73,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 73 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q073.jpg",
+      "image_sha256": "bbd740811f7094e0f34694f0932a50cf28d649bc90b58b0bbb59f65a6c1127a0",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q074",
+      "track": "home",
+      "order": 40,
+      "source_number": 74,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 74 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q074.jpg",
+      "image_sha256": "9c5f57a4d31c3c3a977d29cbdd8508fcc2ec982b7cf957cedb9dfdf061365785",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q075",
+      "track": "home",
+      "order": 41,
+      "source_number": 75,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 75 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q075.jpg",
+      "image_sha256": "2e5a5d0253f00703a74eec68462ae56e585b216efd2f399232fca1b8c5765b1b",
+      "skill": "HW-MAG-011",
+      "skill_name": "تغير المحصلة عند تحريك الأسلاك أو تغيير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q076",
+      "track": "home",
+      "order": 42,
+      "source_number": 76,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 76 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q076.jpg",
+      "image_sha256": "e6b02c57580ac2d1b6dd5f5d25a440f95636d4e5b31f6e012d66b29662e5be66",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q077",
+      "track": "home",
+      "order": 43,
+      "source_number": 77,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 77 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q077.jpg",
+      "image_sha256": "f064a1108f2c0de1f48fdc9a6603cecebb4e46e4ef138935a7e2479c1e7b7740",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q078",
+      "track": "home",
+      "order": 44,
+      "source_number": 78,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 78 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q078.jpg",
+      "image_sha256": "03d3c7243e7ab2069901e60331930a92e7f152894a39a8842ac69213e4ff8625",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q079",
+      "track": "home",
+      "order": 45,
+      "source_number": 79,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 79 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q079.jpg",
+      "image_sha256": "de91a83ecf5baae364c52f4475439f7ccda025ed289888bf325f0ce970c3ea4e",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q080",
+      "track": "home",
+      "order": 46,
+      "source_number": 80,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 80 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q080.jpg",
+      "image_sha256": "94a02aec919c7a6932bb13f6493df28936da5a807f40c3ae708ea9b12cbb2922",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q093",
+      "track": "home",
+      "order": 47,
+      "source_number": 93,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 93 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q093.jpg",
+      "image_sha256": "40607d6789fb115a9d90b3e2b9023a8b9c4be0da55f3bb6f92f00ac2d28d2f3e",
+      "skill": "HW-MAG-012",
+      "skill_name": "نقطة التعادل ومسائلها المقالية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "التياران في نفس الاتجاه",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "التياران في اتجاهين متضادين",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q094",
+      "track": "home",
+      "order": 48,
+      "source_number": 94,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 94 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q094.jpg",
+      "image_sha256": "23fa6c346a9751be74c00d9d436ead186f7a759aac158b2c34db0f39d9792d54",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "محصلة كثافة الفيض واتجاهها عند C",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q095",
+      "track": "home",
+      "order": 49,
+      "source_number": 95,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 95 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q095.jpg",
+      "image_sha256": "db87dac185cf03e050ca105762bb2d43ce975b412de46b2efde7c6ecb4cd5447",
+      "skill": "HW-MAG-012",
+      "skill_name": "نقطة التعادل ومسائلها المقالية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "أثر تحريك السلك x",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q096",
+      "track": "home",
+      "order": 50,
+      "source_number": 96,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 96 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q096.jpg",
+      "image_sha256": "866c858c4e1a54f8d9cd28a930e8c92f14b6757b55976b189126db293315a5f2",
+      "skill": "HW-MAG-012",
+      "skill_name": "نقطة التعادل ومسائلها المقالية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "تغيير I₂ ليكون التعادل عند y",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "تغيير I₂ ليكون التعادل عند z",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q097",
+      "track": "home",
+      "order": 51,
+      "source_number": 97,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 97 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q097.jpg",
+      "image_sha256": "e125f30e8df6266c835ae9910c38ac3abd2692901e0d3dc14aa810b11d919040",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "إثبات المتباينة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L01-REM-Q098",
+      "track": "home",
+      "order": 52,
+      "source_number": 98,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 98 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l1-book-remaining/EXAM-L01-REM-Q098.jpg",
+      "image_sha256": "78f3d6af2396061fedcc1ff217195265b3263dbce36c2937765bd2fc099b7526",
+      "skill": "HW-MAG-010",
+      "skill_name": "المحصلة عند عدة نقاط وعلاقة الشدة بالمسافة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "عند انعدام تيار Y",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "عند انعدام تيار Z",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    }
+  ]
+}

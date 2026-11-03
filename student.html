@@ -307,6 +307,23 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace(visibleAnchor,'!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed)');
   html=html.replace(pingAnchor,"const review35=$('openLesson1Review35');if(review35){review35.classList.add('hidden');sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{review35Allowed=!error&&data?.ok&&Array.isArray(data.workshops)&&data.workshops.some(w=>w.slug==='third-secondary-term-2-lesson-1-review-35');review35.classList.toggle('hidden',!review35Allowed);renderSecondTermAccess()}).catch(()=>{review35Allowed=false;review35.classList.add('hidden');renderSecondTermAccess()})};"+pingAnchor);
   html=html.replace(linkAnchor,"const review35Link=$('openLesson1Review35');if(review35Link)review35Link.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lesson-1-review-35'};"+linkAnchor);
+
+  // Book-only remainder: create an independent workshop card and gate it on the server's ping response.
+  if(!html.includes('id="openBookRemainder"')){
+    const bookCardAnchor='<button id="openLecture1Homework"';
+    if(!html.includes(bookCardAnchor))throw new Error('تعذر إضافة ورشة استكمال الكتاب');
+    const bookCard='<button id="openBookRemainder" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">📗</div><h3>استكمال أسئلة الدرس الأول</h3><p>52 سؤالًا من كتاب الامتحان فقط — اختيار ومقالي، دون تكرار الواجب الأول.</p></button>';
+    html=html.replace(bookCardAnchor,bookCard+bookCardAnchor);
+  }
+  const bookAllowedAnchor="let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false;";
+  const bookVisibleAnchor="!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed)";
+  const bookPingAnchor="if(lecture1HomeworkButton){lecture1HomeworkButton.classList.add('hidden');";
+  const bookBindAnchor="const unifiedL1=$('openUnifiedL1Workshop');";
+  if(!html.includes(bookAllowedAnchor)||!html.includes(bookVisibleAnchor)||!html.includes(bookPingAnchor)||!html.includes(bookBindAnchor))throw new Error('تعذر ربط صلاحيات ورشة استكمال الكتاب');
+  html=html.replace(bookAllowedAnchor,"let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false,bookRemainderAllowed=false;");
+  html=html.replace(bookVisibleAnchor,"!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed||bookRemainderAllowed)");
+  html=html.replace(bookPingAnchor,"const bookRemainderButton=$('openBookRemainder');if(bookRemainderButton){bookRemainderButton.classList.add('hidden');sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-1-book-remaining'}}).then(({data,error})=>{bookRemainderAllowed=!error&&data?.ok&&data?.available;bookRemainderButton.classList.toggle('hidden',!bookRemainderAllowed);renderSecondTermAccess()}).catch(()=>{bookRemainderAllowed=false;bookRemainderButton.classList.add('hidden');renderSecondTermAccess()})};"+bookPingAnchor);
+  html=html.replace(bookBindAnchor,"const bookRemainderLink=$('openBookRemainder');if(bookRemainderLink)bookRemainderLink.onclick=()=>{window.location.href='./lesson1-book-remaining.html'};"+bookBindAnchor);
   document.open();
   document.write(html);
   document.close();

@@ -2,7 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const URL='https://ltjdhconuiqblxfjzpzj.supabase.co';
 const KEY='sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr';
-const SLUG='third-secondary-term-2-lecture-1-homework';
+const SLUG=document.body.dataset.workshopSlug||'third-secondary-term-2-lecture-1-homework';
 const sb=createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=(id)=>document.getElementById(id);
 const esc=(value)=>String(value??'').replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
