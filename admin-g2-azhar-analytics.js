@@ -8,7 +8,7 @@ const pct=v=>v==null?"—":Math.round(v)+"%";
 const date=v=>v?new Date(v).toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"}):"—";
 const badge=(label,cl="off")=>'<span class="mini '+cl+'">'+escapeHtml(label)+'</span>';
 const key=(slug,id,part)=>slug+"|"+id+"|"+part;
-let raw=null,tab="overview",filtered=[],scopedAttempts=[],scopedStudents=[],scopedParts=[],answersMap=new Map(),partIndex=new Map(),byAttempt=new Map();
+let raw=null,tab="overview",filtered=[],scopedAttempts=[],scopedStudents=[],scopedParts=[],answersMap=new Map(),partIndex=new Map(),byAttempt=new Map(),fetchInFlight=false,lastFetchAt=0;
 const modeLabel={learn:"ورشة تعلّم",mastery:"تدريبات إتقان",exam:"امتحان"};
 const chapters={1:"الفصل الأول — القياس",2:"الفصل الثاني — الحركة",3:"الفصل الثالث — القوة"};
 const setMessage=(s,isError=false)=>{$("message").textContent=s;$("message").style.color=isError?"#a32c48":"#42618b"};
@@ -220,7 +220,9 @@ function exportCsv(){
  const a=el("a");a.href=url;a.download="YR-G2-Azhar-Analytics.csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function load(){
- $("refresh").disabled=true;setMessage("جارٍ تحميل التحليلات الحقيقية من الخادم…");
+ if(fetchInFlight)return;
+ fetchInFlight=true;
+ $("refresh").disabled=true;setMessage("جارٍ تحديث التحليلات مباشرة من قاعدة البيانات…");
  try{
   const {data,error}=await sb.functions.invoke("admin-grade2-azhar-analytics",{body:{action:"snapshot"}});
   const httpStatus=error?.context?.status;
@@ -229,23 +231,40 @@ async function load(){
     throw Error("يجب تسجيل الدخول بحساب صاحب إدارة المنصة للوصول للتحليلات.");
   }
   if(error||!data?.ok)throw Error(data?.message||error?.message||"تعذر تحميل الإحصاءات");
-  if(!["students","activities","parts","attempts","answers"].every(k=>Array.isArray(data[k])))throw Error("استجابة غير مكتملة من الخادم");
+  if(!["students","activities","parts","attempts","answers","foundation_attempts","legacy_exam_attempts"].every(k=>Array.isArray(data[k])))throw Error("استجابة غير مكتملة من الخادم");
   raw=data;
   $("dashboard").hidden=false;$("access").hidden=true;
   const selected=$("group").value;
   $("group").replaceChildren(new Option("جميع مجموعات الأزهر","all"),...[...new Set(raw.students.map(s=>s.group_code))].sort().map(code=>new Option(code,code)));
   $("group").value=[...$("group").options].some(x=>x.value===selected)?selected:"all";
   refreshActivityOptions();render();
-  setMessage("تم جلب البيانات الحقيقية — آخر تحديث: "+date(data.generated_at)+" · "+fmt(data.activities.length)+" أنشطة منشورة.");
+  lastFetchAt=Date.now();
+  const newSubmitted=data.attempts.filter(x=>x.state==="submitted").length;
+  const foundationSubmitted=data.foundation_attempts.filter(x=>x.submitted_at).length;
+  const legacySubmitted=data.legacy_exam_attempts.filter(x=>x.submitted_at).length;
+  $("sources").innerHTML=metric("الورش والامتحانات الجديدة",fmt(data.attempts.length),"تسليمات: "+fmt(newSubmitted))+
+    metric("التدريبات التأسيسية المشتركة",fmt(data.foundation_attempts.length),"تسليمات: "+fmt(foundationSubmitted))+
+    metric("الامتحان الأزهري القديم",fmt(data.legacy_exam_attempts.length),"تسليمات: "+fmt(legacySubmitted));
+  const latestDates=[...data.attempts.map(x=>x.started_at),...data.answers.map(x=>x.submitted_at),
+    ...data.foundation_attempts.map(x=>x.started_at),...data.legacy_exam_attempts.map(x=>x.updated_at)]
+    .map(x=>x?new Date(x).getTime():0).filter(Number.isFinite);
+  const maxTime=latestDates.length?Math.max(...latestDates):0;
+  $("syncStatus").textContent="تحديث مباشر: "+date(data.generated_at)+" · أحدث نشاط محفوظ بالمصادر: "+(maxTime?date(new Date(maxTime).toISOString()):"لا توجد محاولات")+
+    " · التحديث التلقائي "+($("autoRefresh").checked?"مفعّل (كل دقيقة)":"متوقف");
+  setMessage("تم تحديث البيانات من الخادم: "+date(data.generated_at)+" · "+fmt(data.activities.length)+" نشاطًا جديدًا منشورًا · "+fmt(data.attempts.length+data.foundation_attempts.length+data.legacy_exam_attempts.length)+" محاولة عبر 3 مصادر منفصلة.");
  }catch(e){
-  setMessage(e.message,true);
+  setMessage("تعذر تحديث البيانات: "+e.message+(raw&&lastFetchAt?" — البيانات المعروضة من "+date(new Date(lastFetchAt).toISOString()):""),true);
   if(/owner|403|401|admin|authorized|صلاحية|سجل الدخول/i.test(e.message)){$("dashboard").hidden=true;$("access").hidden=false}
- }finally{$("refresh").disabled=false}
+ }finally{fetchInFlight=false;$("refresh").disabled=false}
 }
 function render(){$("detail").hidden=true;buildView()}
 for(const id of ["group","activity","search"])$(id).addEventListener(id==="search"?"input":"change",()=>{if(raw)render()});
 for(const id of ["chapter","kind"])$(id).addEventListener("change",()=>{if(raw){refreshActivityOptions();render()}});
 $("refresh").addEventListener("click",load);$("csv").addEventListener("click",exportCsv);
+$("autoRefresh").addEventListener("change",()=>{if(raw)load()});
+setInterval(()=>{if($("autoRefresh").checked&&!document.hidden&&raw)load()},60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&$("autoRefresh").checked&&Date.now()-lastFetchAt>60000)load()});
+window.addEventListener("focus",()=>{if($("autoRefresh").checked&&Date.now()-lastFetchAt>60000)load()});
 for(const b of document.querySelectorAll("[data-tab]"))b.addEventListener("click",()=>{
  tab=b.dataset.tab;for(const btn of document.querySelectorAll("[data-tab]"))btn.setAttribute("aria-selected",String(btn===b));if(raw)render();
 });
