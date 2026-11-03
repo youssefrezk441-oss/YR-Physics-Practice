@@ -322,7 +322,9 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   if(!html.includes(bookAllowedAnchor)||!html.includes(bookVisibleAnchor)||!html.includes(bookPingAnchor)||!html.includes(bookBindAnchor))throw new Error('تعذر ربط صلاحيات ورشة استكمال الكتاب');
   html=html.replace(bookAllowedAnchor,"let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false,bookRemainderAllowed=false;");
   html=html.replace(bookVisibleAnchor,"!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed||bookRemainderAllowed)");
-  html=html.replace(bookPingAnchor,"const bookRemainderButton=$('openBookRemainder');if(bookRemainderButton){bookRemainderButton.classList.add('hidden');sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-1-book-remaining'}}).then(({data,error})=>{bookRemainderAllowed=!error&&data?.ok&&data?.available;bookRemainderButton.classList.toggle('hidden',!bookRemainderAllowed);renderSecondTermAccess()}).catch(()=>{bookRemainderAllowed=false;bookRemainderButton.classList.add('hidden');renderSecondTermAccess()})};"+bookPingAnchor);
+  // A visible third-secondary navigation card; server authorization still gates workshop access.
+  // An optional ping should never silently remove the published workshop from the menu.
+  html=html.replace(bookPingAnchor,"const bookRemainderButton=$('openBookRemainder');if(bookRemainderButton){bookRemainderAllowed=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';bookRemainderButton.classList.toggle('hidden',!bookRemainderAllowed);renderSecondTermAccess()};"+bookPingAnchor);
   html=html.replace(bookBindAnchor,"const bookRemainderLink=$('openBookRemainder');if(bookRemainderLink)bookRemainderLink.onclick=()=>{window.location.href='./lesson1-book-remaining.html'};"+bookBindAnchor);
   document.open();
   document.write(html);
