@@ -168,6 +168,34 @@ function buildView(){
      wrap.innerHTML='<h2>المهارات ونقاط الضعف</h2><p class="sub">يظهر التصنيف «عينة محدودة» لأقل من 3 أجزاء مصححة، ولا يُعتبر ذلك حكمًا على أداء الطالب. رموز المهارات من بنك أسئلة الأزهر المعتمد.</p>'+
        table(["رمز المهارة","أجزاء مجابة","أجزاء مصححة","بانتظار التصحيح","معدل الدرجة","التقدير"],rows);
    }
+ }else if(tab==="foundation"){
+   const allowed=new Set(scopedStudents.map(s=>s.user_id));
+   const rows=(raw.foundation_attempts||[]).filter(a=>allowed.has(a.user_id));
+   const students=new Map(scopedStudents.map(s=>[s.user_id,s]));
+   const summaries=new Map();
+   for(const a of rows){
+     if(!summaries.has(a.training_slug))summaries.set(a.training_slug,{slug:a.training_slug,title:a.training_title,attempts:0,submitted:0,users:new Set(),scores:[]});
+     const x=summaries.get(a.training_slug);x.attempts++;x.users.add(a.user_id);
+     if(a.submitted_at){x.submitted++;if(a.percentage!=null&&Number.isFinite(Number(a.percentage)))x.scores.push(Number(a.percentage))}
+   }
+   const summaryRows=[...summaries.values()].sort((a,b)=>b.attempts-a.attempts).map(x=>
+     '<tr><td class="wrap">'+escapeHtml(x.title)+'</td><td>'+fmt(x.users.size)+'</td><td>'+fmt(x.attempts)+'</td><td>'+fmt(x.submitted)+'</td><td>'+pct(x.scores.length?x.scores.reduce((a,b)=>a+b,0)/x.scores.length:null)+'</td></tr>');
+   const detailed=rows.slice().sort((a,b)=>String(b.started_at).localeCompare(String(a.started_at))).map(a=>{
+      const student=students.get(a.user_id);
+      return '<tr><td class="wrap">'+escapeHtml(student?.full_name||student?.student_code||"—")+'</td><td>'+escapeHtml(student?.group_code||"—")+'</td><td class="wrap">'+escapeHtml(a.training_title)+'</td><td>'+badge(a.submitted_at?"تم التسليم":"قيد الحل",a.submitted_at?"ok":"pending")+'</td><td>'+pct(a.submitted_at?a.percentage:null)+'</td><td>'+date(a.submitted_at||a.started_at)+'</td></tr>';
+   });
+   wrap.innerHTML='<h2>التدريبات التأسيسية المشتركة</h2><p class="sub">نتائج تدريبات التأسيس القديمة فقط (foundation)، للأفراد المسجلين حاليًا ضمن مجموعات الأزهر. لا تدخل ضمن مؤشرات الورش الثلاثة ولا تُعد محاولات محتوى البكالوريا. الدرجات ظاهرة للمحاولات المسلَّمة فقط.</p>'+
+     '<h3>المشاركة حسب التدريب</h3>'+table(["التدريب","طلاب شاركوا","محاولات","مسلّمة","متوسط النتائج المسلّمة"],summaryRows)+
+     '<h3 style="margin-top:20px">سجل المحاولات</h3>'+table(["الطالب","المجموعة الحالية","التدريب","الحالة","النتيجة","آخر وقت"],detailed);
+ }else if(tab==="legacy"){
+   const search=$("search").value.trim().toLocaleLowerCase("ar-EG");
+   const all=raw.legacy_exam_attempts||[];
+   const records=all.filter(a=>!search||String(a.student_name||"").toLocaleLowerCase("ar-EG").includes(search));
+   const submitted=records.filter(a=>a.submitted_at).length;
+   const rows=records.map(a=>'<tr><td class="wrap">'+escapeHtml(a.student_name||"—")+'</td><td>'+badge(a.submitted_at?"تم التسليم":"لم يسلّم",a.submitted_at?"ok":"pending")+'</td><td>'+date(a.started_at)+'</td><td>'+date(a.submitted_at)+'</td><td>'+date(a.updated_at)+'</td></tr>');
+   wrap.innerHTML='<h2>الامتحان الأزهري السابق — الفصلان الأول والثاني</h2><p class="sub">سجلات مستقلة من امتحان أكتوبر 2026 الذي سمح بالدخول بالاسم، وليست من محرك الورش الحالي. الأسماء غير مرتبطة تلقائيًا بأكواد الطلاب أو المجموعات، ولذلك لا تُدمج درجات هذا الامتحان مع نتائج الطلاب أو في مقارنة المجموعات. فلتر المجموعة والفصل لا يُطبّق على هذا التقرير القديم؛ البحث بالاسم فقط.</p>'+
+     '<p>'+badge("المحاولات: "+fmt(records.length),"off")+' '+badge("تم التسليم: "+fmt(submitted),"ok")+' '+badge("لم يسلّم: "+fmt(records.length-submitted),"pending")+'</p>'+
+     table(["الاسم المسجل","حالة الامتحان","بدأ","سلّم","آخر تعديل"],rows);
  }else{
    const codes=[...new Set(scopedStudents.map(s=>s.group_code))].sort();
    const rows=codes.map(code=>{
