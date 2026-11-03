@@ -23,6 +23,24 @@ test("G2 Azhar analytics are read-only and require an active owner, never a stud
  for(const forbidden of ["service_role","correct_answer","answer_spec","answer_payload,","student_phone","guardian_phone","select * from private.g2_keys"])assert.equal(code.includes(forbidden),false,forbidden);
  assert.doesNotMatch(code,/\b(update|delete|insert)\s+(?:into|from)?\s*private\.g2_/i);
 });
+test("Azhar history is imported as separate, scoped analytics sources",()=>{
+ const source=read("supabase/functions/admin-grade2-azhar-analytics/index.ts");
+ const ui=read("admin-g2-azhar-analytics.js"),html=read("admin-g2-azhar-analytics.html");
+ assert.match(source,/ts\.slug like 'foundation-%'/);
+ assert.match(source,/private\.azhar_exam_name_attempts/);
+ assert.match(source,/name-only|name.only|name_only/i);
+ assert.match(source,/foundation_attempts:foundationAttempts/);
+ assert.match(source,/legacy_exam_attempts:legacyExamAttempts/);
+ assert.match(ui,/tab==="foundation"/);
+ assert.match(ui,/tab==="legacy"/);
+ assert.match(html,/data-tab="foundation"/);
+ assert.match(html,/data-tab="legacy"/);
+ assert.match(ui,/setInterval\(\(\)=>/);
+ assert.match(ui,/60000/);
+ assert.match(ui,/document\.addEventListener\("visibilitychange"/);
+ assert.match(ui,/source.*\w*foundation|foundation_attempts/);
+});
+
 test("Admin UI has real dataset filters and does not mix pending essay with final grades",()=>{
  const ui=read("admin-g2-azhar-analytics.js"),page=read("admin-g2-azhar-analytics.html"),home=read("admin-home.html");
  for(const id of ["group","chapter","kind","activity","search","stats","detail"])assert.ok(page.includes('id="'+id+'"'),id);

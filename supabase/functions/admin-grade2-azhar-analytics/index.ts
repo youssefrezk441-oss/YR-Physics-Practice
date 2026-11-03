@@ -26,7 +26,7 @@ Deno.serve(async req=>{
   if(!await requireOwner(req))return reply(req,{error:"owner_only",message:"هذه التحليلات متاحة لصاحب إدارة المنصة فقط"},403);
   const body=await req.json().catch(()=>({}));
   if(body?.action!=="snapshot")return reply(req,{error:"unsupported_action"},400);
-  const [students,activities,parts,attempts,answers]=await Promise.all([
+  const [students,activities,parts,attempts,answers,foundationAttempts,legacyExamAttempts]=await Promise.all([
    db`select sp.user_id::text as user_id,sp.student_code,sp.full_name,
       sp.group_code,sp.is_active as student_active,sg.is_active as group_active,
       sg.center_name
@@ -70,10 +70,32 @@ Deno.serve(async req=>{
       from latest e left join lateral (
        select d.awarded_points,d.max_points,d.method from private.g2_grading_decisions d
        where d.answer_event_id=e.id order by d.created_at desc,d.id desc limit 1
-      ) d on true`
+      ) d on true`,
+   // Older foundational course: only the genuinely shared foundation lessons,
+   // not Baccalaureate-specific b2-* materials associated with migrated students.
+   db`select a.id::text as id,a.user_id::text as user_id,ts.slug as training_slug,
+      ts.title as training_title,a.started_at,a.submitted_at,a.status,
+      a.score::float8 as score,a.max_score::float8 as max_score,
+      a.percentage::float8 as percentage
+      from public.attempts a
+      join public.training_sets ts on ts.id=a.training_set_id
+      join public.student_profiles sp on sp.user_id=a.user_id
+      join public.student_groups sg on sg.group_code=sp.group_code
+      where sg.education_track='azhar'
+        and sg.grade_level='الصف الثاني الثانوي'
+        and ts.slug like 'foundation-%'
+      order by a.started_at desc`,
+   // Historical October exam allowed name-only login: never match a free-text
+   // name to an authenticated student profile or assign a class/group.
+   db`select exam_id,student_name,started_at,submitted_at,updated_at
+      from private.azhar_exam_name_attempts
+      where exam_id='azhar-physics-g2-ch1-ch2-2026-10'
+      order by started_at desc`
   ]);
   return reply(req,{ok:true,generated_at:new Date().toISOString(),scope:"grade2_azhar",
-    privacy:"owner_only_no_raw_answers",students,activities,parts,attempts,answers});
+    privacy:"owner_only_no_raw_answers",
+    source_policy:"new_azhar_workshops_plus_separate_shared_foundation_and_name_only_legacy_exam",
+    students,activities,parts,attempts,answers,foundation_attempts:foundationAttempts,legacy_exam_attempts:legacyExamAttempts});
  }catch(e){
   console.error("grade2-analytics",e instanceof Error?e.name:"error");
   return reply(req,{error:"analytics_unavailable",message:"تعذر تحميل التحليلات، حاول إعادة التحديث."},500);
