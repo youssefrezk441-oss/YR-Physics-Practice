@@ -129,3 +129,17 @@ test("relative velocity lesson reference is not exposed to Azhar students",()=>{
  assert.match(builder,/\$\('refB2Lesson1'\)\.onclick=\(\)=>\{if\(gradeLabel/);
  assert.match(nav,/if\(chapter==="1"&&source\("openReferences"\)\)/);
 });
+
+test("chapter-two book remainder is shown in the actual student learning workspace",()=>{
+ const nav=read("student-workspace-navigation-v1.js");
+ const shell=read("student-base.html");
+ const loader=read("student.html");
+ const list=nav.match(/const availableSources=\[([\s\S]*?)\];/)?.[1]||"";
+ const chapterTwo=nav.match(/found\+=collect\(box,"ورش الفصل الثاني",\[([\s\S]*?)\]\);/)?.[1]||"";
+ assert.match(list,/"openBookRemainder"/,"the live workspace must watch its availability");
+ assert.match(chapterTwo,/\["openBookRemainder","استكمال أسئلة الدرس الأول/,"chapter 2 must render the book remainder");
+ assert.match(nav,/new MutationObserver\(scheduledRefresh\)/,"launcher visibility must refresh the workspace");
+ assert.match(shell,/student-workspace-navigation-v1\.js\?v=20261104-book52-menu/,"load the updated module");
+ assert.match(loader,/openBookRemainder/,"the authorized launcher must exist");
+ assert.match(loader,/gradeLabel\(profile\?\.grade_level\)==='الصف الثالث الثانوي'/,"grade 3 restriction stays");
+});

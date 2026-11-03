@@ -9,7 +9,7 @@ const chapters={learning:"1",review:"1"};
 const availableSources=[
  "openFirstTermWorkshops","openSecondTermWorkshops",
  "openLecture3Workshop","openLecture4Workshop","openLecture5Workshop","openLecture6Workshop",
- "openUnifiedL1Workshop","openLecture1Homework","openLesson1Review35","openChapterMistakes","openCh2Mistakes",
+ "openUnifiedL1Workshop","openLecture1Homework","openBookRemainder","openLesson1Review35","openChapterMistakes","openCh2Mistakes",
  "openB2Lesson1Workshop","openB2Lesson2Workshop","openB2Lesson1Trainings","openChapterTrainings",
  "openFoundationTrainings","openCompleted","openHonor","openIndicators","openReferences"
 ];
@@ -114,7 +114,8 @@ function refreshLearning(){
   found+=collect(box,"ورش الفصل الثاني",[
    ["openUnifiedL1Workshop",null,null,"⚡"],
    ["openLesson1Review35","مراجعة الدرس الأول — السلك المستقيم (35 سؤالًا)","ورشة مراجعة تفاعلية، مع تسجيل الأخطاء للمراجعة والإتقان.","🧲"],
-   ["openLecture1Homework",null,null,"▤"]
+   ["openLecture1Homework",null,null,"▤"],
+   ["openBookRemainder","استكمال أسئلة الدرس الأول — كتاب الامتحان (52 سؤالًا)","الأسئلة المتبقية فقط، دون أسئلة السنوات السابقة أو تكرار الواجب الأول.","📗"]
   ]);
   if(!found && source("openSecondTermWorkshops")){
    found+=collect(box,"الفصل الثاني",[
