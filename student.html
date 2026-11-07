@@ -36,7 +36,7 @@
       }
     }catch(error){console.warn('Student login portal unavailable; using legacy entry.',error)}
   }
-  let html=await (await fetch('./student-base.html?v=20260822-2',{cache:'no-store'})).text();
+  let html=await (await fetch('./student-base.html?v=20261107-honor-top5-clean-v2',{cache:'no-store'})).text();
   const replaceOnce=(oldText,newText,label)=>{if(!html.includes(oldText))throw new Error('تعذر تجهيز '+label);html=html.replace(oldText,newText)};
 
   replaceOnce(
