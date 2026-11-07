@@ -207,7 +207,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 <div class="studentHomeGrid">
 <button id="openTrainings" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg></div><h3>التدريبات</h3><p>التدريبات المتاحة وما أنجزته من تدريبات المنصة.</p></button>
 <button id="openIndicators" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><rect x="6.5" y="12" width="3" height="6" rx=".6"/><rect x="11.5" y="8" width="3" height="10" rx=".6"/><rect x="16.5" y="5" width="3" height="13" rx=".6"/></svg></div><h3>مؤشراتي</h3><p>متابعة مؤشرات الالتزام والاختبارات وتدريبات المنصة.</p></button>
-<button id="openHonor" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/></svg></div><h3>لوحة الشرف</h3><p>بطولة التميز: الصدارة، الصعود، أبطال الفئات وتحدي ناهيا وكفر حكيم.</p></button>
+<button id="openHonor" class="card studentNavCard" type="button"><div class="studentNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/></svg></div><h3>لوحة الشرف</h3><p>لوحة شرف كل دورة: منصة التتويج وأفضل 5 طلاب.</p></button>
 </div>
 </section>
 <section id="honorView" class="hidden">
@@ -219,7 +219,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 <p id="honorArenaLead" class="honorHeroLead">هذا ترتيب مبدئي للاستعداد. بعد اكتمال الشامل تتحول الجولة إلى 80% شامل + 20% استعداد.</p>
 <div id="honorFormula" class="honorFormula"><span><b>40%</b> كويزات</span><span><b>30%</b> منصة</span><span><b>20%</b> واجب</span><span><b>10%</b> حضور</span></div>
 <div class="honorGradeTabs"><button class="honorGradeTab" data-honor-grade="grade3">🎓 ٣ ثانوي</button><button class="honorGradeTab" data-honor-grade="grade2">📘 ٢ ث بكالوريا</button><button class="honorGradeTab" data-honor-grade="grade2_azhar">🕌 ٢ ث أزهر</button></div>
-<div id="honorCycleSelector" class="yrHonorCycleSelector" aria-label="إصدارات جولات التقييم"></div><div id="honorChallenge" class="honorChallenge">كل نقطة تصنع فرقًا في سباق التميز.</div>
+<div id="honorCycleSelector" class="yrHonorCycleSelector" aria-label="إصدارات جولات التقييم"></div><div id="honorChallenge" style="display:none!important" aria-hidden="true"></div>
 </div>
 <div id="honorLoading" class="card"><div class="empty">جاري تجهيز لوحة الشرف من البيانات الفعلية...</div></div>
 <div id="honorContent" class="hidden">
@@ -230,14 +230,14 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
  <p>يمكنك متابعة تدريباتك، وستُعرض لوحة الشرف بعد اعتماد ربط الحضور والكويزات والواجبات والتدريبات الخاصة بالفصل الثاني فقط.</p>
 </div>
 <div class="honorSectionTitle"><div><h3 id="honorGradeTitle">لوحة الشرف</h3><p>الترتيب مستقل لكل صف دراسي لضمان عدالة المنافسة.</p></div></div>
-<div class="honorStats"><div class="honorStat"><span>طلاب مؤهلون للترتيب</span><b id="honorEligible">—</b></div><div class="honorStat"><span id="honorHighestLabel">أعلى مؤشر استعداد</span><b id="honorHighest">—</b></div><div class="honorStat"><span>تقييمات قيد المراجعة</span><b id="honorRiseStat">—</b></div><div class="honorStat"><span>السنتر المتصدر</span><b id="honorLeadingGroup">—</b></div><div class="honorStat"><span>درجات شامل مدخلة</span><b id="honorGoldCommit">—</b></div></div>
+<div class="honorStats"><div class="honorStat"><span>طلاب مؤهلون للترتيب</span><b id="honorEligible">—</b></div><div class="honorStat"><span id="honorHighestLabel">أعلى مؤشر استعداد</span><b id="honorHighest">—</b></div><div class="honorStat"><span>تقييمات قيد المراجعة</span><b id="honorRiseStat">—</b></div><div id="honorLeadingGroup" style="display:none!important" aria-hidden="true"></div><div class="honorStat"><span>درجات شامل مدخلة</span><b id="honorGoldCommit">—</b></div></div>
 <div class="honorSectionTitle"><div><h3>👑 منصة التتويج</h3><p>أفضل 3 في الترتيب الحالي مع مراعاة التعادل الحقيقي.</p></div></div><div id="honorPodium" class="honorPodium"></div>
 <div id="honorPersonalWrap"></div>
-<div class="honorSectionTitle"><div><h3>🏁 سباق الـ Top 5</h3><p>ترتيب مختصر وواضح: النتيجة الحالية، الشامل، والاستعداد.</p></div></div><div id="honorTop10" class="honorTopList"></div>
-<div class="honorSectionTitle"><div><h3>🎖️ أبطال الفئات</h3><p>أبطال الشامل والاستعداد والكويزات والمنصة — كل فئة مستقلة.</p></div></div><div id="honorCategories" class="honorCategories"></div>
-<div class="honorSectionTitle"><div><h3>⭐ أوسمة الالتزام الكامل</h3><p>الحضور والواجب الكامل يُكرّمان كوسام جماعي عند التعادل على 100%، وليس كترتيب مصطنع.</p></div></div><div id="honorAwards" class="honorCategories"></div>
-<div class="honorSectionTitle"><div><h3 id="honorRiserTitle">📈 نجوم الصعود</h3><p id="honorRiserDesc">نجمة الصعود تظهر فقط إذا كان أحدث كويز 70% فأكثر وأعلى من متوسط كل الكويزات السابقة في نفس الدورة.</p></div></div><div id="honorRisers" class="honorRisers"></div>
-<div class="honorSectionTitle"><div><h3>⚔️ تحدي السنترين</h3><p>منافسة داخل نفس الصف فقط.</p></div></div><div id="honorGroups" class="honorDuel"></div>
+<div class="honorSectionTitle"><div><h3>🏁 أفضل 5 طلاب</h3><p>ترتيب مختصر وواضح: النتيجة الحالية، الشامل، والاستعداد.</p></div></div><div id="honorTop10" class="honorTopList"></div>
+<div id="honorCategories" style="display:none!important" aria-hidden="true"></div>
+<div id="honorAwards" style="display:none!important" aria-hidden="true"></div>
+<div style="display:none!important" aria-hidden="true"><span id="honorRiserTitle"></span><span id="honorRiserDesc"></span><div id="honorRisers"></div></div>
+<div id="honorGroups" style="display:none!important" aria-hidden="true"></div>
 <div class="honorFoot"><b>قواعد العدالة:</b> كل الحسابات تأتي من محرك دورة التقييم المركزي. غياب أي كويز أو امتحان مسجل = صفر ويدخل بكامل نهاية الاختبار في الحصيلة. تدريبات المنصة المحتسبة هي تدريبات الإعداد المسلّمة قبل الـCutoff فقط، والنشاط بعده لا يغيّر الجولة السابقة. الطالب الذي لديه أعمال قبل الشامل ما زالت قيد المراجعة لا يأخذ مركزًا مؤقتًا، لكنه يرى حالته الشخصية «قيد المراجعة» حتى اكتمال التصحيح.</div>
 <div id="honorUpdated" class="honorUpdate"></div>
 </div>
