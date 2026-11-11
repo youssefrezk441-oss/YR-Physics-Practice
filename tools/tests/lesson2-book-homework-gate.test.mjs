@@ -21,11 +21,14 @@ test('all shared paper-homework UI elements exist in lesson-two wrapper', () => 
   for (const id of new Set(ids)) assert.ok(page.includes('id="'+id+'"'), 'missing element: '+id);
 });
 
-test('student launcher fails closed until authorized server confirms publication', () => {
+test('grade-three navigation card is visible without relying on ping while server guards access', () => {
   assert.ok(student.includes('openLesson2BookHomework'));
   assert.ok(student.includes("action:'ping',workshop_slug:'"+slug+"'"));
-  assert.ok(student.includes('lesson2BookAllowed=!error&&data?.ok&&data?.available===true'));
-  assert.ok(student.includes("lesson2BookAllowed=false;l2BookButton.classList.add('hidden')"));
+  assert.ok(student.includes("lesson2BookAllowed=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي'"));
+  assert.ok(student.includes("l2BookButton.classList.toggle('hidden',!lesson2BookAllowed)"));
+  assert.ok(student.includes("if(lesson2BookAllowed)sb.functions.invoke('paper-homework'"));
+  assert.ok(!student.includes('lesson2BookAllowed=!error&&data?.ok&&data?.available===true'));
+  assert.ok(!student.includes("lesson2BookAllowed=false;l2BookButton.classList.add('hidden')"));
 });
 
 test('no teacher-only keys leak into student-facing HTML', () => {
