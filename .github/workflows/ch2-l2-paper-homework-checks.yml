@@ -4,6 +4,9 @@ on:
     paths:
       - "lesson2-book-homework.html"
       - "student.html"
+      - "student-base.html"
+      - "student-workspace-navigation-v1.js"
+      - "tools/tests/l2-workspace-visibility.test.mjs"
       - "student-ch2-mistakes.js"
       - "tools/tests/lesson2-mistake-transfer.test.mjs"
       - "lecture1-homework.js"
@@ -25,3 +28,10 @@ jobs:
           node-version: 22
       - name: Verify authenticated launcher, UI contract, and key separation
         run: node --test tools/tests/lesson2-book-homework-gate.test.mjs tools/tests/lesson2-public-assets.test.mjs tools/tests/lesson2-mistake-transfer.test.mjs
+      - name: Browser E2E of the actual published student workspace navigation
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install chromium
+          export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
+          node --test tools/tests/l2-workspace-visibility.test.mjs
+
