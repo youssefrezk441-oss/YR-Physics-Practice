@@ -75,6 +75,9 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
   assert.match(html, /openBookRemainder/);
   assert.match(html, /openLesson2BookHomework/);
   assert.match(html, /third-secondary-term-2-lesson-2-book-homework/);
-  assert.match(html, /lesson2BookAllowed=!error&&data\?\.ok&&data\?\.available===true/);
-  assert.match(html, /lesson2BookAllowed=false;l2BookButton\.classList\.add\('hidden'\)/);
+  // Publication visibility is independent of a transient ping; the backend still guards access.
+  assert.match(html, /lesson2BookAllowed=gradeLabel\(profile\?\.grade_level\)==='الصف الثالث الثانوي'\|\|profile\?\.grade_level==='3 ثانوي'/);
+  assert.match(html, /l2BookButton\.classList\.toggle\('hidden',!lesson2BookAllowed\)/);
+  assert.doesNotMatch(html, /lesson2BookAllowed=!error&&data\?\.ok&&data\?\.available===true/);
+  assert.doesNotMatch(html, /lesson2BookAllowed=false;l2BookButton\.classList\.add\('hidden'\)/);
 });
