@@ -1,0 +1,4929 @@
+{
+  "schema_version": 1,
+  "delivery_contract": "paper_homework_capture_v1",
+  "workshop": {
+    "slug": "third-secondary-term-2-lesson-2-book-homework",
+    "title": "واجب الدرس الثاني كاملًا — كتاب الامتحان",
+    "subtitle": "الملف الدائري والملف اللولبي — 95 اختيار و20 مقالي",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 2,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "home",
+      "title": "واجب الدرس الثاني — كتاب الامتحان",
+      "mode": "final_submit",
+      "order": 1,
+      "policy": {
+        "allow_unanswered": true,
+        "one_submission": true,
+        "essay_self_review": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "HW-MAG-L2-01",
+      "name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "order": 1
+    },
+    {
+      "id": "HW-MAG-L2-02",
+      "name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "order": 2
+    },
+    {
+      "id": "HW-MAG-L2-03",
+      "name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "order": 3
+    },
+    {
+      "id": "HW-MAG-L2-04",
+      "name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "order": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "EXAM-L02-HW-Q001",
+      "track": "home",
+      "order": 1,
+      "source_number": 1,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 1 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q001.jpg",
+      "image_sha256": "a3d52b0f15944abd6e4c22ef1307a0acb91e623dec5c0d8289f5281de328f957",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q002",
+      "track": "home",
+      "order": 2,
+      "source_number": 2,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 2 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q002.jpg",
+      "image_sha256": "17d3bd51febd3857b2386b6f360f301c70cf676ee028709c527e5703169de8ab",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q003",
+      "track": "home",
+      "order": 3,
+      "source_number": 3,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 3 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q003.jpg",
+      "image_sha256": "a9f0405632228991264e3ea2a8e5ec5aed490711f53a21a5b4296a33ce0d231b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q004",
+      "track": "home",
+      "order": 4,
+      "source_number": 4,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 4 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q004.jpg",
+      "image_sha256": "d7acb5737152b7f1e203c4c1b76507eb1549024b153a535871f53f342cd5594b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q005",
+      "track": "home",
+      "order": 5,
+      "source_number": 5,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 5 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q005.jpg",
+      "image_sha256": "4abe194aa7c811d49259a3f42f7761ec5305caf4cffe12acd9cc20e0758e83fe",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q006",
+      "track": "home",
+      "order": 6,
+      "source_number": 6,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 6 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q006.jpg",
+      "image_sha256": "366444b4f52774964151a8a1498e74c69328a4f45d3240c142a78a718d691520",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q007",
+      "track": "home",
+      "order": 7,
+      "source_number": 7,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 7 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q007.jpg",
+      "image_sha256": "3f0206816f07e630e52de8eb488a86d5b286c059ba3d5e9e6cef1d9efbe02630",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q008",
+      "track": "home",
+      "order": 8,
+      "source_number": 8,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 8 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q008.jpg",
+      "image_sha256": "b7a0d1fb86488143c90737179458ed95c7f39d961e4f21f8d6b035647b6abae7",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q009",
+      "track": "home",
+      "order": 9,
+      "source_number": 9,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 9 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q009.jpg",
+      "image_sha256": "43ee978271c028c90c7484ae67a1a085f1e03373bcd9b4e340ea638d7b49b5de",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q010",
+      "track": "home",
+      "order": 10,
+      "source_number": 10,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 10 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q010.jpg",
+      "image_sha256": "bf1c35b8d7206e23892e9d272d132e58e43eb2cd71b8a279dcf17ad842e96bcd",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q011",
+      "track": "home",
+      "order": 11,
+      "source_number": 11,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 11 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q011.jpg",
+      "image_sha256": "6d4f18993cbb73e0368b3ddf9dd3b44ef0be199fcf7496be17a70f0a5c60e8f2",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q012",
+      "track": "home",
+      "order": 12,
+      "source_number": 12,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 12 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q012.jpg",
+      "image_sha256": "e1bee19ebf65632532e6708ce2ff47cd44daa753aa87052ad53f8c21b0634eda",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q013",
+      "track": "home",
+      "order": 13,
+      "source_number": 13,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 13 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q013.jpg",
+      "image_sha256": "4b870e9bb815db3234b6528c0f10e7a91001d9fd9f2347ea3679460244a38d28",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q014",
+      "track": "home",
+      "order": 14,
+      "source_number": 14,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 14 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q014.jpg",
+      "image_sha256": "47c60a9f2c15ae451f992e79f68ae2888b0220c66783040d6c155675fa8e9b75",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q015",
+      "track": "home",
+      "order": 15,
+      "source_number": 15,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 15 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q015.jpg",
+      "image_sha256": "e36cea65cb6df51fd354f8bbbf2e1586cd75aeed20f6ecbcdc06b28e7bab2879",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q016",
+      "track": "home",
+      "order": 16,
+      "source_number": 16,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 16 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q016.jpg",
+      "image_sha256": "72c117b8e75e327507baa024a4ef00f133268489c242444f93c3889c3cbda720",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q017",
+      "track": "home",
+      "order": 17,
+      "source_number": 17,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 17 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q017.jpg",
+      "image_sha256": "ad0e43df9b015abe04cb6b25025e4444ebe7d638b121d07b1728ea103afe3a85",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q018",
+      "track": "home",
+      "order": 18,
+      "source_number": 18,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 18 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q018.jpg",
+      "image_sha256": "e33513ab6b8f14b28d5bad13dcf67637e417c36c6d7cf3c3718280924b2b2a04",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q019",
+      "track": "home",
+      "order": 19,
+      "source_number": 19,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 19 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q019.jpg",
+      "image_sha256": "a6e9cd7603b65b717ca829b46e5294ac286a9e0f11cce14a01c4d7fd40c555dc",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q020",
+      "track": "home",
+      "order": 20,
+      "source_number": 20,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 20 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q020.jpg",
+      "image_sha256": "c3a6694129218991007665c939dbde8de297514e49ca89a36e18c69518c65706",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q021",
+      "track": "home",
+      "order": 21,
+      "source_number": 21,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 21 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q021.jpg",
+      "image_sha256": "befccdf3594b25bcbd8573d1703087c159cc46b309e7178f2a633930a27dcf0a",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q022",
+      "track": "home",
+      "order": 22,
+      "source_number": 22,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 22 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q022.jpg",
+      "image_sha256": "870c80c4678abefecfbfcc8c3d72e8acbb0a53340cd1f44d83cebc59bb62b49b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q023",
+      "track": "home",
+      "order": 23,
+      "source_number": 23,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 23 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q023.jpg",
+      "image_sha256": "acf5cd467b7356b1d57c272627e28cd7bf127f47f7f629a0f985e708ee118cf8",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q024",
+      "track": "home",
+      "order": 24,
+      "source_number": 24,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 24 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q024.jpg",
+      "image_sha256": "12c487dd76136b5593e91ae7aa4b7e7d6a37d290b9bec52eb1f914e7fbd324ba",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q025",
+      "track": "home",
+      "order": 25,
+      "source_number": 25,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 25 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q025.jpg",
+      "image_sha256": "2c93d9c04cd55007bac01f983d7f75901da1db23527014687f636f9d026559ea",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q026",
+      "track": "home",
+      "order": 26,
+      "source_number": 26,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 26 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q026.jpg",
+      "image_sha256": "af78e7df61ca6f970fa3d9cae5562544345119a0c6d65f29f84808fd2a0eba76",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q027",
+      "track": "home",
+      "order": 27,
+      "source_number": 27,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 27 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q027.jpg",
+      "image_sha256": "3ae8384b57ad32dce774cd16550b0e9920906cf46e86bf445f21d838aee8a670",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q028",
+      "track": "home",
+      "order": 28,
+      "source_number": 28,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 28 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q028.jpg",
+      "image_sha256": "3add1d3ab224cc7ac442deb52577231e08c023e59cfaaba01c61f4cf4784fefb",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q029",
+      "track": "home",
+      "order": 29,
+      "source_number": 29,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 29 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q029.jpg",
+      "image_sha256": "c952e14f4f47b6da24e2edc2bf193cd535b5485b489d46cc05190ddc8015207b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q030",
+      "track": "home",
+      "order": 30,
+      "source_number": 30,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 30 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q030.jpg",
+      "image_sha256": "13ed8e428e9a1fc9adec6a126964cf6840a98e9b99a5e2cdb7becf9eef019d77",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q031",
+      "track": "home",
+      "order": 31,
+      "source_number": 31,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 31 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q031.jpg",
+      "image_sha256": "bc013faa782f394a4d2f69f98a09f114463f9a403d40f9afc1d1e15e8a0e37d2",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q032",
+      "track": "home",
+      "order": 32,
+      "source_number": 32,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 32 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q032.jpg",
+      "image_sha256": "f55d9cb7d5682bfeae42ac2cc19f4bd62649d54cd6081a95be8e58b3b1de91b8",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q033",
+      "track": "home",
+      "order": 33,
+      "source_number": 33,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 33 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q033.jpg",
+      "image_sha256": "04ac25e19e29bb5ac286e177660ba05c8dab52d3301c1edd37f60a4f7b3d125b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q034",
+      "track": "home",
+      "order": 34,
+      "source_number": 34,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 34 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q034.jpg",
+      "image_sha256": "763736f0be136b0012b65b21f3b87a124f569a7d18aec16c6a0b4cae23f3b9cd",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q035",
+      "track": "home",
+      "order": 35,
+      "source_number": 35,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 35 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q035.jpg",
+      "image_sha256": "cb7f5811ab833e1699e679f2a3365820b8231966f014c1ca7ce97107926d47f8",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q036",
+      "track": "home",
+      "order": 36,
+      "source_number": 36,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 36 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q036.jpg",
+      "image_sha256": "3306b45837a57b30e57141d50d42a5e394bb1282079c21fad811f66624470fcf",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "المطلوب (3)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q037",
+      "track": "home",
+      "order": 37,
+      "source_number": 37,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 37 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q037.jpg",
+      "image_sha256": "3568b05523056e1f2c3faf22708d7e83699137a492349bca9632c7de45ec12c7",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q038",
+      "track": "home",
+      "order": 38,
+      "source_number": 38,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 38 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q038.jpg",
+      "image_sha256": "b48561ddcc5a80e7b584d0cd95c095ab3d71d36a3fdeb1f6b2bd4ddaf5456f22",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q039",
+      "track": "home",
+      "order": 39,
+      "source_number": 39,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 39 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q039.jpg",
+      "image_sha256": "546c6f902b596bc9049f27c871c4d0c604a62640b5a99857677bb323b5ee6ac8",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q040",
+      "track": "home",
+      "order": 40,
+      "source_number": 40,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 40 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q040.jpg",
+      "image_sha256": "558a70c6142b8a5666305c585fd9b1791339f2e6309d0479092929a9198e56aa",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q041",
+      "track": "home",
+      "order": 41,
+      "source_number": 41,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 41 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q041.jpg",
+      "image_sha256": "eb24dbe6f60d1b6babf0a27157193ed857d481f4d8d0ef0d86916b936dc4bf8e",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q042",
+      "track": "home",
+      "order": 42,
+      "source_number": 42,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 42 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q042.jpg",
+      "image_sha256": "a0e143d50279bfa1491848d14c78b212805f5604f21ec7966acbb86746eeb35b",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q043",
+      "track": "home",
+      "order": 43,
+      "source_number": 43,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 43 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q043.jpg",
+      "image_sha256": "219e8222a5279b669c23ec4a02c762dd2192fd889d42367a85ba9653c77d2b8a",
+      "skill": "HW-MAG-L2-01",
+      "skill_name": "المجال المغناطيسي للملف الدائري: الاتجاه والقانون والتناسبات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q044",
+      "track": "home",
+      "order": 44,
+      "source_number": 44,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 44 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q044.jpg",
+      "image_sha256": "d0dc6bfaf563e5abdd7de69b5e041ccd7e474b6ad8701ae62b71284c4ee763b3",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q045",
+      "track": "home",
+      "order": 45,
+      "source_number": 45,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 45 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q045.jpg",
+      "image_sha256": "bf7ab82c977d92b8af0f11f24582c710c586cefd25e97a72f04c724a8210576b",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q046",
+      "track": "home",
+      "order": 46,
+      "source_number": 46,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 46 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q046.jpg",
+      "image_sha256": "23fad6d23f4ca3e0720cf87918a372777a603b158e4e97011a3d691b8933636b",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q047",
+      "track": "home",
+      "order": 47,
+      "source_number": 47,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 47 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q047.jpg",
+      "image_sha256": "a40cad691ecab36ef1bffe6cba430ca59bc81f6fd80ad47325a3237b09e88bbc",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q048",
+      "track": "home",
+      "order": 48,
+      "source_number": 48,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 48 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q048.jpg",
+      "image_sha256": "d8a270d18f08009180a58975d797818d1ddfdb25ecd255409dbe611fa05c5171",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q049",
+      "track": "home",
+      "order": 49,
+      "source_number": 49,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 49 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q049.jpg",
+      "image_sha256": "b83adf34135952ba7d9a7ece26d4ce1addf5244b001c4971ea6ad9191b44cf11",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q050",
+      "track": "home",
+      "order": 50,
+      "source_number": 50,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 50 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q050.jpg",
+      "image_sha256": "0337a04c8620be1d0e62a2fe4d4387274d8d01a1348a7a66f309e23d9128e4ee",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q051",
+      "track": "home",
+      "order": 51,
+      "source_number": 51,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 51 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q051.jpg",
+      "image_sha256": "cb2b639a953d12280053284cec4e5da76f50d7755e4afc84136bc9a9448e20b6",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q052",
+      "track": "home",
+      "order": 52,
+      "source_number": 52,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 52 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q052.jpg",
+      "image_sha256": "e634de237854a106fb1104868ba746243bc699b4d981a6dd8b82ee3c7c5f2734",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q053",
+      "track": "home",
+      "order": 53,
+      "source_number": 53,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 53 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q053.jpg",
+      "image_sha256": "11ba328dc817bf5fce8870ca8298d5fe15189b46fda2cbebec1f847a305b2aa4",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q054",
+      "track": "home",
+      "order": 54,
+      "source_number": 54,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 54 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q054.jpg",
+      "image_sha256": "949532950b945f1702b4ef7450a8c79a685d79434d3e9e14d5235e847472d35d",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q055",
+      "track": "home",
+      "order": 55,
+      "source_number": 55,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 55 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q055.jpg",
+      "image_sha256": "9722cfff31047b02f8a5f608b92a7e17da671203206259bc1bbbc544bb632e9e",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q056",
+      "track": "home",
+      "order": 56,
+      "source_number": 56,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 56 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q056.jpg",
+      "image_sha256": "53c0fd249fc6138cca681013c386cdbec337c7c8a4d2d84d400a3824fa8e78f2",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q057",
+      "track": "home",
+      "order": 57,
+      "source_number": 57,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 57 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q057.jpg",
+      "image_sha256": "c190cec6ec813cd3f3e5205909c5d79fb550cbaf125e0aac78fec1e4075c29d8",
+      "skill": "HW-MAG-L2-02",
+      "skill_name": "المجال المركب للملف الدائري والأسلاك ومحصلة المجالات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q058",
+      "track": "home",
+      "order": 58,
+      "source_number": 58,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 58 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q058.jpg",
+      "image_sha256": "ddb15706a18c76ecb28d2f495bc115b63cea3948b3aa717e6c666e9613b5ef4b",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q059",
+      "track": "home",
+      "order": 59,
+      "source_number": 59,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 59 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q059.jpg",
+      "image_sha256": "eabcc0a417d4fbb52d42ff489d90ead584d164c1537876dd41e34fd2b6f67b72",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q060",
+      "track": "home",
+      "order": 60,
+      "source_number": 60,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 60 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q060.jpg",
+      "image_sha256": "eb01b006042e4551af73e09f4c40a99aec0f82573b0ab0e7707c13dbf067e1f0",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q061",
+      "track": "home",
+      "order": 61,
+      "source_number": 61,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 61 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q061.jpg",
+      "image_sha256": "594a4c099ffc23f8c9a68c06addc2c84693c73da252938ff88388e5bc16cafae",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q062",
+      "track": "home",
+      "order": 62,
+      "source_number": 62,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 62 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q062.jpg",
+      "image_sha256": "19afc86d241182dabb371bce43f2948bcc4130a829aff4bdab89e290977af78d",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q063",
+      "track": "home",
+      "order": 63,
+      "source_number": 63,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 63 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q063.jpg",
+      "image_sha256": "a6b18c89e6e1a6ddc790976560ef67c14229ffddd84e154362f453d94c30a972",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q064",
+      "track": "home",
+      "order": 64,
+      "source_number": 64,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 64 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q064.jpg",
+      "image_sha256": "a6b476071775f3a4ac56827e322f968e9d5ba4d6cd20114d2386d90cf7f893a4",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q065",
+      "track": "home",
+      "order": 65,
+      "source_number": 65,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 65 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q065.jpg",
+      "image_sha256": "8a32f1ce798ec7f9f4cc1f8174e709b3c2c1e5bb276c5b5d7d82a07832492691",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q066",
+      "track": "home",
+      "order": 66,
+      "source_number": 66,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 66 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q066.jpg",
+      "image_sha256": "c8d82399a443fbd8649ce136ecec97cdbfb521a9c696ef02694c8e491a2d2a6c",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q067",
+      "track": "home",
+      "order": 67,
+      "source_number": 67,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 67 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q067.jpg",
+      "image_sha256": "2dddb1d329e058769b89f56915301e3d0c249252c570be24f73f948ac59ec934",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q068",
+      "track": "home",
+      "order": 68,
+      "source_number": 68,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 68 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q068.jpg",
+      "image_sha256": "3d8c756e8927ff5a8163f783466edf612ade71af4c2cea5f9e0c00607b2ca637",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q069",
+      "track": "home",
+      "order": 69,
+      "source_number": 69,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 69 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q069.jpg",
+      "image_sha256": "c8f5220fa8c815c3e5e3242e35f4cd7b04db391a4041863f747f4e005e7ab368",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q070",
+      "track": "home",
+      "order": 70,
+      "source_number": 70,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 70 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q070.jpg",
+      "image_sha256": "59864ded8c63bd811a961703c121481ed06d0a16e9fd4476cdd4412da2ba21e4",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q071",
+      "track": "home",
+      "order": 71,
+      "source_number": 71,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 71 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q071.jpg",
+      "image_sha256": "27946332e537279549c9c46addf8e599c49ba5fbe327829d47311afc2da0a1d9",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q072",
+      "track": "home",
+      "order": 72,
+      "source_number": 72,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 72 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q072.jpg",
+      "image_sha256": "95128647911ad9ee3a64399b5be1027dc7f59c57e9209a5bc902b38d5eb16aa1",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q073",
+      "track": "home",
+      "order": 73,
+      "source_number": 73,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 73 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q073.jpg",
+      "image_sha256": "a1e0e6406ac1cc3bb92f91d7fae46daeb0e83565371ab4713c00fb6c657b33ca",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q074",
+      "track": "home",
+      "order": 74,
+      "source_number": 74,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 74 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q074.jpg",
+      "image_sha256": "f9370f23c17416af36eb62e759c28a4de158f5a1b09adb88e8fcd78f55af5c35",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q075",
+      "track": "home",
+      "order": 75,
+      "source_number": 75,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 75 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q075.jpg",
+      "image_sha256": "db6cd63a7e49cb987e9668935402d5522bd99568fa270ebd6fc89642eab95311",
+      "skill": "HW-MAG-L2-03",
+      "skill_name": "الملف اللولبي: المجال والاتجاه والقطبية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q076",
+      "track": "home",
+      "order": 76,
+      "source_number": 76,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 76 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q076.jpg",
+      "image_sha256": "b0e5560f9e173de4f3ceef55f8d7293d94b528cbd2fd20d5075384342c9a6be9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q077",
+      "track": "home",
+      "order": 77,
+      "source_number": 77,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 77 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q077.jpg",
+      "image_sha256": "6ef5ae75b7f1528b022ec571df85e64c78870eb47ee772321e1094c328e16306",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q078",
+      "track": "home",
+      "order": 78,
+      "source_number": 78,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 78 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q078.jpg",
+      "image_sha256": "4a5cb2a5a61dbdf07d0449744d854a10084ab47afad83caaf5c32887762582f9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q079",
+      "track": "home",
+      "order": 79,
+      "source_number": 79,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 79 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q079.jpg",
+      "image_sha256": "b71e8429f51c74c6e7a8290f11a855455ba91240e40c5364b3d96217ac01bbeb",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q080",
+      "track": "home",
+      "order": 80,
+      "source_number": 80,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 80 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q080.jpg",
+      "image_sha256": "4cda20cfe083e433850ce28d2098c93c05714dfa27496eae5c25d10b5f3f90ea",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q081",
+      "track": "home",
+      "order": 81,
+      "source_number": 81,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 81 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q081.jpg",
+      "image_sha256": "c3aac37a8737d80f726371005aac611f5b58b4005dbad76166b2a92fa4184fc2",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q082",
+      "track": "home",
+      "order": 82,
+      "source_number": 82,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 82 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q082.jpg",
+      "image_sha256": "53f2195d7171393f5124136793b68f4110aea169098adc1708ac201358b71537",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q083",
+      "track": "home",
+      "order": 83,
+      "source_number": 83,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 83 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q083.jpg",
+      "image_sha256": "00d5d70e4e613a20332ebd2134359d50fb25a3b8dbda51de69685af69bf5e787",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q084",
+      "track": "home",
+      "order": 84,
+      "source_number": 84,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 84 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q084.jpg",
+      "image_sha256": "50c6b9b77cbf5d43cab972833ddccf88e653c031291cd70f2fb141c8dbf8ab09",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q085",
+      "track": "home",
+      "order": 85,
+      "source_number": 85,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 85 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q085.jpg",
+      "image_sha256": "3587bba95d68b558af3a378cab683a89e3849d22db7ecfdca0dea9b13f89a5b9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q086",
+      "track": "home",
+      "order": 86,
+      "source_number": 86,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 86 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q086.jpg",
+      "image_sha256": "5ab995a5170dc3e529ef5178146668466e9c72aecc551a3d2fe201ba8d882695",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q087",
+      "track": "home",
+      "order": 87,
+      "source_number": 87,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 87 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q087.jpg",
+      "image_sha256": "9d5f025f63f21abfed862359f1c51d0fc3f1196e61266fe1b59285ed34d63202",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q088",
+      "track": "home",
+      "order": 88,
+      "source_number": 88,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 88 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q088.jpg",
+      "image_sha256": "4ab058348ba2ce35eed9d50779d7e5261c3ce446fc3c35d461fc49d3640978f4",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q089",
+      "track": "home",
+      "order": 89,
+      "source_number": 89,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 89 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q089.jpg",
+      "image_sha256": "6913ebc742fcf1fa1d12284121ef55a6fdc2e9b5db462c145b34aedd089bbacd",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q090",
+      "track": "home",
+      "order": 90,
+      "source_number": 90,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 90 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q090.jpg",
+      "image_sha256": "4a2442deac6ad5b4bfb9dd786695d134dd2ab49664e2d9dff45955b8244790f2",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "المطلوب (1)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "المطلوب (2)",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q091",
+      "track": "home",
+      "order": 91,
+      "source_number": 91,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 91 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q091.jpg",
+      "image_sha256": "e2dea09b4e8419708d4516f450dfd535ca42345cb683d9c7d3b65a2c2f7d04b7",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q092",
+      "track": "home",
+      "order": 92,
+      "source_number": 92,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 92 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q092.jpg",
+      "image_sha256": "ebf407952743642cc5dc7b9f55e6f78028268d732d40d98282f4c146abc0dd55",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q093",
+      "track": "home",
+      "order": 93,
+      "source_number": 93,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 93 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q093.jpg",
+      "image_sha256": "82ee09307973e257265998949b684534205fc6b049fc6f2609bbf3e0955a09a8",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q094",
+      "track": "home",
+      "order": 94,
+      "source_number": 94,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 94 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q094.jpg",
+      "image_sha256": "5307d860589e10c4874d6b7de1d6a7844b91df8ff636e593dde6996d6d600049",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q095",
+      "track": "home",
+      "order": 95,
+      "source_number": 95,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "سؤال 95 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q095.jpg",
+      "image_sha256": "032bd1e993ae0ff33450c043d4050d7f10feeecf2bd184cb550ecf6c91d01c88",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q096",
+      "track": "home",
+      "order": 96,
+      "source_number": 96,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 96 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q096.jpg",
+      "image_sha256": "787c43ecbbd20a530171d181e75d671f721a0a7b849eeace93b6425a9333a0e9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q097",
+      "track": "home",
+      "order": 97,
+      "source_number": 97,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 97 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q097.jpg",
+      "image_sha256": "d9844626ba372d60faf6d093c8491612f3edfe69d068ab9347789395f084dd16",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q098",
+      "track": "home",
+      "order": 98,
+      "source_number": 98,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 98 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q098.jpg",
+      "image_sha256": "1d9c8329405086fe9d390f53dd5b081add0ed088fb93de04d82f3746d980341e",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q099",
+      "track": "home",
+      "order": 99,
+      "source_number": 99,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 99 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q099.jpg",
+      "image_sha256": "5f7ada7e2abc1561c27c651072d27197e610bad1b36fcb35e5eedd09638bae32",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q100",
+      "track": "home",
+      "order": 100,
+      "source_number": 100,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 100 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q100.jpg",
+      "image_sha256": "db2dd1de906e5a6b37b3571bab86210e614ef72d12554edd3a166cb952dbcd6e",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q101",
+      "track": "home",
+      "order": 101,
+      "source_number": 101,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 101 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q101.jpg",
+      "image_sha256": "56719ed52d2c18a8d271b2972834bc89823e875a6cf57af4f75eb2c2223d7f5b",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q102",
+      "track": "home",
+      "order": 102,
+      "source_number": 102,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 102 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q102.jpg",
+      "image_sha256": "aaad3f0395c01244f09d78c933d6c7471a915d48d51947098e64f4a2aad3df16",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q103",
+      "track": "home",
+      "order": 103,
+      "source_number": 103,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 103 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q103.jpg",
+      "image_sha256": "4204775dbf75ffb13a24cc058a6a5378615cdb118408c6b693feb55047b8ade3",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q104",
+      "track": "home",
+      "order": 104,
+      "source_number": 104,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 104 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q104.jpg",
+      "image_sha256": "359699615ccf756f77ec9c0bd171400d508dbf470ae99639fd5ece8c3911b32e",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "مضاعفة شدة التيار في السلك X فقط",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "مضاعفة شدة التيار في السلك Y فقط",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q105",
+      "track": "home",
+      "order": 105,
+      "source_number": 105,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 105 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q105.jpg",
+      "image_sha256": "f587b86041b9b7e97729c5c3c55d2aa4244cafcf615471b45d790a2ec1e2e983",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q106",
+      "track": "home",
+      "order": 106,
+      "source_number": 106,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 106 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q106.jpg",
+      "image_sha256": "50da2dfae8b0dcbbe1bb41d1f77baf7bc0a57a40ca07c8a92e599d0a4f2ee330",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "الطريقة الأولى",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "الطريقة الثانية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_3",
+          "label": "الطريقة الثالثة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_4",
+          "label": "الطريقة الرابعة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q107",
+      "track": "home",
+      "order": 107,
+      "source_number": 107,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 107 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q107.jpg",
+      "image_sha256": "7c85d1553215690e6b18075118a977240b644f38ab07149c3282319320d726b3",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "الرسم (1) — ملف دائري B مقابل 1/r",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "الرسم (2) — ملف لولبي B مقابل N",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_3",
+          "label": "الرسم (3) — ملف لولبي B مقابل 1/ℓ",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q108",
+      "track": "home",
+      "order": 108,
+      "source_number": 108,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 108 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q108.jpg",
+      "image_sha256": "6363011524e195c1364a5a4b69680cd85ee9c371710991cf205b72ab880df9ad",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "التغيير (1) — إبعاد اللفات",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "التغيير (2) — مضاعفة قطر اللفات",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_3",
+          "label": "التغيير (3) — وصل ملف مماثل على التوالي",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q109",
+      "track": "home",
+      "order": 109,
+      "source_number": 109,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 109 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q109.jpg",
+      "image_sha256": "251c99ff68599f507b200d6ef66bc72f2a49a0d27245b267f5dcd56ad6ff0378",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q110",
+      "track": "home",
+      "order": 110,
+      "source_number": 110,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 110 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q110.jpg",
+      "image_sha256": "9c5dc0385e2463eae8780482367ded50439b3f334ff5a739bea53664b806642e",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q111",
+      "track": "home",
+      "order": 111,
+      "source_number": 111,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 111 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q111.jpg",
+      "image_sha256": "c8d8e769c6df40fefc168737bcdb65a3492e70a942968037911c981ba9957faf",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q112",
+      "track": "home",
+      "order": 112,
+      "source_number": 112,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 112 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q112.jpg",
+      "image_sha256": "a7162c3d8190e41cf31ee4d18e84757e7977e6f7f7ee25433bdc6e5e40de21bb",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "الحالة (1)",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "الحالة (2)",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_3",
+          "label": "الحالة (3)",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q113",
+      "track": "home",
+      "order": 113,
+      "source_number": 113,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 113 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q113.jpg",
+      "image_sha256": "b146546c5de2d3daab099802c6a2707e446f26dae8f6150259ab591858ff04f9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q114",
+      "track": "home",
+      "order": 114,
+      "source_number": 114,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 114 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q114.jpg",
+      "image_sha256": "f0c11943ae071648ff8543a155f067195ae6eb8c1ab0b9f45e4c0de112e8a0b9",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "قبل غلق المفتاح K",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "بعد غلق المفتاح K",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L02-HW-Q115",
+      "track": "home",
+      "order": 115,
+      "source_number": 115,
+      "source_kind": "original_book_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "سؤال 115 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l2-book-homework/EXAM-L02-HW-Q115.jpg",
+      "image_sha256": "782441e75b591a39457cec7bfd1172b094e263f97c5334bd40422d5e98a81896",
+      "skill": "HW-MAG-L2-04",
+      "skill_name": "الملف اللولبي: العوامل والعلاقات البيانية والتطبيقات",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة المقالية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    }
+  ]
+}

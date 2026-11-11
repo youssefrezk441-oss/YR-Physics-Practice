@@ -326,6 +326,22 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   // An optional ping should never silently remove the published workshop from the menu.
   html=html.replace(bookPingAnchor,"const bookRemainderButton=$('openBookRemainder');if(bookRemainderButton){bookRemainderAllowed=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي';bookRemainderButton.classList.toggle('hidden',!bookRemainderAllowed);renderSecondTermAccess();if(bookRemainderAllowed)sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-1-book-remaining'}}).catch(()=>{});};"+bookPingAnchor);
   html=html.replace(bookBindAnchor,"const bookRemainderLink=$('openBookRemainder');if(bookRemainderLink)bookRemainderLink.onclick=()=>{window.location.href='./lesson1-book-remaining.html'};"+bookBindAnchor);
+  // Chapter-two lesson-two book homework: never surface without server-confirmed availability.
+  if(!html.includes('id="openLesson2BookHomework"')){
+    const navAnchor='<div id="secondTermWorkshopsGrid" class="studentSubGrid">';
+    if(!html.includes(navAnchor))throw new Error('تعذر إضافة واجب الدرس الثاني');
+    const navButton='<button id="openLesson2BookHomework" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">📘</div><h3>واجب الدرس الثاني كاملًا</h3><p>الملف الدائري واللولبي — 95 اختيار و20 مقالي من كتاب الامتحان.</p></button>';
+    html=html.replace(navAnchor,navAnchor+navButton);
+  }
+  const l2AllowedAnchor="let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false,bookRemainderAllowed=false;";
+  const l2VisibleAnchor="!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed||bookRemainderAllowed)";
+  const l2PingAnchor="if(lecture1HomeworkButton){lecture1HomeworkButton.classList.add('hidden');";
+  const l2BindAnchor="const unifiedL1=$('openUnifiedL1Workshop');";
+  if(!html.includes(l2AllowedAnchor)||!html.includes(l2VisibleAnchor)||!html.includes(l2PingAnchor)||!html.includes(l2BindAnchor))throw new Error('تعذر ربط صلاحية واجب الدرس الثاني');
+  html=html.replace(l2AllowedAnchor,"let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false,bookRemainderAllowed=false,lesson2BookAllowed=false;");
+  html=html.replace(l2VisibleAnchor,"!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed||bookRemainderAllowed||lesson2BookAllowed)");
+  html=html.replace(l2PingAnchor,"const l2BookButton=$('openLesson2BookHomework');if(l2BookButton){l2BookButton.classList.add('hidden');sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-2-book-homework'}}).then(({data,error})=>{lesson2BookAllowed=!error&&data?.ok&&data?.available===true;l2BookButton.classList.toggle('hidden',!lesson2BookAllowed);renderSecondTermAccess()}).catch(()=>{lesson2BookAllowed=false;l2BookButton.classList.add('hidden');renderSecondTermAccess()});};"+l2PingAnchor);
+  html=html.replace(l2BindAnchor,"const l2BookLink=$('openLesson2BookHomework');if(l2BookLink)l2BookLink.onclick=()=>{window.location.href='./lesson2-book-homework.html'};"+l2BindAnchor);
   document.open();
   document.write(html);
   document.close();

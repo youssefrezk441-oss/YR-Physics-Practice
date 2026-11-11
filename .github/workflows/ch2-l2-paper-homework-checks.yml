@@ -1,0 +1,25 @@
+name: Verify Lesson 2 Paper Homework
+on:
+  pull_request:
+    paths:
+      - "lesson2-book-homework.html"
+      - "student.html"
+      - "lecture1-homework.js"
+      - "tools/tests/lesson2-book-homework-gate.test.mjs"
+      - "tools/tests/lesson2-public-assets.test.mjs"
+      - "workshops/third-secondary-term-2-lesson-2-book-homework/**"
+      - "assets/workshops/ch2-l2-book-homework/**"
+      - ".github/workflows/ch2-l2-paper-homework-checks.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lesson2-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify authenticated launcher, UI contract, and key separation
+        run: node --test tools/tests/lesson2-book-homework-gate.test.mjs tools/tests/lesson2-public-assets.test.mjs
