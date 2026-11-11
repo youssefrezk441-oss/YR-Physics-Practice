@@ -41,7 +41,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
     'openLecture3Workshop', 'openLecture4Workshop',
     'openLecture5Workshop', 'openLecture6Workshop',
     'openChapterMistakes', 'openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop', 'openBookRemainder',
-    'openReferences', 'openLesson1Review35', 'openBookRemainder',
+    'openReferences', 'openLesson1Review35', 'openLesson2BookHomework',
   ];
 
   for (const id of ids) {
@@ -66,11 +66,15 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
   assert.match(html, /showOnly\('firstTermWorkshopsView'\)/);
   assert.match(html, /showOnly\('secondTermWorkshopsView'\)/);
   assert.match(html, /secondTermWorkshopsButton\.classList\.add\('hidden'\)/);
-  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|lecture1HomeworkAllowed\|\|ch2MistakesAllowed\|\|review35Allowed\|\|bookRemainderAllowed\)\)/);
+  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|lecture1HomeworkAllowed\|\|ch2MistakesAllowed\|\|review35Allowed\|\|bookRemainderAllowed\|\|lesson2BookAllowed\)\)/);
   assert.match(html, /functions\.invoke\('paper-homework',\{body:\{action:'ping',workshop_slug:'third-secondary-term-2-lecture-1-homework'\}\}\)/);
   assert.match(html, /functions\.invoke\('student-ch2-mistakes',\{body:\{action:'ping'\}\}\)/);
   assert.match(html, /ch2MistakesAllowed=!error&&data\?\.ok&&data\?\.available/);
   assert.match(html, /third-secondary-term-2-lesson-1-review-35/);
   assert.match(html, /third-secondary-term-2-lesson-1-book-remaining/);
   assert.match(html, /openBookRemainder/);
+  assert.match(html, /openLesson2BookHomework/);
+  assert.match(html, /third-secondary-term-2-lesson-2-book-homework/);
+  assert.match(html, /lesson2BookAllowed=!error&&data\?\.ok&&data\?\.available===true/);
+  assert.match(html, /lesson2BookAllowed=false;l2BookButton\.classList\.add\('hidden'\)/);
 });
