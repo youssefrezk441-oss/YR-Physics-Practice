@@ -4,6 +4,8 @@ on:
     paths:
       - "lesson2-book-homework.html"
       - "student.html"
+      - "student-ch2-mistakes.js"
+      - "tools/tests/lesson2-mistake-transfer.test.mjs"
       - "lecture1-homework.js"
       - "tools/tests/lesson2-book-homework-gate.test.mjs"
       - "tools/tests/lesson2-public-assets.test.mjs"
@@ -22,4 +24,4 @@ jobs:
         with:
           node-version: 22
       - name: Verify authenticated launcher, UI contract, and key separation
-        run: node --test tools/tests/lesson2-book-homework-gate.test.mjs tools/tests/lesson2-public-assets.test.mjs
+        run: node --test tools/tests/lesson2-book-homework-gate.test.mjs tools/tests/lesson2-public-assets.test.mjs tools/tests/lesson2-mistake-transfer.test.mjs
