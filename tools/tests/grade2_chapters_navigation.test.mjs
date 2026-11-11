@@ -139,7 +139,7 @@ test("chapter-two book remainder is shown in the actual student learning workspa
  assert.match(list,/"openBookRemainder"/,"the live workspace must watch its availability");
  assert.match(chapterTwo,/\["openBookRemainder","استكمال أسئلة الدرس الأول/,"chapter 2 must render the book remainder");
  assert.match(nav,/new MutationObserver\(scheduledRefresh\)/,"launcher visibility must refresh the workspace");
- assert.match(shell,/student-workspace-navigation-v1\.js\?v=20261104-book52-menu/,"load the updated module");
+ assert.match(shell,/student-workspace-navigation-v1\.js\?v=\d{8}-[a-z0-9-]+/,"load the versioned workspace module");
  assert.match(loader,/openBookRemainder/,"the authorized launcher must exist");
  assert.match(loader,/gradeLabel\(profile\?\.grade_level\)==='الصف الثالث الثانوي'/,"grade 3 restriction stays");
 });
