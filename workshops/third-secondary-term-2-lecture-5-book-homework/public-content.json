@@ -1,0 +1,2571 @@
+{
+  "schema_version": 1,
+  "delivery_contract": "paper_homework_capture_v1",
+  "workshop": {
+    "slug": "third-secondary-term-2-lecture-5-book-homework",
+    "title": "واجب المحاضرة الخامسة — كتاب الامتحان",
+    "subtitle": "القوة المغناطيسية · الاختياري ١–٤٩ والمقالي ١–٧",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 5,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "home",
+      "title": "واجب المحاضرة الخامسة — كتاب الامتحان",
+      "mode": "final_submit",
+      "order": 1,
+      "policy": {
+        "one_submission": true,
+        "allow_unanswered": true,
+        "essay_self_review": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "MAG-040",
+      "name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "order": 1
+    },
+    {
+      "id": "MAG-041",
+      "name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "order": 2
+    },
+    {
+      "id": "MAG-046",
+      "name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "order": 3
+    },
+    {
+      "id": "MAG-044",
+      "name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "order": 4
+    },
+    {
+      "id": "MAG-048",
+      "name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "order": 5
+    },
+    {
+      "id": "MAG-049",
+      "name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "order": 6
+    }
+  ],
+  "questions": [
+    {
+      "id": "EXAM-L03-E001",
+      "track": "home",
+      "order": 1,
+      "source_number": 1,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 1 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E001.jpg",
+      "image_sha256": "53a42ca1f11f9d3ad078227612c6fd77667a60013634cee1ebce8323f8e0e872",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E002",
+      "track": "home",
+      "order": 2,
+      "source_number": 2,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 2 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E002.jpg",
+      "image_sha256": "a1c689def8fa3a79589110ec73d4d93a42a23f5d10e8c2a20dce808c470039fe",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E003",
+      "track": "home",
+      "order": 3,
+      "source_number": 3,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 3 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E003.jpg",
+      "image_sha256": "203f9924fc838e4f2f3650a79384fe772bc2d31cd75801636eef4d74abb43f90",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E004",
+      "track": "home",
+      "order": 4,
+      "source_number": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 4 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E004.jpg",
+      "image_sha256": "056ae6a1164814a84368dfb8cbe4c1af3136a3eccb67cc8ad44c7f5e17f79280",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E005",
+      "track": "home",
+      "order": 5,
+      "source_number": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 5 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E005.jpg",
+      "image_sha256": "e54f16fdeed8c95a1d4924d3d7059f5ef85751f9b18ef064dd6f35e93508694a",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. زاوية صفر درجة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. زاوية ٤٥ درجة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "٣. زاوية ٩٠ درجة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_4",
+          "label": "٤. زاوية ١٣٥ درجة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_5",
+          "label": "٥. زاوية ١٨٠ درجة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E006",
+      "track": "home",
+      "order": 6,
+      "source_number": 6,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 6 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E006.jpg",
+      "image_sha256": "662efe41fe7ea46a10b866a05f68fbf25f9f974d7ab428d2979bc011ab7bfb96",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E007",
+      "track": "home",
+      "order": 7,
+      "source_number": 7,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 7 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E007.jpg",
+      "image_sha256": "d6021f3758ffa274f3cb2f002ba10868d6d1aac362be50bd5039d9af470f70e2",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E008",
+      "track": "home",
+      "order": 8,
+      "source_number": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 8 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E008.jpg",
+      "image_sha256": "8954da0f20513840da50e6032bd8824eceb35139fa7d963bda16def4dc734d31",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E009",
+      "track": "home",
+      "order": 9,
+      "source_number": 9,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 9 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E009.jpg",
+      "image_sha256": "fe3ecebd263f00dc0cea60ec747fc70d290eddd958e7a661a75b8ae189e34222",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E010",
+      "track": "home",
+      "order": 10,
+      "source_number": 10,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 10 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E010.jpg",
+      "image_sha256": "e27f17df59121bb6eedc5e99c8d5dde5da7e8685d83bb0f760b46dae0d89d442",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E011",
+      "track": "home",
+      "order": 11,
+      "source_number": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 11 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E011.jpg",
+      "image_sha256": "247f603cf330434b4b8dc0920fcfcc9325159ec9dba413d520e4ad3226fbb6d8",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E012",
+      "track": "home",
+      "order": 12,
+      "source_number": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 12 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E012.jpg",
+      "image_sha256": "5a4ca6ed79dc5b35df745c1940ac766cd58f98b50ff4bf5bf0bd0f069e8c577a",
+      "skill": "MAG-046",
+      "skill_name": "العلاقات البيانية للقوة المغناطيسية على سلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E013",
+      "track": "home",
+      "order": 13,
+      "source_number": 13,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 13 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E013.jpg",
+      "image_sha256": "54e6157a8a1bce63ec5fd83ba15929d1f90500aa8bd611ea7757e426a727e8c5",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E014",
+      "track": "home",
+      "order": 14,
+      "source_number": 14,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 14 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E014.jpg",
+      "image_sha256": "d1f3c91123da494d54b2b0af4cae4d202b97c063044050352f1607586a6dcdde",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E015",
+      "track": "home",
+      "order": 15,
+      "source_number": 15,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 15 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E015.jpg",
+      "image_sha256": "28238fe6a0ce32669d0cebe25972b50bbb27e980dfb74af53b73a69b2eebd29e",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E016",
+      "track": "home",
+      "order": 16,
+      "source_number": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 16 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E016.jpg",
+      "image_sha256": "49bcea70af0221aa786412b82ee2f3a0c3c1a20c8a513a49de599a7f392c8245",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E017",
+      "track": "home",
+      "order": 17,
+      "source_number": 17,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 17 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E017.jpg",
+      "image_sha256": "01799947c915885362400bbefca01130005d6d7205776fee56403abacc400b59",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E018",
+      "track": "home",
+      "order": 18,
+      "source_number": 18,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 18 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E018.jpg",
+      "image_sha256": "4fb834849ace83da480af68047cac85aed6ce56ca49c5d312be5ba327bd82e52",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E019",
+      "track": "home",
+      "order": 19,
+      "source_number": 19,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 19 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E019.jpg",
+      "image_sha256": "3b51087f6aa6ff1c6f3d462c9b396fe2f55957605f0004ccd194c353e99c2d88",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. القوة على الجزء ab",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. القوة على الجزء bc",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_3",
+          "label": "٣. القوة على الجزء cd",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E020",
+      "track": "home",
+      "order": 20,
+      "source_number": 20,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 20 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E020.jpg",
+      "image_sha256": "ec70fb06485bc4b0efbc28088f178ca7a719e506fc18cff9cb5d64651b12c1c0",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E021",
+      "track": "home",
+      "order": 21,
+      "source_number": 21,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 21 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E021.jpg",
+      "image_sha256": "49be6bccee59620337468c6830c98a06b99c4088ba86d32d11d8e8a212524d39",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E022",
+      "track": "home",
+      "order": 22,
+      "source_number": 22,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 22 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E022.jpg",
+      "image_sha256": "92e9c525d0706be69e87c9b08376c8b3e330a6672caeece181c4d4fd2d098080",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E023",
+      "track": "home",
+      "order": 23,
+      "source_number": 23,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 23 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E023.jpg",
+      "image_sha256": "dec096644515a0670dad76b6bb0465711e8b3bc1fd8017146292635156af6fad",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E024",
+      "track": "home",
+      "order": 24,
+      "source_number": 24,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 24 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E024.jpg",
+      "image_sha256": "54f7ad9e3f9db8ed7b167ca1021211ba0f0722e7d1cedad6e7bf0cc35c67c484",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E025",
+      "track": "home",
+      "order": 25,
+      "source_number": 25,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 25 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E025.jpg",
+      "image_sha256": "8c6fd4dcaf08fc20ad0c5f7e4a36a3c9d6931ccf5c2c8a834dfd3440e65c912b",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E026",
+      "track": "home",
+      "order": 26,
+      "source_number": 26,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 26 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E026.jpg",
+      "image_sha256": "78e907075252459aebf6bf7008ef0ba5bcd9a38ef346ae5c95923a85b6e07a89",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. القوة في الحالة الأولى",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. القوة عند مضاعفة القطر",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E027",
+      "track": "home",
+      "order": 27,
+      "source_number": 27,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 27 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E027.jpg",
+      "image_sha256": "21d16d34c98ebfb5435ca6cc205df11c2929997ee135e3e12828c2080cae4e6f",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E028",
+      "track": "home",
+      "order": 28,
+      "source_number": 28,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 28 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E028.jpg",
+      "image_sha256": "0f583e062de6582ee28ed68cb275000470f14f18fdd62a9703c506cb58cc2302",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E029",
+      "track": "home",
+      "order": 29,
+      "source_number": 29,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 29 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E029.jpg",
+      "image_sha256": "79b92d285e61bcce05c7c11bddc3ed758ea74547de853761430a1422bfd66606",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. كثافة الفيض",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. قراءة الميزان بعد عكس المجال",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E030",
+      "track": "home",
+      "order": 30,
+      "source_number": 30,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 30 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E030.jpg",
+      "image_sha256": "3d560a7cb3657c9e32eb68ba7907a1f8029d3de26a0cf122228b9b027b2e2661",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. بعد عكس اتجاه المجال",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. بعد تنصيف شدة التيار",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E031",
+      "track": "home",
+      "order": 31,
+      "source_number": 31,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 31 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E031.jpg",
+      "image_sha256": "51d9c372157b6e95d08f773c3c3b8005fae8f6b8b398f42e0da82457821b4641",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وحركته والقوة المحصلة وتغير التيار",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. شدة التيار واتجاهه",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. قوة الشد في كل ملف بعد عكس التيار",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E032",
+      "track": "home",
+      "order": 32,
+      "source_number": 32,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 32 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E032.jpg",
+      "image_sha256": "bf8f4fccfe938c6398be653ab92311b954288eba15bd2c35eb54f8ec7e07c0f0",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E033",
+      "track": "home",
+      "order": 33,
+      "source_number": 33,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 33 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E033.jpg",
+      "image_sha256": "16cb5fee37869a16c2ebd688125d13eb90943f586318f1189d64bf0acd427dd7",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E034",
+      "track": "home",
+      "order": 34,
+      "source_number": 34,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 34 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E034.jpg",
+      "image_sha256": "fe6743ec6bdedf54f8b631e4151816ca8eeaaa31e3ea753d5eaba976db3fcf4e",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E035",
+      "track": "home",
+      "order": 35,
+      "source_number": 35,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 35 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E035.jpg",
+      "image_sha256": "24a62b23f80564f87e7f41bb79beb41d64c83874a80e855b8bd90ae40beeb1ea",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E036",
+      "track": "home",
+      "order": 36,
+      "source_number": 36,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 36 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E036.jpg",
+      "image_sha256": "5fad90173ebbe7c857533caff80e4a6327427ec9cefaa2311ae4c1c693ea11d7",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E037",
+      "track": "home",
+      "order": 37,
+      "source_number": 37,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 37 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E037.jpg",
+      "image_sha256": "d4bac46e3f537df04033a6c689c34feac9fd85880f02a621c71908da20b6ddb0",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E038",
+      "track": "home",
+      "order": 38,
+      "source_number": 38,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 38 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E038.jpg",
+      "image_sha256": "3efcc6c2c3ad37ba7080fa1d504a2709c36a0d65c118e253d0475f343ef3ae89",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E039",
+      "track": "home",
+      "order": 39,
+      "source_number": 39,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 39 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E039.jpg",
+      "image_sha256": "429515c2cd30e9af20ddcf4776c9d86282e43880bfd0395cb21e3a548064304e",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E040",
+      "track": "home",
+      "order": 40,
+      "source_number": 40,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 40 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E040.jpg",
+      "image_sha256": "02494c1124d0c44f7e20f47fa905d6b82ba1280d26a4d4201b2554dff5e939a7",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E041",
+      "track": "home",
+      "order": 41,
+      "source_number": 41,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 41 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E041.jpg",
+      "image_sha256": "5cddc90ddcefdd57c5e075decccf0e8428263dcb70eb6b227b289e24dea5ed4a",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E042",
+      "track": "home",
+      "order": 42,
+      "source_number": 42,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 42 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E042.jpg",
+      "image_sha256": "34eba61fe9e12378e3276ab7035ccb34ab1df3f5c695ae4b1aa013fd49da6e2e",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E043",
+      "track": "home",
+      "order": 43,
+      "source_number": 43,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 43 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E043.jpg",
+      "image_sha256": "8323072733a8647d3bde35d99f6c889514493c0f37cf8bdaeddfb0717ef22bd2",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E044",
+      "track": "home",
+      "order": 44,
+      "source_number": 44,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 44 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E044.jpg",
+      "image_sha256": "b6d9c85a7339ac1961a4dd71a9c877376714be5bfb8dc74e5ab1d254b0db16c9",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E045",
+      "track": "home",
+      "order": 45,
+      "source_number": 45,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 45 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E045.jpg",
+      "image_sha256": "ffbcecb3df00a701a3bed3ba7955b6c575d4b8a7d25cbed942a22b876b548f16",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. كثافة الفيض على بعد ١٠ سم",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. القوة على السلك الثاني",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E046",
+      "track": "home",
+      "order": 46,
+      "source_number": 46,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 46 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E046.jpg",
+      "image_sha256": "54c91fb7fd2202b1a2a755139a3a9b373d8bec3137eeba26aeb97a5b46c9e840",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E047",
+      "track": "home",
+      "order": 47,
+      "source_number": 47,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 47 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E047.jpg",
+      "image_sha256": "a5045e1d7c45d3b1901386f5dd0e06b408ac9fc79430d4c931284124cc4ad1e0",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E048",
+      "track": "home",
+      "order": 48,
+      "source_number": 48,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 48 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E048.jpg",
+      "image_sha256": "947362ec3161a3ed8369613303d80d8958d6b6425ceff571b6d6c844f750383d",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E049",
+      "track": "home",
+      "order": 49,
+      "source_number": 49,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "mcq",
+      "title": "اختياري 49 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E049.jpg",
+      "image_sha256": "ccf6f6c53295a2fcb142822a65fb6c08d507f01f804014bbaa8b9e4e9f7325f9",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "الإجابة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ],
+          "response_contract": "paper_mcq_capture"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E097",
+      "track": "home",
+      "order": 50,
+      "source_number": 1,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 1 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E097.jpg",
+      "image_sha256": "b03267ad868fbe64cc6e71c859aa4376204811b5f2a468b33d482684a123494b",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة المغناطيسية على سلك وقاعدة فلمنج",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "نوع القطب X وتفسيره",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E098",
+      "track": "home",
+      "order": 51,
+      "source_number": 2,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 2 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E098.jpg",
+      "image_sha256": "0c088615e50ec5d761d8c099c91baaa66dbcf9b976d1a06b7cda4255db687daf",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. مع عقارب الساعة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. عكس عقارب الساعة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E099",
+      "track": "home",
+      "order": 52,
+      "source_number": 3,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 3 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E099.jpg",
+      "image_sha256": "e0e6f4954f8f117442fef2e44962938261b121bc2bd6249f45f8c597433f7ea5",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "مقدار القوة المغناطيسية",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E100",
+      "track": "home",
+      "order": 53,
+      "source_number": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 4 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E100.jpg",
+      "image_sha256": "f547a5dd436d1ee9909d9342f641984ea36ee30d817198f3a330539aac9403c8",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية والزاوية والطول الفعّال",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "نسبة القوتين على السلكين",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E101",
+      "track": "home",
+      "order": 54,
+      "source_number": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 5 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E101.jpg",
+      "image_sha256": "ce4efedb60a77fe3e356aaa0cf33ffd25e50f0f462e5c1d78bb9428843ecc572",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "تفسير تقوس السلكين إلى الخارج",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E102",
+      "track": "home",
+      "order": 55,
+      "source_number": 6,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 6 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E102.jpg",
+      "image_sha256": "250a11c337d96bfa6a7281ae00e91af9d59f59db32bf349ba7ce44cfbe421e04",
+      "skill": "MAG-048",
+      "skill_name": "اتجاه القوتين المتبادلتين وقاعدة التجاذب والتنافر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "part_1",
+          "label": "١. نوع القوة بين السلكين",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        },
+        {
+          "key": "part_2",
+          "label": "٢. أثر غلق المفتاح في مقدار القوة",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    },
+    {
+      "id": "EXAM-L03-E103",
+      "track": "home",
+      "order": 56,
+      "source_number": 7,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "response_kind": "essay_self_review",
+      "title": "مقالي 7 — كتاب الامتحان",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-book-homework/EXAM-L03-E103.jpg",
+      "image_sha256": "69e20fc4bddf74d7975ea888878fe51b24d867d708180057f7335337ffdc80c6",
+      "skill": "MAG-049",
+      "skill_name": "مقدار القوة المتبادلة بين سلكين والقوة لكل وحدة طول",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "القوة على وحدة الأطوال بعد زيادة طول السلك",
+          "input_type": "text",
+          "options": [],
+          "response_contract": "essay_text_or_image_self_review"
+        }
+      ]
+    }
+  ]
+}

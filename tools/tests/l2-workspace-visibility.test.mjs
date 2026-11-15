@@ -23,7 +23,8 @@ const groups={
  homework:[
   ['openLecture1Homework','/lecture1-homework.html'],
   ['openBookRemainder','/lesson1-book-remaining.html'],
-  ['openLesson2BookHomework','/lesson2-book-homework.html']
+  ['openLesson2BookHomework','/lesson2-book-homework.html'],
+  ['openLecture5BookHomework','/lecture5-book-homework.html']
  ]
 };
 test('Chapter 2 activities use the existing eligible launchers',()=>{
@@ -51,7 +52,10 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='student-identity'&&body?.action==='me')return {data:{ok:true,enforcement:false,review:{status:'approved',legacy_account:true},profile:{is_active:true,profile_schema_version:1},required_profile_schema_version:1}};
    if(name==='student-identity'&&body?.action==='config')return {data:{ok:true,registration_enabled:true,profile_enforcement_enabled:false,profile_update_enabled:true}};
-   if(name==='paper-homework'&&body?.action==='ping')return {data:{ok:true,available:true,workshop:{slug:body.workshop_slug}}};
+   if(name==='paper-homework'&&body?.action==='ping'){
+    const pending=body.workshop_slug==='third-secondary-term-2-lecture-5-book-homework'&&new URL(location.href).searchParams.has('pending_homework');
+    return {data:{ok:!pending,available:!pending,workshop:{slug:body.workshop_slug}}};
+   }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
    if(name==='unified-workshop'&&body?.action==='ping')return {data:{ok:true,workshops:[
     {slug:'third-secondary-term-2-lecture-1'},
@@ -64,7 +68,7 @@ const fakeSupabase=String.raw`export function createClient(){
  }
 }`;
 
-test('real browser: Chapter 2 groups the six eligible activities and opens their original pages',async()=>{
+test('real browser: Chapter 2 groups the eligible activities and opens their original pages',async()=>{
  const out=mkdtempSync(join(tmpdir(),'yr-lesson2-workspace-'));
  let server,browser;
  try{
@@ -94,8 +98,11 @@ test('real browser: Chapter 2 groups the six eligible activities and opens their
    }));
    await page.route('https://fonts.googleapis.com/**',route=>route.abort());
    const origin='http://127.0.0.1:'+server.address().port;
-   const enterChapter=async()=>{
-    await page.goto(origin+'/student.html'+(legacy?'?legacy_grade=1':''),{waitUntil:'domcontentloaded'});
+   const enterChapter=async(pending=false)=>{
+    const query=new URLSearchParams();
+    if(legacy)query.set('legacy_grade','1');
+    if(pending)query.set('pending_homework','1');
+    await page.goto(origin+'/student.html?'+query,{waitUntil:'domcontentloaded'});
     await page.locator('#dashboardView').waitFor({state:'visible',timeout:20000});
     await page.locator('[data-yr-go="learning"]:visible').first().click();
     await page.locator('[data-yr-panel="learning"][data-yr-chapter="2"]:visible').first().click();
@@ -114,12 +121,17 @@ test('real browser: Chapter 2 groups the six eligible activities and opens their
     await summary.press('Enter');
     assert.equal(await disclosure.locator('[data-yr-source]:visible').count(),0);
     for(const [id,path] of entries){
-     const isLastRoute=group==='homework'&&id==='openLesson2BookHomework';
+     const isLastRoute=group==='homework'&&id==='openLecture5BookHomework';
      await summary.click();
      await Promise.all([page.waitForURL(origin+path,{timeout:12000}),disclosure.locator(`[data-yr-source="${id}"]`).click()]);
      if(!isLastRoute)await enterChapter();
     }
    }
+   await enterChapter(true);
+   const homework=chapter.locator('details[data-yr-chapter-group="homework"]');
+   await homework.locator('summary').click();
+   await homework.locator('[data-yr-source="openLesson2BookHomework"]').waitFor({state:'visible'});
+   assert.equal(await homework.locator('[data-yr-source="openLecture5BookHomework"]').count(),0);
    assert.ok(!failures.some(x=>/SyntaxError|is not defined|Cannot access .* before initialization/.test(x)),failures.join('; '));
    await page.close();
   }

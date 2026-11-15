@@ -360,6 +360,17 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
     html=html.replace(ping,`const ch2Lecture5Workshop=$('openCh2Lecture5Workshop');if(ch2Lecture5Workshop){sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{ch2Lecture5WorkshopAllowed=!error&&data?.ok===true&&Array.isArray(data.workshops)&&data.workshops.some(workshop=>workshop.slug==='third-secondary-term-2-lecture-5');ch2Lecture5Workshop.classList.toggle('hidden',!ch2Lecture5WorkshopAllowed);renderSecondTermAccess()}).catch(()=>{ch2Lecture5WorkshopAllowed=false;ch2Lecture5Workshop.classList.add('hidden');renderSecondTermAccess()})};`+ping);
     html=html.replace(link,`const ch2Lecture5WorkshopLink=$('openCh2Lecture5Workshop');if(ch2Lecture5WorkshopLink)ch2Lecture5WorkshopLink.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lecture-5'};`+link);
   }
+  const l5BookMenu='<div id="secondTermWorkshopsGrid" class="studentSubGrid">';
+  const l5BookPermissions='let ch2Lecture5WorkshopAllowed=false;';
+  const l5BookVisibility='||ch2Lecture5WorkshopAllowed)';
+  const l5BookPing="if(lecture1HomeworkButton){lecture1HomeworkButton.classList.add('hidden');";
+  const l5BookLink="const unifiedL1=$('openUnifiedL1Workshop');";
+  if(![l5BookMenu,l5BookPermissions,l5BookVisibility,l5BookPing,l5BookLink].every(anchor=>html.includes(anchor)))throw new Error('تعذر ربط واجب المحاضرة الخامسة');
+  html=html.replace(l5BookMenu,l5BookMenu+'<button id="openLecture5BookHomework" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">📘</div><h3>واجب المحاضرة الخامسة — كتاب الامتحان</h3><p>القوة المغناطيسية · 49 سؤال اختيار و7 أسئلة مقالية.</p></button>');
+  html=html.replace(l5BookPermissions,l5BookPermissions+'let lecture5BookHomeworkAllowed=false;');
+  html=html.replace(l5BookVisibility,'||lecture5BookHomeworkAllowed'+l5BookVisibility);
+  html=html.replace(l5BookPing,`const lecture5BookHomework=$('openLecture5BookHomework');if(lecture5BookHomework){sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lecture-5-book-homework'}}).then(({data,error})=>{lecture5BookHomeworkAllowed=!error&&data?.ok===true&&data.available===true;lecture5BookHomework.classList.toggle('hidden',!lecture5BookHomeworkAllowed);renderSecondTermAccess()}).catch(()=>{lecture5BookHomeworkAllowed=false;lecture5BookHomework.classList.add('hidden');renderSecondTermAccess()})};`+l5BookPing);
+  html=html.replace(l5BookLink,`const lecture5BookHomeworkLink=$('openLecture5BookHomework');if(lecture5BookHomeworkLink)lecture5BookHomeworkLink.onclick=()=>{window.location.href='./lecture5-book-homework.html'};`+l5BookLink);
   document.open();
   document.write(html);
   document.close();
