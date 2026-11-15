@@ -9,7 +9,7 @@ const chapters={learning:"1",review:"1"};
 const availableSources=[
  "openFirstTermWorkshops","openSecondTermWorkshops",
  "openLecture3Workshop","openLecture4Workshop","openLecture5Workshop","openLecture6Workshop",
- "openUnifiedL1Workshop","openLecture1Homework","openLesson1Review35","openBookRemainder","openLesson2BookHomework","openCh2Lecture5Workshop","openChapterMistakes","openCh2Mistakes",
+ "openUnifiedL1Workshop","openLecture1Homework","openLesson1Review35","openBookRemainder","openLesson2BookHomework","openLecture5BookHomework","openCh2Lecture5Workshop","openChapterMistakes","openCh2Mistakes",
  "openB2Lesson1Workshop","openB2Lesson2Workshop","openB2Lesson1Trainings","openChapterTrainings",
  "openFoundationTrainings","openCompleted","openHonor","openIndicators","openReferences"
 ];
@@ -145,7 +145,8 @@ function refreshLearning(){
    entries:[
     ["openLecture1Homework",null,null,"📘"],
     ["openBookRemainder","استكمال أسئلة الدرس الأول — كتاب الامتحان (52 سؤالًا)",null,"📗"],
-    ["openLesson2BookHomework","واجب الدرس الثاني كاملًا — كتاب الامتحان (115 سؤالًا)","الملف الدائري واللولبي — 95 اختيار و20 مقالي، مع انتقال الأخطاء إلى ورشة الإتقان.","📘"]
+    ["openLesson2BookHomework","واجب الدرس الثاني كاملًا — كتاب الامتحان (115 سؤالًا)","الملف الدائري واللولبي — 95 اختيار و20 مقالي، مع انتقال الأخطاء إلى ورشة الإتقان.","📘"],
+    ["openLecture5BookHomework",null,null,"📘"]
    ]
   },openGroups);
  }

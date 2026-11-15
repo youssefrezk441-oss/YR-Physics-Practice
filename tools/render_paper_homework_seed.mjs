@@ -28,6 +28,8 @@ export function renderPaperHomeworkSeed({ publicPath, privatePath, reportPath, o
   if (parts.some(({ question, part }) => !keys.has(`${question.id}:${part.key}`))) throw new Error('A reviewed private key is missing.');
 
   const slug = content.workshop.slug;
+  const sourceLabel = report.source_label ?? 'Lecture 1 second-term homework — owner-reviewed CSV/PDF';
+  if (typeof sourceLabel !== 'string' || !sourceLabel.trim() || sourceLabel.length > 500) throw new Error('Invalid homework source label.');
   const workshopId = uuid('paper-homework', slug);
   const versionId = uuid('paper-homework-version', `${slug}:1:${secrets.public_content_sha256}`);
   const trackId = uuid('paper-homework-track', `${versionId}:home`);
@@ -36,7 +38,7 @@ export function renderPaperHomeworkSeed({ publicPath, privatePath, reportPath, o
     '-- Generated locally; never commit this file or copy it into the Pages artifact.',
     'begin;',
     `insert into private.workshop_definitions (id, slug, title, grade_level, academic_term, lecture_no, status, eligible_group_codes) values (${sqlText(workshopId)}::uuid, ${sqlText(slug)}, ${sqlText(content.workshop.title)}, ${sqlText(content.workshop.grade_level)}, ${sqlText(content.workshop.academic_term)}, ${Number(content.workshop.lecture_no)}, 'draft', '[]'::jsonb) on conflict (slug) do nothing;`,
-    `insert into private.workshop_versions (id, workshop_id, version_no, content_sha256, source_label, status, validation_report) values (${sqlText(versionId)}::uuid, ${sqlText(workshopId)}::uuid, 1, ${sqlText(secrets.public_content_sha256)}, 'Lecture 1 second-term homework — owner-reviewed CSV/PDF', 'validated', ${sqlJson(report)}) on conflict (workshop_id, version_no) do nothing;`,
+    `insert into private.workshop_versions (id, workshop_id, version_no, content_sha256, source_label, status, validation_report) values (${sqlText(versionId)}::uuid, ${sqlText(workshopId)}::uuid, 1, ${sqlText(secrets.public_content_sha256)}, ${sqlText(sourceLabel)}, 'validated', ${sqlJson(report)}) on conflict (workshop_id, version_no) do nothing;`,
     `update private.workshop_definitions set active_version_id = ${sqlText(versionId)}::uuid where id = ${sqlText(workshopId)}::uuid and status = 'draft' and active_version_id is null;`,
     `insert into private.workshop_tracks (id, version_id, track_key, title, mode, sort_order, policy) values (${sqlText(trackId)}::uuid, ${sqlText(versionId)}::uuid, 'home', ${sqlText(content.tracks[0].title)}, 'final_submit', 1, ${sqlJson(content.tracks[0].policy)}) on conflict (version_id, track_key) do nothing;`,
   ];
