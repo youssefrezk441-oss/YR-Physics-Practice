@@ -35,17 +35,24 @@ function titleFrom(el,fallback){
 function detailFrom(el,fallback){
  return el?.querySelector("p")?.textContent?.trim()||fallback||"";
 }
+function fillEntry(entry,title,detail,symbol){
+ entry.className="yrWorkspaceItem";
+ const icon=document.createElement("span");icon.className="yrWorkspaceItemIcon";icon.textContent=symbol;
+ icon.setAttribute("aria-hidden","true");
+ const body=document.createElement("span");
+ const strong=document.createElement("strong");strong.textContent=title;
+ body.append(strong);
+ if(detail){
+  const small=document.createElement("small");small.textContent=detail;body.append(small);
+ }
+ const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="‹";
+ entry.append(icon,body,arrow);
+}
 function makeEntry(id,title,detail,symbol="▤"){
  const el=source(id);if(!el)return null;
  const b=document.createElement("button");
- b.className="yrWorkspaceItem";b.type="button";b.dataset.yrSource=id;
- const ico=document.createElement("span");ico.className="yrWorkspaceItemIcon";ico.textContent=symbol;
- const body=document.createElement("span");
- const strong=document.createElement("strong");strong.textContent=title||titleFrom(el,id);
- const small=document.createElement("small");small.textContent=detail||detailFrom(el,"افتح المحتوى المتاح لحسابك");
- body.append(strong,small);
- const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="‹";
- b.append(ico,body,arrow);
+ b.type="button";b.dataset.yrSource=id;
+ fillEntry(b,title||titleFrom(el,id),detail||detailFrom(el,"افتح المحتوى المتاح لحسابك"),symbol);
  b.addEventListener("click",()=>{
   const target=source(id);
   if(!target){refresh();return}
@@ -65,6 +72,19 @@ function collect(container,heading,defs){
  if(items.length){container.append(h3(heading),...items);return items.length}
  return 0;
 }
+function collectChapterGroup(container,{key,title,detail,icon,entries},openGroups){
+ const items=entries.map(entry=>makeEntry(...entry)).filter(Boolean);
+ if(!items.length)return 0;
+ const group=document.createElement("details");
+ group.dataset.yrChapterGroup=key;
+ group.open=openGroups.has(key);
+ const summary=document.createElement("summary");
+ fillEntry(summary,title,detail,icon);
+ const list=document.createElement("div");list.className="yrWorkspaceItems";
+ list.append(...items);
+ group.append(summary,list);container.append(group);
+ return items.length;
+}
 function displayChapterTabs(area){
  document.querySelectorAll('[data-yr-panel="'+area+'"] [data-yr-chapter]').forEach(()=>{});
  document.querySelectorAll('[data-yr-panel="'+area+'"][data-yr-chapter]').forEach(b=>{
@@ -74,6 +94,7 @@ function displayChapterTabs(area){
 }
 function refreshLearning(){
  const box=$("yrLearningContent");if(!box)return;
+ const openGroups=new Set(Array.from(box.querySelectorAll("details[data-yr-chapter-group][open]"),group=>group.dataset.yrChapterGroup));
  box.replaceChildren();
  const second=canSecondGrade(),third=canThirdGrade();
  syncGrade2Tabs($("yrLearnView")?.querySelector(".yrChapterTabs"),second);
@@ -111,19 +132,22 @@ function refreshLearning(){
    ]);
   }
  }else if(third){
-  found+=collect(box,"ورش الفصل الثاني",[
-   ["openUnifiedL1Workshop",null,null,"⚡"],
-   ["openLesson1Review35","مراجعة الدرس الأول — السلك المستقيم (35 سؤالًا)","ورشة مراجعة تفاعلية، مع تسجيل الأخطاء للمراجعة والإتقان.","🧲"],
-   ["openLecture1Homework",null,null,"▤"],
-   ["openBookRemainder","استكمال أسئلة الدرس الأول — كتاب الامتحان (52 سؤالًا)","الأسئلة المتبقية فقط، دون أسئلة السنوات السابقة أو تكرار الواجب الأول.","📗"],
-   ["openLesson2BookHomework","واجب الدرس الثاني كاملًا — كتاب الامتحان (115 سؤالًا)","الملف الدائري واللولبي — 95 اختيار و20 مقالي، مع انتقال الأخطاء إلى ورشة الإتقان.","📘"],
-   ["openCh2Lecture5Workshop",null,null,"🧲"]
-  ]);
-  if(!found && source("openSecondTermWorkshops")){
-   found+=collect(box,"الفصل الثاني",[
-    ["openSecondTermWorkshops","فتح ورش الفصل الثاني","الورش المنشورة والمتاحة لحسابك","▤"]
-   ]);
-  }
+  found+=collectChapterGroup(box,{
+   key:"workshops",title:"ورش الفصل الثاني",icon:"🧲",
+   entries:[
+    ["openUnifiedL1Workshop",null,null,"⚡"],
+    ["openCh2Lecture5Workshop",null,null,"🧲"],
+    ["openLesson1Review35","مراجعة الدرس الأول — السلك المستقيم (35 سؤالًا)",null,"🧲"]
+   ]
+  },openGroups);
+  found+=collectChapterGroup(box,{
+   key:"homework",title:"واجبات الفصل الثاني",detail:"كتاب الامتحان",icon:"📘",
+   entries:[
+    ["openLecture1Homework",null,null,"📘"],
+    ["openBookRemainder","استكمال أسئلة الدرس الأول — كتاب الامتحان (52 سؤالًا)",null,"📗"],
+    ["openLesson2BookHomework","واجب الدرس الثاني كاملًا — كتاب الامتحان (115 سؤالًا)","الملف الدائري واللولبي — 95 اختيار و20 مقالي، مع انتقال الأخطاء إلى ورشة الإتقان.","📘"]
+   ]
+  },openGroups);
  }
  if(ch==="1"&&third){
   found+=collect(box,"مرجع الشرح",[

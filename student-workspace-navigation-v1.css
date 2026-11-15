@@ -58,6 +58,11 @@
 .yrStudentApp .yrWorkspaceItem>span:last-child{color:#5F806B;font-size:23px}
 .yrStudentApp .yrWorkspaceItemIcon{width:44px;height:44px;flex:0 0 auto;border-radius:14px;
  display:grid;place-items:center;font:900 23px/1 Arial,sans-serif;background:#EAF4ED;color:#13654C}
+.yrStudentApp [data-yr-chapter-group]>summary{list-style:none}
+.yrStudentApp [data-yr-chapter-group]>summary::-webkit-details-marker{display:none}
+.yrStudentApp [data-yr-chapter-group]>summary:focus-visible{outline:3px solid var(--yr-focus,#A6D7B8);outline-offset:2px}
+.yrStudentApp [data-yr-chapter-group][open]>summary>span:last-child{transform:rotate(-90deg)}
+.yrStudentApp [data-yr-chapter-group]>.yrWorkspaceItems{margin-block-start:10px;padding-inline-start:clamp(10px,3vw,25px)}
 .yrStudentApp .yrWorkspaceEmpty{border:1px dashed #C8DCCF;border-radius:17px;padding:26px;
  background:#F9FBF8;text-align:center;color:var(--yr-muted);font-size:14px;line-height:1.8}
 .yrStudentApp .yrWorkspaceBottom{margin-top:18px}

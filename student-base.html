@@ -145,7 +145,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 .studentReviewImageGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.studentReviewImage{border:1px solid #e4e7ec;border-radius:12px;overflow:hidden;background:#fff}.studentReviewImage img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff}.studentReviewImageMeta{padding:7px 9px;font-size:10px;color:#667085}.studentReviewImage a{display:block}@media(max-width:650px){.studentReviewImageGrid{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="student-internal-identity-v1.css">
-<link rel="stylesheet" href="student-workspace-navigation-v1.css">
+<link rel="stylesheet" href="student-workspace-navigation-v1.css?v=20261115-ch2-activity-groups">
 </head>
 <body class="yrStudentApp"><div class="wrap">
 <div class="top yrInternalTop"><div class="brand yrInternalBrand">
@@ -649,4 +649,4 @@ async function checkProfileOnReturn(){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkProfileOnReturn()});
 window.addEventListener('focus',()=>void checkProfileOnReturn());
 window.addEventListener('pageshow',e=>{if(e.persisted)void checkProfileOnReturn()});
-</script><script type="module" src="./student-account-shell.js"></script><script type="module" src="./student-workspace-navigation-v1.js?v=20261115-ch2-l5-workshop"></script></body></html>
+</script><script type="module" src="./student-account-shell.js"></script><script type="module" src="./student-workspace-navigation-v1.js?v=20261115-ch2-activity-groups"></script></body></html>

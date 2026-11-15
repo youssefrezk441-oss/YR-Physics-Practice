@@ -14,13 +14,24 @@ const root=resolve(process.cwd());
 const nav=readFileSync(join(root,'student-workspace-navigation-v1.js'),'utf8');
 const loader=readFileSync(join(root,'student.html'),'utf8');
 const base=readFileSync(join(root,'student-base.html'),'utf8');
-const slug='openLesson2BookHomework';
-test('Chapter 2 homework is included in both the legacy launcher and the visible workspace adapter',()=>{
+const groups={
+ workshops:[
+  ['openUnifiedL1Workshop','/workshop.html?workshop=third-secondary-term-2-lecture-1'],
+  ['openCh2Lecture5Workshop','/workshop.html?workshop=third-secondary-term-2-lecture-5'],
+  ['openLesson1Review35','/workshop.html?workshop=third-secondary-term-2-lesson-1-review-35']
+ ],
+ homework:[
+  ['openLecture1Homework','/lecture1-homework.html'],
+  ['openBookRemainder','/lesson1-book-remaining.html'],
+  ['openLesson2BookHomework','/lesson2-book-homework.html']
+ ]
+};
+test('Chapter 2 activities use the existing eligible launchers',()=>{
  const sources=nav.slice(nav.indexOf('const availableSources=['),nav.indexOf('];',nav.indexOf('const availableSources=['))+2);
- const ch2=nav.slice(nav.indexOf('}else if(third){'),nav.indexOf('if(ch==="1"&&third)'));
- assert.match(loader,/id="openLesson2BookHomework"/);
- assert.ok(sources.includes('"'+slug+'"'),'new workspace does not watch homework source');
- assert.ok(ch2.includes('["'+slug+'"'),'new workspace does not render homework in Chapter 2');
+ for(const [id] of Object.values(groups).flat()){
+  assert.ok(loader.replaceAll('\\"','"').includes(`id="${id}"`),`missing launcher ${id}`);
+  assert.ok(sources.includes('"'+id+'"'),`the workspace does not watch ${id}`);
+ }
  assert.match(base,/student-workspace-navigation-v1\.js\?v=\d{8}-[a-z0-9-]+/);
 });
 
@@ -42,14 +53,18 @@ const fakeSupabase=String.raw`export function createClient(){
    if(name==='student-identity'&&body?.action==='config')return {data:{ok:true,registration_enabled:true,profile_enforcement_enabled:false,profile_update_enabled:true}};
    if(name==='paper-homework'&&body?.action==='ping')return {data:{ok:true,available:true,workshop:{slug:body.workshop_slug}}};
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
-   if(name==='unified-workshop'&&body?.action==='ping')return {data:{ok:true,workshops:[]}};
+   if(name==='unified-workshop'&&body?.action==='ping')return {data:{ok:true,workshops:[
+    {slug:'third-secondary-term-2-lecture-1'},
+    {slug:'third-secondary-term-2-lecture-5'},
+    {slug:'third-secondary-term-2-lesson-1-review-35'}
+   ]}};
    return {data:{ok:true}};
   }},
   storage:{from:()=>({getPublicUrl:(key)=>({data:{publicUrl:'/synthetic/'+key}})})}
  }
 }`;
 
-test('real browser: 3rd-secondary learner sees and opens Lesson 2 in the NEW Chapter 2 workspace',async()=>{
+test('real browser: Chapter 2 groups the six eligible activities and opens their original pages',async()=>{
  const out=mkdtempSync(join(tmpdir(),'yr-lesson2-workspace-'));
  let server,browser;
  try{
@@ -68,23 +83,44 @@ test('real browser: 3rd-secondary learner sees and opens Lesson 2 in the NEW Cha
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});
   for(const legacy of [false,true]){
-   const page=await browser.newPage({viewport:{width:1280,height:900}});
+   const page=await browser.newPage({viewport:legacy?{width:390,height:844}:{width:1280,height:900}});
    const failures=[];
    page.on('pageerror',e=>failures.push(e.message));
-   await page.route('https://cdn.jsdelivr.net/**',route=>route.fulfill({status:200,contentType:'text/javascript',body:fakeSupabase}));
+   await page.route('https://cdn.jsdelivr.net/**',route=>route.fulfill({
+    status:200,contentType:'text/javascript',
+    body:route.request().url().endsWith('/supabase.min.js')
+     ?fakeSupabase.replace('export function createClient','window.supabase={createClient}; function createClient')
+     :fakeSupabase
+   }));
    await page.route('https://fonts.googleapis.com/**',route=>route.abort());
-   await page.goto('http://127.0.0.1:'+server.address().port+'/student.html'+(legacy?'?legacy_grade=1':''),{waitUntil:'domcontentloaded'});
-   await page.locator('#dashboardView').waitFor({state:'visible',timeout:20000});
-   await page.locator('[data-yr-go="learning"]:visible').first().click();
-   await page.locator('[data-yr-panel="learning"][data-yr-chapter="2"]:visible').first().click();
-   const item=page.locator('#yrLearningContent [data-yr-source="openLesson2BookHomework"]');
-   await item.waitFor({state:'visible',timeout:16000});
-   assert.equal(await item.count(),1);
-   assert.match(await item.innerText(),/115 سؤالًا/);
-   const originalCard=page.locator('#openLesson2BookHomework');
-   assert.equal(await originalCard.evaluate(el=>el.classList.contains('hidden')),false);
+   const origin='http://127.0.0.1:'+server.address().port;
+   const enterChapter=async()=>{
+    await page.goto(origin+'/student.html'+(legacy?'?legacy_grade=1':''),{waitUntil:'domcontentloaded'});
+    await page.locator('#dashboardView').waitFor({state:'visible',timeout:20000});
+    await page.locator('[data-yr-go="learning"]:visible').first().click();
+    await page.locator('[data-yr-panel="learning"][data-yr-chapter="2"]:visible').first().click();
+   };
+   await enterChapter();
+   const chapter=page.locator('#yrLearningContent');
+   await chapter.locator('summary', {hasText:'واجبات الفصل الثاني'}).waitFor({state:'visible',timeout:6000});
+   assert.deepEqual(await chapter.locator('summary strong').allTextContents(),['ورش الفصل الثاني','واجبات الفصل الثاني']);
+   assert.equal(await chapter.locator('[data-yr-source]:visible').count(),0);
+   for(const [group,entries] of Object.entries(groups)){
+    const disclosure=chapter.locator(`details[data-yr-chapter-group="${group}"]`);
+    const summary=disclosure.locator('summary');
+    await summary.press('Enter');
+    assert.deepEqual(await disclosure.locator('[data-yr-source]:visible').evaluateAll(items=>items.map(item=>item.dataset.yrSource)),entries.map(([id])=>id));
+    if(group==='homework')assert.match(await disclosure.locator('[data-yr-source="openLesson2BookHomework"]').innerText(),/115 سؤالًا/);
+    await summary.press('Enter');
+    assert.equal(await disclosure.locator('[data-yr-source]:visible').count(),0);
+    for(const [id,path] of entries){
+     const isLastRoute=group==='homework'&&id==='openLesson2BookHomework';
+     await summary.click();
+     await Promise.all([page.waitForURL(origin+path,{timeout:12000}),disclosure.locator(`[data-yr-source="${id}"]`).click()]);
+     if(!isLastRoute)await enterChapter();
+    }
+   }
    assert.ok(!failures.some(x=>/SyntaxError|is not defined|Cannot access .* before initialization/.test(x)),failures.join('; '));
-   await Promise.all([page.waitForURL(/lesson2-book-homework\.html/,{timeout:12000}),item.click()]);
    await page.close();
   }
  }finally{

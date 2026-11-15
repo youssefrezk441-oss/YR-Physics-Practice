@@ -135,9 +135,9 @@ test("chapter-two book remainder is shown in the actual student learning workspa
  const shell=read("student-base.html");
  const loader=read("student.html");
  const list=nav.match(/const availableSources=\[([\s\S]*?)\];/)?.[1]||"";
- const chapterTwo=nav.match(/found\+=collect\(box,"ورش الفصل الثاني",\[([\s\S]*?)\]\);/)?.[1]||"";
+ const homework=nav.match(/key:"homework",title:"واجبات الفصل الثاني"[\s\S]*?entries:\[([\s\S]*?)\]\s*\},openGroups\)/)?.[1]||"";
  assert.match(list,/"openBookRemainder"/,"the live workspace must watch its availability");
- assert.match(chapterTwo,/\["openBookRemainder","استكمال أسئلة الدرس الأول/,"chapter 2 must render the book remainder");
+ assert.match(homework,/\["openBookRemainder","استكمال أسئلة الدرس الأول/,"chapter 2 must render the book remainder under homework");
  assert.match(nav,/new MutationObserver\(scheduledRefresh\)/,"launcher visibility must refresh the workspace");
  assert.match(shell,/student-workspace-navigation-v1\.js\?v=\d{8}-[a-z0-9-]+/,"load the versioned workspace module");
  assert.match(loader,/openBookRemainder/,"the authorized launcher must exist");
