@@ -345,6 +345,21 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   // Optional ping is diagnostic only: network timeouts must not silently remove a published card.
   html=html.replace(l2PingAnchor,"const l2BookButton=$('openLesson2BookHomework');if(l2BookButton){lesson2BookAllowed=gradeLabel(profile?.grade_level)==='الصف الثالث الثانوي'||profile?.grade_level==='3 ثانوي';l2BookButton.classList.toggle('hidden',!lesson2BookAllowed);renderSecondTermAccess();if(lesson2BookAllowed)sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-2-book-homework'}}).then(({data,error})=>{if(error||!data?.ok||data.available!==true)console.warn('Lesson-two homework availability check failed; actual access is verified on opening.');}).catch(error=>console.warn('Lesson-two homework availability check unavailable; actual access is verified on opening.',error));};"+l2PingAnchor);
   html=html.replace(l2BindAnchor,"const l2BookLink=$('openLesson2BookHomework');if(l2BookLink)l2BookLink.onclick=()=>{window.location.href='./lesson2-book-homework.html'};"+l2BindAnchor);
+  // Chapter 2 lecture-five workshop uses the unified server eligibility check.
+  if(!html.includes('id="openCh2Lecture5Workshop"')){
+    const menu='<div id="secondTermWorkshopsGrid" class="studentSubGrid">';
+    const permissions='let unifiedL1Allowed=false,lecture1HomeworkAllowed=false,ch2MistakesAllowed=false,review35Allowed=false,bookRemainderAllowed=false,lesson2BookAllowed=false;';
+    const visibility='!(unifiedL1Allowed||lecture1HomeworkAllowed||ch2MistakesAllowed||review35Allowed||bookRemainderAllowed||lesson2BookAllowed)';
+    const ping="if(lecture1HomeworkButton){lecture1HomeworkButton.classList.add('hidden');";
+    const link="const unifiedL1=$('openUnifiedL1Workshop');";
+    if(![menu,permissions,visibility,ping,link].every(anchor=>html.includes(anchor)))throw new Error('تعذر ربط بطاقة ورشة القوة المغناطيسية');
+    const card='<button id="openCh2Lecture5Workshop" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">🧲</div><h3>ورشة المحاضرة الخامسة القوة المغناطيسية</h3><p>ورشة الحصة · التدريب المنزلي</p></button>';
+    html=html.replace(menu,menu+card);
+    html=html.replace(permissions,permissions+'let ch2Lecture5WorkshopAllowed=false;');
+    html=html.replace(visibility,visibility.slice(0,-1)+'||ch2Lecture5WorkshopAllowed)');
+    html=html.replace(ping,`const ch2Lecture5Workshop=$('openCh2Lecture5Workshop');if(ch2Lecture5Workshop){sb.functions.invoke('unified-workshop',{body:{action:'ping'}}).then(({data,error})=>{ch2Lecture5WorkshopAllowed=!error&&data?.ok===true&&Array.isArray(data.workshops)&&data.workshops.some(workshop=>workshop.slug==='third-secondary-term-2-lecture-5');ch2Lecture5Workshop.classList.toggle('hidden',!ch2Lecture5WorkshopAllowed);renderSecondTermAccess()}).catch(()=>{ch2Lecture5WorkshopAllowed=false;ch2Lecture5Workshop.classList.add('hidden');renderSecondTermAccess()})};`+ping);
+    html=html.replace(link,`const ch2Lecture5WorkshopLink=$('openCh2Lecture5Workshop');if(ch2Lecture5WorkshopLink)ch2Lecture5WorkshopLink.onclick=()=>{window.location.href='./workshop.html?workshop=third-secondary-term-2-lecture-5'};`+link);
+  }
   document.open();
   document.write(html);
   document.close();

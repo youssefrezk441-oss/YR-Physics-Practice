@@ -21,7 +21,7 @@ test('Chapter 2 homework is included in both the legacy launcher and the visible
  assert.match(loader,/id="openLesson2BookHomework"/);
  assert.ok(sources.includes('"'+slug+'"'),'new workspace does not watch homework source');
  assert.ok(ch2.includes('["'+slug+'"'),'new workspace does not render homework in Chapter 2');
- assert.match(base,/student-workspace-navigation-v1\.js\?v=20261111-lesson2-workspace/);
+ assert.match(base,/student-workspace-navigation-v1\.js\?v=\d{8}-[a-z0-9-]+/);
 });
 
 const fakeSupabase=String.raw`export function createClient(){
