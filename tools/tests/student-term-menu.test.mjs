@@ -41,7 +41,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
     'openLecture3Workshop', 'openLecture4Workshop',
     'openLecture5Workshop', 'openLecture6Workshop',
     'openChapterMistakes', 'openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop', 'openBookRemainder',
-    'openReferences', 'openLesson1Review35', 'openLesson2BookHomework',
+    'openReferences', 'openLesson1Review35', 'openLesson2BookHomework', 'openCh2Lecture5Workshop',
   ];
 
   for (const id of ids) {
@@ -58,7 +58,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
     const position = html.indexOf(`id="${id}"`);
     assert.ok(position > firstGrid && position < secondGrid, `${id} must be inside the first-term menu`);
   }
-  for (const id of ['openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop']) {
+  for (const id of ['openCh2Mistakes', 'openLecture1Homework', 'openUnifiedL1Workshop', 'openCh2Lecture5Workshop']) {
     assert.ok(html.indexOf(`id="${id}"`) > secondGrid, `${id} must be inside the second-term menu`);
   }
 
@@ -66,7 +66,7 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
   assert.match(html, /showOnly\('firstTermWorkshopsView'\)/);
   assert.match(html, /showOnly\('secondTermWorkshopsView'\)/);
   assert.match(html, /secondTermWorkshopsButton\.classList\.add\('hidden'\)/);
-  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|lecture1HomeworkAllowed\|\|ch2MistakesAllowed\|\|review35Allowed\|\|bookRemainderAllowed\|\|lesson2BookAllowed\)\)/);
+  assert.match(html, /secondTermWorkshopsButton\.classList\.toggle\('hidden',!\(unifiedL1Allowed\|\|lecture1HomeworkAllowed\|\|ch2MistakesAllowed\|\|review35Allowed\|\|bookRemainderAllowed\|\|lesson2BookAllowed\|\|ch2Lecture5WorkshopAllowed\)\)/);
   assert.match(html, /functions\.invoke\('paper-homework',\{body:\{action:'ping',workshop_slug:'third-secondary-term-2-lecture-1-homework'\}\}\)/);
   assert.match(html, /functions\.invoke\('student-ch2-mistakes',\{body:\{action:'ping'\}\}\)/);
   assert.match(html, /ch2MistakesAllowed=!error&&data\?\.ok&&data\?\.available/);
@@ -75,6 +75,8 @@ test('groups third-secondary workshops under first- and second-term menus', asyn
   assert.match(html, /openBookRemainder/);
   assert.match(html, /openLesson2BookHomework/);
   assert.match(html, /third-secondary-term-2-lesson-2-book-homework/);
+  assert.match(html, /ch2Lecture5WorkshopAllowed=!error&&data\?\.ok===true&&Array\.isArray\(data\.workshops\)&&data\.workshops\.some\(workshop=>workshop\.slug==='third-secondary-term-2-lecture-5'\)/);
+  assert.match(html, /workshop\.html\?workshop=third-secondary-term-2-lecture-5'/);
   // Publication visibility is independent of a transient ping; the backend still guards access.
   assert.match(html, /lesson2BookAllowed=gradeLabel\(profile\?\.grade_level\)==='الصف الثالث الثانوي'\|\|profile\?\.grade_level==='3 ثانوي'/);
   assert.match(html, /l2BookButton\.classList\.toggle\('hidden',!lesson2BookAllowed\)/);
