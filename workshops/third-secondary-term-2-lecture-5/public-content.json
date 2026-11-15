@@ -1,0 +1,2456 @@
+{
+  "schema_version": 1,
+  "workshop": {
+    "slug": "third-secondary-term-2-lecture-5",
+    "title": "ورشة المحاضرة الخامسة القوة المغناطيسية",
+    "grade_level": "الصف الثالث الثانوي",
+    "academic_term": "second",
+    "lecture_no": 5,
+    "status": "draft"
+  },
+  "tracks": [
+    {
+      "key": "class",
+      "title": "ورشة الحصة",
+      "mode": "interactive",
+      "order": 1,
+      "policy": {
+        "max_unique_attempts": 2,
+        "reveal_after_attempts": 2,
+        "auto_reveal_mcq": true
+      }
+    },
+    {
+      "key": "home",
+      "title": "التدريب المنزلي",
+      "mode": "final_submit",
+      "order": 2,
+      "policy": {
+        "require_all_answers": true,
+        "allow_review_after_submit": true
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "MAG-039",
+      "name": "ملاحظة حركة السلك عند مرور التيار",
+      "order": 1
+    },
+    {
+      "id": "MAG-040",
+      "name": "اتجاه القوة وقاعدة فلمنج لليد اليسرى",
+      "order": 2
+    },
+    {
+      "id": "MAG-041",
+      "name": "مقدار القوة المغناطيسية المؤثرة على السلك",
+      "order": 3
+    },
+    {
+      "id": "MAG-042",
+      "name": "الزاوية والحالات الخاصة للقوة",
+      "order": 4
+    },
+    {
+      "id": "MAG-043",
+      "name": "وحدة التسلا",
+      "order": 5
+    },
+    {
+      "id": "MAG-044",
+      "name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "order": 6
+    },
+    {
+      "id": "MAG-045",
+      "name": "تراكب المجالين على جانبي السلك",
+      "order": 7
+    },
+    {
+      "id": "MAG-046",
+      "name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "order": 8
+    },
+    {
+      "id": "MAG-047",
+      "name": "نشأة القوة المتبادلة بين سلكين",
+      "order": 9
+    },
+    {
+      "id": "MAG-048",
+      "name": "التجاذب والتنافر بين سلكين متوازيين",
+      "order": 10
+    },
+    {
+      "id": "MAG-049",
+      "name": "قانون القوة المتبادلة والقوة لكل متر",
+      "order": 11
+    },
+    {
+      "id": "MAG-050",
+      "name": "تساوي القوتين المتبادلتين وتضاد اتجاهيهما",
+      "order": 12
+    },
+    {
+      "id": "MAG-051",
+      "name": "الطول المتقابل وحدود العلاقة",
+      "order": 13
+    }
+  ],
+  "questions": [
+    {
+      "id": "CLS-MAG05-C01",
+      "track": "class",
+      "order": 1,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال الحصة 1",
+      "prompt": "في تجربة القوة المغناطيسية على سلك حر الحركة ومتعامد مع مجال منتظم، فُتح المفتاح بعد انحراف السلك. ماذا يحدث للقوة المغناطيسية التي يؤثر بها المجال على السلك؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-039",
+      "skill_name": "ملاحظة حركة السلك عند مرور التيار",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تنعدم لانقطاع التيار."
+            },
+            {
+              "value": "ب",
+              "label": "تثبت لأن المجال مستمر."
+            },
+            {
+              "value": "ج",
+              "label": "ينعكس اتجاهها."
+            },
+            {
+              "value": "د",
+              "label": "تزداد لأن السلك حر الحركة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q072",
+      "track": "class",
+      "order": 2,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 2",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q072.png",
+      "image_sha256": "f748099943005fdc2a6e094d9fe1d0d09cba8851d4d3b11396fc3e84aa649a68",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة وقاعدة فلمنج لليد اليسرى",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q105",
+      "track": "class",
+      "order": 3,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 3",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q105.png",
+      "image_sha256": "260b2be05ddc454c3c2040df631db1609ef86f99399e3a6f38e0dc6b39d0b6d8",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية المؤثرة على السلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q200",
+      "track": "class",
+      "order": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 4",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q200.png",
+      "image_sha256": "b7e5693a1b1976fb563aa862093f24a5374c25260f72d53bfb418790149f936f",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية المؤثرة على السلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "magnitude",
+          "label": "السؤال (١) — مقدار القوة بالنيوتن. اكتب العدد فقط",
+          "input_type": "numeric",
+          "options": []
+        },
+        {
+          "key": "direction",
+          "label": "السؤال (١) — اتجاه القوة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "إلى خارج الصفحة"
+            },
+            {
+              "value": "ب",
+              "label": "إلى داخل الصفحة"
+            },
+            {
+              "value": "ج",
+              "label": "يمين الصفحة"
+            },
+            {
+              "value": "د",
+              "label": "يسار الصفحة"
+            }
+          ]
+        },
+        {
+          "key": "zero",
+          "label": "السؤال (٢) — وضع السلك الذي تنعدم عنده القوة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "عموديًا على المجال"
+            },
+            {
+              "value": "ب",
+              "label": "بزاوية ٣٠° مع المجال"
+            },
+            {
+              "value": "ج",
+              "label": "موازيًا للمجال أو معاكسًا له"
+            },
+            {
+              "value": "د",
+              "label": "بزاوية ٦٠° مع المجال"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q092",
+      "track": "class",
+      "order": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 5",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q092.png",
+      "image_sha256": "ab8009095aca182bab7a139f906750fb7d9cad528a0e00d19bfd1e173b71420c",
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CLS-MAG05-C02",
+      "track": "class",
+      "order": 6,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال الحصة 6",
+      "prompt": "سلك طوله متر واحد يمر به تيار شدته أمبير واحد، ووُضع كله عموديًا على مجال منتظم كثافة فيضه تسلا واحد. ما مقدار القوة المغناطيسية على السلك؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-043",
+      "skill_name": "وحدة التسلا",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "صفر."
+            },
+            {
+              "value": "ب",
+              "label": "نصف نيوتن."
+            },
+            {
+              "value": "ج",
+              "label": "نيوتن واحد."
+            },
+            {
+              "value": "د",
+              "label": "نيوتنين."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CLS-MAG05-C03",
+      "track": "class",
+      "order": 7,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال الحصة 7",
+      "prompt": "على إحدى ناحيتي سلك مستقيم يمر به تيار، يتفق اتجاه مجاله مع المجال الخارجي المنتظم. ماذا يحدث عند عكس التيار فقط؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-045",
+      "skill_name": "تراكب المجالين على جانبي السلك",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "يظل المجالان في الاتجاه نفسه على تلك الناحية."
+            },
+            {
+              "value": "ب",
+              "label": "يختفي المجال الخارجي."
+            },
+            {
+              "value": "ج",
+              "label": "يصبح المجالان متضادين على تلك الناحية."
+            },
+            {
+              "value": "د",
+              "label": "ينعكس المجال الخارجي ومجال السلك معًا."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q041",
+      "track": "class",
+      "order": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 8",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q041.png",
+      "image_sha256": "8f2ed361317bb5cfe726aed3e16f9c37bd99f88e258987c8669acc8a8c5be8e9",
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q104",
+      "track": "class",
+      "order": 9,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 9",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q104.png",
+      "image_sha256": "959b32468479e9742db4e8e00cdeaf96c6cd5a0fdf70ab1c0e59bd92e116cbc2",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q157",
+      "track": "class",
+      "order": 10,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 10",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q157.png",
+      "image_sha256": "d122b648770b5244922c836c54e60c0d9120d56fe1e33e475bda76eb7061e394",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q062",
+      "track": "class",
+      "order": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 11",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q062.png",
+      "image_sha256": "a67c316030144a3d52c95211434c3bfdc74dea9ada3dcd441ffb517fa9c711d5",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q007",
+      "track": "class",
+      "order": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 12",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q007.png",
+      "image_sha256": "b454b03771dda78c9ef9f41d58ecb1237f3df5ea5324bdd773302b03682e122a",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q170",
+      "track": "class",
+      "order": 13,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 13",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q170.png",
+      "image_sha256": "57c96811dea2878afd2f4d7ce25d8803aac4b5483fda5f6f5df33598da9dd2e2",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q203",
+      "track": "class",
+      "order": 14,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 14",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q203.png",
+      "image_sha256": "33db09c8192aae01ec807b2743ca6f0f8f04104801cc38c3e4ac491478ff370c",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر التفسير الفيزيائي لنقص قراءة الميزان",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "أثر السلك على المغناطيس بقوة لأعلى."
+            },
+            {
+              "value": "ب",
+              "label": "أثر السلك على المغناطيس بقوة لأسفل."
+            },
+            {
+              "value": "ج",
+              "label": "ازداد وزن المغناطيس بعد مرور التيار."
+            },
+            {
+              "value": "د",
+              "label": "أثر المغناطيس على الميزان بقوة أفقية فقط."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CLS-MAG05-C04",
+      "track": "class",
+      "order": 15,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال الحصة 15",
+      "prompt": "لحساب القوة المغناطيسية التي يؤثر بها السلك الأول على السلك الثاني، عند أي موضع نحسب المجال الناشئ عن تيار السلك الأول؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-047",
+      "skill_name": "نشأة القوة المتبادلة بين سلكين",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "على محور السلك الأول."
+            },
+            {
+              "value": "ب",
+              "label": "عند موضع السلك الثاني."
+            },
+            {
+              "value": "ج",
+              "label": "عند منتصف المسافة بين السلكين فقط."
+            },
+            {
+              "value": "د",
+              "label": "عند طرف السلك الأول فقط."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q205",
+      "track": "class",
+      "order": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 16",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q205.png",
+      "image_sha256": "22f87740d252c24b43c7a1a62d4c5d78db14b1eb58a2fee9f478fbe14ad22864",
+      "skill": "MAG-048",
+      "skill_name": "التجاذب والتنافر بين سلكين متوازيين",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "currents",
+          "label": "السؤال (١) — اتجاه التيار في السلكين",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "السلك (١) للخارج والسلك (٢) للداخل"
+            },
+            {
+              "value": "ب",
+              "label": "السلكان إلى الخارج"
+            },
+            {
+              "value": "ج",
+              "label": "السلك (١) للداخل والسلك (٢) للخارج"
+            },
+            {
+              "value": "د",
+              "label": "السلكان إلى الداخل"
+            }
+          ]
+        },
+        {
+          "key": "force",
+          "label": "السؤال (٢) — نوع القوة المتبادلة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تجاذب"
+            },
+            {
+              "value": "ب",
+              "label": "تنافر"
+            },
+            {
+              "value": "ج",
+              "label": "تنعدم القوة"
+            },
+            {
+              "value": "د",
+              "label": "عزم ازدواج فقط"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q110",
+      "track": "class",
+      "order": 17,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 17",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q110.png",
+      "image_sha256": "92735e7fb758a20e879b67218ab3438221992a00166afe4c0e81f3aa7e74ba90",
+      "skill": "MAG-050",
+      "skill_name": "تساوي القوتين المتبادلتين وتضاد اتجاهيهما",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q171",
+      "track": "class",
+      "order": 18,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 18",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q171.png",
+      "image_sha256": "75826aa60d65bde3f65e9ef355e7b9a1b282a0e29cb656b02109f2d88d5a2f4a",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q180",
+      "track": "class",
+      "order": 19,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 19",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q180.png",
+      "image_sha256": "297c923292ff5ad266e513d5e84ab56bf26e537e2a611d534bafef862dd0e339",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q018",
+      "track": "class",
+      "order": 20,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 20",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q018.png",
+      "image_sha256": "5901648670cc3923dd50bca357445e62eba39c5fb857249ed1f2aea63fbc2ef6",
+      "skill": "MAG-051",
+      "skill_name": "الطول المتقابل وحدود العلاقة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CLS-MAG05-C05",
+      "track": "class",
+      "order": 21,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال الحصة 21",
+      "prompt": "في تقريب السلكين الطويلين المتوازيين كما يُستخدم في الدرس، أيُّ طول نعوّض به لحساب مقدار القوة المغناطيسية المتبادلة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-051",
+      "skill_name": "الطول المتقابل وحدود العلاقة",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "مجموع طولي السلكين."
+            },
+            {
+              "value": "ب",
+              "label": "الطول الكلي للسلك الأطول دائمًا."
+            },
+            {
+              "value": "ج",
+              "label": "طول الجزء المتقابل بين السلكين."
+            },
+            {
+              "value": "د",
+              "label": "المسافة العمودية بين السلكين."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q115",
+      "track": "class",
+      "order": 22,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال الحصة 22",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q115.png",
+      "image_sha256": "e4048165dbe5b1a3364acc52ec6a8d02b33ab11261b948370f2c076cc3492e2a",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q161",
+      "track": "class",
+      "order": 23,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 23",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q161.png",
+      "image_sha256": "1eacc9d7e29a2379eb065adb44ae65696d92f2be2a23cb27479d17e205e99d4f",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q093",
+      "track": "class",
+      "order": 24,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 24",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q093.png",
+      "image_sha256": "5a78faf0585cd20f4c84a118b84b1937a38dde6afdc12bbc213b727be57d8709",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q150",
+      "track": "class",
+      "order": 25,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 25",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q150.png",
+      "image_sha256": "31f64aa46e860f3cbfff464b7c9d6950d2a6a13ffdaa931ae262aa9e4d70d3ca",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q151",
+      "track": "class",
+      "order": 26,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 26",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q151.png",
+      "image_sha256": "e80a5192cf96cd7017adc906c37428e604e609ad0907733888d7b08e1f5031c0",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q153",
+      "track": "class",
+      "order": 27,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 27",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q153.png",
+      "image_sha256": "03aaa096b75e7698d1c460c8d4678a047355fc58f5c98fc79825ebb9a32a7371",
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q165",
+      "track": "class",
+      "order": 28,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 28",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q165.png",
+      "image_sha256": "2e628836ac7b4497a8279de6f41728172e6fcca7a1b17b87dddfd95f7b9f3d5f",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q167",
+      "track": "class",
+      "order": 29,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 29",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q167.png",
+      "image_sha256": "7d03b6a234a483c55bf17b60120543c0141b71080d7ae2aafa823db798678598",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q113",
+      "track": "class",
+      "order": 30,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 30",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q113.png",
+      "image_sha256": "7ebc849ad3d1f55e14a16fc71e1cee9a1f0d849724cdaee7fe6e00e9abd451ab",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q173",
+      "track": "class",
+      "order": 31,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "امتداد الحصة 31",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-class/BANK-L03-Q173.png",
+      "image_sha256": "d613f4dc5580b915c09ab91255c794e576402738e8a2bb28f8e52ebbf14b3255",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C01",
+      "track": "home",
+      "order": 1,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 1",
+      "prompt": "في تجربة وضع سلك مستقيم حر الحركة عموديًا على مجال مغناطيسي منتظم، ماذا نلاحظ عند غلق دائرة السلك ومرور التيار فيه؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-039",
+      "skill_name": "ملاحظة حركة السلك عند مرور التيار",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "يبقى السلك ساكنًا لأن المجال منتظم."
+            },
+            {
+              "value": "ب",
+              "label": "ينحرف السلك عموديًا على اتجاهي التيار والمجال."
+            },
+            {
+              "value": "ج",
+              "label": "ينحرف السلك في اتجاه المجال."
+            },
+            {
+              "value": "د",
+              "label": "ينحرف السلك في اتجاه التيار."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q070",
+      "track": "home",
+      "order": 2,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 2",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q070.png",
+      "image_sha256": "47ac424f6aea1a255df8fcaa00a0e0af888ed7d2f3f73b0cf8d0cd189747d39b",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة وقاعدة فلمنج لليد اليسرى",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q136",
+      "track": "home",
+      "order": 3,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 3",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q136.png",
+      "image_sha256": "f93dc5ac53fd8f978b750128e85cd78824e76841268acfbbf91cd5f9acc94aaf",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة وقاعدة فلمنج لليد اليسرى",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q051",
+      "track": "home",
+      "order": 4,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 4",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q051.png",
+      "image_sha256": "f8090cbc08d1e1b22258934fb4d3beaa5bdb874cb6691ef1cda60e364f682dce",
+      "skill": "MAG-040",
+      "skill_name": "اتجاه القوة وقاعدة فلمنج لليد اليسرى",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q155",
+      "track": "home",
+      "order": 5,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 5",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q155.png",
+      "image_sha256": "6819d249e8c41932b69219d3d5f2a0d14a82c4450664cc5c60f103fcd2e9fc50",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية المؤثرة على السلك",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q144",
+      "track": "home",
+      "order": 6,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 6",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q144.png",
+      "image_sha256": "6b702dee458e668372963b99e8fc1494e837b60eedd5c88753ed667e33dd2f7f",
+      "skill": "MAG-041",
+      "skill_name": "مقدار القوة المغناطيسية المؤثرة على السلك",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q107",
+      "track": "home",
+      "order": 7,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 7",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q107.png",
+      "image_sha256": "56e527519984d0f3297f12e264281a38681a18e8bc6bba1bd3c9fcdc6ec586c9",
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q149",
+      "track": "home",
+      "order": 8,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 8",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q149.png",
+      "image_sha256": "d82b1d3737cf6e768910a241efef96142fcbcef45916265327a48b75cb0b2fa8",
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C07",
+      "track": "home",
+      "order": 9,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 9",
+      "prompt": "تتغير زاوية السلك مع المجال من صفر إلى ٩٠°، وتظل كثافة الفيض وشدة التيار والطول المعرض ثابتة. أي تمثيل بياني يكون خطًا مستقيمًا يمر بنقطة الأصل؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-042",
+      "skill_name": "الزاوية والحالات الخاصة للقوة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "القوة مقابل الزاوية نفسها فقط."
+            },
+            {
+              "value": "ب",
+              "label": "القوة مقابل جيب الزاوية فقط."
+            },
+            {
+              "value": "ج",
+              "label": "التمثيلان خطّان مستقيمان."
+            },
+            {
+              "value": "د",
+              "label": "كلا التمثيلين يمر بنقطة الأصل على هيئة منحنى فقط."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C02",
+      "track": "home",
+      "order": 10,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 10",
+      "prompt": "من قانون القوة المغناطيسية على سلك يمر به تيار وموضوع عموديًا على المجال، كيف تُكتب وحدة التسلا بدلالة النيوتن والأمبير والمتر؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-043",
+      "skill_name": "وحدة التسلا",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "نيوتن × أمبير × متر"
+            },
+            {
+              "value": "ب",
+              "label": "(نيوتن × متر) لكل أمبير"
+            },
+            {
+              "value": "ج",
+              "label": "نيوتن لكل (أمبير × متر)"
+            },
+            {
+              "value": "د",
+              "label": "أمبير لكل (نيوتن × متر)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q168",
+      "track": "home",
+      "order": 11,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 11",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q168.png",
+      "image_sha256": "6df0092f32a75c67b1260b7907ca68431275f33b2e22b3bd59231a786db8b4ce",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q169",
+      "track": "home",
+      "order": 12,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 12",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q169.png",
+      "image_sha256": "67f6bafc9a00ce30091e52ac6b11260ca1582a695b960d9dc7e4a26be3af9e4f",
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C10",
+      "track": "home",
+      "order": 13,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 13",
+      "prompt": "مغناطيس مستقر على كفة ميزان، وسلك مثبت على حامل منفصل يمر بين قطبيه. إذا أثّر المغناطيس في السلك بقوة رأسية لأعلى بعد غلق الدائرة، فكيف تتغير قراءة الميزان؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-044",
+      "skill_name": "اتزان السلك وأثر القوة على قراءة الميزان",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تقل بقدر القوة المغناطيسية على السلك."
+            },
+            {
+              "value": "ب",
+              "label": "تبقى ثابتة لأن السلك على حامل منفصل."
+            },
+            {
+              "value": "ج",
+              "label": "تزداد بضعف القوة المغناطيسية على السلك."
+            },
+            {
+              "value": "د",
+              "label": "تزداد بقدر القوة المغناطيسية على السلك."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C03",
+      "track": "home",
+      "order": 14,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 14",
+      "prompt": "في رسم تراكب مجال سلك مستقيم مع مجال خارجي منتظم يعامد السلك، نقطتان على جانبيه تبعدان عنه المسافة نفسها. يتفق المجالان عند إحداهما ويتضادان عند الأخرى. عند أيّ النقطتين تكون محصلة كثافة الفيض أكبر؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-045",
+      "skill_name": "تراكب المجالين على جانبي السلك",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "في الجانب الذي يتضاد فيه المجالان."
+            },
+            {
+              "value": "ب",
+              "label": "في الجانب الذي يتفق فيه اتجاه المجالين."
+            },
+            {
+              "value": "ج",
+              "label": "في الجانب الأقرب إلى مصدر التيار في الدائرة."
+            },
+            {
+              "value": "د",
+              "label": "المحصلة متساوية عند النقطتين دائمًا."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q145",
+      "track": "home",
+      "order": 15,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 15",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q145.png",
+      "image_sha256": "5b9be14bb5833079741ed2699f8e1838f2d84b6b2bc0f492e02f70cb91d51667",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q156",
+      "track": "home",
+      "order": 16,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 16",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q156.png",
+      "image_sha256": "d0a4a1f442d63cd9a4a654283b6ea2effd808bcd42b3be91753a2de3e5084240",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q147",
+      "track": "home",
+      "order": 17,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 17",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q147.png",
+      "image_sha256": "ce22b47d31a318a5ddae420a1848a0a87eb7ea711cc113a33988343dc3f742e2",
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "hard",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C08",
+      "track": "home",
+      "order": 18,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 18",
+      "prompt": "سلك مستقيم عمودي على مجال منتظم، موصول على التوالي بمقاومة متغيرة ومصدر جهد مثالي. إذا ازدادت المقاومة الكلية للدائرة إلى الضعف مع ثبات طول السلك داخل المجال وكثافة الفيض، فكيف تتغير القوة المغناطيسية على السلك؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-046",
+      "skill_name": "أثر التيار والمجال والطول المعرض والعلاقات البيانية",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تتضاعف."
+            },
+            {
+              "value": "ب",
+              "label": "تنخفض إلى النصف."
+            },
+            {
+              "value": "ج",
+              "label": "تنخفض إلى الربع."
+            },
+            {
+              "value": "د",
+              "label": "تبقى ثابتة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C04",
+      "track": "home",
+      "order": 19,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 19",
+      "prompt": "لماذا يتأثر كلٌّ من سلكين مستقيمين متوازيين يمر بهما تيار بقوة مغناطيسية؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-047",
+      "skill_name": "نشأة القوة المتبادلة بين سلكين",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "لأن مجال كل سلك يؤثر بقوة في التيار المار في السلك الآخر."
+            },
+            {
+              "value": "ب",
+              "label": "لأن التيار في كل سلك يتأثر بقوة من المجال الذي يولّده السلك نفسه."
+            },
+            {
+              "value": "ج",
+              "label": "لأن المجال المغناطيسي لا يتكوّن إلا في منتصف المسافة بين السلكين."
+            },
+            {
+              "value": "د",
+              "label": "لأن السلك ذا التيار الأكبر يؤثر وحده في السلك الآخر."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q174",
+      "track": "home",
+      "order": 20,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 20",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q174.png",
+      "image_sha256": "dec46f6b87ba0396f69802b8ff71bec80e34311c055af0c207e5a759eda4e4b6",
+      "skill": "MAG-048",
+      "skill_name": "التجاذب والتنافر بين سلكين متوازيين",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C05",
+      "track": "home",
+      "order": 21,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 21",
+      "prompt": "يتجاذب سلكان مستقيمان متوازيان يمر فيهما تياران ثابتان. إذا عُكس اتجاه تيار أحدهما فقط، مع ثبات شدتي التيارين وطول الجزء المتقابل والمسافة بين السلكين، فماذا يحدث للقوة المتبادلة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-048",
+      "skill_name": "التجاذب والتنافر بين سلكين متوازيين",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "تصبح تنافرًا بالمقدار نفسه."
+            },
+            {
+              "value": "ب",
+              "label": "يستمر التجاذب بالمقدار نفسه."
+            },
+            {
+              "value": "ج",
+              "label": "تنعدم القوة."
+            },
+            {
+              "value": "د",
+              "label": "تصبح تنافرًا ويتضاعف مقدارها."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q053",
+      "track": "home",
+      "order": 22,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 22",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q053.png",
+      "image_sha256": "52453e8fe295d479f76e9910ead5fcdeb104d49af9be958fd3fb258629397c15",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q109",
+      "track": "home",
+      "order": 23,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 23",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q109.png",
+      "image_sha256": "90894e633dc34db0d9b7bf5530a9f60a76a965b3ac3d6c244151563c6a1e52a2",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q175",
+      "track": "home",
+      "order": 24,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 24",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q175.png",
+      "image_sha256": "5092b517936387d2e37a37a4d2b0133f7529627aa27d0d73ce91503dae1db08d",
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C09",
+      "track": "home",
+      "order": 25,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 25",
+      "prompt": "رُسمت القوة المغناطيسية المتبادلة لكل متر بين سلكين متوازيين على المحور الرأسي، ومقلوب المسافة بينهما على المحور الأفقي. إذا ضوعفت شدة تيار سلك واحد فقط، فماذا يحدث لميل الخط عند ثبات الوسط؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-049",
+      "skill_name": "قانون القوة المتبادلة والقوة لكل متر",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "يقل إلى النصف."
+            },
+            {
+              "value": "ب",
+              "label": "يزيد إلى أربعة أمثاله."
+            },
+            {
+              "value": "ج",
+              "label": "يتضاعف."
+            },
+            {
+              "value": "د",
+              "label": "يبقى ثابتًا."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q176",
+      "track": "home",
+      "order": 26,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 26",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q176.png",
+      "image_sha256": "0984dd3a7c8f70cf985880ab7fe7410ed5a8f953eb2bed596e15042a3453fd09",
+      "skill": "MAG-050",
+      "skill_name": "تساوي القوتين المتبادلتين وتضاد اتجاهيهما",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BANK-L03-Q131",
+      "track": "home",
+      "order": 27,
+      "source_kind": "original_bank_image",
+      "kind": "image",
+      "title": "سؤال 27",
+      "prompt": null,
+      "image": "assets/workshops/ch2-l5-homework/BANK-L03-Q131.png",
+      "image_sha256": "aafb6b6664e7c8984894f7da3538e7e06c526adbc44c6ce5246237e310ec5c91",
+      "skill": "MAG-051",
+      "skill_name": "الطول المتقابل وحدود العلاقة",
+      "difficulty": "medium",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "الاختيار أ"
+            },
+            {
+              "value": "ب",
+              "label": "الاختيار ب"
+            },
+            {
+              "value": "ج",
+              "label": "الاختيار ج"
+            },
+            {
+              "value": "د",
+              "label": "الاختيار د"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HW-MAG05-C06",
+      "track": "home",
+      "order": 28,
+      "source_kind": "authored_concept",
+      "kind": "concept",
+      "title": "سؤال 28",
+      "prompt": "إذا ظل تيارا سلكين متوازيين والمسافة بينهما ثابتة، وتضاعف الطول المتقابل الذي ينطبق عليه تقريب السلكين الطويلين، فماذا يحدث لمقدار القوة المغناطيسية المتبادلة؟",
+      "image": null,
+      "image_sha256": null,
+      "skill": "MAG-051",
+      "skill_name": "الطول المتقابل وحدود العلاقة",
+      "difficulty": "easy",
+      "parts": [
+        {
+          "key": "main",
+          "label": "اختر الإجابة الصحيحة",
+          "input_type": "mcq",
+          "options": [
+            {
+              "value": "أ",
+              "label": "يبقى ثابتًا."
+            },
+            {
+              "value": "ب",
+              "label": "يقل إلى النصف."
+            },
+            {
+              "value": "ج",
+              "label": "يتضاعف."
+            },
+            {
+              "value": "د",
+              "label": "يصبح أربعة أمثاله."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
