@@ -224,7 +224,10 @@ function deltaValue(x){const cp=compPct(x);return cp==null||x.readiness==null?nu
 function deltaCell(x){const d=deltaValue(x);if(d==null)return'<span class="delta na">—</span>';const cls=Math.abs(d)<=10?'normal':d>10?'up':'down',sign=d>0?'+':'';return`<span class="delta ${cls}">${sign}${num(d)} نقطة</span>`}
 function platformCell(x){
   const p=x.platform||{};
-  if(isChapter2(x))return metric(p.ratio,p.ratio==null?'الورش':`الورش المحسوبة · ${p.workshop_counted??0}`);
+  if(isChapter2(x)){
+    const counted=p.workshop_counted??0;
+    return metric(p.ratio,counted?`${p.trainings??0} من ${counted} ورشة محسوبة`:'ورش المنصة');
+  }
   const count=p.trainings??0,available=p.available,quality=p.quality_ratio,completion=p.completion_rate;let sub=`${count}${available!=null?'/'+available:''} مكتمل`;if(quality!=null)sub+=` · جودة ${pct(quality)}`;else if(completion!=null)sub+=` · إكمال ${pct(completion)}`;return metric(p.ratio,sub)}
 function homeworkCell(x){
   const h=x.homework||{},p=x.online_homework;
