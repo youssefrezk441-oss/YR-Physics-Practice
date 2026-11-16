@@ -58,10 +58,12 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='student-honor-board'&&body?.action==='home_progress'){
     const mode=new URL(location.href).searchParams.get('home_case');
+    const homework={kind:'homework',slug:'third-secondary-term-2-lecture-5-book-homework',title:'واجب القوة المغناطيسية'};
+    const workshop={kind:'workshops',slug:'third-secondary-term-2-lecture-1',title:'ورشة المحاضرة الأولى'};
+    const pending=mode==='urgent'?[{...homework,due_at:new Date(Date.now()+3600000).toISOString()},workshop]
+      :mode==='required'?[homework,workshop]:[];
     return {data:{ok:true,progress:{ranked:false,attendance:{total:0},classroom_homework:{total:1,pending:0},
-      quizzes:{pending:1},homework:{submitted:1,counted:3},workshops:{completed:1,counted:2},
-      due:mode==='urgent'?{kind:'homework',slug:'third-secondary-term-2-lecture-5-book-homework',
-        title:'واجب القوة المغناطيسية',due_at:new Date(Date.now()+3600000).toISOString()}:null}}};
+      quizzes:{pending:1},homework:{submitted:3,counted:3},workshops:{completed:2,counted:2},pending}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='summary'){
     const all=new URL(location.href).searchParams.get('home_case')==='complete';
@@ -130,15 +132,22 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
     await page.locator('[data-yr-panel="learning"][data-yr-chapter="2"]:visible').first().click();
    };
    const home=page.locator('#yrHomeNext');
-   for(const mode of ['review','urgent','complete']){
+   for(const mode of ['review','urgent','required','complete']){
     await page.goto(origin+'/student.html?home_case='+mode+(legacy?'&legacy_grade=1':''),{waitUntil:'domcontentloaded'});
     await home.getByRole('heading',{name:'خطوتك الجاية'}).waitFor({state:'visible'});
-    const key=mode==='urgent'?'افتح الواجب':mode==='complete'?'افتح الواجبات':'كمّل تصحيح أخطائك';
+    const key=mode==='urgent'||mode==='required'?'افتح الواجب':mode==='complete'?'عرض تفاصيل تقييمي':'كمّل تصحيح أخطائك';
     await home.getByRole('button',{name:key,exact:true}).waitFor({state:'visible'});
     assert.match(await home.innerText(),mode==='complete'?/صحّحت كل أخطائك/:/٦ من ١٠ أخطاء/);
     assert.match(await home.innerText(),/تقييمك مستني تسجيل سجل الحضور، درجات كويز/);
     const afterHero=await home.evaluate(el=>el.previousElementSibling.classList.contains('yrDashboardHero')&&el.getBoundingClientRect().top>=el.previousElementSibling.getBoundingClientRect().bottom);
     assert.equal(afterHero,true);
+    if(mode==='required'){
+     const list=home.locator('.yrHomePending');
+     assert.equal(await list.getAttribute('open'),null);
+     await list.locator('summary').click();
+     assert.match(await list.innerText(),/الواجبات ١ · الورش ١/);
+     assert.equal(await list.getByRole('button').count(),2);
+    }
     if(mode==='urgent'){
      await Promise.all([page.waitForURL(origin+'/lecture5-book-homework.html'),home.getByRole('button',{name:key,exact:true}).click()]);
     }

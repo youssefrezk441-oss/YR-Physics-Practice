@@ -197,3 +197,8 @@ html[data-theme="dark"] .yrStudentApp .yrHonorPendingEyebrow{color:#A4E2BF}
 @media(max-width:600px){
  .yrStudentApp.yrWorkspaceReady #dashboardView>.yrHomeChapter2{order:0;margin:12px 0}
 }
+
+.yrStudentApp .yrHomePending{grid-column:1/-1;border-top:1px solid var(--yr-line);padding-top:8px;color:var(--yr-deep)}
+.yrStudentApp .yrHomePending summary{cursor:pointer;font-size:13px;font-weight:800}
+.yrStudentApp .yrHomePending ul{margin:5px 0 0;padding-inline-start:20px}
+.yrStudentApp .yrHomePending .yrHomeQuietButton{text-align:start}

@@ -242,10 +242,6 @@ function refreshAchievements(){
 }
 let homeProgress=null,homeProgressRequest=null,homeProgressAt=0;
 const chapter2Cycle="CHAPTER2-2026-G3-01";
-const chapter2Groups={
- workshops:["openUnifiedL1Workshop","openCh2Lecture5Workshop","openLesson1Review35"],
- homework:["openLecture1Homework","openBookRemainder","openLesson2BookHomework","openLecture5BookHomework"]
-};
 const activityLaunchers={
  "third-secondary-term-2-lecture-1":"openUnifiedL1Workshop",
  "third-secondary-term-2-lecture-5":"openCh2Lecture5Workshop",
@@ -270,27 +266,28 @@ function requestHomeProgress(force=false){
   if(!$("dashboardView")?.classList.contains("hidden"))homeNext();
  });
 }
+function openPendingActivity(activity){
+ const launch=activityLaunchers[activity.slug];
+ const target=launch?source(launch):null;
+ if(target){target.click();return;}
+ const route=activity.kind==="homework"?"lecture1-homework.html":"workshop.html";
+ window.location.href=`./${route}?workshop=${encodeURIComponent(activity.slug)}`;
+}
 function renderChapter2Home(region){
  const {assessment:a,mistakes:m,unavailable}=homeProgress||{};
- const openGroup=group=>window.yrWorkspaceOpenChapter2Group(group);
  const showDetails=()=>window.yrWorkspaceOpenHonorCycle("grade3",chapter2Cycle);
- const hasGroup=group=>chapter2Groups[group].some(id=>source(id));
  const remaining=m?Number(m.remaining||0):0;
- const due=a?.due, dueId=activityLaunchers[due?.slug], dueLauncher=dueId?source(dueId):null;
- const homeworkLeft=Math.max(0,Number(a?.homework?.counted||0)-Number(a?.homework?.submitted||0));
- const workshopsLeft=Math.max(0,Number(a?.workshops?.counted||0)-Number(a?.workshops?.completed||0));
+ const showingPending=region.querySelector(".yrHomePending")?.open??false;
+ const pending=Array.isArray(a?.pending)?a.pending:null;
+ const next=pending?.[0];
  let task;
- if(dueLauncher&&Date.parse(due.due_at)>Date.now()){
-  const dueTime=new Date(due.due_at).toLocaleString("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Cairo"});
-  task={text:`${due.title} · موعد التسليم ${dueTime}`,label:due.kind==="homework"?"افتح الواجب":"افتح الورشة",open:()=>dueLauncher.click()};
+ if(next){
+  const dueTime=next.due_at?new Date(next.due_at).toLocaleString("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Cairo"}):null;
+  task={text:dueTime?`${next.title} · موعد التسليم ${dueTime}`:next.title,label:next.kind==="homework"?"افتح الواجب":"افتح الورشة",open:()=>openPendingActivity(next)};
  }else if(remaining&&source("openCh2Mistakes")){
   task={text:"راجع سؤالًا غلطت فيه وحاول تحلّه من جديد.",label:"كمّل تصحيح أخطائك",open:()=>source("openCh2Mistakes")?.click()};
- }else if(homeworkLeft&&hasGroup("homework")){
-  task={text:`متبقي لك ${homeNumber(homeworkLeft)} للتسليم في واجبات الفصل الثاني المحتسبة حاليًا.`,label:"افتح الواجبات",open:()=>openGroup("homework")};
- }else if(workshopsLeft&&hasGroup("workshops")){
-  task={text:`متبقي لك ${homeNumber(workshopsLeft)} في ورش الفصل الثاني المحتسبة حاليًا.`,label:"افتح الورش",open:()=>openGroup("workshops")};
- }else if(a){
-  task={text:a.ranked?"تابع تقييمك في الفصل الثاني.":"راجع حالة تقييمك في الفصل الثاني.",label:"عرض تفاصيل تقييمي",open:showDetails};
+ }else if(pending){
+  task={text:"خلّصت كل واجبات وورش الفصل الثاني المتاحة ليك.",label:"عرض تفاصيل تقييمي",open:showDetails};
  }else{
   task={text:homeProgress?(unavailable?"تعذّر تحميل ملخص تقدّمك دلوقتي.":"شوف الأنشطة المتاحة في الفصل الثاني."):"جاري تحميل خطوتك الجاية…",label:"افتح أنشطة الفصل الثاني",open:()=>{chapters.learning="2";go("learning")}};
  }
@@ -302,6 +299,19 @@ function renderChapter2Home(region){
  const button=document.createElement("button");button.type="button";button.textContent=task.label;
  button.addEventListener("click",task.open);
  region.replaceChildren(text,button);
+ if(pending?.length){
+  const workCount=pending.filter(item=>item.kind==="homework").length;
+  const details=document.createElement("details");details.className="yrHomePending";details.open=showingPending;
+  const summary=document.createElement("summary");
+  summary.textContent=`المطلوب في الفصل الثاني · الواجبات ${homeNumber(workCount)} · الورش ${homeNumber(pending.length-workCount)}`;
+  const list=document.createElement("ul");
+  for(const activity of pending){
+   const li=document.createElement("li"),link=document.createElement("button");
+   link.type="button";link.className="yrHomeQuietButton";link.textContent=activity.title;
+   link.addEventListener("click",()=>openPendingActivity(activity));li.append(link);list.append(li);
+  }
+  details.append(summary,list);region.append(details);
+ }
  if(m&&source("openCh2Mistakes")){
   const row=document.createElement("div");row.className="yrHomeMastery";
   const caption=document.createElement("p");
@@ -320,7 +330,7 @@ function renderChapter2Home(region){
   }
   region.append(row);
  }
- if(a&&!a.ranked){
+ if(a?.attendance&&!a.ranked){
   const notes=[];
   if(!a.attendance.total)notes.push("سجل الحضور");
   if(a.classroom_homework.pending||!a.classroom_homework.total)notes.push("واجب الحصة");
