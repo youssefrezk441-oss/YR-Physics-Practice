@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
+import {runInNewContext} from "node:vm";
 
 const read=(path)=>readFile(new URL("../../"+path,import.meta.url),"utf8");
 
@@ -26,4 +27,21 @@ test("achievements show only the current student's grade and distinguish frozen 
  const css=await read("student-workspace-navigation-v1.css");
  assert.match(css,/yrHonorCycleSelector/);
  assert.match(css,/yrEditionButton/);
+});
+
+test("chapter two shows all five weights without changing the legacy honor formula",async()=>{
+ const weights={assessment_model:"chapter2_sources",quizzes:40,platform:30,attendance:10,homework:10,online_homework:10};
+ for(const [file,name] of [["student-base.html","honorFormulaHtml"],["admin-honor.html","formulaHtml"]]){
+  const source=await read(file);
+  const declaration=source.match(new RegExp("function "+name+"\\(p,cycle\\)\\{[^\\n]+?\\}(?=\\s*function|\\s*$)","m"))?.[0];
+  assert.ok(declaration,file);
+  const render=runInNewContext(declaration+"\n"+name,{esc:String});
+  const chapter2=render("readiness",{weights});
+  assert.match(chapter2,/<b>40%<\/b> الكويزات/);
+  assert.match(chapter2,/<b>30%<\/b> ورش المنصة/);
+  assert.match(chapter2,/<b>10%<\/b> الحضور/);
+  assert.match(chapter2,/<b>10%<\/b> واجب الحصة/);
+  assert.match(chapter2,/<b>10%<\/b> تسليم واجب المنصة/);
+  assert.doesNotMatch(render("readiness",{}),/تسليم واجب المنصة/);
+ }
 });
