@@ -187,3 +187,13 @@ html[data-theme="dark"] .yrStudentApp .yrHistoryFilterTabs button[aria-pressed="
 .yrStudentApp .yrHonorPendingNotice p{line-height:1.85;margin:12px 0 0;max-width:75ch}
 html[data-theme="dark"] .yrStudentApp .yrHonorPendingNotice{border-color:#467B67;background:#173C30}
 html[data-theme="dark"] .yrStudentApp .yrHonorPendingEyebrow{color:#A4E2BF}
+
+.yrStudentApp .yrHomeChapter2{gap:10px 15px}
+.yrStudentApp .yrHomeChapter2 .yrHomeNextTitle{margin:0;font-size:18px}
+.yrStudentApp .yrHomeChapter2 .yrHomeMastery,.yrStudentApp .yrHomeChapter2 .yrHomeAssessment{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;border-top:1px solid var(--yr-line);padding-top:8px}
+.yrStudentApp .yrHomeChapter2 .yrHomeMastery p,.yrStudentApp .yrHomeChapter2 .yrHomeAssessment p{margin:0}
+.yrStudentApp .yrHomeChapter2 .yrHomeMastery strong{display:block;color:var(--yr-deep)}
+.yrStudentApp .yrHomeChapter2 .yrHomeQuietButton{width:auto;padding:5px 0;background:transparent;color:var(--yr-deep);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){
+ .yrStudentApp.yrWorkspaceReady #dashboardView>.yrHomeChapter2{order:0;margin:12px 0}
+}

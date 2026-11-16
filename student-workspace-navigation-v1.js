@@ -240,32 +240,135 @@ function refreshAchievements(){
   honorCatalogFailure=true;renderHonorEditionCards();
  }).finally(()=>{honorCatalogLoading=false});
 }
-function homeNext(){
- const home=$("dashboardView");if(!home||!home.classList.contains("hidden")&&document.querySelector(".yrHomeNext")===null){
-  // Rendering is idempotent; no fake progress or guessed latest assessment.
+let homeProgress=null,homeProgressRequest=null,homeProgressAt=0;
+const chapter2Cycle="CHAPTER2-2026-G3-01";
+const chapter2Groups={
+ workshops:["openUnifiedL1Workshop","openCh2Lecture5Workshop","openLesson1Review35"],
+ homework:["openLecture1Homework","openBookRemainder","openLesson2BookHomework","openLecture5BookHomework"]
+};
+const activityLaunchers={
+ "third-secondary-term-2-lecture-1":"openUnifiedL1Workshop",
+ "third-secondary-term-2-lecture-5":"openCh2Lecture5Workshop",
+ "third-secondary-term-2-lesson-1-review-35":"openLesson1Review35",
+ "third-secondary-term-2-lecture-1-homework":"openLecture1Homework",
+ "third-secondary-term-2-lesson-1-book-remaining":"openBookRemainder",
+ "third-secondary-term-2-lesson-2-book-homework":"openLesson2BookHomework",
+ "third-secondary-term-2-lecture-5-book-homework":"openLecture5BookHomework"
+};
+const homeNumber=value=>Number(value||0).toLocaleString("ar-EG");
+function requestHomeProgress(force=false){
+ if(!canThirdGrade()||$("dashboardView")?.classList.contains("hidden")||homeProgressRequest)return;
+ if(!force&&Date.now()-homeProgressAt<30000)return;
+ if(typeof window.yrWorkspaceLoadHomeProgress!=="function")return;
+ homeProgressRequest=window.yrWorkspaceLoadHomeProgress().then(result=>{
+  homeProgress=result;
+ }).catch(()=>{
+  homeProgress={unavailable:true};
+ }).finally(()=>{
+  homeProgressAt=Date.now();
+  homeProgressRequest=null;
+  if(!$("dashboardView")?.classList.contains("hidden"))homeNext();
+ });
+}
+function renderChapter2Home(region){
+ const {assessment:a,mistakes:m,unavailable}=homeProgress||{};
+ const openGroup=group=>window.yrWorkspaceOpenChapter2Group(group);
+ const showDetails=()=>window.yrWorkspaceOpenHonorCycle("grade3",chapter2Cycle);
+ const hasGroup=group=>chapter2Groups[group].some(id=>source(id));
+ const remaining=m?Number(m.remaining||0):0;
+ const due=a?.due, dueId=activityLaunchers[due?.slug], dueLauncher=dueId?source(dueId):null;
+ const homeworkLeft=Math.max(0,Number(a?.homework?.counted||0)-Number(a?.homework?.submitted||0));
+ const workshopsLeft=Math.max(0,Number(a?.workshops?.counted||0)-Number(a?.workshops?.completed||0));
+ let task;
+ if(dueLauncher&&Date.parse(due.due_at)>Date.now()){
+  const dueTime=new Date(due.due_at).toLocaleString("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Cairo"});
+  task={text:`${due.title} · موعد التسليم ${dueTime}`,label:due.kind==="homework"?"افتح الواجب":"افتح الورشة",open:()=>dueLauncher.click()};
+ }else if(remaining&&source("openCh2Mistakes")){
+  task={text:"راجع سؤالًا غلطت فيه وحاول تحلّه من جديد.",label:"كمّل تصحيح أخطائك",open:()=>source("openCh2Mistakes")?.click()};
+ }else if(homeworkLeft&&hasGroup("homework")){
+  task={text:`متبقي لك ${homeNumber(homeworkLeft)} للتسليم في واجبات الفصل الثاني المحتسبة حاليًا.`,label:"افتح الواجبات",open:()=>openGroup("homework")};
+ }else if(workshopsLeft&&hasGroup("workshops")){
+  task={text:`متبقي لك ${homeNumber(workshopsLeft)} في ورش الفصل الثاني المحتسبة حاليًا.`,label:"افتح الورش",open:()=>openGroup("workshops")};
+ }else if(a){
+  task={text:a.ranked?"تابع تقييمك في الفصل الثاني.":"راجع حالة تقييمك في الفصل الثاني.",label:"عرض تفاصيل تقييمي",open:showDetails};
+ }else{
+  task={text:homeProgress?(unavailable?"تعذّر تحميل ملخص تقدّمك دلوقتي.":"شوف الأنشطة المتاحة في الفصل الثاني."):"جاري تحميل خطوتك الجاية…",label:"افتح أنشطة الفصل الثاني",open:()=>{chapters.learning="2";go("learning")}};
  }
- let region=$("yrHomeNext");if(!home)return;
+ const text=document.createElement("div");
+ const title=document.createElement("h2");
+ title.className="yrHomeNextTitle";title.textContent="خطوتك الجاية";
+ const copy=document.createElement("p");copy.textContent=task.text;
+ text.append(title,copy);
+ const button=document.createElement("button");button.type="button";button.textContent=task.label;
+ button.addEventListener("click",task.open);
+ region.replaceChildren(text,button);
+ if(m&&source("openCh2Mistakes")){
+  const row=document.createElement("div");row.className="yrHomeMastery";
+  const caption=document.createElement("p");
+  const total=Number(m.total_mistakes||0),manual=Number(m.self_reviewed||0);
+  const corrected=Number(m.corrected||0);
+  let line="لسه مفيش أخطاء مسجّلة في الفصل الثاني.";
+  if(total&&remaining===0&&!manual)line="صحّحت كل أخطائك المسجّلة في الفصل الثاني.";
+  else if(total)line=`صحّحت بنفسك ${homeNumber(corrected)} من ${homeNumber(total)} أخطاء مسجّلة${manual?`، وراجعت ${homeNumber(manual)} بالتقييم الذاتي`:""}.`;
+  const heading=document.createElement("strong");heading.textContent="من الغلطة للإتقان";
+  caption.append(heading,document.createTextNode(line));
+  row.append(caption);
+  if(task.label!=="كمّل تصحيح أخطائك"&&total){
+   const review=document.createElement("button");review.type="button";review.className="yrHomeQuietButton";
+   review.textContent="عرض أخطائي";review.addEventListener("click",()=>source("openCh2Mistakes")?.click());
+   row.append(review);
+  }
+  region.append(row);
+ }
+ if(a&&!a.ranked){
+  const notes=[];
+  if(!a.attendance.total)notes.push("سجل الحضور");
+  if(a.classroom_homework.pending||!a.classroom_homework.total)notes.push("واجب الحصة");
+  if(a.quizzes.pending)notes.push("درجات كويز");
+  if(notes.length){
+   const row=document.createElement("div");row.className="yrHomeAssessment";
+   const copy=document.createElement("p");copy.textContent="تقييمك مستني تسجيل "+notes.join("، ")+".";
+   row.append(copy);
+   if(task.label!=="عرض تفاصيل تقييمي"){
+    const details=document.createElement("button");details.type="button";details.className="yrHomeQuietButton";
+    details.textContent="عرض تفاصيل تقييمي";details.addEventListener("click",showDetails);row.append(details);
+   }
+   region.append(row);
+  }
+ }
+}
+function homeNext(){
+ const home=$("dashboardView");
+ if(!home)return;
+ let region=$("yrHomeNext");
  if(!region){
   region=document.createElement("section");region.id="yrHomeNext";region.className="yrHomeNext";
   home.querySelector(".yrDashboardHero")?.insertAdjacentElement("afterend",region);
  }
- const candidates=[
-  "openLesson2BookHomework","openUnifiedL1Workshop","openLecture1Homework","openLecture6Workshop",
-  "openLecture5Workshop","openLecture4Workshop","openLecture3Workshop",
-  "openB2Lesson2Workshop","openB2Lesson1Workshop"
- ];
- const id=candidates.find(i=>source(i));
- const target=id?$(id):null;
- const text=document.createElement("div");
- const h=document.createElement("div");h.className="yrHomeNextTitle";
- h.textContent=id?"تدريب متاح ليك":"ابدأ من التعلّم";
- const p=document.createElement("p");
- p.textContent=id?titleFrom(target,"افتح التدريب المناسب"): "اختار الفصل المطلوب وشوف الأنشطة المتاحة لحسابك.";
- text.append(h,p);
- const button=document.createElement("button");button.type="button";
- button.textContent=id?"فتح التدريب":"استعراض الفصول";
- button.addEventListener("click",()=>{if(id&&source(id))source(id).click();else go("learning")});
- region.replaceChildren(text,button);
+ if(canThirdGrade()){
+  region.classList.add("yrHomeChapter2");
+  renderChapter2Home(region);
+  requestHomeProgress();
+ }else{
+  region.classList.remove("yrHomeChapter2");
+  const candidates=[
+   "openLesson2BookHomework","openUnifiedL1Workshop","openLecture1Homework","openLecture6Workshop",
+   "openLecture5Workshop","openLecture4Workshop","openLecture3Workshop",
+   "openB2Lesson2Workshop","openB2Lesson1Workshop"
+  ];
+  const id=candidates.find(i=>source(i));
+  const target=id?$(id):null;
+  const text=document.createElement("div");
+  const h=document.createElement("div");h.className="yrHomeNextTitle";
+  h.textContent=id?"تدريب متاح ليك":"ابدأ من التعلّم";
+  const p=document.createElement("p");
+  p.textContent=id?titleFrom(target,"افتح التدريب المناسب"): "اختار الفصل المطلوب وشوف الأنشطة المتاحة لحسابك.";
+  text.append(h,p);
+  const button=document.createElement("button");button.type="button";
+  button.textContent=id?"فتح التدريب":"استعراض الفصول";
+  button.addEventListener("click",()=>{if(id&&source(id))source(id).click();else go("learning")});
+  region.replaceChildren(text,button);
+ }
  // Keep existing indicator/history screens reachable after retiring the old home tiles.
  let progress=$("yrHomeProgress");
  if(!progress){
@@ -379,11 +482,14 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("yr:student-view",e=>{
  updateActive(e.detail?.id||"dashboardView");
  if(e.detail?.id==="yrAchievementsView")refreshAchievements();
+ if(e.detail?.id==="dashboardView")homeNext();
 });
 document.addEventListener("yr:honor-editions-ready",e=>{
  honorEditionCatalog=e.detail;honorCatalogFailure=false;
  if(!$("yrAchievementsView")?.classList.contains("hidden"))renderHonorEditionCards();
 });
+window.addEventListener("pageshow",event=>{if(event.persisted)requestHomeProgress(true)});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")requestHomeProgress()});
 const user=$("userBar");
 if(user)new MutationObserver(updateReady).observe(user,{attributes:true,attributeFilter:["class"]});
 const meta=$("studentProfileMeta");

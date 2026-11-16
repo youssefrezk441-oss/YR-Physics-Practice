@@ -149,7 +149,7 @@ html[data-theme="dark"] .courseReadinessCard{background:linear-gradient(135deg,#
 @media(max-width:480px){.honorPersonalRow{grid-template-columns:minmax(0,1fr)}.honorPersonalRow>strong{text-align:start}}
 </style>
 <link rel="stylesheet" href="student-internal-identity-v1.css">
-<link rel="stylesheet" href="student-workspace-navigation-v1.css?v=20261115-ch2-activity-groups">
+<link rel="stylesheet" href="student-workspace-navigation-v1.css?v=20261116-home-next-step">
 </head>
 <body class="yrStudentApp"><div class="wrap">
 <div class="top yrInternalTop"><div class="brand yrInternalBrand">
@@ -442,6 +442,22 @@ async function openClassTestsView(){clearMsg();showOnly('classTestsView');$('cla
 
 let honorData=null,honorGrade=null,honorSelectedCycles={},honorCycleRequest=0;
 async function honorFn(cycles={}){const{data,error}=await sb.functions.invoke('student-honor-board',{body:{action:'summary',cycles}});if(error)throw new Error(error.message||'تعذر تحميل لوحة الشرف');if(data?.error)throw new Error(data.message||data.error);return data}
+async function loadHomePiece(name,action){
+ const {data,error}=await sb.functions.invoke(name,{body:{action}});
+ if(error||data?.error)throw new Error('تعذر تحديث ملخص التقييم');
+ return data;
+}
+window.yrWorkspaceLoadHomeProgress=async()=>{
+ const [assessment,mistakes]=await Promise.allSettled([
+  loadHomePiece('student-honor-board','home_progress'),
+  loadHomePiece('student-ch2-mistakes','summary')
+ ]);
+ return {
+  assessment:assessment.status==='fulfilled'?assessment.value?.progress:null,
+  mistakes:mistakes.status==='fulfilled'?mistakes.value?.summary:null,
+  unavailable:assessment.status==='rejected'||mistakes.status==='rejected'
+ };
+};
 function honorPct(v){return v==null?'—':Number(v).toFixed(Number(v)%1?1:0)+'%'}
 function honorPodiumSymbol(rank){return rank===1?'👑':rank===2?'★':'◆'}
 function honorBadges(list){return (list||[]).map(x=>x==='واجب كامل'?'إتقان الواجب':x).map(x=>`<span class="honorBadge">${esc(x)}</span>`).join('')}
@@ -725,4 +741,4 @@ async function checkProfileOnReturn(){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkProfileOnReturn()});
 window.addEventListener('focus',()=>void checkProfileOnReturn());
 window.addEventListener('pageshow',e=>{if(e.persisted)void checkProfileOnReturn()});
-</script><script type="module" src="./student-account-shell.js"></script><script type="module" src="./student-workspace-navigation-v1.js?v=20261116-honor-personal"></script></body></html>
+</script><script type="module" src="./student-account-shell.js"></script><script type="module" src="./student-workspace-navigation-v1.js?v=20261116-home-next-step"></script></body></html>

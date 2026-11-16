@@ -56,6 +56,17 @@ const fakeSupabase=String.raw`export function createClient(){
     const pending=body.workshop_slug==='third-secondary-term-2-lecture-5-book-homework'&&new URL(location.href).searchParams.has('pending_homework');
     return {data:{ok:!pending,available:!pending,workshop:{slug:body.workshop_slug}}};
    }
+   if(name==='student-honor-board'&&body?.action==='home_progress'){
+    const mode=new URL(location.href).searchParams.get('home_case');
+    return {data:{ok:true,progress:{ranked:false,attendance:{total:0},classroom_homework:{total:1,pending:0},
+      quizzes:{pending:1},homework:{submitted:1,counted:3},workshops:{completed:1,counted:2},
+      due:mode==='urgent'?{kind:'homework',slug:'third-secondary-term-2-lecture-5-book-homework',
+        title:'واجب القوة المغناطيسية',due_at:new Date(Date.now()+3600000).toISOString()}:null}}};
+   }
+   if(name==='student-ch2-mistakes'&&body?.action==='summary'){
+    const all=new URL(location.href).searchParams.get('home_case')==='complete';
+    return {data:{ok:true,summary:{total_mistakes:10,corrected:all?10:6,self_reviewed:0,remaining:all?0:4}}};
+   }
    if(name==='student-honor-board'&&body?.cycles?.grade3==='CHAPTER2-2026-G3-01'){
     const cycle={id:'synthetic-cycle',code:'CHAPTER2-2026-G3-01',title:'الفصل الثاني',status:'open'};
     const top10=Array.from({length:12},(_,i)=>({rank:i<2?i+1:i===2?2:Math.min(10,i),full_name:'طالب '+i,overall:i===2?99:i===11?90:100-i}));
@@ -118,6 +129,20 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
     await page.locator('[data-yr-go="learning"]:visible').first().click();
     await page.locator('[data-yr-panel="learning"][data-yr-chapter="2"]:visible').first().click();
    };
+   const home=page.locator('#yrHomeNext');
+   for(const mode of ['review','urgent','complete']){
+    await page.goto(origin+'/student.html?home_case='+mode+(legacy?'&legacy_grade=1':''),{waitUntil:'domcontentloaded'});
+    await home.getByRole('heading',{name:'خطوتك الجاية'}).waitFor({state:'visible'});
+    const key=mode==='urgent'?'افتح الواجب':mode==='complete'?'افتح الواجبات':'كمّل تصحيح أخطائك';
+    await home.getByRole('button',{name:key,exact:true}).waitFor({state:'visible'});
+    assert.match(await home.innerText(),mode==='complete'?/صحّحت كل أخطائك/:/٦ من ١٠ أخطاء/);
+    assert.match(await home.innerText(),/تقييمك مستني تسجيل سجل الحضور، درجات كويز/);
+    const afterHero=await home.evaluate(el=>el.previousElementSibling.classList.contains('yrDashboardHero')&&el.getBoundingClientRect().top>=el.previousElementSibling.getBoundingClientRect().bottom);
+    assert.equal(afterHero,true);
+    if(mode==='urgent'){
+     await Promise.all([page.waitForURL(origin+'/lecture5-book-homework.html'),home.getByRole('button',{name:key,exact:true}).click()]);
+    }
+   }
    await enterChapter();
    const chapter=page.locator('#yrLearningContent');
    await chapter.locator('summary', {hasText:'واجبات الفصل الثاني'}).waitFor({state:'visible',timeout:6000});

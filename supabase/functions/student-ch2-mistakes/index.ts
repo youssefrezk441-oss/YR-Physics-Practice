@@ -311,6 +311,21 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    if (action === "summary") {
+      const mistakes = await loadMistakes(account.user.id, groupCode);
+      const mastered = mistakes.filter((item) => item.mastered_at);
+      const selfReviewed = mastered.filter((item) => item.mastery_kind === "essay_self_review").length;
+      return response(req, {
+        ok: true,
+        summary: {
+          total_mistakes: mistakes.length,
+          corrected: mastered.length - selfReviewed,
+          self_reviewed: selfReviewed,
+          remaining: mistakes.length - mastered.length,
+        },
+      });
+    }
+
     if (action === "list") {
       const [mistakeRows, incompleteRows] = await Promise.all([
         loadMistakes(account.user.id, groupCode),
