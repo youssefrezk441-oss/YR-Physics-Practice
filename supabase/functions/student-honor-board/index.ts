@@ -46,36 +46,26 @@ function chapter2Progress(metrics:any){
   };
 }
 async function homeProgress(userId:string, groupCode:string){
-  const [cycle]=await sql`
-    select id, start_at from public.assessment_cycles
-    where cycle_code='CHAPTER2-2026-G3-01' and status='open' and cutoff_at is null
-  `;
-  if(!cycle)return {progress:null};
-  const [row]=await sql`
-    select m from private.assessment_cycle_metrics(${cycle.id}::uuid) m
-    where m->>'user_id'=${userId}
-  `;
-  if(!row?.m)return {progress:null};
-  const m=row.m;
-  const [due]=await sql`
-    with due_activities as (
-      select d.id, d.slug, d.title, d.active_version_id, r.due_at, h.workshop_id is not null as paper
-      from private.chapter2_assessment_activity_rules r
-      join private.workshop_definitions d on d.id=r.workshop_id
+  const pending=await sql`
+    with activities as (
+      select d.id, d.slug, d.title, d.active_version_id, d.lecture_no, v.published_at,
+             case when r.due_at>=v.published_at then r.due_at end as due_at,
+             h.workshop_id is not null as paper
+      from private.workshop_definitions d
       join private.workshop_versions v on v.id=d.active_version_id and v.status='published'
+      left join private.chapter2_assessment_activity_rules r on r.workshop_id=d.id
       left join private.homework_delivery_policies h on h.workshop_id=d.id
         and h.delivery_contract='paper_homework_capture_v1'
-      where r.counts_for_assessment and r.due_at between now() and now()+interval '2 days'
-        and r.due_at>=v.published_at and v.published_at between ${cycle.start_at} and now()
+      where v.published_at<=now()
         and d.academic_term='second' and d.status='published' and d.grade_level='الصف الثالث الثانوي'
         and (h.workshop_id is null or h.enabled)
         and (jsonb_array_length(d.eligible_group_codes)=0 or d.eligible_group_codes ? ${groupCode})
     )
     select a.slug, a.title, a.due_at, case when a.paper then 'homework' else 'workshops' end as kind
-    from due_activities a
+    from activities a
     where (a.paper and not exists (
       select 1 from private.homework_submissions s
-      where s.workshop_id=a.id and s.user_id=${userId}::uuid and s.submitted_at>=${cycle.start_at}
+      where s.workshop_id=a.id and s.user_id=${userId}::uuid
     )) or (not a.paper and exists (
       select 1
       from private.workshop_tracks t
@@ -84,7 +74,6 @@ async function homeProgress(userId:string, groupCode:string){
           (t.mode='final_submit' and not exists (
             select 1 from private.workshop_submissions s join private.workshop_cycles w on w.id=s.cycle_id
             where s.track_id=t.id and w.user_id=${userId}::uuid and w.source='initial'
-              and s.submitted_at>=${cycle.start_at}
           )) or (t.mode='interactive' and exists (
             select 1 from private.workshop_track_questions tq
             join private.workshop_questions q on q.id=tq.question_id and q.active
@@ -92,20 +81,35 @@ async function homeProgress(userId:string, groupCode:string){
             where tq.track_id=t.id and not exists (
               select 1 from private.workshop_attempt_events e join private.workshop_cycles w on w.id=e.cycle_id
               where e.track_id=t.id and e.part_id=p.id and e.attempt_no=1 and w.user_id=${userId}::uuid
-                and w.source='initial' and e.server_received_at>=${cycle.start_at}
+                and w.source='initial'
             )
           ))
         )
     ))
-    order by a.due_at,a.slug
-    limit 1
+    order by
+      case when a.due_at<=now()+interval '2 days' then 0 when a.paper then 1 else 2 end,
+      case when a.due_at<=now()+interval '2 days' then a.due_at end,
+      a.lecture_no, a.published_at, a.slug
   `;
+  const [row]=await sql`
+    select m from public.assessment_cycles c
+    cross join lateral private.assessment_cycle_metrics(c.id) m
+    where c.cycle_code='CHAPTER2-2026-G3-01' and c.status='open'
+      and m->>'user_id'=${userId}
+  `;
+  const m=row?.m;
   return {progress:{
-    ranked:m.readiness_score!=null,
-    ...chapter2Progress(m),
-    workshops:{completed:Number(m.platform_completed||0),counted:Number(m.workshop_counted||0)},
-    homework:{submitted:Number(m.online_homework_submitted||0),counted:Number(m.online_homework_counted||0)},
-    due:due??null
+    pending,
+    due:pending.find(activity=>{
+      const time=new Date(activity.due_at).getTime();
+      return time>Date.now()&&time<=Date.now()+48*60*60*1000;
+    })??null,
+    ...(m?{
+      ranked:m.readiness_score!=null,
+      ...chapter2Progress(m),
+      workshops:{completed:Number(m.platform_completed||0),counted:Number(m.workshop_counted||0)},
+      homework:{submitted:Number(m.online_homework_submitted||0),counted:Number(m.online_homework_counted||0)}
+    }:{})
   }};
 }
 async function cycleCatalog(key:string){const g=gradeDb(key),track=trackDb(key);const rows=await sql`select c.id,c.cycle_code,c.title,c.grade_level,c.education_track,c.start_at,c.cutoff_at,c.comprehensive_exam_date,c.comprehensive_exam_id,c.status,c.created_at,exists(select 1 from public.assessment_cycle_snapshots s where s.cycle_id=c.id) archived,(select max(s.frozen_at) from public.assessment_cycle_snapshots s where s.cycle_id=c.id) frozen_at,e.status exam_status,e.approved_at from public.assessment_cycles c left join public.comprehensive_exams e on e.id=c.comprehensive_exam_id where c.grade_level=${g} and c.education_track=${track} order by (c.status='open') desc,c.start_at desc,c.created_at desc`;return rows.map((x:any,i:number)=>({id:x.id,code:x.cycle_code,title:x.title,grade_level:x.grade_level,education_track:x.education_track,start_at:x.start_at,cutoff_at:x.cutoff_at,exam_date:x.comprehensive_exam_date,status:x.status,exam_status:x.exam_status,archived:!!x.archived,frozen_at:x.frozen_at,is_default:i===0}))}
