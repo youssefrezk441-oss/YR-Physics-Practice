@@ -134,7 +134,7 @@ function refreshLearning(){
   }
  }else if(third){
   const honor=document.createElement("button");honor.type="button";
-  fillEntry(honor,"لوحة شرف الفصل الثاني","أفضل ١٠ طلاب ونجوم الكويزات ونجوم الصعود","🏆");
+  fillEntry(honor,"لوحة شرف الفصل الثاني","أول ١٠ مراكز ونجوم الكويزات ونجوم الصعود","🏆");
   honor.addEventListener("click",()=>window.yrWorkspaceOpenHonorCycle?.("grade3","CHAPTER2-2026-G3-01"));
   found+=collectChapterGroup(box,{
    key:"workshops",title:"ورش الفصل الثاني",icon:"🧲",extra:honor,

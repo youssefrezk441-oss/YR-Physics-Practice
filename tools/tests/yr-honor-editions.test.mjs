@@ -58,15 +58,15 @@ test("Chapter 2 highlights render ten overall leaders and the two requested star
  const render=runInNewContext(renderSource+"\nrenderHonorHighlights",{
   $,honorTopRows:rows=>rows.length,honorLeaderRows:rows=>rows.length,honorRiserCards:rows=>rows.length
  });
- const group={cycle:{code:"CHAPTER2-2026-G3-01"},top10:Array(10).fill({}),leaders:{quizzes:[{}]},risers:[{}]};
+ const group={cycle:{code:"CHAPTER2-2026-G3-01"},top10:Array(12).fill({}),leaders:{quizzes:[{}]},risers:[{}]};
  render(group);
- assert.equal($("honorTop10").innerHTML,10);
+ assert.equal($("honorTop10").innerHTML,12);
  assert.equal($("honorQuizStars").hidden,false);
  assert.equal($("honorQuizLeaders").innerHTML,1);
  assert.equal($("honorRiseStars").hidden,false);
  assert.equal($("honorRisers").innerHTML,1);
- render({...group,cycle:{code:"CHAPTER1-2026-G3-01"}});
- assert.equal($("honorTop10").innerHTML,5);
+ render({...group,cycle:{code:"CHAPTER1-2026-G3-01"},top10:Array(6).fill({})});
+ assert.equal($("honorTop10").innerHTML,6);
  assert.equal($("honorQuizStars").hidden,true);
  assert.equal($("honorRiseStars").hidden,true);
 });
@@ -74,10 +74,10 @@ test("Chapter 2 highlights render ten overall leaders and the two requested star
 test("honor endpoint sends the Chapter 2 top ten and uses real quiz participants for stars",async()=>{
  const {stripTypeScriptTypes}=await import("node:module");
  const source=(await read("supabase/functions/student-honor-board/index.ts")).replace(/^import .*;\n/gm,"");
- const entries=Array.from({length:12},(_,i)=>({m:{
-  user_id:"synthetic-"+i,full_name:"طالب "+i,group_code:"N3-A",total_sessions:2,readiness_score:100-i,
-  quiz_ratio:i===11?100:80-i,quiz_scored:i===11?0:2,latest_quiz_pct:i<3?([70,69,80][i]):null,
-  previous_quiz_avg_pct:i===2?80:60,previous_quiz_count:1
+ const entries=Array.from({length:15},(_,i)=>({m:{
+  user_id:"synthetic-"+i,full_name:"طالب "+i,group_code:"N3-A",total_sessions:2,readiness_score:100-(i>=2?i-1:i)-(i>=7?-1:0),
+  quiz_ratio:i===14?100:i===5?76:80-i,quiz_scored:i===14?0:2,latest_quiz_pct:i<4?([70,69,80,90][i]):null,
+  previous_quiz_avg_pct:i===2?80:i===3?0:60,previous_quiz_count:1
  }}));
  let chapter2=true;
  const sql=async(parts)=>{
@@ -93,10 +93,15 @@ test("honor endpoint sends the Chapter 2 top ten and uses real quiz participants
   Deno:{env:{get:()=>undefined},serve(){}},postgres:()=>sql,createClient:()=>({})
  });
  const result=await build("grade3",null,null);
- assert.equal(result.top10.length,10);
+ assert.equal(result.top10.length,12);
+ assert.equal(result.top10.at(-1).rank,10);
+ assert.deepEqual(Array.from(result.podium,student=>student.rank),[1,2,2,3]);
  assert.equal(result.leaders.quizzes[0].user_id,"synthetic-0");
+ assert.deepEqual(Array.from(result.leaders.quizzes,student=>student.rank),[1,2,3,4,5,5]);
  assert.equal(result.risers.length,1);
  assert.equal(result.risers[0].user_id,"synthetic-0");
  chapter2=false;
- assert.equal((await build("grade3",null,null)).top10.length,5);
+ const earlier=await build("grade3",null,null);
+ assert.equal(earlier.top10.length,6);
+ assert.equal(earlier.risers.length,1);
 });
