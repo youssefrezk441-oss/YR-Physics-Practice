@@ -94,12 +94,13 @@ async function getWorkshop(slug: string, publishedOnly = true) {
   return workshop ?? null;
 }
 
-async function ensureCycle(tx: postgres.TransactionSql, workshopId: string, userId: string) {
+async function ensureCycle(tx: postgres.TransactionSql, workshopId: string, userId: string, chapter2: boolean) {
   await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-cycle:${workshopId}:${userId}`}, 0))`;
   const [existing] = await tx`
     select * from private.workshop_cycles
-    where workshop_id = ${workshopId}::uuid and user_id = ${userId}::uuid and status = 'open'
-    order by cycle_no desc limit 1 for update`;
+    where workshop_id = ${workshopId}::uuid and user_id = ${userId}::uuid
+      and (status = 'open' or ${chapter2})
+    order by (status = 'open') desc, cycle_no desc limit 1 for update`;
   if (existing) return existing;
   const [created] = await tx`
     insert into private.workshop_cycles
@@ -113,6 +114,29 @@ async function ensureCycle(tx: postgres.TransactionSql, workshopId: string, user
   return created;
 }
 
+async function interactiveTrackComplete(query: typeof sql | postgres.TransactionSql, cycleId: string, trackId: string) {
+  const [result] = await query`
+    select not exists (
+      select 1
+      from private.workshop_track_questions placement
+      join private.workshop_questions question on question.id=placement.question_id and question.active
+      join private.workshop_question_parts part on part.question_id=question.id
+      where placement.track_id=${trackId}::uuid
+        and not exists (
+          select 1 from private.workshop_attempt_events event
+          where event.cycle_id=${cycleId}::uuid and event.track_id=placement.track_id
+            and event.part_id=part.id and event.attempt_no=1
+        )
+    ) as complete`;
+  return result?.complete === true;
+}
+
+function requireOpenChapter2(chapter2: boolean, cycle: {status?: string}, trackComplete = false) {
+  if (chapter2 && (cycle.status !== "open" || trackComplete)) {
+    throw new WorkshopContractError(409, "workshop_read_only", "الورشة محفوظة للعرض فقط. يمكنك تصحيح أخطائك من ورشة من الغلطة للإتقان.");
+  }
+}
+
 function cycleAllows(cycle: Record<string, unknown>, trackKey: string, questionRef?: string) {
   if (cycle.scope_kind === "workshop") return true;
   if (cycle.scope_kind === "track") return cycle.scope_ref === trackKey;
@@ -121,7 +145,7 @@ function cycleAllows(cycle: Record<string, unknown>, trackKey: string, questionR
 
 async function getTrackContext(slug: string, trackKey: string, questionRef?: string, partKey?: string) {
   const [row] = await sql`
-    select definition.id as workshop_id, definition.slug, definition.title, definition.grade_level,
+    select definition.id as workshop_id, definition.slug, definition.title, definition.grade_level, definition.academic_term,
            definition.eligible_group_codes, definition.active_version_id as version_id,
            track.id as track_id, track.track_key, track.mode, track.policy,
            question.id as question_id, question.question_ref,
@@ -178,7 +202,8 @@ async function loadWorkshop(account: NonNullable<Awaited<ReturnType<typeof requi
   const publicQuestions = questions.map((question) => ({ ...question, parts: partsByQuestion.get(String(question.id)) ?? [] }));
 
   if (account.role === "admin") return { workshop, track, questions: publicQuestions, cycle: null, progress: [], drafts: [], submission: null };
-  const cycle = await sql.begin((tx) => ensureCycle(tx, String(workshop.id), account.user.id));
+  const chapter2 = workshop.academic_term === "second";
+  const cycle = await sql.begin((tx) => ensureCycle(tx, String(workshop.id), account.user.id, chapter2));
   if (!cycleAllows(cycle, trackKey)) {
     if (cycle.scope_kind !== "question") throw new WorkshopContractError(403, "reopen_scope_mismatch", "دورة الإعادة الحالية لا تشمل هذا القسم.");
     const [scopedQuestion] = await sql`
@@ -201,7 +226,7 @@ async function loadWorkshop(account: NonNullable<Awaited<ReturnType<typeof requi
     left join private.workshop_part_key_versions revealed_key on revealed_key.id = reveal.key_version_id
     left join private.current_workshop_part_keys active_key on active_key.part_id = progress.part_id
     where progress.cycle_id = ${cycle.id}::uuid and progress.track_id = ${track.id}::uuid`;
-  const drafts = track.mode === "final_submit" ? await sql`
+  const drafts = track.mode === "final_submit" && cycle.status === "open" ? await sql`
     select part_id, answer_json, revision, updated_at from private.workshop_drafts
     where cycle_id = ${cycle.id}::uuid and track_id = ${track.id}::uuid` : [];
   const [submission] = await sql`
@@ -219,9 +244,12 @@ async function loadWorkshop(account: NonNullable<Awaited<ReturnType<typeof requi
      and decision.response_ref = 'submission:' || stored_submission.id::text || ':' || answer.part_id::text
     join private.workshop_part_key_versions key on key.id = decision.key_version_id
     where answer.submission_id = ${submission.id}::uuid` as unknown as Record<string, any>[];
+  const readOnly = !!submission || (chapter2 && (
+    cycle.status !== "open" || (track.mode === "interactive" && await interactiveTrackComplete(sql, String(cycle.id), String(track.id)))
+  ));
   const currentScore = submissionAnswers.reduce<number>((sum, item) => sum + Number(item.awarded_points ?? 0), 0);
   return {
-    workshop, track, questions: publicQuestions, cycle, progress, drafts,
+    workshop, track, questions: publicQuestions, cycle, progress, drafts, read_only: readOnly,
     submission: submission ? { ...submission, score: currentScore, answers: submissionAnswers } : null,
   };
 }
@@ -264,6 +292,7 @@ Deno.serve(async (req: Request) => {
     const context = await getTrackContext(slug, trackKey, questionRef || undefined, partKey || undefined);
     if (!context?.part_id) throw new WorkshopContractError(404, "question_not_found", "السؤال أو الجزء غير متاح.");
     if (!eligible(account.profile, context)) throw new WorkshopContractError(403, "workshop_not_allowed", "هذه الورشة غير متاحة لحسابك.");
+    const chapter2 = context.academic_term === "second";
     const requestId = validateRequestId(body.request_id);
     const bodyHash = await sha256(body);
 
@@ -271,7 +300,7 @@ Deno.serve(async (req: Request) => {
       if (context.mode !== "interactive") throw new WorkshopContractError(400, "wrong_track_mode", "هذا القسم يستخدم التسليم النهائي.");
       const expectedRevision = validateExpectedRevision(body.expected_revision);
       const result = await sql.begin(async (tx) => {
-        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id);
+        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id, chapter2);
         if (!cycleAllows(cycle, trackKey, questionRef)) throw new WorkshopContractError(403, "reopen_scope_mismatch", "دورة الإعادة الحالية لا تشمل هذا السؤال.");
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-attempt:${cycle.id}:${context.track_id}:${context.part_id}`}, 0))`;
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-key:${context.part_id}`}, 0))`;
@@ -280,6 +309,8 @@ Deno.serve(async (req: Request) => {
           if (receipt.action !== action || receipt.body_sha256 !== bodyHash) throw new WorkshopContractError(409, "request_id_reused", "تم استخدام معرف الطلب مع بيانات مختلفة.");
           return receipt.response_json;
         }
+        requireOpenChapter2(chapter2, cycle, chapter2 &&
+          await interactiveTrackComplete(tx, String(cycle.id), String(context.track_id)));
         const [key] = await tx`select * from private.current_workshop_part_keys where part_id = ${context.part_id}::uuid limit 1`;
         if (!key) throw new WorkshopContractError(503, "key_not_available", "تعذر تصحيح هذا السؤال حاليًا.");
         const graded = gradeWorkshopAnswer(context.input_type as WorkshopInputType, key.answer_spec, body.answer);
@@ -355,10 +386,14 @@ Deno.serve(async (req: Request) => {
             values (gen_random_uuid(), ${cycle.id}::uuid, ${context.track_id}::uuid,
                     ${context.question_id}::uuid, ${context.part_id}::uuid, ${key.key_version_id}::uuid)
             on conflict (cycle_id, track_id, part_id) do nothing`;
+          const readOnly = chapter2 && next.attempts_count === 1 &&
+            await interactiveTrackComplete(tx, String(cycle.id), String(context.track_id));
           payload = {
             ok: true, correct: graded.correct, assisted: next.assisted, progress,
-            can_reveal: decision.can_reveal ?? false,
-            message: graded.correct ? "إجابة صحيحة." : next.assisted ? "انتهت المحاولات؛ سُجل السؤال كتعلّم بمساعدة." : "ليست صحيحة. راجع التلميح وحاول مجددًا.",
+            read_only: readOnly,
+            can_reveal: !readOnly && (decision.can_reveal ?? false),
+            message: readOnly ? "اكتملت ورشة الحصة. تقدر تراجع إجاباتك هنا وتصحّح أخطاءك من الغلطة للإتقان."
+              : graded.correct ? "إجابة صحيحة." : next.assisted ? "انتهت المحاولات؛ سُجل السؤال كتعلّم بمساعدة." : "ليست صحيحة. راجع التلميح وحاول مجددًا.",
             hint: graded.correct || next.assisted ? null : key.feedback_hint,
             display_answer: next.assisted ? key.display_answer : null,
             explanation: graded.correct || next.assisted ? key.explanation : null,
@@ -373,7 +408,7 @@ Deno.serve(async (req: Request) => {
     if (action === "reveal") {
       if (context.mode !== "interactive") throw new WorkshopContractError(400, "wrong_track_mode", "هذا القسم لا يدعم الإظهار التفاعلي.");
       const result = await sql.begin(async (tx) => {
-        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id);
+        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id, chapter2);
         if (!cycleAllows(cycle, trackKey, questionRef)) throw new WorkshopContractError(403, "reopen_scope_mismatch", "دورة الإعادة الحالية لا تشمل هذا السؤال.");
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-reveal:${cycle.id}:${context.track_id}:${context.part_id}`}, 0))`;
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-key:${context.part_id}`}, 0))`;
@@ -382,6 +417,8 @@ Deno.serve(async (req: Request) => {
           if (receipt.action !== action || receipt.body_sha256 !== bodyHash) throw new WorkshopContractError(409, "request_id_reused", "تم استخدام معرف الطلب مع بيانات مختلفة.");
           return receipt.response_json;
         }
+        requireOpenChapter2(chapter2, cycle, chapter2 &&
+          await interactiveTrackComplete(tx, String(cycle.id), String(context.track_id)));
         const [current] = await tx`select * from private.workshop_progress where cycle_id = ${cycle.id}::uuid and track_id = ${context.track_id}::uuid and part_id = ${context.part_id}::uuid for update`;
         const [key] = await tx`select * from private.current_workshop_part_keys where part_id = ${context.part_id}::uuid limit 1`;
         if (!key) throw new WorkshopContractError(503, "key_not_available", "تعذر إظهار الإجابة حاليًا.");
@@ -412,7 +449,7 @@ Deno.serve(async (req: Request) => {
         throw new WorkshopContractError(400, "invalid_answer", "اختر إجابة من البدائل المتاحة.");
       }
       const result = await sql.begin(async (tx) => {
-        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id);
+        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id, chapter2);
         if (!cycleAllows(cycle, trackKey, questionRef)) throw new WorkshopContractError(403, "reopen_scope_mismatch", "دورة الإعادة الحالية لا تشمل هذا السؤال.");
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-draft:${cycle.id}:${context.track_id}:${context.part_id}`}, 0))`;
         const [receipt] = await tx`select action, body_sha256, response_json from private.workshop_mutation_receipts where user_id = ${account.user.id}::uuid and request_id = ${requestId}::uuid`;
@@ -420,6 +457,7 @@ Deno.serve(async (req: Request) => {
           if (receipt.action !== action || receipt.body_sha256 !== bodyHash) throw new WorkshopContractError(409, "request_id_reused", "تم استخدام معرف الطلب مع بيانات مختلفة.");
           return receipt.response_json;
         }
+        requireOpenChapter2(chapter2, cycle);
         const [submitted] = await tx`select id from private.workshop_submissions where cycle_id = ${cycle.id}::uuid and track_id = ${context.track_id}::uuid limit 1`;
         if (submitted) throw new WorkshopContractError(409, "already_submitted", "تم تثبيت هذا التسليم ولا يمكن تغيير إجاباته الأصلية.");
         const [current] = await tx`select revision from private.workshop_drafts where cycle_id = ${cycle.id}::uuid and track_id = ${context.track_id}::uuid and part_id = ${context.part_id}::uuid for update`;
@@ -445,7 +483,7 @@ Deno.serve(async (req: Request) => {
     if (action === "submit_track") {
       if (context.mode !== "final_submit") throw new WorkshopContractError(400, "wrong_track_mode", "هذا القسم لا يستخدم التسليم النهائي.");
       const result = await sql.begin(async (tx) => {
-        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id);
+        const cycle = await ensureCycle(tx, String(context.workshop_id), account.user.id, chapter2);
         if (!cycleAllows(cycle, trackKey, questionRef || undefined)) throw new WorkshopContractError(403, "reopen_scope_mismatch", "دورة الإعادة الحالية لا تشمل هذا القسم.");
         await tx`select pg_advisory_xact_lock(hashtextextended(${`workshop-submit:${cycle.id}:${context.track_id}`}, 0))`;
         const [receipt] = await tx`select action, body_sha256, response_json from private.workshop_mutation_receipts where user_id = ${account.user.id}::uuid and request_id = ${requestId}::uuid`;
@@ -459,6 +497,7 @@ Deno.serve(async (req: Request) => {
           await tx`insert into private.workshop_mutation_receipts(request_id, user_id, action, body_sha256, response_json) values (${requestId}::uuid, ${account.user.id}::uuid, ${action}, ${bodyHash}, ${tx.json(payload)})`;
           return payload;
         }
+        requireOpenChapter2(chapter2, cycle);
         const partIds = await tx`
           select part.id
           from private.workshop_track_questions placement
