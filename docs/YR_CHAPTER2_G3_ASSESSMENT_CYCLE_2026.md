@@ -60,3 +60,20 @@ WHERE c.cycle_code='CHAPTER1-2026-G3-01'
   AND c.grade_level='الصف الثالث الثانوي' AND c.education_track='all'
 ON CONFLICT (cycle_code) DO NOTHING;
 ```
+
+## Chapter 2 scoring sources
+
+The Chapter 2 readiness formula is 40% quizzes, 10% attendance, 10% homework recorded in class, 10% online homework submissions, and 30% workshops. The same cycle continues to use the existing comprehensive exam formula after approval. The updated calculation is selected by the Chapter 2 cycle's `assessment_model` setting.
+
+- Class records and quizzes follow the existing cycle links. Online activities are discovered by the published grade, chapter, version and availability, and student eligibility uses group membership dates.
+- An online book homework is earned by its final submission regardless of the grade. Each counted homework has equal weight within that component.
+- The workshop score uses first independent attempts in the class track and the initial final submission in the home track. Track parts contribute their allotted points to the workshop score. Each counted workshop has equal weight within the component.
+- Eligible, unstarted or unsubmitted work without a recorded assessment deadline does not reduce the provisional score. When a deadline exists, missing work enters the denominator after it. A score is reported when all four sources have data for that student. The cycle cutoff limits which events can enter the calculation.
+- `private.chapter2_assessment_activity_rules` is the assessment override by activity. Set `counts_for_assessment=false` for optional content and record `due_at` when a deadline is assigned.
+- Record a classroom session's duplicate assignment in `private.chapter2_assessment_homework_links` when the same paper homework appears online and in the class log. The classroom assignment is then omitted only for students eligible for the online assignment. Attendance remains counted.
+
+### Release and rollback
+
+The migration adds the scoring function and its two private configuration tables. With the original cycle weights, the public board continues to receive the previous results. After the updated Edge Functions and Pages build are available, activate the scoring model only for the live Chapter 2 cycle by setting its weight JSON to `{"assessment_model":"chapter2_sources","quizzes":40,"platform":30,"homework":10,"attendance":10,"online_homework":10}`.
+
+For rollback, restore the prior weight JSON on the live cycle `{"quizzes":40,"homework":20,"platform":30,"attendance":10}`. The calculation then follows the original path. Keep the release's pre-change function definitions and cycle settings available for recovery.
