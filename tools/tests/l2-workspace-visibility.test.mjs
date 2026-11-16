@@ -58,10 +58,10 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='student-honor-board'&&body?.cycles?.grade3==='CHAPTER2-2026-G3-01'){
     const cycle={id:'synthetic-cycle',code:'CHAPTER2-2026-G3-01',title:'الفصل الثاني',status:'open'};
-    const top10=Array.from({length:10},(_,i)=>({rank:i+1,full_name:'طالب '+i,overall:100-i}));
+    const top10=Array.from({length:12},(_,i)=>({rank:i<2?i+1:i===2?2:Math.min(10,i),full_name:'طالب '+i,overall:i===2?99:i===11?90:100-i}));
     return {data:{profile:{grade_key:'grade3'},available_cycles:{grade3:[cycle]},grades:{grade3:{
-      cycle,label:'الصف الثالث الثانوي',phase:'readiness',top10,leaders:{quizzes:[top10[0]]},
-      risers:[{...top10[1],improvement:10,latest_test:80,previous_average:70}]
+      cycle,label:'الصف الثالث الثانوي',phase:'readiness',top10,podium:top10.slice(0,4),leaders:{quizzes:[{...top10[1],rank:1},{...top10[2],rank:1}]},
+      risers:[{...top10[1],rank:1,improvement:10,latest_test:80,previous_average:70}]
     }}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
@@ -141,7 +141,10 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    await workshopGroup.getByRole('button',{name:/لوحة شرف الفصل الثاني/}).click();
    await page.locator('#honorQuizStars').waitFor({state:'visible'});
    assert.equal(await page.locator('#honorTop10 .honorRankNum').count(),10);
-   assert.equal(await page.locator('#honorQuizLeaders .honorLeaderRow').count(),1);
+   assert.equal(await page.locator('#honorTop10 .honorTopRow[data-place="10"]').count(),2);
+   assert.equal(await page.locator('#honorPodium [data-place="2"] .podiumMember').count(),2);
+   assert.equal(await page.locator('#honorQuizLeaders .honorLeaderRow[data-place="1"]').count(),2);
+   assert.equal(await page.locator('#honorQuizLeaders .honorLeaderNo').count(),1);
    assert.equal(await page.locator('#honorRisers .honorRiser').count(),1);
    await enterChapter(true);
    const homework=chapter.locator('details[data-yr-chapter-group="homework"]');
