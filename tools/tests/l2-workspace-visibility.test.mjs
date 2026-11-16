@@ -61,7 +61,10 @@ const fakeSupabase=String.raw`export function createClient(){
     const top10=Array.from({length:12},(_,i)=>({rank:i<2?i+1:i===2?2:Math.min(10,i),full_name:'طالب '+i,overall:i===2?99:i===11?90:100-i}));
     return {data:{profile:{grade_key:'grade3'},available_cycles:{grade3:[cycle]},grades:{grade3:{
       cycle,label:'الصف الثالث الثانوي',phase:'readiness',top10,podium:top10.slice(0,4),leaders:{quizzes:[{...top10[1],rank:1},{...top10[2],rank:1}]},
-      risers:[{...top10[1],rank:1,improvement:10,latest_test:80,previous_average:70}]
+      risers:[{...top10[1],rank:1,improvement:10,latest_test:80,previous_average:70}],
+      personal:{eligible:false,quiz_possible:40,quiz_earned:18,completed_sets:1,available_sets:2,
+        online_homework_submitted:1,online_homework_counted:3,platform_score:40,homework_score:null,
+        progress:{attendance:{present:0,total:0},classroom_homework:{total:1,pending:1},quizzes:{taken:1,pending:1}}}
     }}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
@@ -146,6 +149,17 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    assert.equal(await page.locator('#honorQuizLeaders .honorLeaderRow[data-place="1"]').count(),2);
    assert.equal(await page.locator('#honorQuizLeaders .honorLeaderNo').count(),1);
    assert.equal(await page.locator('#honorRisers .honorRiser').count(),1);
+   const personal=page.locator('#honorPersonalWrap');
+   assert.match(await personal.innerText(),/كمّل 1 من الورش/);
+   assert.match(await personal.innerText(),/سلّم 2 من الواجبات/);
+   assert.match(await personal.innerText(),/18 من 40 درجة/);
+   assert.match(await personal.innerText(),/درجات الكويزات لسه مستنية التسجيل/);
+   await personal.getByRole('button',{name:'افتح الواجبات'}).click();
+   await chapter.locator('details[data-yr-chapter-group="homework"][open]').waitFor({state:'visible'});
+   assert.equal(await chapter.locator('details[data-yr-chapter-group="workshops"][open]').count(),1);
+   await workshopGroup.getByRole('button',{name:/لوحة شرف الفصل الثاني/}).click();
+   await personal.getByRole('button',{name:'افتح الورش'}).click();
+   await chapter.locator('details[data-yr-chapter-group="workshops"][open]').waitFor({state:'visible'});
    await enterChapter(true);
    const homework=chapter.locator('details[data-yr-chapter-group="homework"]');
    await homework.locator('summary').click();

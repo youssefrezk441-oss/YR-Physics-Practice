@@ -330,6 +330,16 @@ function go(area){
  refresh();
  window.yrWorkspaceShowOnly(next);
 }
+window.yrWorkspaceOpenChapter2Group=group=>{
+ if(!canThirdGrade()||!["workshops","homework"].includes(group))return;
+ chapters.learning="2";
+ go("learning");
+ const details=$("yrLearningContent")?.querySelector(`[data-yr-chapter-group="${group}"]`);
+ if(details){
+  details.open=true;
+  details.querySelector("summary")?.focus();
+ }
+};
 function visibleStudent(){
  return !$("userBar")?.classList.contains("hidden");
 }

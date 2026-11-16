@@ -77,7 +77,7 @@ test("honor endpoint sends the Chapter 2 top ten and uses real quiz participants
  const entries=Array.from({length:15},(_,i)=>({m:{
   user_id:"synthetic-"+i,full_name:"طالب "+i,group_code:"N3-A",total_sessions:2,readiness_score:100-(i>=2?i-1:i)-(i>=7?-1:0),
   quiz_ratio:i===14?100:i===5?76:80-i,quiz_scored:i===14?0:2,latest_quiz_pct:i<4?([70,69,80,90][i]):null,
-  previous_quiz_avg_pct:i===2?80:i===3?0:60,previous_quiz_count:1
+  previous_quiz_avg_pct:i===2?80:i===3?0:60,previous_quiz_count:1,present:1,homework_known:2,homework_unknown:1,quiz_pending:1
  }}));
  let chapter2=true;
  const sql=async(parts)=>{
@@ -92,7 +92,7 @@ test("honor endpoint sends the Chapter 2 top ten and uses real quiz participants
  const build=runInNewContext(stripTypeScriptTypes(source)+"\nbuild",{
   Deno:{env:{get:()=>undefined},serve(){}},postgres:()=>sql,createClient:()=>({})
  });
- const result=await build("grade3",null,null);
+ const result=await build("grade3","synthetic-0",null);
  assert.equal(result.top10.length,12);
  assert.equal(result.top10.at(-1).rank,10);
  assert.deepEqual(Array.from(result.podium,student=>student.rank),[1,2,2,3]);
@@ -100,8 +100,16 @@ test("honor endpoint sends the Chapter 2 top ten and uses real quiz participants
  assert.deepEqual(Array.from(result.leaders.quizzes,student=>student.rank),[1,2,3,4,5,5]);
  assert.equal(result.risers.length,1);
  assert.equal(result.risers[0].user_id,"synthetic-0");
+ assert.equal(result.personal.progress.attendance.present,1);
+ assert.equal(result.personal.progress.attendance.total,2);
+ assert.equal(result.personal.progress.classroom_homework.pending,1);
+ assert.equal(result.personal.progress.quizzes.taken,2);
+ assert.equal(result.personal.progress.quizzes.pending,1);
+ assert.equal(result.top10[0].progress,undefined);
+ assert.equal((await build("grade3",null,null)).personal,null);
  chapter2=false;
- const earlier=await build("grade3",null,null);
+ const earlier=await build("grade3","synthetic-0",null);
+ assert.equal(earlier.personal.progress,undefined);
  assert.equal(earlier.top10.length,6);
  assert.equal(earlier.risers.length,1);
 });
