@@ -42,7 +42,7 @@ const fakeSupabase=String.raw`export function createClient(){
  return {
   auth:{
    getSession:async()=>({data:{session:{user:{id:'synthetic-only',app_metadata:{role:'student'}}}}}),
-   signOut:async()=>({error:null})
+   signOut:async()=>({error:null}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})
   },
   functions:{invoke:async(name,{body}={})=>{
    if(name==='student-practice'){
@@ -52,6 +52,13 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='student-identity'&&body?.action==='me')return {data:{ok:true,enforcement:false,review:{status:'approved',legacy_account:true},profile:{is_active:true,profile_schema_version:1},required_profile_schema_version:1}};
    if(name==='student-identity'&&body?.action==='config')return {data:{ok:true,registration_enabled:true,profile_enforcement_enabled:false,profile_update_enabled:true}};
+   if(name==='paper-homework'&&body?.action==='load'){
+    const submission={mcq_score:0,mcq_max_score:1,answered_parts:1,unanswered_parts:0,answers:[
+     {question_id:'q',question_title:'سؤال واجب تجريبي',image_path:'',answer_state:'answered',response_kind:'auto_mcq',
+      answer_json:{raw:'ب'},is_correct:false,label:'الاختيار',display_answer:'أ'}
+    ]};
+    return {data:{ok:true,workshop:{title:'واجب تجريبي'},submission}};
+   }
    if(name==='paper-homework'&&body?.action==='ping'){
     const pending=body.workshop_slug==='third-secondary-term-2-lecture-5-book-homework'&&new URL(location.href).searchParams.has('pending_homework');
     return {data:{ok:!pending,available:!pending,workshop:{slug:body.workshop_slug}}};
@@ -81,7 +88,18 @@ const fakeSupabase=String.raw`export function createClient(){
     }}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
-   if(name==='unified-workshop'&&body?.action==='ping')return {data:{ok:true,workshops:[
+   if(name==='unified-workshop'&&body?.action==='load'){
+    const track={track_key:body.track,title:body.track==='home'?'التدريب المنزلي':'ورشة الحصة',mode:body.track==='home'?'final_submit':'interactive'};
+    const workshop={academic_term:'second'};
+    const questions=[{id:'q',question_ref:'q',title:'سؤال ورشة تجريبي',question_kind:'concept',skill_ref:'test',skill_name:'التجربة',
+     parts:[{id:'p',part_key:'main',label:'الاختيار',input_type:'mcq',options_public:[{value:'أ',label:'الأول'},{value:'ب',label:'الثاني'}]}]}];
+    const answer={part_id:'p',answer_json:{raw:'ب',normalized:'ب'},is_correct:false,display_answer:'أ'};
+    const read_only=!new URL(location.href).searchParams.has('unfinished');
+    return {data:{ok:true,workshop,track,questions,read_only,
+      progress:[{part_id:'p',attempts_count:1,last_answer:answer.answer_json}],
+      submission:track.track_key==='home'?{answers:[answer]}:null}};
+   }
+   if(name==='unified-workshop'&&body?.action==='ping')return {data:{ok:true,role:'student',profile,workshops:[
     {slug:'third-secondary-term-2-lecture-1'},
     {slug:'third-secondary-term-2-lecture-5'},
     {slug:'third-secondary-term-2-lesson-1-review-35'}
@@ -199,6 +217,23 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    await homework.locator('summary').click();
    await homework.locator('[data-yr-source="openLesson2BookHomework"]').waitFor({state:'visible'});
    assert.equal(await homework.locator('[data-yr-source="openLecture5BookHomework"]').count(),0);
+   for(const track of ['class','home']){
+    await page.goto(origin+'/workshop.html?workshop=third-secondary-term-2-lecture-1&track='+track,{waitUntil:'domcontentloaded'});
+    await page.locator('#review-only').waitFor({state:'visible'});
+    assert.match(await page.locator('#answers').innerText(),/إجابتك المحفوظة: ب/);
+    assert.equal(await page.locator('#answers input, #answers button').count(),0);
+    assert.equal(await page.locator('#submission-box').isVisible(),false);
+    assert.equal(await page.locator('#review-only a').getAttribute('href'),'student-ch2-mistakes.html');
+   }
+   await page.goto(origin+'/workshop.html?workshop=third-secondary-term-2-lecture-1&track=class&unfinished=1',{waitUntil:'domcontentloaded'});
+   await page.locator('#answers .choice').first().waitFor({state:'visible'});
+   assert.equal(await page.locator('#review-only').isVisible(),false);
+   assert.equal(await page.locator('#answers .choice:enabled').count(),2);
+   await page.goto(origin+'/lecture5-book-homework.html',{waitUntil:'domcontentloaded'});
+   await page.locator('#results').waitFor({state:'visible'});
+   assert.match(await page.locator('#results').innerText(),/إجابتك الأصلية: ب/);
+   assert.equal(await page.locator('#workspace').isVisible(),false);
+   assert.match(await page.locator('#results a').getAttribute('href'),/student-ch2-mistakes\.html/);
    assert.ok(!failures.some(x=>/SyntaxError|is not defined|Cannot access .* before initialization/.test(x)),failures.join('; '));
    await page.close();
   }
