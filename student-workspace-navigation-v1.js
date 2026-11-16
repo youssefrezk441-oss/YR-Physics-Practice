@@ -72,7 +72,7 @@ function collect(container,heading,defs){
  if(items.length){container.append(h3(heading),...items);return items.length}
  return 0;
 }
-function collectChapterGroup(container,{key,title,detail,icon,entries},openGroups){
+function collectChapterGroup(container,{key,title,detail,icon,entries,extra},openGroups){
  const items=entries.map(entry=>makeEntry(...entry)).filter(Boolean);
  if(!items.length)return 0;
  const group=document.createElement("details");
@@ -82,6 +82,7 @@ function collectChapterGroup(container,{key,title,detail,icon,entries},openGroup
  fillEntry(summary,title,detail,icon);
  const list=document.createElement("div");list.className="yrWorkspaceItems";
  list.append(...items);
+ if(extra)list.append(extra);
  group.append(summary,list);container.append(group);
  return items.length;
 }
@@ -132,8 +133,11 @@ function refreshLearning(){
    ]);
   }
  }else if(third){
+  const honor=document.createElement("button");honor.type="button";
+  fillEntry(honor,"لوحة شرف الفصل الثاني","أفضل ١٠ طلاب ونجوم الكويزات ونجوم الصعود","🏆");
+  honor.addEventListener("click",()=>window.yrWorkspaceOpenHonorCycle?.("grade3","CHAPTER2-2026-G3-01"));
   found+=collectChapterGroup(box,{
-   key:"workshops",title:"ورش الفصل الثاني",icon:"🧲",
+   key:"workshops",title:"ورش الفصل الثاني",icon:"🧲",extra:honor,
    entries:[
     ["openUnifiedL1Workshop",null,null,"⚡"],
     ["openCh2Lecture5Workshop",null,null,"🧲"],
