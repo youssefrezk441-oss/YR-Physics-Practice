@@ -1,5 +1,4 @@
 import './honor-cycle-selector.js';
-import './ledger-cycle-selector.js';
 export async function loadAdminAccess(sb){
   const{data:{session}}=await sb.auth.getSession();
   if(!session?.user||session.user.app_metadata?.role!=='admin')throw new Error('admin_required');
@@ -13,4 +12,4 @@ export function canView(ctx,section){const x=accessLevel(ctx,section);return x==
 export function canEdit(ctx,section){return accessLevel(ctx,section)==='edit'}
 export function levelArabic(level){return level==='edit'?'تعديل':level==='view'?'مشاهدة فقط':'بدون صلاحية'}
 export function denyMessage(){return 'ليس لديك صلاحية لفتح هذا القسم.'}
-if(location.pathname.endsWith('student-ledger-admin.html'))import('./student-ledger-export.js').catch(e=>console.warn('ledger export',e));
+if(location.pathname.endsWith('student-ledger-admin.html'))import('./student-ledger-export.js?v=20261116-ledger-cycles').catch(e=>console.warn('ledger export',e));

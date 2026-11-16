@@ -16,6 +16,12 @@ button,input,select{font:inherit}
 .btn{border:0;border-radius:11px;padding:10px 14px;font-weight:900;cursor:pointer;text-decoration:none;display:inline-block}
 .secondary{background:#fff;border:1px solid #d0d5dd;color:#344054}.primary{background:var(--navy);color:#fff}
 .card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:16px;margin-bottom:14px;box-shadow:0 5px 18px rgba(15,23,42,.035)}
+.cycleCard{display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap;background:#f4f7ff;border-color:#c7d7fe}
+.cyclePicker{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cyclePicker label{font-weight:900;color:var(--navy)}
+.cyclePicker select{border:1px solid #bac7e2;background:white;border-radius:10px;padding:9px 12px;color:#172033}
+.cycleStatus{color:#475467;font-size:13px;line-height:1.65}
+.metric+.metric{margin-top:7px}
 .hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:11px}
 .filters{display:grid;grid-template-columns:2fr repeat(6,minmax(140px,1fr));gap:10px}
 .filters input,.filters select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:10px 11px;background:#fff;color:#172033}
@@ -67,15 +73,26 @@ details.block[open] summary{border-bottom:1px solid #eef0f4}
 <body>
 <div class="wrap">
   <div class="top">
-    <div class="brand"><h1>سجل الطلاب الشامل</h1><p>لوحة لاتخاذ القرار: ابدأ بالأولوية، ثم راجع الشامل والاستعداد ومؤشرات الأداء، وافتح التفاصيل عند الحاجة.</p></div>
+    <div class="brand"><h1>سجل الطلاب الشامل</h1><p>راجع التقييم الجاري ونتائج الدورات المؤرشفة.</p></div>
     <div class="toolbar"><span id="who" class="muted small"></span><a class="btn secondary" href="admin-followup-menu.html">← الطلاب والمتابعة</a><button id="refresh" class="btn primary">تحديث</button></div>
   </div>
   <div id="msg"></div>
+  <section class="card cycleCard" id="ledgerCycleCard">
+    <div class="cyclePicker">
+      <label for="ledgerCycleMode">دورة تقييم تالتة ثانوي</label>
+      <select id="ledgerCycleMode" disabled>
+        <option value="chapter2">الفصل الثاني</option>
+        <option value="chapter1">الفصل الأول</option>
+        <option value="foundation">الكورس التأسيسي</option>
+      </select>
+    </div>
+    <div id="ledgerCycleInfo" class="cycleStatus" aria-live="polite"></div>
+  </section>
 
   <div class="card">
     <div class="filters">
       <input id="search" placeholder="بحث بالكود أو الاسم أو السنتر أو المجموعة">
-      <select id="grade"><option value="">كل الصفوف</option><option value="الصف الثالث الثانوي">تالتة ثانوي</option><option value="الصف الثاني الثانوي">تانية ثانوي</option></select>
+      <select id="grade"><option value="">كل الصفوف</option><option value="الصف الثالث الثانوي" selected>تالتة ثانوي</option><option value="الصف الثاني الثانوي">تانية ثانوي</option></select>
       <select id="center"><option value="">كل السناتر</option></select>
       <select id="group"><option value="">كل المجموعات</option></select>
       <select id="active"><option value="">نشط وغير نشط</option><option value="1">نشط فقط</option><option value="0">غير نشط فقط</option></select>
@@ -96,16 +113,48 @@ details.block[open] summary{border-bottom:1px solid #eef0f4}
 
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/+esm';
-import{loadAdminAccess,canView}from'./admin-access.js';
+import{loadAdminAccess,canView}from'./admin-access.js?v=20261116-ledger-cycles';
 
 const sb=createClient('https://ltjdhconuiqblxfjzpzj.supabase.co','sb_publishable_-7SIdrqTmUibqpA7mXXrgg_SHz9EJRr',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let data=[],detailCache=new Map(),sortState={key:'priority',dir:'asc'};
+const grade3='الصف الثالث الثانوي';
+const cycleCodes={chapter2:'CHAPTER2-2026-G3-01',chapter1:'CHAPTER1-2026-G3-01'};
+let data=[],detailCache=new Map(),sortState={key:'priority',dir:'asc'},loadVersion=0,cycles={};
+
+function cycleRequest(){
+  const selection=$('ledgerCycleMode').value;
+  return selection==='foundation' ? {cycle_mode:'foundation'} :
+    {cycle_mode:'current',cycle_ids:{[grade3]:cycleCodes[selection]}};
+}
+function isChapter2(x){return x.cycle?.weights?.assessment_model==='chapter2_sources'}
+function cairoDate(date){
+  if(!date)return '';
+  return new Intl.DateTimeFormat('ar-EG',{dateStyle:'medium',timeZone:'Africa/Cairo'}).format(new Date(date));
+}
+function renderCycleInfo(){
+  const g=$('grade').value;
+  const c=g==='الصف الثاني الثانوي'?cycles.grade2:cycles.grade3;
+  const w=c?.weights;
+  if(!c){$('ledgerCycleInfo').textContent='';return}
+  const current=isChapter2({cycle:c})&&!c.has_comprehensive;
+  const quick=$('quick');
+  quick.querySelector('[value="excellent"]').textContent=current?'التقييم الجاري 85% فأعلى':'الشامل 85% فأعلى';
+  quick.querySelector('[value="absent"]').disabled=current;
+  if(current&&quick.value==='absent')quick.value='';
+  const status=c.archived?'مقفولة ومؤرشفة':c.status==='open'?'جارية':c.status==='pending_review'?'قيد المراجعة':'مقفولة';
+  const summary=[c.title,status];
+  if(c.archived&&c.frozen_at)summary.push('حُفظت '+cairoDate(c.frozen_at));
+  if(isChapter2({cycle:c})){
+    summary.push(`الكويزات ${pct(w.quizzes)} · الورشة كاملة ${pct(w.platform)} · الحضور ${pct(w.attendance)} · واجب الحصة ${pct(w.homework)} · تسليم واجب المنصة ${pct(w.online_homework)}`);
+  }
+  if(!g&&cycles.grade2?.title)summary.push(cycles.grade2.title);
+  $('ledgerCycleInfo').textContent=summary.join(' · ');
+}
 
 const columns=[
-  ['priority','الأولوية'],['student_code','الكود'],['full_name','الطالب'],['grade_level','الصف'],['center_name','السنتر'],['group_code','المجموعة'],['is_active','الحالة'],
-  ['attendance','الحضور'],['homework','الواجب'],['quizzes','الكويزات'],['platform','المنصة'],['comprehensive','الشامل'],['readiness','الاستعداد'],['delta','الفرق'],['action','الإجراء المقترح']
+  ['priority','الأولوية'],['student_code','الكود'],['full_name','الطالب'],['grade_level','الصف'],['center_name','السنتر'],['group_code','المجموعة'],['is_active','حالة الحساب الحالية'],
+  ['attendance','الحضور'],['homework','الواجب'],['quizzes','الكويزات'],['platform','المنصة والورش'],['comprehensive','الشامل'],['readiness','التقييم'],['delta','الفرق'],['action','الإجراء المقترح']
 ];
 
 function pct(v){if(v==null||!Number.isFinite(Number(v)))return'—';const x=Math.round((Number(v)+1e-9)*10)/10;return x.toFixed(x%1?1:0)+'%'}
@@ -128,16 +177,17 @@ function weakFlags(x){
   const cp=compPct(x);
   if(cp!=null&&cp<50)out.push({key:'comprehensive',label:'نتيجة الشامل منخفضة',value:cp});
   if(x.quizzes?.ratio!=null&&Number(x.quizzes.ratio)<60)out.push({key:'quizzes',label:'الكويزات منخفضة',value:Number(x.quizzes.ratio)});
-  if(x.platform?.ratio!=null&&Number(x.platform.ratio)<60)out.push({key:'platform',label:'تدريبات المنصة منخفضة',value:Number(x.platform.ratio)});
+  if(x.platform?.ratio!=null&&Number(x.platform.ratio)<60)out.push({key:'platform',label:isChapter2(x)?'درجة الورش منخفضة':'تدريبات المنصة منخفضة',value:Number(x.platform.ratio)});
   if(x.homework?.rate!=null&&Number(x.homework.rate)<70)out.push({key:'homework',label:'الواجب يحتاج متابعة',value:Number(x.homework.rate)});
+  if(x.online_homework?.rate!=null&&Number(x.online_homework.rate)<70)out.push({key:'online_homework',label:'تسليم واجب المنصة يحتاج متابعة',value:Number(x.online_homework.rate)});
   if(x.attendance?.rate!=null&&Number(x.attendance.rate)<80)out.push({key:'attendance',label:'الحضور يحتاج متابعة',value:Number(x.attendance.rate)});
   return out.sort((a,b)=>a.value-b.value);
 }
 function decisionFor(x){
   if(!x.is_active)return{key:'inactive',rank:6,label:'غير نشط',icon:'⚪'};
   const cp=compPct(x),rd=x.readiness==null?null:Number(x.readiness);
-  if(cp==null||rd==null)return{key:'missing',rank:4,label:'بيانات غير كافية',icon:'⚪'};
-  const d=cp-rd;
+  if(rd==null||(cp==null&&(!isChapter2(x)||x.cycle.has_comprehensive)))return{key:'missing',rank:4,label:'بيانات غير كافية',icon:'⚪'};
+  const d=cp==null?0:cp-rd;
   if(d<-10)return{key:'intervention',rank:1,label:'يحتاج تدخل',icon:'🔴'};
   if(d>10)return{key:'higher',rank:3,label:'تفوق غير متوقع',icon:'🟣'};
   if(weakFlags(x).length)return{key:'followup',rank:2,label:'يحتاج متابعة',icon:'🟠'};
@@ -151,13 +201,17 @@ function actionFor(x){
   if(d.key==='higher')return platformLikely(x)?'ثبّت سبب التحسن وراجع أثر المنصة':'تواصل مع الطالب لفهم سبب التفوق';
   if(d.key==='followup'){
     if(!weak)return'متابعة عامة';
-    return weak.key==='comprehensive'?'راجع مستوى الشامل مع الطالب':weak.key==='quizzes'?'ركز على الكويزات':weak.key==='platform'?'ركز على تدريبات المنصة':weak.key==='homework'?'تابع الواجب':'تابع الحضور';
+    return weak.key==='comprehensive'?'راجع مستوى الشامل مع الطالب':weak.key==='quizzes'?'ركز على الكويزات':weak.key==='platform'?(isChapter2(x)?'راجع أداء الورش':'ركز على تدريبات المنصة'):weak.key==='homework'?'تابع واجب الحصة':weak.key==='online_homework'?'تابع تسليم واجب المنصة':'تابع الحضور';
   }
   return'لا يحتاج تدخل حاليًا';
 }
 function decisionReason(x){
   const d=decisionFor(x),weak=weakFlags(x)[0];
   if(d.key==='inactive')return'الطالب غير نشط حاليًا، لذلك لا يدخل ضمن أولويات التدخل اليومية.';
+  if(isChapter2(x)&&!x.cycle.has_comprehensive){
+    if(d.key==='missing')return'بيانات التقييم الجاري غير مكتملة.';
+    return weak?`${weak.label} (${pct(weak.value)}).`:'مؤشرات التقييم الجاري مستقرة.';
+  }
   if(d.key==='missing')return'لا توجد نتيجة شامل معتمدة أو مؤشر استعداد مكتمل يسمح بمقارنة عادلة.';
   if(d.key==='intervention'||d.key==='higher')return x.comparison?.reason||'يوجد فرق أكبر من 10 نقاط بين الشامل والاستعداد.';
   if(d.key==='followup')return weak?`${weak.label} (${pct(weak.value)}) رغم أن فرق الشامل والاستعداد داخل الهامش الطبيعي.`:'يوجد مؤشر يحتاج متابعة.';
@@ -168,7 +222,20 @@ function metric(rate,sub){return`<div class="metric ${band(rate)}"><b>${pct(rate
 function compCell(x){const c=x.comprehensive;if(!c)return'<div class="metric"><b>—</b><span>لا يوجد شامل</span></div>';if(c.status==='pending')return'<div class="metric"><b>—</b><span>لم تُدخل الدرجة</span></div>';if(c.status==='absent')return'<div class="metric bad"><b>0%</b><span>غياب · 0 / '+esc(num(c.max_score))+'</span></div>';return`<div class="metric ${band(c.percentage)}"><b>${pct(c.percentage)}</b><span>${num(c.score)} / ${num(c.max_score)}</span></div>`}
 function deltaValue(x){const cp=compPct(x);return cp==null||x.readiness==null?null:Math.round((cp-Number(x.readiness)+1e-9)*10)/10}
 function deltaCell(x){const d=deltaValue(x);if(d==null)return'<span class="delta na">—</span>';const cls=Math.abs(d)<=10?'normal':d>10?'up':'down',sign=d>0?'+':'';return`<span class="delta ${cls}">${sign}${num(d)} نقطة</span>`}
-function platformCell(x){const p=x.platform||{},count=p.trainings??0,available=p.available,quality=p.quality_ratio,completion=p.completion_rate;let sub=`${count}${available!=null?'/'+available:''} مكتمل`;if(quality!=null)sub+=` · جودة ${pct(quality)}`;else if(completion!=null)sub+=` · إكمال ${pct(completion)}`;return metric(p.ratio,sub)}
+function platformCell(x){
+  const p=x.platform||{};
+  if(isChapter2(x))return metric(p.ratio,p.ratio==null?'الورش':`الورش المحسوبة · ${p.workshop_counted??0}`);
+  const count=p.trainings??0,available=p.available,quality=p.quality_ratio,completion=p.completion_rate;let sub=`${count}${available!=null?'/'+available:''} مكتمل`;if(quality!=null)sub+=` · جودة ${pct(quality)}`;else if(completion!=null)sub+=` · إكمال ${pct(completion)}`;return metric(p.ratio,sub)}
+function homeworkCell(x){
+  const h=x.homework||{},p=x.online_homework;
+  const classroom=metric(h.rate,`واجب الحصة · ${h.known??0} واجب في الحساب`);
+  return p?classroom+metric(p.rate,`واجب المنصة · ${p.submitted} تسليم من ${p.counted} محسوب`):classroom;
+}
+function evaluationCell(x){
+  if(isChapter2(x))return metric(x.readiness,'التقييم الجاري');
+  const readiness=metric(x.readiness,'مؤشر الاستعداد');
+  return x.cycle?.archived?metric(x.final_score,'النتيجة النهائية')+readiness:readiness;
+}
 function decisionPill(x){const d=decisionFor(x);return`<span class="decision ${d.key}">${d.icon} ${esc(d.label)}</span>`}
 
 function baseFiltered(){
@@ -177,8 +244,11 @@ function baseFiltered(){
     const textOk=!q||[x.student_code,x.full_name,x.center_name,x.group_code].some(v=>String(v||'').toLowerCase().includes(q));
     const core=textOk&&(!g||x.grade_level===g)&&(!c||x.center_name===c)&&(!gr||x.group_code===gr)&&(!a||(a==='1')===!!x.is_active);
     if(!core)return false;
-    if(quick==='low')return [x.attendance?.rate,x.homework?.rate,x.quizzes?.ratio,x.platform?.ratio,compPct(x)].some(v=>v!=null&&Number(v)<60);
-    if(quick==='excellent')return compPct(x)!=null&&compPct(x)>=85;
+    if(quick==='low')return [x.attendance?.rate,x.homework?.rate,x.online_homework?.rate,x.quizzes?.ratio,x.platform?.ratio,compPct(x)].some(v=>v!=null&&Number(v)<60);
+    if(quick==='excellent'){
+      const score=isChapter2(x)&&!x.cycle.has_comprehensive?x.readiness:compPct(x);
+      return score!=null&&score>=85;
+    }
     if(quick==='absent')return x.comprehensive?.status==='absent';
     return true;
   });
@@ -196,7 +266,7 @@ function sortValue(x,key){
   if(key==='quizzes')return x.quizzes?.ratio;
   if(key==='platform')return x.platform?.ratio;
   if(key==='comprehensive')return compPct(x);
-  if(key==='readiness')return x.readiness;
+  if(key==='readiness')return x.cycle?.archived?x.final_score:x.readiness;
   if(key==='delta')return deltaValue(x);
   if(key==='action')return actionFor(x);
   return null;
@@ -245,7 +315,7 @@ function renderSummary(){
   document.querySelectorAll('[data-summary]').forEach(b=>b.onclick=()=>{$('decision').value=b.dataset.summary;render()});
 }
 function render(){
-  renderHead();renderSummary();
+  renderCycleInfo();renderHead();renderSummary();
   const raw=filtered(),rows=sortedRows(raw);
   $('sortInfo').textContent=sortState.key?`الترتيب الحالي: ${columns.find(x=>x[0]===sortState.key)?.[1]||sortState.key} ${sortState.dir==='asc'?'↑':'↓'}`:'بدون ترتيب — ترتيب التحميل الأصلي';
   $('rows').innerHTML=rows.length?rows.map(x=>{
@@ -257,11 +327,11 @@ function render(){
       <div>${esc(gradeShort(x.grade_level))}</div><div>${esc(x.center_name||'—')}</div><div>${esc(x.group_code||'—')}</div>
       <div><span class="pill ${x.is_active?'on':'off'}">${x.is_active?'نشط':'غير نشط'}</span></div>
       <div>${metric(x.attendance?.rate,`${x.attendance?.present||0}/${x.attendance?.total||0} · غياب ${x.attendance?.absent||0}`)}</div>
-      <div>${metric(x.homework?.rate,`كامل ${x.homework?.done||0} · ناقص ${x.homework?.partial||0} · لم يسلم ${x.homework?.not_submitted||0}`)}</div>
+      <div>${homeworkCell(x)}</div>
       <div>${metric(x.quizzes?.ratio,x.quizzes?.possible?`${num(x.quizzes.earned)} / ${num(x.quizzes.possible)} · ${x.quizzes.recorded||0} اختبار`:'لا توجد درجات')}</div>
       <div>${platformCell(x)}</div>
       <div>${compCell(x)}</div>
-      <div>${metric(x.readiness,'مؤشر الاستعداد')}</div>
+      <div>${evaluationCell(x)}</div>
       <div>${deltaCell(x)}</div>
       <div><span class="actionTag">${esc(actionFor(x))}</span></div>
     </div><div id="d-${x.user_id}" class="details hidden"></div>`;
@@ -274,53 +344,84 @@ async function toggleDetail(id,b){
   if(!box.classList.contains('hidden')){box.classList.add('hidden');b.textContent='فتح';return}
   box.classList.remove('hidden');b.textContent='إغلاق';
   const x=data.find(v=>String(v.user_id)===String(id));
-  if(detailCache.has(id)){renderDetail(box,detailCache.get(id),x);return}
+  const cycleId=x?.cycle?.id,cacheKey=`${cycleId||''}:${id}`,version=loadVersion;
+  if(detailCache.has(cacheKey)){renderDetail(box,detailCache.get(cacheKey),x);return}
   box.innerHTML='<div class="loading">جاري تحميل التفاصيل...</div>';
-  try{const d=await fn({action:'detail',user_id:id});detailCache.set(id,d);renderDetail(box,d,x)}
-  catch(e){box.innerHTML='<div class="msg err">'+esc(e.message)+'</div>'}
+  try{
+    const d=await fn({action:'detail',user_id:id,cycle_id:cycleId,...cycleRequest()});
+    if(version!==loadVersion)return;
+    detailCache.set(cacheKey,d);
+    if(box.isConnected)renderDetail(box,d,x);
+  }catch(e){
+    if(version===loadVersion&&box.isConnected)box.innerHTML='<div class="msg err">'+esc(e.message)+'</div>';
+  }
 }
 function renderDetail(box,d,x){
-  const r=d.readiness||{},ss=d.sessions||[],qs=d.quizzes||[],ps=d.platform||[],cs=d.comprehensive||[],dec=decisionFor(x),delta=deltaValue(x),cp=compPct(x),weak=weakFlags(x)[0];
+  const ss=d.sessions||[],qs=d.quizzes||[],ps=d.platform||[],cs=d.comprehensive||[];
+  const dec=decisionFor(x),delta=deltaValue(x),cp=compPct(x),archived=!!d.cycle?.archived,chapter2=isChapter2(x);
+  const mini=(label,value)=>`<div class="mini"><span>${label}</span><b>${pct(value)}</b></div>`;
   const prompt=dec.key==='intervention'&&!platformLikely(x)?'اسأل الطالب: إيه أكتر حاجة شايف إنها حصلت معاك في الامتحان وخلت النتيجة أقل من المتوقع؟':dec.key==='higher'&&!platformLikely(x)?'اسأل الطالب: إيه اللي شايف إنك عملته بشكل مختلف أو إيه اللي ساعدك تحقق النتيجة الأعلى من المتوقع؟':'';
   box.innerHTML=`
     <div class="decisionHero">
       <div class="decisionMain"><h3>${dec.icon} ${esc(x.full_name||'الطالب')} — ${esc(dec.label)}</h3><div>${decisionPill(x)}</div><p>${esc(decisionReason(x))}</p></div>
-      <div class="heroMetric"><span>نتيجة الشامل</span><b>${pct(cp)}</b></div>
-      <div class="heroMetric"><span>درجة الاستعداد</span><b>${pct(x.readiness)}</b></div>
-      <div class="heroMetric"><span>الفرق</span><b>${delta==null?'—':(delta>0?'+':'')+num(delta)}</b></div>
+      <div class="heroMetric"><span>${chapter2?'التقييم الجاري':'درجة الاستعداد'}</span><b>${pct(x.readiness)}</b></div>
+      ${archived?`<div class="heroMetric"><span>النتيجة النهائية المؤرشفة</span><b>${pct(x.final_score)}</b></div>`:''}
+      ${chapter2&&!x.cycle.has_comprehensive?'':`<div class="heroMetric"><span>نتيجة الشامل</span><b>${pct(cp)}</b></div>`}
+      ${!archived&&!chapter2?`<div class="heroMetric"><span>الفرق</span><b>${delta==null?'—':(delta>0?'+':'')+num(delta)}</b></div>`:''}
     </div>
     <div class="actionBox">
       <div class="actionPanel"><b>🎯 الإجراء المقترح</b><p>${esc(actionFor(x))}</p></div>
       <div class="reasonPanel"><b>🔎 ما الذي يدعم القرار؟</b><p>${esc(decisionReason(x))}${prompt?'<br><strong>'+esc(prompt)+'</strong>':''}</p></div>
     </div>
     <div class="detailGrid">
-      <div class="mini"><span>الحضور</span><b>${pct(x.attendance?.rate)}</b></div>
-      <div class="mini"><span>الواجب</span><b>${pct(x.homework?.rate)}</b></div>
-      <div class="mini"><span>الكويزات</span><b>${pct(x.quizzes?.ratio)}</b></div>
-      <div class="mini"><span>مؤشر المنصة</span><b>${pct(x.platform?.ratio)}</b></div>
-      <div class="mini"><span>جودة المكتمل</span><b>${pct(x.platform?.quality_ratio)}</b></div>
+      ${mini('الحضور',x.attendance?.rate)}
+      ${mini('واجب الحصة',x.homework?.rate)}
+      ${mini('الكويزات',x.quizzes?.ratio)}
+      ${mini(chapter2?'الورش كاملة':'مؤشر المنصة',x.platform?.ratio)}
+      ${chapter2?mini('تسليم واجب المنصة',x.online_homework?.rate):mini('جودة المكتمل',x.platform?.quality_ratio)}
     </div>
     <div class="small muted">التقييم السريع والإجراء المقترح أدوات مساعدة لاتخاذ القرار وليسا تشخيصًا نهائيًا للطالب.</div>
 
-    <details class="block"><summary>📅 سجل الحضور والواجب (${ss.length})</summary><div class="blockBody">${detailTable('sessions',['التاريخ','الحصة','العنوان','الحضور','الواجب'],ss.map(v=>`<div class="srow"><div>${esc(v.session_date)}</div><div>${Number(v.session_number)}</div><div>${esc(v.title||'—')}</div><div>${v.attendance==='absent'?'غائب':'حاضر'}</div><div>${!v.has_homework?'لا يوجد':v.homework_status==='mastered'?'مكتمل بإتقان':v.homework_status==='done'?'مكتمل':v.homework_status==='partial'?'ناقص':v.homework_status==='not_submitted'?'لم يسلم':v.homework_status==='legacy_done'?'تم — سجل سابق':'غير مسجل'}</div></div>`).join(''))}</div></details>
+    ${archived?'<p class="small muted">هذه البيانات من ملخص الدورة المحفوظ وقت الإقفال. الحفظ شمل المؤشرات الإجمالية ونتيجة الشامل.</p>':`
+    <details class="block"><summary>📅 سجل الحضور والواجب (${ss.length})</summary><div class="blockBody">${detailTable('sessions',['التاريخ','الحصة','العنوان','الحضور','الواجب'],ss.map(v=>`<div class="srow"><div>${esc(v.session_date)}</div><div>${Number(v.session_number)}</div><div>${esc(v.title||'—')}</div><div>${v.attendance==='absent'?'غائب':v.attendance==='present'?'حاضر':'غير مسجل'}</div><div>${!v.has_homework?'لا يوجد':v.homework_status==='mastered'?'مكتمل بإتقان':v.homework_status==='done'?'مكتمل':v.homework_status==='partial'?'ناقص':v.homework_status==='not_submitted'?'لم يسلم':v.homework_status==='legacy_done'?'تم — سجل سابق':'غير مسجل'}</div></div>`).join(''))}</div></details>
     <details class="block"><summary>🧪 الكويزات والاختبارات (${qs.length})</summary><div class="blockBody">${detailTable('quizzes',['التاريخ','الاختبار','النوع','الدرجة','النسبة','الحالة'],qs.map(v=>`<div class="srow"><div>${esc(v.session_date)}</div><div>${esc(v.test_name||v.session_title||'اختبار')}</div><div>${esc(v.test_type||'—')}</div><div>${['scored','absent'].includes(v.status)?`${num(v.score)} / ${num(v.max_score)}`:'—'}</div><div>${pct(v.percentage)}</div><div>${v.status==='absent'?'غائب':v.status==='scored'?'مسجل':'لم تدخل'}</div></div>`).join(''))}</div></details>
-    <details class="block"><summary>🚀 تدريبات المنصة — أفضل نتيجة لكل تدريب (${ps.length})</summary><div class="blockBody">${detailTable('platform',['التدريب','المحاولات','أفضل درجة','أفضل نسبة','الحالة'],ps.map(v=>`<div class="srow"><div>${esc(v.title)}</div><div>${Number(v.attempts||0)}</div><div>${v.best_score==null?'—':`${num(v.best_score)} / ${num(v.best_max)}`}</div><div>${pct(v.best_percentage)}</div><div>${esc(v.training_status||'—')}</div></div>`).join(''))}</div></details>
-    <details class="block"><summary>📌 الامتحانات الشاملة (${cs.length})</summary><div class="blockBody">${detailTable('comps',['التاريخ','الامتحان','الدرجة','النسبة','الحالة','النشر'],cs.map(v=>`<div class="srow"><div>${esc(v.exam_date)}</div><div>${esc(v.title)}</div><div>${['scored','absent'].includes(v.status)?`${num(v.score)} / ${num(v.max_score)}`:'—'}</div><div>${pct(v.percentage)}</div><div>${v.status==='absent'?'غائب':v.status==='scored'?'مسجل':'لم تدخل'}</div><div>${v.exam_status==='approved'?'معتمد':v.exam_status==='complete'?'مكتمل':'مسودة'}</div></div>`).join(''))}</div></details>`;
+    ${chapter2?'':`<details class="block"><summary>🚀 تدريبات المنصة — أفضل نتيجة لكل تدريب (${ps.length})</summary><div class="blockBody">${detailTable('platform',['التدريب','المحاولات','أفضل درجة','أفضل نسبة','الحالة'],ps.map(v=>`<div class="srow"><div>${esc(v.title)}</div><div>${Number(v.attempts||0)}</div><div>${v.best_score==null?'—':`${num(v.best_score)} / ${num(v.best_max)}`}</div><div>${pct(v.best_percentage)}</div><div>${esc(v.training_status||'—')}</div></div>`).join(''))}</div></details>`}`}
+    ${cs.length?`<details class="block"><summary>📌 الامتحانات الشاملة (${cs.length})</summary><div class="blockBody">${detailTable('comps',['التاريخ','الامتحان','الدرجة','النسبة','الحالة','النشر'],cs.map(v=>`<div class="srow"><div>${esc(v.exam_date||v.date||'—')}</div><div>${esc(v.title)}</div><div>${['scored','absent'].includes(v.status)?`${num(v.score)} / ${num(v.max_score)}`:'—'}</div><div>${pct(v.percentage)}</div><div>${v.status==='absent'?'غائب':v.status==='scored'?'مسجل':'لم تدخل'}</div><div>${v.exam_status==='approved'?'معتمد':v.exam_status==='complete'?'مكتمل':'مسودة'}</div></div>`).join(''))}</div></details>`:''}`;
 }
 async function load(){
+  const version=++loadVersion;
+  detailCache.clear();
+  data=[];
+  cycles={};
+  $('summary').textContent='';
+  $('ledgerCycleInfo').textContent='';
+  $('loading').textContent='جاري تحميل دورة التقييم...';
+  $('loading').classList.remove('hidden');
+  $('table').classList.add('hidden');
   try{
-    $('loading').classList.remove('hidden');$('table').classList.add('hidden');
-    const d=await fn({action:'list'});data=d.students||[];fillFilters();render();
+    const d=await fn({action:'list',...cycleRequest()});
+    if(version!==loadVersion)return;
+    data=d.students||[];
+    cycles=d.cycles||{};
+    fillFilters();render();
     $('loading').classList.add('hidden');$('table').classList.remove('hidden');
-  }catch(e){$('loading').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'}
+  }catch(e){
+    if(version===loadVersion)$('loading').innerHTML='<div class="msg err">'+esc(e.message)+'</div>';
+  }
 }
 ['search','grade','center','group','active','decision','quick'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));
-$('refresh').onclick=()=>{detailCache.clear();load()};
+$('refresh').onclick=load;
+$('ledgerCycleMode').onchange=()=>{
+  $('grade').value=grade3;
+  for(const id of ['center','group','active','decision','quick'])$(id).value='';
+  load();
+};
 $('reset').onclick=()=>{['search','grade','center','group','active','decision','quick'].forEach(id=>$(id).value='');sortState={key:'priority',dir:'asc'};render()};
 try{
   const ctx=await loadAdminAccess(sb);
   if(!canView(ctx,'students')||!canView(ctx,'class_sessions'))throw new Error('تحتاج صلاحية مشاهدة الطلاب والحصص.');
   $('who').textContent=ctx.user.email||'';
+  $('ledgerCycleMode').disabled=false;
   await load();
 }catch(e){msg(e.message||'تعذر فتح الصفحة');$('loading').classList.add('hidden')}
 </script>

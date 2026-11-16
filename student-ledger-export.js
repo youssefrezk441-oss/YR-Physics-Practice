@@ -8,6 +8,8 @@ function currentSortText(){
 }
 function currentFilterSummary(){
   const parts=[];
+  const cycle=el('ledgerCycleInfo')?.textContent?.trim();
+  if(cycle)parts.push(cycle);
   const search=el('search')?.value?.trim();if(search)parts.push(`بحث: ${search}`);
   const fields=[['grade','الصف'],['center','السنتر'],['group','المجموعة'],['active','النشاط'],['decision','التقييم'],['quick','فلتر سريع']];
   for(const [id,label] of fields){
@@ -27,7 +29,7 @@ function ensurePrintStyle(){
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important}
   .wrap{max-width:none!important;padding:0!important}
-  .top .toolbar,.filtersCard,.open,.details{display:none!important}
+  .top .toolbar,.cycleCard,.filtersCard,.open,.details{display:none!important}
   .top{margin-bottom:8px!important}.brand p{display:none!important}
   .printHeader{display:flex!important;justify-content:space-between;gap:12px;align-items:flex-end;margin:0 0 8px;padding:8px 0;border-bottom:1px solid #d0d5dd;font-size:10px;color:#475467}
   .summary{grid-template-columns:repeat(6,1fr)!important;gap:5px!important;margin-bottom:7px!important}
