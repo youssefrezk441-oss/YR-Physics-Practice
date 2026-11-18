@@ -1,0 +1,29 @@
+name: Lesson 2 Homework Isolated E2E
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/paper-homework/**'
+      - 'supabase/functions/student-ch2-mistakes/**'
+      - 'supabase/functions/_shared/**'
+      - 'supabase/migrations/20261024100000_unified_workshop_system.sql'
+      - 'supabase/migrations/20261028120000_ch2_mistake_workshop.sql'
+      - 'supabase/migrations/20261028150000_paper_homework_system.sql'
+      - 'tools/tests/lesson2-homework-isolated.e2e.mjs'
+      - 'tools/fixtures/l2_homework_e2e_baseline.sql'
+      - 'tools/l2_homework_local_gateway.mjs'
+      - 'tools/run_l2_homework_isolated_e2e.sh'
+      - '.github/workflows/l2-paper-homework-isolated-e2e.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-homework-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Synthetic local GoTrue/Postgres/Edge Functions student E2E
+        run: bash tools/run_l2_homework_isolated_e2e.sh
