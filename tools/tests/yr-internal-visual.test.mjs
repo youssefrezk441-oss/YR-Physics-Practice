@@ -136,7 +136,7 @@ test("student workspace routes separate chapter-specific learning and review wit
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 });
 
-test("grade-two learning stays available without a fabricated chapter assignment",{skip:!fs.existsSync(dir)},async()=>{
+test("grade-two learning shows its three chapters and keeps unpublished activities disabled",{skip:!fs.existsSync(dir)},async()=>{
  const server=serve();await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:["--no-sandbox"]});
  try{
@@ -149,9 +149,13 @@ test("grade-two learning stays available without a fabricated chapter assignment
   await page.goto("http://127.0.0.1:"+server.address().port+"/student.html",{waitUntil:"domcontentloaded"});
   await page.locator("#dashboardView").waitFor({state:"visible",timeout:18000});
   await page.locator('.yrMobileNav [data-yr-go="learning"]').click();
-  await page.waitForFunction(()=>document.querySelector("#yrLearnView .yrChapterTabs")?.classList.contains("hidden"));
-  assert.equal(await page.locator("#yrLearnView .yrChapterTabs").isVisible(),false);
-  assert.match(await page.locator("#yrLearnView").textContent(),/تصنيفها إلى فصول مؤجل/);
+  const tabs=page.locator("#yrLearnView .yrChapterTabs");
+  await tabs.getByRole("tab",{name:"الفصل الثالث"}).waitFor({state:"visible"});
+  assert.equal(await tabs.getByRole("tab").count(),3);
+  await tabs.getByRole("tab",{name:"الفصل الثالث"}).click();
+  await page.getByRole("heading",{name:"القوة والحركة",exact:true}).waitFor({state:"visible"});
+  assert.equal(await page.locator("#yrLearningContent .yrG2Preview").count(),4);
+  assert.equal(await page.locator("#yrLearningContent .yrG2Preview button").count(),0);
   assert.doesNotMatch(await page.locator("#yrLearningContent").textContent(),/ورش الفصل الثاني/);
   await page.locator('.yrMobileNav [data-yr-go="review"]').click();
   assert.equal(await page.locator("#yrReviewView .yrChapterTabs").isVisible(),false);

@@ -12,6 +12,7 @@ const page = read('../../lesson2-book-homework.html');
 const studentMistakes = read('../../student-ch2-mistakes.js');
 const mistakesEndpoint = read('../../supabase/functions/student-ch2-mistakes/index.ts');
 const homeworkEndpoint = read('../../supabase/functions/paper-homework/index.ts');
+const homeworkAnalytics = read('../../supabase/functions/_shared/paper-homework-analytics.ts');
 const uuid = '4e9b6a31-0f91-4b54-a524-6a0676ebd15a';
 
 test('lesson-two submitted results expose the existing personal mistake workshop', () => {
@@ -34,7 +35,8 @@ test('automatic evidence is derived server-side from immutable submitted history
   assert.match(mistakesEndpoint, /private\.ch2_verified_mistake_evidence/);
   assert.match(mistakesEndpoint, /private\.ch2_paper_homework_mistake_evidence/);
   assert.match(mistakesEndpoint, /union all/);
-  assert.match(homeworkEndpoint, /paper_homework/);
+  assert.match(homeworkEndpoint, /loadHomeworkAnalytics/);
+  assert.match(homeworkAnalytics, /private\.ch2_paper_homework_mistake_evidence/);
   assert.match(mistakesEndpoint, /attempt_mastery/);
   assert.match(mistakesEndpoint, /begin_essay_mastery/);
   assert.match(mistakesEndpoint, /assess_essay_mastery/);

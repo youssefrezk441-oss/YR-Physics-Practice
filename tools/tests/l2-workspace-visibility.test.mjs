@@ -52,6 +52,22 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='student-identity'&&body?.action==='me')return {data:{ok:true,enforcement:false,review:{status:'approved',legacy_account:true},profile:{is_active:true,profile_schema_version:1},required_profile_schema_version:1}};
    if(name==='student-identity'&&body?.action==='config')return {data:{ok:true,registration_enabled:true,profile_enforcement_enabled:false,profile_update_enabled:true}};
+   if(name==='paper-homework'&&new URL(location.href).searchParams.has('draft_race')){
+    const events=globalThis.homeworkEvents??=[];
+    const parts=[{question_id:'q',question_ref:'q',source_ref:'1',question_title:'تجربة مسودة',image_path:'',
+      skill_name:'مقالي',question_order:1,part_id:'p',label:'المطلوب الأول',input_type:'short_text'}];
+    if(body.action==='load')return {data:{ok:true,workshop:{title:'تجربة مسودة'},parts,drafts:[]}};
+    if(body.action==='save_answer'){
+     events.push({phase:'saving',answer:body.answer?.text,revision:body.expected_revision});
+     if(!body.expected_revision)await new Promise(resolve=>{globalThis.releaseHomeworkSave=resolve});
+     events.push({phase:'saved',answer:body.answer?.text});
+     return {data:{revision:body.expected_revision+1}};
+    }
+    if(body.action==='submit'){
+     events.push({phase:'submit'});
+     return {data:{submission:{answered_parts:1,unanswered_parts:0,answers:[]}}};
+    }
+   }
    if(name==='paper-homework'&&body?.action==='load'){
     const submission={mcq_score:0,mcq_max_score:1,answered_parts:1,unanswered_parts:0,answers:[
      {question_id:'q',question_title:'سؤال واجب تجريبي',image_path:'',answer_state:'answered',response_kind:'auto_mcq',
@@ -234,6 +250,23 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    assert.match(await page.locator('#results').innerText(),/إجابتك الأصلية: ب/);
    assert.equal(await page.locator('#workspace').isVisible(),false);
    assert.match(await page.locator('#results a').getAttribute('href'),/student-ch2-mistakes\.html/);
+   await page.goto(origin+'/lesson2-book-homework.html?draft_race=1',{waitUntil:'domcontentloaded'});
+   await page.locator('.essay').fill('إجابة أولى');
+   await page.waitForFunction(()=>typeof globalThis.releaseHomeworkSave==='function');
+   await page.locator('.essay').fill('آخر إجابة كتبها الطالب');
+   page.once('dialog',dialog=>dialog.accept());
+   await page.locator('#submit').click();
+   await page.waitForFunction(()=>document.querySelector('#workspace').inert);
+   assert.equal(await page.evaluate(()=>globalThis.homeworkEvents.some(event=>event.phase==='submit')),false);
+   await page.evaluate(()=>globalThis.releaseHomeworkSave());
+   await page.locator('#results').waitFor({state:'visible'});
+   assert.deepEqual(await page.evaluate(()=>globalThis.homeworkEvents),[
+    {phase:'saving',answer:'إجابة أولى',revision:0},
+    {phase:'saved',answer:'إجابة أولى'},
+    {phase:'saving',answer:'آخر إجابة كتبها الطالب',revision:1},
+    {phase:'saved',answer:'آخر إجابة كتبها الطالب'},
+    {phase:'submit'}
+   ]);
    assert.ok(!failures.some(x=>/SyntaxError|is not defined|Cannot access .* before initialization/.test(x)),failures.join('; '));
    await page.close();
   }

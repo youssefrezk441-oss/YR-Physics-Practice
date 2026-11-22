@@ -33,17 +33,17 @@ const current={
 };
 const profile={user_id:id,student_code:'SYN-NOW',full_name:'طالب تجريبي',grade_level:grade3,center_name:'سنتر حالي',group_code:'B',is_active:true};
 
-function mockEndpoint(){
+function mockEndpoint({cycles=[currentCycle,archivedCycle],profiles=[profile],metrics=new Map()}={}){
   let handle;
   const queries=[];
   const sql=async(parts,...params)=>{
     const query=parts.join('?');
     queries.push({query,params});
     if(query.includes('public.admin_profiles'))return [{is_owner:true,is_active:true}];
-    if(query.includes('public.assessment_cycles c'))return [currentCycle,archivedCycle];
-    if(query.includes('public.student_profiles'))return [profile];
+    if(query.includes('public.assessment_cycles c'))return cycles;
+    if(query.includes('public.student_profiles'))return params.length?profiles.filter(p=>p.user_id===params[0]):profiles;
     if(query.includes('select user_id, metrics m'))return [{user_id:id,m:frozen}];
-    if(query.includes('private.assessment_cycle_metrics'))return [{user_id:id,m:current}];
+    if(query.includes('private.assessment_cycle_metrics'))return metrics.get(params[0])??[{user_id:id,m:current}];
     if(query.includes('assessment_cycle_sessions')||query.includes('assessment_cycle_tests'))return [];
     throw Error('Unexpected query '+query);
   };
@@ -84,6 +84,31 @@ test('ledger reads frozen values and keeps the open cycle on the shared metrics'
   assert.equal(today.students[0].comprehensive,null);
   const invalid=await invoke({action:'list',cycle_ids:{[grade3]:'WRONG-CYCLE'}});
   assert.equal(invalid.status,404);
+});
+
+test('each second-secondary track uses its own cycle in the list and detail',async()=>{
+  const grade2='الصف الثاني الثانوي';
+  const azharId='44444444-4444-4444-8444-444444444444';
+  const bacId='55555555-5555-4555-8555-555555555555';
+  const azhar={...currentCycle,id:azharId,cycle_code:'TERM1-AZHAR',grade_level:grade2,education_track:'azhar'};
+  const bac={...currentCycle,id:bacId,cycle_code:'TERM1-BACCALAUREATE',grade_level:grade2,education_track:'baccalaureate'};
+  const otherId='66666666-6666-4666-8666-666666666666';
+  const {invoke}=mockEndpoint({
+    cycles:[azhar,bac],
+    profiles:[{...profile,grade_level:grade2,group_code:'K2-B',education_track:'azhar'},
+      {...profile,user_id:otherId,grade_level:grade2,group_code:'N2-A',education_track:'baccalaureate'}],
+    metrics:new Map([
+      [azharId,[{user_id:id,m:{readiness_score:90}}]],
+      [bacId,[{user_id:otherId,m:{readiness_score:75}}]],
+    ]),
+  });
+  const list=await (await invoke({action:'list'})).json();
+  assert.equal(list.cycles.grade2.id,bacId);
+  assert.equal(list.cycles.grade2_azhar.id,azharId);
+  assert.deepEqual(list.students.map(row=>[row.cycle.id,row.readiness]),[[azharId,90],[bacId,75]]);
+  const azharDetail=await (await invoke({action:'detail',user_id:id,cycle_id:azharId})).json();
+  assert.equal(azharDetail.readiness.score,90);
+  assert.equal((await invoke({action:'detail',user_id:id,cycle_id:bacId})).status,404);
 });
 
 test('published ledger opens Chapter 2 and sends the exact cycle when expanding an archived student',async()=>{

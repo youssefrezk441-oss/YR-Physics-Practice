@@ -134,7 +134,13 @@ function cairoDate(date){
 }
 function renderCycleInfo(){
   const g=$('grade').value;
-  const c=g==='الصف الثاني الثانوي'?cycles.grade2:cycles.grade3;
+  if(g==='الصف الثاني الثانوي'){
+    $('ledgerCycleInfo').textContent=[cycles.grade2?.title,cycles.grade2_azhar?.title].filter(Boolean).join(' · ');
+    $('quick').querySelector('[value="excellent"]').textContent='الشامل 85% فأعلى';
+    $('quick').querySelector('[value="absent"]').disabled=false;
+    return;
+  }
+  const c=cycles.grade3;
   const w=c?.weights;
   if(!c){$('ledgerCycleInfo').textContent='';return}
   const current=isChapter2({cycle:c})&&!c.has_comprehensive;
@@ -148,7 +154,7 @@ function renderCycleInfo(){
   if(isChapter2({cycle:c})){
     summary.push(`الكويزات ${pct(w.quizzes)} · الورشة كاملة ${pct(w.platform)} · الحضور ${pct(w.attendance)} · واجب الحصة ${pct(w.homework)} · تسليم واجب المنصة ${pct(w.online_homework)}`);
   }
-  if(!g&&cycles.grade2?.title)summary.push(cycles.grade2.title);
+  if(!g)summary.push(...[cycles.grade2?.title,cycles.grade2_azhar?.title].filter(Boolean));
   $('ledgerCycleInfo').textContent=summary.join(' · ');
 }
 

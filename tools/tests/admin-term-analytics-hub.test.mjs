@@ -9,9 +9,10 @@ test("second-term catalog is behind existing admin authorization",async()=>{
  const catalog=fn.indexOf('if (action === "term2_catalog")');
  const slugGuard=fn.indexOf('if (!slug) throw new WorkshopContractError');
  assert.ok(permission>=0&&catalog>permission&&slugGuard>catalog);
- assert.match(fn,/where slug like '%-term-2-%'/);
+ assert.match(fn,/where definition.academic_term = 'second'/);
  assert.match(fn,/status = 'published'/);
- assert.match(fn,/active_version_id is not null/);
+ assert.match(fn,/version.id = definition.active_version_id and version.status = 'published'/);
+ assert.match(fn,/jsonb_agg\(track.track_key/);
 });
 test("admin dashboard clearly routes registration reviews and combined analytics",async()=>{
  const home=await read("admin-home.html");

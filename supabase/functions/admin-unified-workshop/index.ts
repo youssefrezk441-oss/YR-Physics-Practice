@@ -59,43 +59,64 @@ async function workshopBySlug(slug: string) {
   return workshop ?? null;
 }
 
+function workshopRoster(workshop: Record<string, any>, groupCode: string) {
+  const groupCodes = JSON.stringify(workshop.eligible_group_codes ?? []);
+  return sql`
+  select profile.user_id, profile.student_code, profile.full_name, profile.group_code
+  from public.student_profiles profile
+  left join public.student_groups student_group on student_group.group_code = profile.group_code
+  where profile.is_active = true
+    and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
+         or (${workshop.grade_level} = 'الصف الثالث الثانوي'
+             and (coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
+                  or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')))
+    and (jsonb_array_length(${groupCodes}::jsonb) = 0
+         or ${groupCodes}::jsonb ? profile.group_code)
+    ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}`;
+}
+
 async function analyticsOverview(workshop: Record<string, any>, trackKey: string, groupCode: string, cycleSource: string) {
-  const [track] = await sql`select id from private.workshop_tracks where version_id = ${workshop.active_version_id}::uuid and track_key = ${trackKey} limit 1`;
+  const [track] = await sql`select id, mode from private.workshop_tracks where version_id = ${workshop.active_version_id}::uuid and track_key = ${trackKey} limit 1`;
   if (!track) throw new WorkshopContractError(404, "track_not_found", "القسم غير موجود.");
-  const [eligible] = await sql`
-    select count(*)::int as students
-    from public.student_profiles profile
-    left join public.student_groups student_group on student_group.group_code = profile.group_code
-    where profile.is_active = true
-      and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
-           or coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
-           or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')
-      ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}`;
-  const [questionCount] = await sql`select count(*)::int as count from private.workshop_track_questions where track_id = ${track.id}::uuid`;
-  const [partCount] = await sql`
-    select count(*)::int as count
-    from private.workshop_track_questions placement
-    join private.workshop_question_parts part on part.question_id = placement.question_id
-    where placement.track_id = ${track.id}::uuid`;
   const [metrics] = await sql`
-    with allowed_students as (
-      select profile.user_id
-      from public.student_profiles profile
-      left join public.student_groups student_group on student_group.group_code = profile.group_code
-      where profile.is_active = true
-        and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
-             or coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
-             or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')
-        ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}
+    with allowed_students as (${workshopRoster(workshop, groupCode)}), active_parts as (
+      select question.id as question_id, part.id as part_id
+      from private.workshop_track_questions placement
+      join private.workshop_questions question on question.id = placement.question_id and question.active
+      join private.workshop_question_parts part on part.question_id = question.id
+      where placement.track_id = ${track.id}::uuid
+    ), cycles as (
+      select cycle.id, cycle.user_id
+      from private.workshop_cycles cycle
+      join allowed_students on allowed_students.user_id = cycle.user_id
+      where cycle.workshop_id = ${workshop.id}::uuid
+        ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
     ), progress as (
       select cycle.user_id, state.*
       from private.workshop_progress state
-      join private.workshop_cycles cycle on cycle.id = state.cycle_id
-      where cycle.workshop_id = ${workshop.id}::uuid and state.track_id = ${track.id}::uuid
-        ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-        and cycle.user_id in (select user_id from allowed_students)
+      join cycles cycle on cycle.id = state.cycle_id
+      join active_parts part on part.part_id = state.part_id
+      where state.track_id = ${track.id}::uuid
+    ), completed as (
+      ${track.mode === "final_submit" ? sql`
+        select cycle.user_id
+        from cycles cycle
+        join private.workshop_submissions submission on submission.cycle_id = cycle.id
+        where submission.track_id = ${track.id}::uuid
+      ` : sql`
+        select cycle.user_id
+        from cycles cycle
+        join private.workshop_attempt_events event on event.cycle_id = cycle.id
+        join active_parts part on part.part_id = event.part_id
+        where event.track_id = ${track.id}::uuid and event.attempt_no = 1
+        group by cycle.user_id, cycle.id
+        having count(distinct event.part_id) = (select count(*) from active_parts)
+      `}
     )
-    select count(distinct user_id)::int as started_students,
+    select (select count(*)::int from allowed_students) as eligible_students,
+           (select count(distinct question_id)::int from active_parts) as questions,
+           (select count(distinct user_id)::int from completed) as completed_students,
+           count(distinct user_id)::int as started_students,
            count(*)::int as attempted_parts,
            count(*) filter (where first_attempt_correct = true)::int as first_correct_parts,
            count(*) filter (where independently_mastered = true)::int as independently_mastered_parts,
@@ -103,33 +124,18 @@ async function analyticsOverview(workshop: Record<string, any>, trackKey: string
            count(*) filter (where not independently_mastered and not assisted and not revealed)::int as in_progress_parts,
            coalesce(sum(attempts_count), 0)::int as attempts
     from progress`;
-  const [completion] = await sql`
-    with completed as (
-      select cycle.user_id
-      from private.workshop_progress state
-      join private.workshop_cycles cycle on cycle.id = state.cycle_id
-      join public.student_profiles profile on profile.user_id = cycle.user_id and profile.is_active = true
-      left join public.student_groups student_group on student_group.group_code = profile.group_code
-      where cycle.workshop_id = ${workshop.id}::uuid and state.track_id = ${track.id}::uuid
-        ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-        ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}
-        and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
-             or coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
-             or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')
-      group by cycle.user_id, cycle.id
-      having count(distinct state.part_id) >= ${Number(partCount?.count ?? 0)}
-    ) select count(distinct user_id)::int as students from completed`;
-  const studentCount = Number(eligible?.students ?? 0);
+  const studentCount = Number(metrics?.eligible_students ?? 0);
   const started = Number(metrics?.started_students ?? 0);
   const attempted = Number(metrics?.attempted_parts ?? 0);
   return {
     eligible_students: studentCount,
     started_students: started,
     participation_rate: studentCount ? Math.round(1000 * started / studentCount) / 10 : 0,
-    completed_students: Number(completion?.students ?? 0),
-    completion_rate: studentCount ? Math.round(1000 * Number(completion?.students ?? 0) / studentCount) / 10 : 0,
-    questions: Number(questionCount?.count ?? 0),
+    completed_students: Number(metrics?.completed_students ?? 0),
+    completion_rate: studentCount ? Math.round(1000 * Number(metrics?.completed_students ?? 0) / studentCount) / 10 : 0,
+    questions: Number(metrics?.questions ?? 0),
     attempted_parts: attempted,
+    first_correct_parts: Number(metrics?.first_correct_parts ?? 0),
     first_attempt_rate: attempted ? Math.round(1000 * Number(metrics?.first_correct_parts ?? 0) / attempted) / 10 : 0,
     independent_mastery_rate: attempted ? Math.round(1000 * Number(metrics?.independently_mastered_parts ?? 0) / attempted) / 10 : 0,
     assisted_rate: attempted ? Math.round(1000 * Number(metrics?.assisted_parts ?? 0) / attempted) / 10 : 0,
@@ -155,18 +161,23 @@ Deno.serve(async (req: Request) => {
     if (action === "ping") return response(req, { ok: true, level: admin.level });
     if (action === "term2_catalog") {
       const rows = await sql`
-        select slug, title, grade_level, status,
-               (active_version_id is not null) as has_active_version
-        from private.workshop_definitions
-        where slug like '%-term-2-%'
-          and status = 'published'
-          and active_version_id is not null
-        order by grade_level, slug
-        limit 150`;
+        select definition.slug, definition.title, definition.grade_level, definition.status,
+               true as has_active_version,
+               coalesce((
+                 select jsonb_agg(track.track_key order by track.track_key)
+                 from private.workshop_tracks track where track.version_id = version.id
+               ), '[]'::jsonb) as tracks,
+               coalesce(policy.enabled, false) as paper_homework,
+               policy.workshop_id is not null as has_paper_policy
+        from private.workshop_definitions definition
+        join private.workshop_versions version on version.id = definition.active_version_id and version.status = 'published'
+        left join private.homework_delivery_policies policy on policy.workshop_id = definition.id
+        where definition.academic_term = 'second' and definition.status = 'published'
+        order by definition.grade_level, definition.slug`;
       return response(req, {
         ok: true,
-        workshops: rows.filter((row) => !String(row.slug).endsWith("-homework")),
-        homeworks: rows.filter((row) => String(row.slug).endsWith("-homework")),
+        workshops: rows.filter((row) => !row.has_paper_policy),
+        homeworks: rows.filter((row) => row.paper_homework),
       });
     }
     if (!slug) throw new WorkshopContractError(400, "missing_workshop", "معرف الورشة مطلوب.");
@@ -205,8 +216,7 @@ Deno.serve(async (req: Request) => {
                count(*) filter (where progress.independently_mastered = true)::int as independently_mastered_parts,
                count(*) filter (where progress.assisted = true or progress.revealed = true)::int as assisted_parts,
                max(progress.updated_at) as last_activity
-        from public.student_profiles profile
-        left join public.student_groups student_group on student_group.group_code = profile.group_code
+        from (${workshopRoster(workshop, groupCode)}) profile
         left join private.workshop_cycles cycle on cycle.user_id = profile.user_id and cycle.workshop_id = ${workshop.id}::uuid
           ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
         left join private.workshop_progress progress on progress.cycle_id = cycle.id
@@ -214,28 +224,26 @@ Deno.serve(async (req: Request) => {
             select id from private.workshop_tracks
             where version_id = ${workshop.active_version_id}::uuid and track_key = ${trackKey}
           )
-        where profile.is_active = true
-          and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
-               or coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
-               or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')
-          ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}
-          ${search ? sql`and (profile.full_name ilike ${`%${search}%`} or profile.student_code ilike ${`%${search}%`})` : sql``}
+          and exists (
+            select 1 from private.workshop_question_parts part
+            join private.workshop_questions question on question.id = part.question_id
+            where part.id = progress.part_id and question.active
+          )
+        ${search ? sql`where profile.full_name ilike ${'%' + search + '%'} or profile.student_code ilike ${'%' + search + '%'}` : sql``}
         group by profile.user_id, profile.student_code, profile.full_name, profile.group_code
-        order by attempted_parts desc, profile.full_name
-        limit 250`;
+        order by attempted_parts desc, profile.full_name, profile.user_id`;
       return response(req, { ok: true, students: rows });
     }
 
     if (action === "questions") {
       const rows = await sql`
-        with filtered_progress as (
+        with eligible as (${workshopRoster(workshop, groupCode)}), filtered_progress as (
           select progress.*, cycle.user_id
           from private.workshop_progress progress
           join private.workshop_cycles cycle on cycle.id = progress.cycle_id
-          join public.student_profiles profile on profile.user_id = cycle.user_id
+          join eligible on eligible.user_id = cycle.user_id
           where cycle.workshop_id = ${workshop.id}::uuid
             ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-            and (${groupCode} = '' or profile.group_code = ${groupCode})
         )
         select question.question_ref, question.title, question.skill_ref, skill.name as skill_name,
                question.difficulty, placement.sort_order,
@@ -247,7 +255,7 @@ Deno.serve(async (req: Request) => {
                round(avg(progress.attempts_count)::numeric, 2)::float8 as average_attempts
         from private.workshop_tracks track
         join private.workshop_track_questions placement on placement.track_id = track.id
-        join private.workshop_questions question on question.id = placement.question_id
+        join private.workshop_questions question on question.id = placement.question_id and question.active
         join private.workshop_skills skill on skill.version_id = question.version_id and skill.skill_ref = question.skill_ref
         join private.workshop_question_parts part on part.question_id = question.id
         left join filtered_progress progress on progress.track_id = track.id and progress.part_id = part.id
@@ -255,19 +263,18 @@ Deno.serve(async (req: Request) => {
         group by question.question_ref, question.title, question.skill_ref, skill.name, question.difficulty, placement.sort_order
         order by placement.sort_order`;
       const wrongAnswers = await sql`
-        with responses as (
+        with eligible as (${workshopRoster(workshop, groupCode)}), responses as (
           select question.question_ref, event.normalized_answer, cycle.user_id
           from private.workshop_attempt_events event
           join private.workshop_questions question on question.id = event.question_id
           join private.workshop_cycles cycle on cycle.id = event.cycle_id
           join private.current_workshop_grading_decisions decision
             on decision.part_id = event.part_id and decision.response_ref = 'attempt:' || event.id::text
-          join public.student_profiles profile on profile.user_id = cycle.user_id
+          join eligible on eligible.user_id = cycle.user_id
           join private.workshop_tracks track on track.id = event.track_id
-          where question.version_id = ${workshop.active_version_id}::uuid and track.track_key = ${trackKey}
+          where question.version_id = ${workshop.active_version_id}::uuid and track.track_key = ${trackKey} and question.active
             and decision.is_correct = false
             ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-            ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}
           union all
           select question.question_ref, answer.normalized_answer, cycle.user_id
           from private.workshop_submission_answers answer
@@ -277,12 +284,11 @@ Deno.serve(async (req: Request) => {
           join private.current_workshop_grading_decisions decision
             on decision.part_id = answer.part_id
            and decision.response_ref = 'submission:' || submission.id::text || ':' || answer.part_id::text
-          join public.student_profiles profile on profile.user_id = cycle.user_id
+          join eligible on eligible.user_id = cycle.user_id
           join private.workshop_tracks track on track.id = submission.track_id
-          where question.version_id = ${workshop.active_version_id}::uuid and track.track_key = ${trackKey}
+          where question.version_id = ${workshop.active_version_id}::uuid and track.track_key = ${trackKey} and question.active
             and decision.is_correct = false
             ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-            ${groupCode ? sql`and profile.group_code = ${groupCode}` : sql``}
         ), counts as (
           select question_ref, normalized_answer, count(*)::int as answer_count,
                  row_number() over (partition by question_ref order by count(*) desc, normalized_answer) as rank
@@ -296,14 +302,13 @@ Deno.serve(async (req: Request) => {
 
     if (action === "skills") {
       const rows = await sql`
-        with filtered_progress as (
+        with eligible as (${workshopRoster(workshop, groupCode)}), filtered_progress as (
           select progress.*, cycle.user_id
           from private.workshop_progress progress
           join private.workshop_cycles cycle on cycle.id = progress.cycle_id
-          join public.student_profiles profile on profile.user_id = cycle.user_id
+          join eligible on eligible.user_id = cycle.user_id
           where cycle.workshop_id = ${workshop.id}::uuid
             ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
-            and (${groupCode} = '' or profile.group_code = ${groupCode})
         )
         select skill.skill_ref, skill.name, count(distinct question.id)::int as questions,
                count(progress.*)::int as attempted_parts,
@@ -312,7 +317,7 @@ Deno.serve(async (req: Request) => {
                count(*) filter (where progress.independently_mastered = true)::int as independently_mastered_parts,
                count(*) filter (where progress.assisted = true or progress.revealed = true)::int as assisted_parts
         from private.workshop_skills skill
-        join private.workshop_questions question on question.version_id = skill.version_id and question.skill_ref = skill.skill_ref
+        join private.workshop_questions question on question.version_id = skill.version_id and question.skill_ref = skill.skill_ref and question.active
         join private.workshop_track_questions placement on placement.question_id = question.id
         join private.workshop_tracks track on track.id = placement.track_id and track.track_key = ${trackKey}
         join private.workshop_question_parts part on part.question_id = question.id
@@ -331,8 +336,7 @@ Deno.serve(async (req: Request) => {
                count(*) filter (where progress.first_attempt_correct = true)::int as first_correct_parts,
                count(*) filter (where progress.independently_mastered = true)::int as independently_mastered_parts,
                count(*) filter (where progress.assisted = true or progress.revealed = true)::int as assisted_parts
-        from public.student_profiles profile
-        left join public.student_groups student_group on student_group.group_code = profile.group_code
+        from (${workshopRoster(workshop, groupCode)}) profile
         left join private.workshop_cycles cycle on cycle.user_id = profile.user_id and cycle.workshop_id = ${workshop.id}::uuid
           ${cycleSource === "all" ? sql`` : sql`and cycle.source = ${cycleSource}`}
         left join private.workshop_progress progress on progress.cycle_id = cycle.id
@@ -340,10 +344,12 @@ Deno.serve(async (req: Request) => {
             select id from private.workshop_tracks
             where version_id = ${workshop.active_version_id}::uuid and track_key = ${trackKey}
           )
-        where profile.is_active = true and profile.group_code is not null
-          and (coalesce(student_group.grade_level, profile.grade_level, '') = ${workshop.grade_level}
-               or coalesce(student_group.grade_level, profile.grade_level, '') = '3 ثانوي'
-               or coalesce(student_group.grade_level, profile.grade_level, '') like '%الثالث%')
+          and exists (
+            select 1 from private.workshop_question_parts part
+            join private.workshop_questions question on question.id = part.question_id
+            where part.id = progress.part_id and question.active
+          )
+        where profile.group_code is not null
         group by profile.group_code order by profile.group_code`;
       return response(req, { ok: true, groups: rows });
     }
