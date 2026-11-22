@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   security-compatibility-bootstrap:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,12 +32,13 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+          export CHROMIUM_PATH="$(node -e "const{chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
           node --test tools/tests/student-bootstrap.e2e.test.cjs
           node --test tools/tests/student-recovery-admin.test.mjs
       - name: Build Pages artifact without deploying
         run: node tools/build_pages_artifact.mjs /tmp/yr-pages-artifact
   local-gotrue-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
