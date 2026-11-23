@@ -61,16 +61,17 @@ async function homeProgress(userId:string, groupCode:string){
         and (h.workshop_id is null or h.enabled)
         and (jsonb_array_length(d.eligible_group_codes)=0 or d.eligible_group_codes ? ${groupCode})
     )
-    select a.slug, a.title, a.due_at, case when a.paper then 'homework' else 'workshops' end as kind
+    select a.slug,
+           case when a.paper then a.title else a.title || ' — ' ||
+             (case when t.track_key = 'home' then 'ورشة الواجب' else t.title end) end as title,
+           a.due_at, case when a.paper then 'homework' else 'workshops' end as kind,
+           t.track_key as track
     from activities a
+    left join private.workshop_tracks t on not a.paper and t.version_id=a.active_version_id
     where (a.paper and not exists (
       select 1 from private.homework_submissions s
       where s.workshop_id=a.id and s.user_id=${userId}::uuid
-    )) or (not a.paper and exists (
-      select 1
-      from private.workshop_tracks t
-      where t.version_id=a.active_version_id
-        and (
+    )) or (not a.paper and (
           (t.mode='final_submit' and not exists (
             select 1 from private.workshop_submissions s join private.workshop_cycles w on w.id=s.cycle_id
             where s.track_id=t.id and w.user_id=${userId}::uuid and w.source='initial'
@@ -84,12 +85,12 @@ async function homeProgress(userId:string, groupCode:string){
                 and w.source='initial'
             )
           ))
-        )
     ))
     order by
       case when a.due_at<=now()+interval '2 days' then 0 when a.paper then 1 else 2 end,
       case when a.due_at<=now()+interval '2 days' then a.due_at end,
-      a.lecture_no, a.published_at, a.slug
+      a.lecture_no, a.published_at, a.slug,
+      case when t.track_key = 'class' then 0 else 1 end
   `;
   const [row]=await sql`
     select m from public.assessment_cycles c
