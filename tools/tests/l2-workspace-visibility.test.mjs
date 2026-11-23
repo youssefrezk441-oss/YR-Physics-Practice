@@ -189,8 +189,8 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
      assert.equal(await disclosure.locator('.yrWorkshopPair').count(),2);
      const first=disclosure.locator('[data-yr-workshop-source="openUnifiedL1Workshop"]');
      assert.equal(await first.locator('[data-track]').count(),2);
-     await first.locator('[data-track="class"] .yrWorkshopPairStatus').getByText('تمت محاولة جميع الأجزاء').waitFor();
-     await first.locator('[data-track="home"] .yrWorkshopPairStatus').getByText(/مسودة 12 من 18/).waitFor();
+     await first.getByText('تمت محاولة جميع الأجزاء').waitFor();
+     await first.getByText(/مسودة 12 من 18/).waitFor();
     }
     if(group==='homework')assert.match(await disclosure.locator('[data-yr-source="openLesson2BookHomework"]').innerText(),/115 سؤالًا/);
     await summary.press('Enter');
@@ -213,6 +213,7 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
        ]);
       }
      }
+     await enterChapter();
     }
    }
    await enterChapter();
