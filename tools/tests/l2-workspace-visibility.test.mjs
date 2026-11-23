@@ -66,7 +66,7 @@ const fakeSupabase=String.raw`export function createClient(){
    if(name==='student-honor-board'&&body?.action==='home_progress'){
     const mode=new URL(location.href).searchParams.get('home_case');
     const homework={kind:'homework',slug:'third-secondary-term-2-lecture-5-book-homework',title:'واجب القوة المغناطيسية'};
-    const workshop={kind:'workshops',slug:'third-secondary-term-2-lecture-1',title:'ورشة المحاضرة الأولى'};
+    const workshop={kind:'workshops',slug:'third-secondary-term-2-lecture-1',track:'home',title:'ورشة المحاضرة الأولى — ورشة الواجب'};
     const pending=mode==='urgent'?[{...homework,due_at:new Date(Date.now()+3600000).toISOString()},workshop]
       :mode==='required'?[homework,workshop]:[];
     return {data:{ok:true,progress:{ranked:false,attendance:{total:0},classroom_homework:{total:1,pending:0},
@@ -88,7 +88,11 @@ const fakeSupabase=String.raw`export function createClient(){
     }}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
-   if(name==='unified-workshop'&&body?.action==='load'){
+   if(name==='unified-workshop'&&body?.action==='track_status')return {data:{ok:true,tracks:[
+     {track_key:'class',mode:'interactive',total_parts:18,attempted_parts:18,saved_parts:0,submitted_at:null},
+     {track_key:'home',mode:'final_submit',total_parts:18,attempted_parts:0,saved_parts:12,submitted_at:null}
+    ]}};
+    if(name==='unified-workshop'&&body?.action==='load'){
     const track={track_key:body.track,title:body.track==='home'?'التدريب المنزلي':'ورشة الحصة',mode:body.track==='home'?'final_submit':'interactive'};
     const workshop={academic_term:'second'};
     const questions=[{id:'q',question_ref:'q',title:'سؤال ورشة تجريبي',question_kind:'concept',skill_ref:'test',skill_name:'التجربة',
@@ -163,7 +167,7 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
      const list=home.locator('.yrHomePending');
      assert.equal(await list.getAttribute('open'),null);
      await list.locator('summary').click();
-     assert.match(await list.innerText(),/الواجبات ١ · الورش ١/);
+     assert.match(await list.innerText(),/ورش الحصة ٠ · ورش الواجب ١ · واجبات الكتاب ١/);
      assert.equal(await list.getByRole('button').count(),2);
     }
     if(mode==='urgent'){
@@ -179,15 +183,36 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
     const disclosure=chapter.locator(`details[data-yr-chapter-group="${group}"]`);
     const summary=disclosure.locator('summary');
     await summary.press('Enter');
-    assert.deepEqual(await disclosure.locator('[data-yr-source]:visible').evaluateAll(items=>items.map(item=>item.dataset.yrSource)),entries.map(([id])=>id));
+    const normalEntries=group==='workshops'?entries.filter(([id])=>id==='openLesson1Review35'):entries;
+    assert.deepEqual(await disclosure.locator('[data-yr-source]:visible').evaluateAll(items=>items.map(item=>item.dataset.yrSource)),normalEntries.map(([id])=>id));
+    if(group==='workshops'){
+     assert.equal(await disclosure.locator('.yrWorkshopPair').count(),2);
+     const first=disclosure.locator('[data-yr-workshop-source="openUnifiedL1Workshop"]');
+     assert.equal(await first.locator('[data-track]').count(),2);
+     await first.locator('[data-track="class"] .yrWorkshopPairStatus').getByText('تمت محاولة جميع الأجزاء').waitFor();
+     await first.locator('[data-track="home"] .yrWorkshopPairStatus').getByText(/مسودة 12 من 18/).waitFor();
+    }
     if(group==='homework')assert.match(await disclosure.locator('[data-yr-source="openLesson2BookHomework"]').innerText(),/115 سؤالًا/);
     await summary.press('Enter');
     assert.equal(await disclosure.locator('[data-yr-source]:visible').count(),0);
-    for(const [id,path] of entries){
+    for(const [id,path] of normalEntries){
      const isLastRoute=group==='homework'&&id==='openLecture5BookHomework';
      await summary.click();
      await Promise.all([page.waitForURL(origin+path,{timeout:12000}),disclosure.locator(`[data-yr-source="${id}"]`).click()]);
      if(!isLastRoute)await enterChapter();
+    }
+    if(group==='workshops'){
+     for(const [id,slug] of [['openUnifiedL1Workshop','third-secondary-term-2-lecture-1'],['openCh2Lecture5Workshop','third-secondary-term-2-lecture-5']]){
+      for(const track of ['class','home']){
+       await enterChapter();
+       const pair=chapter.locator(`[data-yr-workshop-source="${id}"]`);
+       await chapter.locator('details[data-yr-chapter-group="workshops"] summary').click();
+       await Promise.all([
+        page.waitForURL(origin+'/workshop.html?workshop='+slug+'&track='+track,{timeout:12000}),
+        pair.locator(`[data-track="${track}"]`).click()
+       ]);
+      }
+     }
     }
    }
    await enterChapter();
