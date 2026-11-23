@@ -100,7 +100,9 @@ const fakeSupabase=String.raw`export function createClient(){
       risers:[{...top10[1],rank:1,improvement:10,latest_test:80,previous_average:70}],
       personal:{eligible:false,quiz_possible:40,quiz_earned:18,completed_sets:1,available_sets:2,
         online_homework_submitted:1,online_homework_counted:3,platform_score:40,homework_score:null,
-        progress:{attendance:{present:0,total:0},classroom_homework:{total:1,pending:1},quizzes:{taken:1,pending:1}}}
+        progress:{attendance:{present:0,total:0},classroom_homework:{total:1,pending:1},quizzes:{taken:1,pending:1},
+          workshop_deliveries:[{title:'ورشة اختبار التسليم',class_parts:18,class_answered:12,
+            home_required:true,home_submitted_at:'2026-11-16T10:00:00Z',counted:false}]}}
     }}}};
    }
    if(name==='student-ch2-mistakes'&&body?.action==='ping')return {data:{ok:true,available:true}};
@@ -222,6 +224,8 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    assert.match(await personal.innerText(),/سلّم 2 من الواجبات/);
    assert.match(await personal.innerText(),/18 من 40 درجة/);
    assert.match(await personal.innerText(),/درجات الكويزات لسه مستنية التسجيل/);
+   const workshops=personal.locator('details[open]',{hasText:'حالة تسليم الورش'});
+   assert.match(await workshops.innerText(),/الحصة 12 من 18 · المنزلي مُسلّم · الورشة لسه ناقصة/);
    await personal.getByRole('button',{name:'افتح الواجبات'}).click();
    await chapter.locator('details[data-yr-chapter-group="homework"][open]').waitFor({state:'visible'});
    assert.equal(await chapter.locator('details[data-yr-chapter-group="workshops"][open]').count(),1);

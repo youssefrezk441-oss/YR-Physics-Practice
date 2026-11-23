@@ -29,7 +29,10 @@ const frozen={
 };
 const current={
   readiness_score:88.2,homework_rate:85,attendance_rate:100,quiz_ratio:90,platform_score:79,
-  workshop_counted:2,platform_completed:1,platform_available:2,online_homework_rate:100,online_homework_available:4,online_homework_counted:3,online_homework_submitted:3
+  workshop_counted:2,platform_completed:1,platform_available:2,online_homework_rate:100,online_homework_available:4,online_homework_counted:3,online_homework_submitted:3,
+  workshop_home_pending_class:1,
+  workshop_deliveries:[{title:'ورشة اختبار التسليم',class_parts:18,class_answered:12,
+    home_required:true,home_submitted_at:'2026-11-16T10:00:00Z',counted:false}]
 };
 const profile={user_id:id,student_code:'SYN-NOW',full_name:'طالب تجريبي',grade_level:grade3,center_name:'سنتر حالي',group_code:'B',is_active:true};
 
@@ -80,6 +83,7 @@ test('ledger reads frozen values and keeps the open cycle on the shared metrics'
   assert.equal(today.students[0].group_code,'B');
   assert.equal(today.students[0].readiness,88.2);
   assert.equal(today.students[0].platform.workshop_counted,2);
+  assert.equal(today.students[0].platform.home_pending_class,1);
   assert.equal(today.students[0].online_homework.submitted,3);
   assert.equal(today.students[0].comprehensive,null);
   const invalid=await invoke({action:'list',cycle_ids:{[grade3]:'WRONG-CYCLE'}});
@@ -155,6 +159,11 @@ test('published ledger opens Chapter 2 and sends the exact cycle when expanding 
     assert.match(await page.locator('#rows').innerText(),/واجب المنصة · 3 تسليم من 3 محسوب/);
     assert.match(await page.locator('#rows').innerText(),/1 من 2 ورشة محسوبة/);
     assert.match(await page.locator('#rows').innerText(),/88\.2%/);
+    assert.match(await page.locator('#rows').innerText(),/1 منزلي مُسلّم والحصة ناقصة/);
+    await page.getByRole('button',{name:'فتح',exact:true}).click();
+    const workshops=page.locator('.workshopDeliveries');
+    await workshops.getByText('ورشة اختبار التسليم').waitFor({state:'visible'});
+    assert.match(await workshops.innerText(),/12 من 18\s+تم التسليم\s+غير مكتملة/);
     await page.locator('#ledgerCycleMode').selectOption('chapter1');
     await page.getByText('SYN-OLD').waitFor({state:'visible'});
     assert.match(await page.locator('#ledgerCycleInfo').innerText(),/مؤرشفة/);
