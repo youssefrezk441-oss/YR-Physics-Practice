@@ -167,6 +167,38 @@ async function getTrackContext(slug: string, trackKey: string, questionRef?: str
   return row ?? null;
 }
 
+
+/** Read-only per-track status for student navigation; never creates a cycle or an attempt. */
+async function trackStatuses(account: NonNullable<Awaited<ReturnType<typeof requireAccount>>>, slug: string) {
+  const workshop = await getWorkshop(slug);
+  if (!workshop) throw new WorkshopContractError(404, "workshop_not_found", "هذه الورشة غير متاحة حاليًا.");
+  if (account.role !== "admin" && !eligible(account.profile, workshop)) {
+    throw new WorkshopContractError(403, "workshop_not_allowed", "هذه الورشة غير متاحة لحسابك.");
+  }
+  const [cycle] = account.role === "admin" ? [] : await sql`
+    select id from private.workshop_cycles
+    where workshop_id = ${workshop.id}::uuid and user_id = ${account.user.id}::uuid
+    order by (status = 'open') desc, cycle_no desc limit 1`;
+  const rows = await sql`
+    select t.track_key, t.title, t.mode,
+      (select count(*)::int from private.workshop_track_questions tq
+       join private.workshop_questions q on q.id=tq.question_id and q.active
+       join private.workshop_question_parts part on part.question_id=q.id
+       where tq.track_id=t.id) as total_parts,
+      (select count(*)::int from private.workshop_progress pr
+       where pr.cycle_id=${cycle?.id ?? null}::uuid and pr.track_id=t.id
+         and (pr.attempts_count>0 or pr.revealed)) as attempted_parts,
+      (select count(*)::int from private.workshop_drafts dr
+       where dr.cycle_id=${cycle?.id ?? null}::uuid and dr.track_id=t.id) as saved_parts,
+      (select s.submitted_at from private.workshop_submissions s
+       where s.cycle_id=${cycle?.id ?? null}::uuid and s.track_id=t.id
+       order by s.submitted_at desc limit 1) as submitted_at
+    from private.workshop_tracks t
+    where t.version_id=${workshop.active_version_id}::uuid
+    order by t.sort_order`;
+  return {workshop: {slug:workshop.slug, title:workshop.title}, tracks: rows};
+}
+
 async function loadWorkshop(account: NonNullable<Awaited<ReturnType<typeof requireAccount>>>, slug: string, trackKey: string) {
   const workshop = await getWorkshop(slug);
   if (!workshop) throw new WorkshopContractError(404, "workshop_not_found", "هذه الورشة غير متاحة حاليًا.");
@@ -284,6 +316,7 @@ Deno.serve(async (req: Request) => {
     }
     if (!slug) throw new WorkshopContractError(400, "missing_workshop", "معرف الورشة مطلوب.");
     const trackKey = body.track === "home" ? "home" : "class";
+    if (action === "track_status") return response(req, { ok: true, ...(await trackStatuses(account, slug)) });
     if (action === "load") return response(req, { ok: true, ...(await loadWorkshop(account, slug, trackKey)) });
     if (account.role !== "student") throw new WorkshopContractError(403, "admin_read_only", "معاينة الإدارة لا تسجل إجابات طلاب.");
 
