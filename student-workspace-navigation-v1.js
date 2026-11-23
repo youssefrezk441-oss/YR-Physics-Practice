@@ -63,7 +63,7 @@ function readWorkshopStatus(slug){
  return promise;
 }
 function makeWorkshopPair(id,original,slug){
- const card=document.createElement("section");card.className="yrWorkspaceItem yrWorkshopPair";
+ const card=document.createElement("section");card.className="yrWorkspaceItem yrWorkshopPair";card.dataset.yrWorkshopSource=id;
  const head=document.createElement("div");head.className="yrWorkshopPairHead";
  const icon=document.createElement("span");icon.className="yrWorkspaceItemIcon";icon.textContent="🧲";icon.setAttribute("aria-hidden","true");
  const body=document.createElement("div"),title=document.createElement("strong"),subtitle=document.createElement("small");
