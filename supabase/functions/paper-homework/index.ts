@@ -1,8 +1,9 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.105.0";
 import postgres from "npm:postgres@3.4.7";
+import { homeworkAdminActions, loadHomeworkAnalytics } from "../_shared/paper-homework-analytics.ts";
 import { readWorkshopJson, WorkshopRequestError } from "../_shared/workshop-security.ts";
-import { validateRequestId } from "../_shared/unified-workshop-core.ts";
+import { validateRequestId, WorkshopContractError } from "../_shared/unified-workshop-core.ts";
 import {
   gradeHomeworkPart,
   PaperHomeworkError,
@@ -76,45 +77,6 @@ async function requireAdmin(req: Request) {
   return permission?.level && permission.level !== "none" ? { user: data.user, level: permission.level } : null;
 }
 
-const adminActions = new Set(["overview", "students", "student_detail", "questions", "skills"]);
-
-async function handleAdmin(req: Request, body: Record<string, unknown>, action: string) {
-  const admin = await requireAdmin(req);
-  if (!admin) return respond(req, { error: "unauthorized", message: "لا توجد صلاحية إدارية." }, 401);
-  const slug = text(body.workshop_slug || "third-secondary-term-2-lecture-1-homework", 180);
-  const group = text(body.group_code, 80);
-  const search = text(body.search, 120);
-  const [work] = await sql`select id, active_version_id as version_id, title, grade_level, eligible_group_codes from private.workshop_definitions where slug=${slug} limit 1`;
-  if (!work) return respond(req, { error: "not_found", message: "الواجب غير موجود." }, 404);
-  if (action === "overview") {
-    const [eligible] = await sql`select count(*)::int as count from public.student_profiles profile left join public.student_groups student_group on student_group.group_code=profile.group_code where profile.is_active and (coalesce(student_group.grade_level,profile.grade_level,'')='3 ثانوي' or coalesce(student_group.grade_level,profile.grade_level,'') like '%الثالث%') ${group ? sql`and profile.group_code=${group}` : sql``}`;
-    const [metrics] = await sql`select count(*)::int as submitted,coalesce(avg(case when mcq_max_score>0 then mcq_score*100/mcq_max_score end),0)::numeric(10,2) as average_mcq,coalesce(sum(unanswered_parts),0)::int as unanswered from private.homework_submissions submission join public.student_profiles profile on profile.user_id=submission.user_id where submission.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
-    const [essays] = await sql`select count(*) filter(where review.assessment='correct')::int as correct,count(*) filter(where review.assessment='partial')::int as partial,count(*) filter(where review.assessment='incorrect')::int as incorrect,count(*) filter(where answer.response_kind='essay_self_review' and review.id is null)::int as pending from private.homework_submission_answers answer join private.homework_submissions submission on submission.id=answer.submission_id left join private.homework_self_review_events review on review.submission_answer_id=answer.id join public.student_profiles profile on profile.user_id=submission.user_id where submission.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
-    const [mistakes] = await sql`select count(*)::int as total,
-      count(*) filter(where exists(select 1 from private.ch2_mistake_review_events review where review.user_id=evidence.user_id and review.mistake_ref=evidence.mistake_ref))::int as reviewed,
-      count(*) filter(where exists(select 1 from private.ch2_mistake_mastery_attempts attempt where attempt.user_id=evidence.user_id and attempt.mistake_ref=evidence.mistake_ref and attempt.is_correct)
-        or exists(select 1 from private.ch2_essay_mastery_retries retry join private.ch2_essay_mastery_reviews review on review.retry_id=retry.id and review.assessment='correct' where retry.user_id=evidence.user_id and retry.mistake_ref=evidence.mistake_ref))::int as mastered
-      from private.ch2_paper_homework_mistake_evidence evidence join public.student_profiles profile on profile.user_id=evidence.user_id
-      where evidence.workshop_id=${work.id}::uuid ${group ? sql`and profile.group_code=${group}` : sql``}`;
-    return respond(req, { ok: true, level: admin.level, overview: { eligible: Number(eligible.count), submitted: Number(metrics.submitted), unsubmitted: Math.max(0, Number(eligible.count) - Number(metrics.submitted)), average_mcq: Number(metrics.average_mcq), unanswered: Number(metrics.unanswered), essay_self_review: essays, mistake_progress: mistakes } });
-  }
-  if (action === "students") {
-    const rows = await sql`select profile.user_id,profile.student_code,profile.full_name,profile.group_code,submission.id as submission_id,submission.mcq_score,submission.mcq_max_score,submission.answered_parts,submission.unanswered_parts,submission.submitted_at from public.student_profiles profile left join private.homework_submissions submission on submission.user_id=profile.user_id and submission.workshop_id=${work.id}::uuid where profile.is_active and (profile.grade_level='3 ثانوي' or profile.grade_level like '%الثالث%') ${group ? sql`and profile.group_code=${group}` : sql``} ${search ? sql`and (profile.full_name ilike ${`%${search}%`} or profile.student_code ilike ${`%${search}%`})` : sql``} order by (submission.id is null),profile.full_name limit 500`;
-    return respond(req, { ok: true, students: rows });
-  }
-  if (action === "student_detail") {
-    const userId = text(body.user_id, 40);
-    const rows = await sql`select question.question_ref,question.source_ref,question.title,question.image_path,question.skill_ref,skill.name as skill_name,part.part_key,part.label,answer.response_kind,answer.answer_state,answer.answer_json,answer.is_correct,answer.awarded_points,answer.max_points,review.assessment,review.reviewed_at from private.homework_submission_answers answer join private.homework_submissions submission on submission.id=answer.submission_id join private.workshop_questions question on question.id=answer.question_id join private.workshop_skills skill on skill.version_id=question.version_id and skill.skill_ref=question.skill_ref join private.workshop_question_parts part on part.id=answer.part_id left join private.homework_self_review_events review on review.submission_answer_id=answer.id where submission.workshop_id=${work.id}::uuid and submission.user_id=${userId}::uuid order by question.question_ref,part.sort_order`;
-    return respond(req, { ok: true, answers: rows });
-  }
-  if (action === "questions") {
-    const rows = await sql`select question.question_ref,question.source_ref,question.title,question.skill_ref,skill.name as skill_name,part.part_key,part.label,count(answer.id)::int as submissions,count(*) filter(where answer.answer_state='answered' and answer.is_correct=false)::int as wrong,count(*) filter(where answer.answer_state='unanswered')::int as unanswered from private.workshop_questions question join private.workshop_skills skill on skill.version_id=question.version_id and skill.skill_ref=question.skill_ref join private.workshop_question_parts part on part.question_id=question.id left join private.homework_submission_answers answer on answer.question_id=question.id and answer.part_id=part.id left join private.homework_submissions submission on submission.id=answer.submission_id left join public.student_profiles profile on profile.user_id=submission.user_id where question.version_id=${work.version_id}::uuid ${group ? sql`and (profile.group_code=${group} or profile.user_id is null)` : sql``} group by question.question_ref,question.source_ref,question.title,question.skill_ref,skill.name,part.part_key,part.label,part.sort_order order by wrong desc,question.question_ref,part.sort_order`;
-    return respond(req, { ok: true, questions: rows });
-  }
-  const rows = await sql`select skill.skill_ref,skill.name,count(answer.id) filter(where answer.answer_state='answered')::int as answered,count(answer.id) filter(where answer.answer_state='answered' and answer.is_correct=false)::int as wrong,count(answer.id) filter(where answer.answer_state='unanswered')::int as unanswered from private.workshop_skills skill join private.workshop_questions question on question.version_id=skill.version_id and question.skill_ref=skill.skill_ref join private.workshop_question_parts part on part.question_id=question.id left join private.homework_submission_answers answer on answer.part_id=part.id left join private.homework_submissions submission on submission.id=answer.submission_id left join public.student_profiles profile on profile.user_id=submission.user_id where skill.version_id=${work.version_id}::uuid ${group ? sql`and (profile.group_code=${group} or profile.user_id is null)` : sql``} group by skill.skill_ref,skill.name,skill.sort_order order by skill.sort_order`;
-  return respond(req, { ok: true, skills: rows });
-}
-
 async function getWorkshop(slug: string, groupCode: string) {
   const [row] = await sql`
     select definition.id, definition.slug, definition.title, definition.grade_level,
@@ -131,7 +93,7 @@ async function getWorkshop(slug: string, groupCode: string) {
   return row ?? null;
 }
 
-async function loadParts(workshopId: string, versionId: string) {
+async function loadParts(versionId: string) {
   return await sql`
     select question.id as question_id, question.question_ref, question.source_ref,
            question.title as question_title, question.image_path, question.image_sha256,
@@ -152,10 +114,15 @@ async function ensureAttempt(workshopId: string, versionId: string, userId: stri
   const [attempt] = await sql`
     insert into private.homework_attempts (workshop_id, version_id, user_id)
     values (${workshopId}::uuid, ${versionId}::uuid, ${userId}::uuid)
-    on conflict (workshop_id, user_id) do update set last_activity_at = case
-      when private.homework_attempts.status = 'draft' then now() else private.homework_attempts.last_activity_at end
+    on conflict (workshop_id, user_id) do update set last_activity_at = now()
+      where private.homework_attempts.status = 'draft'
     returning *`;
-  return attempt;
+  if (attempt) return attempt;
+  // The conflicting submitted row is deliberately untouched by the upsert.
+  const [submitted] = await sql`
+    select * from private.homework_attempts
+    where workshop_id = ${workshopId}::uuid and user_id = ${userId}::uuid`;
+  return submitted;
 }
 
 async function receipt(tx: postgres.TransactionSql, userId: string, requestId: string, bodyHash: string) {
@@ -203,25 +170,29 @@ Deno.serve(async (req) => {
     return respond(req, { error: "invalid_json" }, 400);
   }
   const action = text(body.action, 60);
-  if (adminActions.has(action)) {
-    try { return await handleAdmin(req, body, action); }
-    catch (error) {
+  if (homeworkAdminActions.has(action)) {
+    try {
+      const admin = await requireAdmin(req);
+      if (!admin) return respond(req, { error: "unauthorized", message: "لا توجد صلاحية إدارية." }, 401);
+      return respond(req, await loadHomeworkAnalytics(sql, action, body, admin.level));
+    } catch (error) {
+      if (error instanceof PaperHomeworkError) return respond(req, { error: error.code, message: error.message }, error.status);
       console.error("paper-homework-admin", action, error instanceof Error ? error.message : error);
       return respond(req, { error: "server_error", message: "تعذر تحميل التقرير." }, 500);
     }
   }
-  const account = await requireStudent(req);
-  if (!account) return respond(req, { error: "unauthorized", message: "يجب تسجيل الدخول بحساب طالب نشط من الصف الثالث الثانوي." }, 401);
-  const slug = text(body.workshop_slug, 160);
-  const groupCode = String(account.profile.group_code ?? "");
   try {
+    const account = await requireStudent(req);
+    if (!account) return respond(req, { error: "unauthorized", message: "يجب تسجيل الدخول بحساب طالب نشط من الصف الثالث الثانوي." }, 401);
+    const slug = text(body.workshop_slug, 160);
+    const groupCode = String(account.profile.group_code ?? "");
     const workshop = await getWorkshop(slug, groupCode);
     if (!workshop) throw new PaperHomeworkError(404, "homework_unavailable", "هذا الواجب غير متاح لمجموعتك حاليًا.");
     if (action === "ping") return respond(req, { ok: true, available: true, workshop: { slug: workshop.slug, title: workshop.title } });
 
     if (action === "load") {
       const attempt = await ensureAttempt(workshop.id, workshop.version_id, account.user.id);
-      const parts = await loadParts(workshop.id, workshop.version_id);
+      const parts = attempt.status === "draft" ? await loadParts(attempt.version_id) : [];
       const drafts = attempt.status === "draft" ? await sql`
         select part_id, answer_state, answer_json, revision, updated_at
         from private.homework_draft_answers where attempt_id = ${attempt.id}::uuid` : [];
@@ -257,7 +228,12 @@ Deno.serve(async (req) => {
           select part.id, part.question_id, part.input_type, part.public_config
           from private.workshop_question_parts part
           join private.workshop_questions question on question.id = part.question_id
-          where part.id = ${partId}::uuid and question.version_id = ${workshop.version_id}::uuid limit 1`;
+          where part.id = ${partId}::uuid and question.version_id = ${attempt.version_id}::uuid
+            and question.active and exists (
+              select 1 from private.workshop_track_questions placement
+              join private.workshop_tracks track on track.id = placement.track_id
+              where placement.question_id = question.id and track.version_id = question.version_id and track.track_key = 'home'
+            ) limit 1`;
         if (!part) throw new PaperHomeworkError(404, "part_not_found", "جزء السؤال غير موجود.");
         const responseKind: HomeworkResponseKind = part.public_config?.essay_self_review ? "essay_self_review" : "auto_mcq";
         const validated = validateHomeworkAnswer({ responseKind, state: body.answer_state, answer: body.answer });
@@ -293,9 +269,9 @@ Deno.serve(async (req) => {
       const questionId = text(body.question_id, 40);
       const mime = text(body.mime_type, 40);
       if (!new Set(["image/jpeg", "image/webp"]).has(mime)) throw new PaperHomeworkError(400, "invalid_image_type", "ارفع صورة JPEG أو WebP.");
-      const [attempt] = await sql`select id, status from private.homework_attempts where workshop_id = ${workshop.id}::uuid and user_id = ${account.user.id}::uuid limit 1`;
+      const [attempt] = await sql`select id, status, version_id from private.homework_attempts where workshop_id = ${workshop.id}::uuid and user_id = ${account.user.id}::uuid limit 1`;
       if (!attempt || attempt.status !== "draft") throw new PaperHomeworkError(409, "already_submitted", "لا يمكن تعديل الصور بعد التسليم.");
-      const [question] = await sql`select id from private.workshop_questions where id = ${questionId}::uuid and version_id = ${workshop.version_id}::uuid limit 1`;
+      const [question] = await sql`select id from private.workshop_questions where id = ${questionId}::uuid and version_id = ${attempt.version_id}::uuid limit 1`;
       if (!question) throw new PaperHomeworkError(404, "question_not_found", "السؤال غير موجود.");
       const extension = mime === "image/webp" ? "webp" : "jpg";
       const uploadId = crypto.randomUUID();
@@ -363,13 +339,19 @@ Deno.serve(async (req) => {
           from private.workshop_questions question
           join private.workshop_question_parts part on part.question_id = question.id
           left join private.homework_draft_answers draft on draft.attempt_id = ${attempt.id}::uuid and draft.part_id = part.id
-          join lateral (
+          left join lateral (
             select version.id, version.answer_spec from private.workshop_part_key_activations activation
             join private.workshop_part_key_versions version on version.id = activation.key_version_id
             where activation.part_id = part.id order by activation.activated_at desc, activation.id desc limit 1
           ) key on true
-          where question.version_id = ${workshop.version_id}::uuid and question.active = true
+          where question.version_id = ${attempt.version_id}::uuid and question.active = true
+            and exists (
+              select 1 from private.workshop_track_questions placement
+              join private.workshop_tracks track on track.id = placement.track_id
+              where placement.question_id = question.id and track.version_id = question.version_id and track.track_key = 'home'
+            )
           order by question.question_ref, part.sort_order for update of question, part`;
+        if (rows.some((row) => !row.key_version_id)) throw new PaperHomeworkError(409, "homework_key_unavailable", "تعذر التسليم بسبب نقص في إعداد الواجب. تم الاحتفاظ بإجاباتك.");
         if (!rows.length) throw new PaperHomeworkError(409, "empty_homework", "الواجب لا يحتوي أسئلة قابلة للتسليم.");
         const sourceRows = rows as unknown as Record<string, any>[];
         const graded: Array<Record<string, any> & {
@@ -388,7 +370,7 @@ Deno.serve(async (req) => {
         const summary = summarizeHomework(graded);
         const [submission] = await tx`
           insert into private.homework_submissions (request_id, attempt_id, workshop_id, version_id, user_id, mcq_score, mcq_max_score, answered_parts, unanswered_parts)
-          values (${requestId}::uuid, ${attempt.id}::uuid, ${workshop.id}::uuid, ${workshop.version_id}::uuid, ${account.user.id}::uuid,
+          values (${requestId}::uuid, ${attempt.id}::uuid, ${workshop.id}::uuid, ${attempt.version_id}::uuid, ${account.user.id}::uuid,
             ${summary.mcqScore}, ${summary.mcqMaxScore}, ${summary.answeredParts}, ${summary.unansweredParts}) returning id, submitted_at`;
         for (const item of graded) await tx`
           insert into private.homework_submission_answers
@@ -435,8 +417,8 @@ Deno.serve(async (req) => {
 
     throw new PaperHomeworkError(400, "unknown_action", "العملية المطلوبة غير معروفة.");
   } catch (error) {
-    if (error instanceof PaperHomeworkError) return respond(req, { error: error.code, message: error.message }, error.status);
+    if (error instanceof PaperHomeworkError || error instanceof WorkshopContractError) return respond(req, { error: error.code, message: error.message }, error.status);
     console.error("paper-homework", action, error instanceof Error ? error.message : error);
-    return respond(req, { error: "server_error", message: "تعذر إتمام العملية بأمان. لم نغيّر حالة التسليم." }, 500);
+    return respond(req, { error: "server_error", message: "تعذر إتمام الطلب. أعد فتح الواجب للتحقق من حالة التسليم." }, 500);
   }
 });

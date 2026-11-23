@@ -29,21 +29,24 @@ const frozen={
 };
 const current={
   readiness_score:88.2,homework_rate:85,attendance_rate:100,quiz_ratio:90,platform_score:79,
-  workshop_counted:2,platform_completed:1,platform_available:2,online_homework_rate:100,online_homework_available:4,online_homework_counted:3,online_homework_submitted:3
+  workshop_counted:2,platform_completed:1,platform_available:2,online_homework_rate:100,online_homework_available:4,online_homework_counted:3,online_homework_submitted:3,
+  workshop_home_pending_class:1,
+  workshop_deliveries:[{title:'ورشة اختبار التسليم',class_parts:18,class_answered:12,
+    home_required:true,home_submitted_at:'2026-11-16T10:00:00Z',counted:false}]
 };
 const profile={user_id:id,student_code:'SYN-NOW',full_name:'طالب تجريبي',grade_level:grade3,center_name:'سنتر حالي',group_code:'B',is_active:true};
 
-function mockEndpoint(){
+function mockEndpoint({cycles=[currentCycle,archivedCycle],profiles=[profile],metrics=new Map()}={}){
   let handle;
   const queries=[];
   const sql=async(parts,...params)=>{
     const query=parts.join('?');
     queries.push({query,params});
     if(query.includes('public.admin_profiles'))return [{is_owner:true,is_active:true}];
-    if(query.includes('public.assessment_cycles c'))return [currentCycle,archivedCycle];
-    if(query.includes('public.student_profiles'))return [profile];
+    if(query.includes('public.assessment_cycles c'))return cycles;
+    if(query.includes('public.student_profiles'))return params.length?profiles.filter(p=>p.user_id===params[0]):profiles;
     if(query.includes('select user_id, metrics m'))return [{user_id:id,m:frozen}];
-    if(query.includes('private.assessment_cycle_metrics'))return [{user_id:id,m:current}];
+    if(query.includes('private.assessment_cycle_metrics'))return metrics.get(params[0])??[{user_id:id,m:current}];
     if(query.includes('assessment_cycle_sessions')||query.includes('assessment_cycle_tests'))return [];
     throw Error('Unexpected query '+query);
   };
@@ -80,10 +83,36 @@ test('ledger reads frozen values and keeps the open cycle on the shared metrics'
   assert.equal(today.students[0].group_code,'B');
   assert.equal(today.students[0].readiness,88.2);
   assert.equal(today.students[0].platform.workshop_counted,2);
+  assert.equal(today.students[0].platform.home_pending_class,1);
   assert.equal(today.students[0].online_homework.submitted,3);
   assert.equal(today.students[0].comprehensive,null);
   const invalid=await invoke({action:'list',cycle_ids:{[grade3]:'WRONG-CYCLE'}});
   assert.equal(invalid.status,404);
+});
+
+test('each second-secondary track uses its own cycle in the list and detail',async()=>{
+  const grade2='الصف الثاني الثانوي';
+  const azharId='44444444-4444-4444-8444-444444444444';
+  const bacId='55555555-5555-4555-8555-555555555555';
+  const azhar={...currentCycle,id:azharId,cycle_code:'TERM1-AZHAR',grade_level:grade2,education_track:'azhar'};
+  const bac={...currentCycle,id:bacId,cycle_code:'TERM1-BACCALAUREATE',grade_level:grade2,education_track:'baccalaureate'};
+  const otherId='66666666-6666-4666-8666-666666666666';
+  const {invoke}=mockEndpoint({
+    cycles:[azhar,bac],
+    profiles:[{...profile,grade_level:grade2,group_code:'K2-B',education_track:'azhar'},
+      {...profile,user_id:otherId,grade_level:grade2,group_code:'N2-A',education_track:'baccalaureate'}],
+    metrics:new Map([
+      [azharId,[{user_id:id,m:{readiness_score:90}}]],
+      [bacId,[{user_id:otherId,m:{readiness_score:75}}]],
+    ]),
+  });
+  const list=await (await invoke({action:'list'})).json();
+  assert.equal(list.cycles.grade2.id,bacId);
+  assert.equal(list.cycles.grade2_azhar.id,azharId);
+  assert.deepEqual(list.students.map(row=>[row.cycle.id,row.readiness]),[[azharId,90],[bacId,75]]);
+  const azharDetail=await (await invoke({action:'detail',user_id:id,cycle_id:azharId})).json();
+  assert.equal(azharDetail.readiness.score,90);
+  assert.equal((await invoke({action:'detail',user_id:id,cycle_id:bacId})).status,404);
 });
 
 test('published ledger opens Chapter 2 and sends the exact cycle when expanding an archived student',async()=>{
@@ -130,6 +159,11 @@ test('published ledger opens Chapter 2 and sends the exact cycle when expanding 
     assert.match(await page.locator('#rows').innerText(),/واجب المنصة · 3 تسليم من 3 محسوب/);
     assert.match(await page.locator('#rows').innerText(),/1 من 2 ورشة محسوبة/);
     assert.match(await page.locator('#rows').innerText(),/88\.2%/);
+    assert.match(await page.locator('#rows').innerText(),/1 منزلي مُسلّم والحصة ناقصة/);
+    await page.getByRole('button',{name:'فتح',exact:true}).click();
+    const workshops=page.locator('.workshopDeliveries');
+    await workshops.getByText('ورشة اختبار التسليم').waitFor({state:'visible'});
+    assert.match(await workshops.innerText(),/12 من 18\s+تم التسليم\s+غير مكتملة/);
     await page.locator('#ledgerCycleMode').selectOption('chapter1');
     await page.getByText('SYN-OLD').waitFor({state:'visible'});
     assert.match(await page.locator('#ledgerCycleInfo').innerText(),/مؤرشفة/);

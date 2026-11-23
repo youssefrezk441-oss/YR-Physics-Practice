@@ -42,7 +42,8 @@ function chapter2Progress(metrics:any){
   return {
     attendance:{present:Number(metrics.present||0),total:Number(metrics.total_sessions||0)},
     classroom_homework:{total:Number(metrics.homework_known||0),pending:Number(metrics.homework_unknown||0)},
-    quizzes:{taken:Number(metrics.quiz_scored||0),pending:Number(metrics.quiz_pending||0)}
+    quizzes:{taken:Number(metrics.quiz_scored||0),pending:Number(metrics.quiz_pending||0)},
+    workshop_deliveries:metrics.workshop_deliveries??[]
   };
 }
 async function homeProgress(userId:string, groupCode:string){

@@ -4,10 +4,10 @@ import {loadAdminAccess,canView} from "./admin-access.js";
 const $=id=>document.getElementById(id);
 const n=value=>Number(value||0);
 const fmt=value=>Number(value||0).toLocaleString("ar-EG");
-const percent=value=>Number.isFinite(Number(value))?Number(value).toFixed(1)+"%":"—";
+const percent=value=>value!=null&&Number.isFinite(Number(value))?Number(value).toFixed(1)+"%":"—";
 const clean=s=>String(s??"");
 const link=(path,slug)=>path+"?workshop="+encodeURIComponent(slug);
-const state={catalog:null,rows:[],homeworks:[],active:"overview",loading:false};
+const state={catalog:null,rows:[],homeworks:[],active:"overview",refreshId:0};
 function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined&&text!==null)e.textContent=clean(text);if(cls)e.className=cls;return e}
 function status(message){$("notice").textContent=message}
 async function api(fn,action,body={}){
@@ -25,6 +25,9 @@ const group=()=>$("groupFilter").value.trim();
 const cycle=()=>$("cycleFilter").value;
 const tracks=()=>$("trackFilter").value==="all"?["class","home"]:[$("trackFilter").value];
 function selected(arr){return arr.filter(w=>!grade()||w.grade_level===grade())}
+function workshopPlans(workshops){
+  return workshops.flatMap(work=>tracks().filter(track=>!work.tracks||work.tracks.includes(track)).map(track=>({work,track})));
+}
 function addTable(target,heads,entries){
   const box=$(target);box.replaceChildren();
   if(!entries.length){box.append(el("div","لا توجد بيانات منشورة أو مطابقة للفلاتر.","empty"));return}
@@ -45,7 +48,7 @@ function renderOverview(){
   const area=$("metrics");area.replaceChildren();
   const valid=state.rows.filter(r=>!r.error),home=state.homeworks.filter(r=>!r.error);
   const attempted=valid.reduce((sum,r)=>sum+n(r.data.attempted_parts),0);
-  const weightedFirst=valid.reduce((sum,r)=>sum+n(r.data.attempted_parts)*n(r.data.first_attempt_rate)/100,0);
+  const weightedFirst=valid.reduce((sum,r)=>sum+(r.data.first_correct_parts??n(r.data.attempted_parts)*n(r.data.first_attempt_rate)/100),0);
   const participation=valid.reduce((sum,r)=>sum+n(r.data.started_students),0);
   const submissions=home.reduce((sum,r)=>sum+n(r.data.submitted),0);
   const errorCount=state.rows.filter(r=>r.error).length+state.homeworks.filter(r=>r.error).length;
@@ -78,58 +81,70 @@ async function allSettledLimit(tasks,max=5){
   return out;
 }
 async function refresh(){
-  if(state.loading)return;
-  state.loading=true;$("refresh").disabled=true;
+  const refreshId=++state.refreshId, groupCode=group(), cycleSource=cycle();
+  $("refresh").disabled=true;
+  $("studentsTable").replaceChildren();$("questionsTable").replaceChildren();$("skillsTable").replaceChildren();
   try{
     if(!state.catalog){status("جارٍ تحميل قائمة ورش الفصل الثاني وواجباته…");
       const data=await api("admin-unified-workshop","term2_catalog");
+      if(refreshId!==state.refreshId)return;
       state.catalog={workshops:data.workshops||[],homeworks:data.homeworks||[]};
       const grades=[...new Set([...state.catalog.workshops,...state.catalog.homeworks].map(x=>x.grade_level).filter(Boolean))];
       for(const g of grades)$("gradeFilter").add(new Option(g,g));
     }
     const currentWork=selected(state.catalog.workshops),currentHomework=selected(state.catalog.homeworks);
-    const plans=currentWork.flatMap(work=>tracks().map(track=>({work,track})));
+    const plans=workshopPlans(currentWork);
     status("تحميل تحليلات "+plans.length+" قسم ورشة و"+currentHomework.length+" واجب…");
-    const workResults=await allSettledLimit(plans.map(({work,track})=>()=>api("admin-unified-workshop","overview",{workshop_slug:work.slug,track,group_code:group(),cycle_source:cycle()})));
-    state.rows=plans.map((entry,i)=>({...entry,...(workResults[i].ok?{data:workResults[i].value.overview}:{error:workResults[i].error})}));
-    const homeworkResults=await allSettledLimit(currentHomework.map(work=>()=>api("paper-homework","overview",{workshop_slug:work.slug,group_code:group()})));
-    state.homeworks=currentHomework.map((work,i)=>({work,...(homeworkResults[i].ok?{data:homeworkResults[i].value.overview}:{error:homeworkResults[i].error})}));
+    const results=await allSettledLimit([
+      ...plans.map(({work,track})=>()=>api("admin-unified-workshop","overview",{workshop_slug:work.slug,track,group_code:groupCode,cycle_source:cycleSource})),
+      ...currentHomework.map(work=>()=>api("paper-homework","overview",{workshop_slug:work.slug,group_code:groupCode}))
+    ]);
+    if(refreshId!==state.refreshId)return;
+    state.rows=plans.map((entry,i)=>({...entry,...(results[i].ok?{data:results[i].value.overview}:{error:results[i].error})}));
+    state.homeworks=currentHomework.map((work,i)=>{
+      const result=results[plans.length+i];
+      return {work,...(result.ok?{data:result.value.overview}:{error:result.error})};
+    });
     renderOverview();
-    $("studentsTable").replaceChildren();$("questionsTable").replaceChildren();$("skillsTable").replaceChildren();
     status("آخر تحليل للورش والواجبات المنشورة. يتم تحميل تقارير الطلاب والأسئلة عند اختيارها؛ لا توجد بيانات تقديرية.");
-  }catch(error){status("تعذر تحديث التقرير: "+error.message)}
-  finally{state.loading=false;$("refresh").disabled=false}
+  }catch(error){if(refreshId===state.refreshId)status("تعذر تحديث التقرير: "+error.message)}
+  finally{if(refreshId===state.refreshId)$("refresh").disabled=false}
 }
 async function loadStudents(){
   if(!state.catalog){status("جارٍ جلب قائمة الورش…");return}
+  const refreshId=state.refreshId, groupCode=group(), cycleSource=cycle();
   const btn=$("loadStudents");btn.disabled=true;status("جارٍ حساب أداء الطلاب في الورش والواجبات…");
   try{
-    const plans=selected(state.catalog.workshops).flatMap(work=>tracks().map(track=>({work,track})));
+    const plans=workshopPlans(selected(state.catalog.workshops));
     const home=selected(state.catalog.homeworks);
     const tasks=[
-      ...plans.map(p=>()=>api("admin-unified-workshop","students",{workshop_slug:p.work.slug,track:p.track,group_code:group(),cycle_source:cycle()})),
-      ...home.map(work=>()=>api("paper-homework","students",{workshop_slug:work.slug,group_code:group()}))
+      ...plans.map(p=>()=>api("admin-unified-workshop","students",{workshop_slug:p.work.slug,track:p.track,group_code:groupCode,cycle_source:cycleSource})),
+      ...home.map(work=>()=>api("paper-homework","students",{workshop_slug:work.slug,group_code:groupCode}))
     ];
-    const rs=await allSettledLimit(tasks);const entries=new Map();
+    const rs=await allSettledLimit(tasks);
+    if(refreshId!==state.refreshId)return;
+    const entries=new Map();
     function record(r){const key=r.user_id;if(!key)return null;let x=entries.get(key);if(!x){x={name:r.full_name||"",code:r.student_code||"",group:r.group_code||"",attempted:0,first:0,mastered:0,assisted:0,hwSubmitted:0,hwMissing:0};entries.set(key,x)}return x}
     let failures=0;
     rs.forEach((result,i)=>{
       if(!result.ok){failures++;return}
-      if(i<plans.length){for(const r of result.value.students||[]){if(group()&&r.group_code!==group())continue;const x=record(r);if(!x)continue;x.attempted+=n(r.attempted_parts);x.first+=n(r.first_correct_parts);x.mastered+=n(r.independently_mastered_parts);x.assisted+=n(r.assisted_parts)}}
-      else{for(const r of result.value.students||[]){if(group()&&r.group_code!==group())continue;const x=record(r);if(!x)continue;if(r.submission_id)x.hwSubmitted++;else x.hwMissing++}}
+      if(i<plans.length){for(const r of result.value.students||[]){if(groupCode&&r.group_code!==groupCode)continue;const x=record(r);if(!x)continue;x.attempted+=n(r.attempted_parts);x.first+=n(r.first_correct_parts);x.mastered+=n(r.independently_mastered_parts);x.assisted+=n(r.assisted_parts)}}
+      else{for(const r of result.value.students||[]){if(groupCode&&r.group_code!==groupCode)continue;const x=record(r);if(!x)continue;if(r.submission_id)x.hwSubmitted++;else x.hwMissing++}}
     });
     const rows=[...entries.values()].filter(x=>x.attempted||x.hwSubmitted||x.hwMissing).sort((a,b)=>b.attempted-a.attempted||a.name.localeCompare(b.name,"ar"));
     addTable("studentsTable",["الطالب","المجموعة","أجزاء مجرّبة","صح أول مرة","إتقان مستقل","بمساعدة","واجبات مُسلّمة","واجبات لم تُسلّم"],rows.map(r=>[r.name+(r.code?" ("+r.code+")":""),r.group,fmt(r.attempted),fmt(r.first),fmt(r.mastered),fmt(r.assisted),fmt(r.hwSubmitted),fmt(r.hwMissing)]));
     status("تحليل "+rows.length+" طالب عبر الورش والواجبات."+(failures?" تعذّر تحميل "+failures+" مصدر؛ لا تعتبر الأرقام شاملة حتى إعادة المحاولة.":""));
-  }catch(error){status(error.message)}finally{btn.disabled=false}
+  }catch(error){if(refreshId===state.refreshId)status(error.message)}finally{btn.disabled=false}
 }
 async function loadQuestions(){
   if(!state.catalog)return;
+  const refreshId=state.refreshId, groupCode=group(), cycleSource=cycle();
   const btn=$("loadQuestions");btn.disabled=true;status("جارٍ جلب الأخطاء والمهارات من الورش…");
   try{
-    const plans=selected(state.catalog.workshops).flatMap(work=>tracks().map(track=>({work,track})));
+    const plans=workshopPlans(selected(state.catalog.workshops));
     const actions=plans.flatMap(p=>["questions","skills"].map(action=>({p,action})));
-    const rs=await allSettledLimit(actions.map(x=>()=>api("admin-unified-workshop",x.action,{workshop_slug:x.p.work.slug,track:x.p.track,group_code:group(),cycle_source:cycle()})));
+    const rs=await allSettledLimit(actions.map(x=>()=>api("admin-unified-workshop",x.action,{workshop_slug:x.p.work.slug,track:x.p.track,group_code:groupCode,cycle_source:cycleSource})));
+    if(refreshId!==state.refreshId)return;
     const questions=[],skills=[];let failed=0;
     rs.forEach((r,i)=>{
       if(!r.ok){failed++;return}
@@ -141,10 +156,10 @@ async function loadQuestions(){
     });
     questions.sort((a,b)=>n(b.attempted_parts)-n(b.first_correct_parts)-(n(a.attempted_parts)-n(a.first_correct_parts)));
     skills.sort((a,b)=>n(b.first_wrong_parts)-n(a.first_wrong_parts));
-    addTable("questionsTable",["الورشة","السؤال","المهارة","الأجزاء المُجربة","أخطاء أولى","التفاصيل"],questions.slice(0,100).map(q=>[q.work.title+" — "+(q.track==="home"?"المنزلي":"الحصة"),q.question_ref,q.skill_name||q.skill_ref,fmt(q.attempted_parts),fmt(n(q.attempted_parts)-n(q.first_correct_parts)),openLink("admin-workshop-analytics.html",q.work.slug,"افتح")]));
-    addTable("skillsTable",["الورشة","المهارة","أجزاء مجرّبة","أخطاء أولى","بمساعدة"],skills.slice(0,100).map(x=>[x.work.title,x.name||x.skill_ref,fmt(x.attempted_parts),fmt(x.first_wrong_parts),fmt(x.assisted_parts)]));
+    addTable("questionsTable",["الورشة","السؤال","المهارة","الأجزاء المُجربة","أخطاء أولى","التفاصيل"],questions.map(q=>[q.work.title+" — "+(q.track==="home"?"المنزلي":"الحصة"),q.question_ref,q.skill_name||q.skill_ref,fmt(q.attempted_parts),fmt(n(q.attempted_parts)-n(q.first_correct_parts)),openLink("admin-workshop-analytics.html",q.work.slug,"افتح")]));
+    addTable("skillsTable",["الورشة","المهارة","أجزاء مجرّبة","أخطاء أولى","بمساعدة"],skills.map(x=>[x.work.title,x.name||x.skill_ref,fmt(x.attempted_parts),fmt(x.first_wrong_parts),fmt(x.assisted_parts)]));
     status("تم تحميل "+questions.length+" سؤال و"+skills.length+" مهارة."+(failed?" لم تُحمّل "+failed+" استجابة.":""));
-  }catch(error){status(error.message)}finally{btn.disabled=false}
+  }catch(error){if(refreshId===state.refreshId)status(error.message)}finally{btn.disabled=false}
 }
 document.querySelectorAll("[data-tab]").forEach(button=>button.onclick=()=>{
  state.active=button.dataset.tab;document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-pressed",String(b===button)));
