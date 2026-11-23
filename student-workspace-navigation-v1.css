@@ -202,3 +202,15 @@ html[data-theme="dark"] .yrStudentApp .yrHonorPendingEyebrow{color:#A4E2BF}
 .yrStudentApp .yrHomePending summary{cursor:pointer;font-size:13px;font-weight:800}
 .yrStudentApp .yrHomePending ul{margin:5px 0 0;padding-inline-start:20px}
 .yrStudentApp .yrHomePending .yrHomeQuietButton{text-align:start}
+
+/* Two distinct activities inside one lesson entry; paper-book homework remains separate. */
+.yrStudentApp .yrWorkspaceItem.yrWorkshopPair{display:grid;gap:14px;cursor:default;transform:none}
+.yrStudentApp .yrWorkshopPairHead{display:flex;align-items:center;gap:14px;min-width:0}
+.yrStudentApp .yrWorkshopPairHead>div{display:grid;gap:3px;min-width:0}
+.yrStudentApp .yrWorkshopPairActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.yrStudentApp .yrWorkshopPairButton{display:flex;flex-direction:column;gap:5px;min-width:0;min-height:106px;text-align:right;padding:13px 14px;border:1px solid #d4e2db;border-radius:13px;background:#f7fbf8;color:#193b30;font:inherit;cursor:pointer}
+.yrStudentApp .yrWorkshopPairButton:hover,.yrStudentApp .yrWorkshopPairButton:focus-visible{border-color:#418066;background:#eef7f0}
+.yrStudentApp .yrWorkshopPairButton b{font-size:15px;font-weight:900}
+.yrStudentApp .yrWorkshopPairButton small{font-size:12px;color:#587166;line-height:1.6}
+.yrStudentApp .yrWorkshopPairButton .yrWorkshopPairStatus{display:block;margin-top:auto;color:#0e5948;font-size:12px;font-weight:850;line-height:1.6}
+@media(max-width:560px){.yrStudentApp .yrWorkshopPairActions{grid-template-columns:1fr}.yrStudentApp .yrWorkshopPairButton{min-height:0}}
