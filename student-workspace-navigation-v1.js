@@ -341,7 +341,7 @@ function renderChapter2Home(region){
  let task;
  if(next){
   const dueTime=next.due_at?new Date(next.due_at).toLocaleString("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Cairo"}):null;
-  task={text:dueTime?`${next.title} · موعد التسليم ${dueTime}`:next.title,label:next.kind==="homework"?"افتح واجب الكتاب":next.track==="home"?"أكمل ورشة الواجب":next.track==="class"?"أكمل ورشة الحصة":"افتح الورشة",open:()=>openPendingActivity(next)};
+  task={text:dueTime?`${next.title} · موعد التسليم ${dueTime}`:next.title,label:next.kind==="homework"?"افتح الواجب":next.track==="home"?"أكمل ورشة الواجب":next.track==="class"?"أكمل ورشة الحصة":"افتح الورشة",open:()=>openPendingActivity(next)};
  }else if(remaining&&source("openCh2Mistakes")){
   task={text:"راجع سؤالًا غلطت فيه وحاول تحلّه من جديد.",label:"كمّل تصحيح أخطائك",open:()=>source("openCh2Mistakes")?.click()};
  }else if(pending){
