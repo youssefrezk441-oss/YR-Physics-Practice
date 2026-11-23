@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>ورش الفيزياء — مستر يوسف رزق</title>
-  <link rel="stylesheet" href="workshop.css?v=20261024-1">
+  <link rel="stylesheet" href="workshop.css?v=20261124-class-home-v1">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0/dist/umd/supabase.min.js"></script>
 <script>document.documentElement.setAttribute("data-yr-profile-pending","");</script>
 <style>html[data-yr-profile-pending]::before{content:"جارٍ التحقق من بيانات حسابك…";position:fixed;inset:0;z-index:2147483646;background:#f3f8f4;color:#124b3a;font:700 19px/1.8 Tahoma,Arial,sans-serif;display:grid;place-items:center;text-align:center;pointer-events:auto}</style>
@@ -28,7 +28,7 @@
     <section id="welcome" class="panel" hidden>
       <div class="student-line"><div><span>الطالب</span><b id="student-name">—</b><small id="student-meta">—</small></div><span id="role-badge" class="badge"></span></div>
       <h1 id="workshop-title">ورشة الفيزياء</h1>
-      <p>اختر القسم، وسيُستكمل تقدمك المحفوظ على الخادم. لا توجد إعادة ضبط لمحاولاتك.</p>
+      <p>ورشة الحصة للتدريب والتصحيح الفوري، أما ورشة الواجب فتحتاج تسليمًا نهائيًا مستقلًا. يمكنك فتح كل قسم مباشرة ومراجعة تقدمك المحفوظ.</p>
       <div id="track-cards" class="track-cards"></div>
       <p id="welcome-notice" class="notice" role="status"></p>
     </section>
@@ -36,9 +36,9 @@
     <section id="workspace" hidden>
       <div class="workspace-head panel">
         <div><button id="back-tracks" class="text-button">← الأقسام</button><h1 id="track-title">—</h1><p id="track-mode">—</p></div>
-        <div class="progress-summary"><b id="progress-text" dir="ltr">0 / 0</b><progress id="progress" value="0" max="1"></progress></div>
+        <div class="progress-summary"><small id="progress-label">حالة التقدم</small><b id="progress-text" dir="ltr">0 / 0</b><progress id="progress" value="0" max="1"></progress></div>
       </div>
-      <div id="review-only" class="panel submission-box" hidden><p>إجاباتك محفوظة. تقدر ترجع لها في أي وقت، وتصحيح الأخطاء من «من الغلطة للإتقان».</p><a class="button secondary" href="student-ch2-mistakes.html">من الغلطة للإتقان</a></div>
+      <div id="review-only" class="panel submission-box" hidden><p id="review-status">تم حفظ حالتك ويمكنك مراجعة إجاباتك.</p><a class="button secondary" href="student-ch2-mistakes.html">من الغلطة للإتقان</a></div>
       <p id="notice" class="notice" role="status" aria-live="polite"></p>
       <div class="layout">
         <aside class="panel navigator">
@@ -57,12 +57,12 @@
         </article>
       </div>
       <section id="submission-box" class="panel submission-box" hidden>
-        <div><h2>التسليم النهائي</h2><p>بعد التسليم تُثبت إجاباتك الأصلية، ولا يمكن تعديلها أو إعادة التسليم دون دورة يفتحها المسؤول.</p></div>
-        <button id="submit-track" class="button">تسليم التدريب المنزلي</button>
+        <div><h2>تسليم ورشة الواجب</h2><p id="submission-progress" role="status">جارٍ التحقق من إجاباتك المحفوظة…</p><p>حفظ الإجابات ليس تسليمًا. بعد التسليم تُثبت إجاباتك الأصلية، ولا يمكن تعديلها دون دورة يفتحها المسؤول.</p></div>
+        <button id="submit-track" class="button">تسليم ورشة الواجب نهائيًا</button>
       </section>
     </section>
   </main>
   <dialog id="image-dialog"><div class="dialog-head"><b>الصورة الأصلية</b><button id="close-image" class="text-button">إغلاق</button></div><div class="image-scroll"><img id="large-image" alt=""></div></dialog>
-  <script type="module" src="workshop.js?v=20261116-read-only-review"></script>
+  <script type="module" src="workshop.js?v=20261124-class-home-v1"></script>
 </body>
 </html>
