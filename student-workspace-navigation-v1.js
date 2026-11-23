@@ -1,4 +1,5 @@
 import {syncGrade2Tabs,renderGrade2Chapter,isSecondSecondaryBaccalaureate} from "./student-grade2-learning-v3.js";
+import {sb} from "./student-identity-api.js";
 /* YR student workspace — navigation adapter for the real compiled student app.
  * Uses original eligible launcher buttons; never creates bypass URLs or changes grades.
  * Chapter 1/2 mistakes and workshops remain independent; Honor editions use real server-owned assessment cycles and frozen snapshots. */
@@ -48,8 +49,60 @@ function fillEntry(entry,title,detail,symbol){
  const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="‹";
  entry.append(icon,body,arrow);
 }
+const dualWorkshops={
+ "openUnifiedL1Workshop":"third-secondary-term-2-lecture-1",
+ "openCh2Lecture5Workshop":"third-secondary-term-2-lecture-5"
+};
+const workshopStatusCache=new Map();
+function readWorkshopStatus(slug){
+ const prior=workshopStatusCache.get(slug),now=Date.now();
+ if(prior&&now-prior.at<30000)return prior.promise;
+ const promise=sb.functions.invoke("unified-workshop",{body:{action:"track_status",workshop_slug:slug}})
+   .then(({data,error})=>{if(error||!data?.ok)throw Error("تعذر الاستعلام");return data.tracks||[]});
+ workshopStatusCache.set(slug,{at:now,promise});
+ return promise;
+}
+function makeWorkshopPair(id,original,slug){
+ const card=document.createElement("section");card.className="yrWorkspaceItem yrWorkshopPair";
+ const head=document.createElement("div");head.className="yrWorkshopPairHead";
+ const icon=document.createElement("span");icon.className="yrWorkspaceItemIcon";icon.textContent="🧲";icon.setAttribute("aria-hidden","true");
+ const body=document.createElement("div"),title=document.createElement("strong"),subtitle=document.createElement("small");
+ title.textContent=titleFrom(original,"ورشة المحاضرة");subtitle.textContent="قسمان مستقلان في الحل والتسليم.";
+ body.append(title,subtitle);head.append(icon,body);card.append(head);
+ const actions=document.createElement("div");actions.className="yrWorkshopPairActions";
+ const statusElements=new Map();
+ for(const part of [
+   {key:"class",name:"ورشة الحصة",detail:"حل وتصحيح فوري · بدون تسليم"},
+   {key:"home",name:"ورشة الواجب",detail:"مسودة محفوظة ثم تسليم نهائي"}
+ ]){
+   const button=document.createElement("button");button.type="button";button.className="yrWorkshopPairButton";button.dataset.track=part.key;
+   const name=document.createElement("b"),hint=document.createElement("small"),status=document.createElement("span");
+   name.textContent=part.name;hint.textContent=part.detail;status.className="yrWorkshopPairStatus";status.textContent="جارٍ تحميل الحالة…";
+   statusElements.set(part.key,status);button.append(name,hint,status);
+   button.addEventListener("click",()=>{
+     if(!source(id))return;
+     window.location.href="./workshop.html?workshop="+encodeURIComponent(slug)+"&track="+part.key;
+   });
+   actions.append(button);
+ }
+ card.append(actions);
+ readWorkshopStatus(slug).then(tracks=>{
+   if(!card.isConnected)return;
+   for(const track of tracks){
+     const status=statusElements.get(track.track_key);if(!status)continue;
+     const total=Number(track.total_parts||0),attempted=Number(track.attempted_parts||0),saved=Number(track.saved_parts||0);
+     status.textContent=track.mode==="interactive"?
+       (total&&attempted>=total?"تمت محاولة جميع الأجزاء":"تمت محاولة "+attempted+" من "+total):
+       track.submitted_at?"تم التسليم النهائي":
+       total&&saved>=total?"كل الإجابات محفوظة · لم تُسلّم":
+       saved?"مسودة "+saved+" من "+total+" · لم تُسلّم":"لم يبدأ الواجب";
+   }
+ }).catch(()=>{if(card.isConnected)for(const status of statusElements.values())status.textContent="تعذر قراءة الحالة";});
+ return card;
+}
 function makeEntry(id,title,detail,symbol="▤"){
  const el=source(id);if(!el)return null;
+ if(dualWorkshops[id])return makeWorkshopPair(id,el,dualWorkshops[id]);
  const b=document.createElement("button");
  b.type="button";b.dataset.yrSource=id;
  fillEntry(b,title||titleFrom(el,id),detail||detailFrom(el,"افتح المحتوى المتاح لحسابك"),symbol);
