@@ -321,6 +321,11 @@ function requestHomeProgress(force=false){
 }
 function openPendingActivity(activity){
  const launch=activityLaunchers[activity.slug];
+ if(activity.kind==="workshops"&&["class","home"].includes(activity.track)){
+  if(launch&&!source(launch))return;
+  window.location.href="./workshop.html?workshop="+encodeURIComponent(activity.slug)+"&track="+activity.track;
+  return;
+ }
  const target=launch?source(launch):null;
  if(target){target.click();return;}
  const route=activity.kind==="homework"?"lecture1-homework.html":"workshop.html";
@@ -336,7 +341,7 @@ function renderChapter2Home(region){
  let task;
  if(next){
   const dueTime=next.due_at?new Date(next.due_at).toLocaleString("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Cairo"}):null;
-  task={text:dueTime?`${next.title} · موعد التسليم ${dueTime}`:next.title,label:next.kind==="homework"?"افتح الواجب":"افتح الورشة",open:()=>openPendingActivity(next)};
+  task={text:dueTime?`${next.title} · موعد التسليم ${dueTime}`:next.title,label:next.kind==="homework"?"افتح واجب الكتاب":next.track==="home"?"أكمل ورشة الواجب":next.track==="class"?"أكمل ورشة الحصة":"افتح الورشة",open:()=>openPendingActivity(next)};
  }else if(remaining&&source("openCh2Mistakes")){
   task={text:"راجع سؤالًا غلطت فيه وحاول تحلّه من جديد.",label:"كمّل تصحيح أخطائك",open:()=>source("openCh2Mistakes")?.click()};
  }else if(pending){
@@ -353,10 +358,12 @@ function renderChapter2Home(region){
  button.addEventListener("click",task.open);
  region.replaceChildren(text,button);
  if(pending?.length){
-  const workCount=pending.filter(item=>item.kind==="homework").length;
+  const bookCount=pending.filter(item=>item.kind==="homework").length;
+  const classCount=pending.filter(item=>item.kind==="workshops"&&item.track==="class").length;
+  const homeCount=pending.filter(item=>item.kind==="workshops"&&item.track==="home").length;
   const details=document.createElement("details");details.className="yrHomePending";details.open=showingPending;
   const summary=document.createElement("summary");
-  summary.textContent=`المطلوب في الفصل الثاني · الواجبات ${homeNumber(workCount)} · الورش ${homeNumber(pending.length-workCount)}`;
+  summary.textContent=`المطلوب في الفصل الثاني · ورش الحصة ${homeNumber(classCount)} · ورش الواجب ${homeNumber(homeCount)} · واجبات الكتاب ${homeNumber(bookCount)}`;
   const list=document.createElement("ul");
   for(const activity of pending){
    const li=document.createElement("li"),link=document.createElement("button");
