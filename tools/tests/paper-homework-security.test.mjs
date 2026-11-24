@@ -39,6 +39,6 @@ test('reopening submitted paper homework is read-only and never triggers an immu
   assert.match(loader, /select \* from private\.homework_attempts/);
   assert.match(loader, /if \(existing\[0\]\) return existing\[0\]/);
   assert.match(loader, /on conflict \(workshop_id, user_id\) do nothing returning \*/);
-  assert.doesNotMatch(loader, /do update/i, 'reopening must not update a submitted attempt');
+  assert.doesNotMatch(loader.split('\n').filter(line => !/^\s*\/\//.test(line)).join('\n'), /do update/i, 'reopening must not update a submitted attempt');
   assert.match(loader, /if \(raced\[0\]\) return raced\[0\]/);
 });
