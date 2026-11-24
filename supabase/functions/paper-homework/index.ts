@@ -149,13 +149,25 @@ async function loadParts(workshopId: string, versionId: string) {
 }
 
 async function ensureAttempt(workshopId: string, versionId: string, userId: string) {
-  const [attempt] = await sql`
+  // Opening an existing submission is read-only. Never UPSERT with DO UPDATE:
+  // the database guard rejects ANY UPDATE to a submitted attempt, including no-op updates.
+  const existing = await sql`
+    select * from private.homework_attempts
+    where workshop_id = ${workshopId}::uuid and user_id = ${userId}::uuid limit 1`;
+  if (existing[0]) return existing[0];
+
+  // Only an initial visit may create an attempt. Handle simultaneous first visits safely.
+  const inserted = await sql`
     insert into private.homework_attempts (workshop_id, version_id, user_id)
     values (${workshopId}::uuid, ${versionId}::uuid, ${userId}::uuid)
-    on conflict (workshop_id, user_id) do update set last_activity_at = case
-      when private.homework_attempts.status = 'draft' then now() else private.homework_attempts.last_activity_at end
-    returning *`;
-  return attempt;
+    on conflict (workshop_id, user_id) do nothing returning *`;
+  if (inserted[0]) return inserted[0];
+
+  const raced = await sql`
+    select * from private.homework_attempts
+    where workshop_id = ${workshopId}::uuid and user_id = ${userId}::uuid limit 1`;
+  if (raced[0]) return raced[0];
+  throw new PaperHomeworkError(503, "attempt_unavailable", "تعذر تحميل الواجب الآن. أعد المحاولة.");
 }
 
 async function receipt(tx: postgres.TransactionSql, userId: string, requestId: string, bodyHash: string) {
