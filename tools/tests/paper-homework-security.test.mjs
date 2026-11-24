@@ -30,3 +30,15 @@ test('essay mastery stores a new answer before revealing a solution and is self-
   assert.match(mistakes, /essay_requires_self_review/);
   assert.match(mistakes, /mastery_kind: "essay_self_review"/);
 });
+
+test('reopening submitted paper homework is read-only and never triggers an immutable row update', () => {
+  const start = api.indexOf('async function ensureAttempt(');
+  const end = api.indexOf('async function receipt(', start);
+  assert.ok(start > 0 && end > start, 'attempt loader must exist');
+  const loader = api.slice(start, end);
+  assert.match(loader, /select \* from private\.homework_attempts/);
+  assert.match(loader, /if \(existing\[0\]\) return existing\[0\]/);
+  assert.match(loader, /on conflict \(workshop_id, user_id\) do nothing returning \*/);
+  assert.doesNotMatch(loader, /do update/i, 'reopening must not update a submitted attempt');
+  assert.match(loader, /if \(raced\[0\]\) return raced\[0\]/);
+});
