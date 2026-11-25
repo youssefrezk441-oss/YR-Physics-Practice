@@ -1,3 +1,4 @@
+import {mountStudentInbox} from "./beiny-beinak-entry.js";
 import {syncGrade2Tabs,renderGrade2Chapter,isSecondSecondaryBaccalaureate} from "./student-grade2-learning-v3.js";
 import {sb} from "./student-identity-api.js";
 /* YR student workspace — navigation adapter for the real compiled student app.
@@ -570,3 +571,5 @@ for(const id of availableSources){
 }
 updateReady();
 updateActive("dashboardView");
+
+mountStudentInbox(sb);
