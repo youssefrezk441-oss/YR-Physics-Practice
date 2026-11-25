@@ -12,3 +12,10 @@
 ## إيقاف آمن
 `update by_private.settings set enabled=false where singleton;`
 لإيقاف مهمة الاحتفاظ عند حادثة حماية أو عطل، أوقف job المسمى by-private-retention دون حذف البيانات.
+
+
+## Read-only manager access
+- The allowlist table `by_private.viewers` is private, has RLS enabled, and grants no direct table privileges. It only authorizes active non-owner admin accounts whose trusted app metadata role is `admin`.
+- `أ/ جنى الزمر` (`janaelzomor5@gmail.com`) has been granted read-only access. The RPC allowlist permits only `status`, `counts`, `list`, and `get`; all other actions are rejected server-side. The browser hides reply and management controls, and never advances the owner's read cursor for a viewer.
+- To revoke this viewer: `delete from by_private.viewers where user_id = '75786d66-b5fe-4b1e-b317-54a731296d35'::uuid;` (execute as the trusted database operator).
+- No viewer can reveal the internal identity link for anonymous threads. Only the existing owner account can reply or change conversation state.
