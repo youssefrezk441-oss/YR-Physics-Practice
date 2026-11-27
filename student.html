@@ -36,7 +36,7 @@
       }
     }catch(error){console.warn('Student login portal unavailable; using legacy entry.',error)}
   }
-  let html=await (await fetch('./student-base.html?v=20261107-honor-top5-clean-v2',{cache:'no-store'})).text();
+  let html=await (await fetch('./student-base.html?v=20261127-l3-book-homework',{cache:'no-store'})).text();
   const replaceOnce=(oldText,newText,label)=>{if(!html.includes(oldText))throw new Error('تعذر تجهيز '+label);html=html.replace(oldText,newText)};
 
   replaceOnce(
@@ -371,6 +371,12 @@ html[data-theme="dark"] .referenceBadge{background:#052e16;color:#86efac;border-
   html=html.replace(l5BookVisibility,'||lecture5BookHomeworkAllowed'+l5BookVisibility);
   html=html.replace(l5BookPing,`const lecture5BookHomework=$('openLecture5BookHomework');if(lecture5BookHomework){sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lecture-5-book-homework'}}).then(({data,error})=>{lecture5BookHomeworkAllowed=!error&&data?.ok===true&&data.available===true;lecture5BookHomework.classList.toggle('hidden',!lecture5BookHomeworkAllowed);renderSecondTermAccess()}).catch(()=>{lecture5BookHomeworkAllowed=false;lecture5BookHomework.classList.add('hidden');renderSecondTermAccess()})};`+l5BookPing);
   html=html.replace(l5BookLink,`const lecture5BookHomeworkLink=$('openLecture5BookHomework');if(lecture5BookHomeworkLink)lecture5BookHomeworkLink.onclick=()=>{window.location.href='./lecture5-book-homework.html'};`+l5BookLink);
+  // Lesson 3 complete book homework — same server eligibility and submission contract.
+  html=html.replace(l5BookMenu,l5BookMenu+'<button id="openLesson3BookHomework" class="card studentNavCard hidden" type="button"><div class="studentNavIcon">📘</div><h3>واجب الدرس الثالث كاملًا — كتاب الامتحان</h3><p>القوة المغناطيسية وعزم الازدواج · 96 سؤال اختيار فقط.</p></button>');
+  html=html.replace(l5BookPermissions,l5BookPermissions+'let lesson3BookHomeworkAllowed=false;');
+  html=html.replace(l5BookVisibility,'||lesson3BookHomeworkAllowed'+l5BookVisibility);
+  html=html.replace(l5BookPing,`const lesson3BookHomework=$('openLesson3BookHomework');if(lesson3BookHomework){lesson3BookHomework.classList.add('hidden');sb.functions.invoke('paper-homework',{body:{action:'ping',workshop_slug:'third-secondary-term-2-lesson-3-book-homework'}}).then(({data,error})=>{lesson3BookHomeworkAllowed=!error&&data?.ok===true&&data.available===true;lesson3BookHomework.classList.toggle('hidden',!lesson3BookHomeworkAllowed);renderSecondTermAccess()}).catch(()=>{lesson3BookHomeworkAllowed=false;lesson3BookHomework.classList.add('hidden');renderSecondTermAccess()})};`+l5BookPing);
+  html=html.replace(l5BookLink,`const lesson3BookHomeworkLink=$('openLesson3BookHomework');if(lesson3BookHomeworkLink)lesson3BookHomeworkLink.onclick=()=>{window.location.href='./lecture1-homework.html?workshop=third-secondary-term-2-lesson-3-book-homework'};`+l5BookLink);
   document.open();
   document.write(html);
   document.close();
