@@ -24,7 +24,8 @@ const groups={
   ['openLecture1Homework','/lecture1-homework.html'],
   ['openBookRemainder','/lesson1-book-remaining.html'],
   ['openLesson2BookHomework','/lesson2-book-homework.html'],
-  ['openLecture5BookHomework','/lecture5-book-homework.html']
+  ['openLecture5BookHomework','/lecture5-book-homework.html'],
+  ['openLesson3BookHomework','/lecture1-homework.html?workshop=third-secondary-term-2-lesson-3-book-homework']
  ]
 };
 test('Chapter 2 activities use the existing eligible launchers',()=>{
@@ -61,7 +62,8 @@ const fakeSupabase=String.raw`export function createClient(){
    }
    if(name==='paper-homework'&&body?.action==='ping'){
     const pending=body.workshop_slug==='third-secondary-term-2-lecture-5-book-homework'&&new URL(location.href).searchParams.has('pending_homework');
-    return {data:{ok:!pending,available:!pending,workshop:{slug:body.workshop_slug}}};
+    const pendingL3=body.workshop_slug==='third-secondary-term-2-lesson-3-book-homework'&&new URL(location.href).searchParams.has('pending_l3_homework');
+    return {data:{ok:!pending&&!pendingL3,available:!pending&&!pendingL3,workshop:{slug:body.workshop_slug}}};
    }
    if(name==='student-honor-board'&&body?.action==='home_progress'){
     const mode=new URL(location.href).searchParams.get('home_case');
@@ -144,10 +146,11 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    }));
    await page.route('https://fonts.googleapis.com/**',route=>route.abort());
    const origin='http://127.0.0.1:'+server.address().port;
-   const enterChapter=async(pending=false)=>{
+   const enterChapter=async(pending=false,pendingL3=false)=>{
     const query=new URLSearchParams();
     if(legacy)query.set('legacy_grade','1');
     if(pending)query.set('pending_homework','1');
+    if(pendingL3)query.set('pending_l3_homework','1');
     await page.goto(origin+'/student.html?'+query,{waitUntil:'domcontentloaded'});
     await page.locator('#dashboardView').waitFor({state:'visible',timeout:20000});
     await page.locator('[data-yr-go="learning"]:visible').first().click();
@@ -192,11 +195,14 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
      await first.getByText('تمت محاولة جميع الأجزاء').waitFor();
      await first.getByText(/مسودة 12 من 18/).waitFor();
     }
-    if(group==='homework')assert.match(await disclosure.locator('[data-yr-source="openLesson2BookHomework"]').innerText(),/115 سؤالًا/);
+    if(group==='homework'){
+     assert.match(await disclosure.locator('[data-yr-source="openLesson2BookHomework"]').innerText(),/115 سؤالًا/);
+     assert.match(await disclosure.locator('[data-yr-source="openLesson3BookHomework"]').innerText(),/96 سؤالًا/);
+    }
     await summary.press('Enter');
     assert.equal(await disclosure.locator('[data-yr-source]:visible').count(),0);
     for(const [id,path] of normalEntries){
-     const isLastRoute=group==='homework'&&id==='openLecture5BookHomework';
+     const isLastRoute=group==='homework'&&id==='openLesson3BookHomework';
      await summary.click();
      await Promise.all([page.waitForURL(origin+path,{timeout:12000}),disclosure.locator(`[data-yr-source="${id}"]`).click()]);
      if(!isLastRoute)await enterChapter();
@@ -243,6 +249,11 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    await homework.locator('summary').click();
    await homework.locator('[data-yr-source="openLesson2BookHomework"]').waitFor({state:'visible'});
    assert.equal(await homework.locator('[data-yr-source="openLecture5BookHomework"]').count(),0);
+   await homework.locator('[data-yr-source="openLesson3BookHomework"]').waitFor({state:'visible'});
+   await enterChapter(false,true);
+   await homework.locator('summary').click();
+   await homework.locator('[data-yr-source="openLecture5BookHomework"]').waitFor({state:'visible'});
+   assert.equal(await homework.locator('[data-yr-source="openLesson3BookHomework"]').count(),0);
    for(const track of ['class','home']){
     await page.goto(origin+'/workshop.html?workshop=third-secondary-term-2-lecture-1&track='+track,{waitUntil:'domcontentloaded'});
     await page.locator('#review-only').waitFor({state:'visible'});
@@ -256,6 +267,11 @@ test('real browser: Chapter 2 groups the eligible activities and opens their ori
    assert.equal(await page.locator('#review-only').isVisible(),false);
    assert.equal(await page.locator('#answers .choice:enabled').count(),2);
    await page.goto(origin+'/lecture5-book-homework.html',{waitUntil:'domcontentloaded'});
+   await page.locator('#results').waitFor({state:'visible'});
+   assert.match(await page.locator('#results').innerText(),/إجابتك الأصلية: ب/);
+   assert.equal(await page.locator('#workspace').isVisible(),false);
+   assert.match(await page.locator('#results a').getAttribute('href'),/student-ch2-mistakes\.html/);
+   await page.goto(origin+'/lecture1-homework.html?workshop=third-secondary-term-2-lesson-3-book-homework',{waitUntil:'domcontentloaded'});
    await page.locator('#results').waitFor({state:'visible'});
    assert.match(await page.locator('#results').innerText(),/إجابتك الأصلية: ب/);
    assert.equal(await page.locator('#workspace').isVisible(),false);
